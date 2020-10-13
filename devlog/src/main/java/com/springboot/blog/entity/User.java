@@ -26,6 +26,6 @@ public class User {
     private String email;
 
     @CreationTimestamp
-    private Timestamp createAt;
+    private Timestamp createdAt;
 
 }
