@@ -8,8 +8,8 @@ spring:
   jpa:
     open-in-view: true
     hibernate:
-      ddl-auto: create
-        # naming: physical-strategy: org.hibernate.boot.model.naming.SpringPhysicalNamingStrategy -> underscore (default)
+      ddl-auto: update
+      # naming: physical-strategy: org.hibernate.boot.model.naming.SpringPhysicalNamingStrategy -> underscore (default)
       # naming: physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl -> original
       # use-new-id-generator-mappings: false -> @GeneratedValue(strategy = GenerationType.IDENTITY)
     show-sql: true

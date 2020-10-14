@@ -4,13 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.List;
 
+// @DynamicInsert -> except null
 @Builder
 @Data
 @AllArgsConstructor
@@ -22,8 +21,8 @@ public class User {
     @Id
     private Long id;
 
-    @ColumnDefault("'USER_ROLE'")
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
     @Column(nullable = false, length = 45)
     private String username;
