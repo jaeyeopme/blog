@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.transaction.Transactional;
 import java.util.List;
 
-@RequestMapping("users")
 @Controller
 public class UserController {
 
@@ -21,45 +20,55 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    @GetMapping("/")
-    public List<User> findAll(@PageableDefault(size = 2, sort = "id") Pageable pageable) {
-        return userRepository.findAll(pageable).getContent();
+    @GetMapping("join")
+    public String joinForm() {
+        return "user/join-form";
     }
 
-    @GetMapping("/{userId}")
-    public User findById(@PathVariable("userId") Long userId) {
-        User user = userRepository.findById(userId).
-                orElseThrow(() -> new IllegalArgumentException("not found - " + userId));
-
-        return user;
+    @GetMapping("login")
+    public String loginForm() {
+        return "user/login-form";
     }
 
-    @PostMapping("/")
-    public String save(@RequestBody User user) {
-        user.setRole(UserRole.ROLE_USER);
-        userRepository.save(user);
-
-        return "회원가입 완료";
-    }
-
-    @Transactional
-    @PutMapping("/{userId}")
-    public User update(@RequestBody User requestUser, @PathVariable(name = "userId") Long userId) {
-        User user = userRepository.findById(userId).
-                orElseThrow(() -> new IllegalArgumentException("not found - " + userId));
-        user.setPassword(requestUser.getPassword());
-        user.setEmail(requestUser.getEmail());
-
-        return user;
-    }
-
-    @DeleteMapping("users/{userId}")
-    public String delete(@PathVariable(name = "userId") Long userId) {
-        User user = userRepository.findById(userId).
-                orElseThrow(() -> new IllegalArgumentException("not found - " + userId));
-        userRepository.delete(user);
-
-        return "회원삭제 완료";
-    }
+//    @GetMapping("/")
+//    public List<User> findAll(@PageableDefault(size = 2, sort = "id") Pageable pageable) {
+//        return  userRepository.findAll(pageable).getContent();
+//    }
+//
+//    @GetMapping("/{userId}")
+//    public User findById(@PathVariable("userId") Long userId) {
+//        User user = userRepository.findById(userId).
+//                orElseThrow(() -> new IllegalArgumentException("not found - " + userId));
+//
+//        return user;
+//    }
+//
+//    @PostMapping("/")
+//    public String save(@RequestBody User user) {
+//        user.setRole(UserRole.ROLE_USER);
+//        userRepository.save(user);
+//
+//        return "회원가입 완료";
+//    }
+//
+//    @Transactional
+//    @PutMapping("/{userId}")
+//    public User update(@RequestBody User requestUser, @PathVariable(name = "userId") Long userId) {
+//        User user = userRepository.findById(userId).
+//                orElseThrow(() -> new IllegalArgumentException("not found - " + userId));
+//        user.setPassword(requestUser.getPassword());
+//        user.setEmail(requestUser.getEmail());
+//
+//        return user;
+//    }
+//
+//    @DeleteMapping("users/{userId}")
+//    public String delete(@PathVariable(name = "userId") Long userId) {
+//        User user = userRepository.findById(userId).
+//                orElseThrow(() -> new IllegalArgumentException("not found - " + userId));
+//        userRepository.delete(user);
+//
+//        return "회원삭제 완료";
+//    }
 
 }
