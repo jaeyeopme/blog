@@ -5,26 +5,28 @@ import com.springboot.blog.entity.UserRole;
 import com.springboot.blog.repository.UserRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.util.List;
 
-@RestController
-public class DummyControllerTest {
+@RequestMapping("users")
+@Controller
+public class UserController {
 
     private final UserRepository userRepository;
 
-    public DummyControllerTest(UserRepository userRepository) {
+    public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    @GetMapping("users")
+    @GetMapping("/")
     public List<User> findAll(@PageableDefault(size = 2, sort = "id") Pageable pageable) {
         return userRepository.findAll(pageable).getContent();
     }
 
-    @GetMapping("users/{userId}")
+    @GetMapping("/{userId}")
     public User findById(@PathVariable("userId") Long userId) {
         User user = userRepository.findById(userId).
                 orElseThrow(() -> new IllegalArgumentException("not found - " + userId));
@@ -32,7 +34,7 @@ public class DummyControllerTest {
         return user;
     }
 
-    @PostMapping("users")
+    @PostMapping("/")
     public String save(@RequestBody User user) {
         user.setRole(UserRole.ROLE_USER);
         userRepository.save(user);
@@ -41,7 +43,7 @@ public class DummyControllerTest {
     }
 
     @Transactional
-    @PutMapping("users/{userId}")
+    @PutMapping("/{userId}")
     public User update(@RequestBody User requestUser, @PathVariable(name = "userId") Long userId) {
         User user = userRepository.findById(userId).
                 orElseThrow(() -> new IllegalArgumentException("not found - " + userId));
