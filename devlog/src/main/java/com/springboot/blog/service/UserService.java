@@ -1,8 +1,8 @@
 package com.springboot.blog.service;
 
+import com.springboot.blog.api.ApiResponse;
 import com.springboot.blog.entity.User;
 import com.springboot.blog.repository.UserRepository;
-import com.springboot.blog.vo.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -20,23 +20,29 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public ResponseEntity<Response> join(User user) {
+    public ResponseEntity<ApiResponse> join(User user) {
         try {
             userRepository.save(user);
         } catch (Exception e) {
             throw new RuntimeException("Email is invalid or already taken");
         }
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        HttpStatus ok = HttpStatus.OK;
+        ApiResponse success = new ApiResponse(ok, "Welcome to Blog", System.currentTimeMillis());
+
+        return new ResponseEntity<>(success, ok);
     }
 
-    public ResponseEntity<Response> login(User user, HttpSession session) {
+    public ResponseEntity<ApiResponse> login(User user, HttpSession session) {
         User principal = userRepository.findByEmailAndPassword(user.getEmail(), user.getPassword()).
                 orElseThrow(() -> new RuntimeException("Incorrect username or password."));
 
         session.setAttribute("principal", principal);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        HttpStatus ok = HttpStatus.OK;
+        ApiResponse success = new ApiResponse(ok, "success", System.currentTimeMillis());
+
+        return new ResponseEntity<>(success, ok);
     }
 
 }

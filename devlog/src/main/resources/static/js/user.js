@@ -18,9 +18,10 @@ let index = {
             dataType: 'json',
             contentType: 'application/json; charset=utf-8'
         }).done(function (response) {
-            console.log(response)
+            alert(response.message);
         }).fail(function (error) {
-            console.log(error)
+            // error body message (Object -> Json)
+            alert(error.responseJSON.message)
         });
     }
 }
