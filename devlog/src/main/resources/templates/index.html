@@ -1,27 +1,38 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
-    <div th:replace="fragments/common :: head"/>
+
+    <div th:replace="fragments/common :: head"></div>
+
     <title>Blog</title>
 </head>
 <body>
 
-<div th:replace="fragments/common :: header"/>
+<div th:replace="fragments/common :: header"></div>
 
 <br>
 
 <div class="container">
 
-    <div class="card m-2">
-        <div class="card-body">
-            <h4 class="card-title">Title</h4>
-            <a class="btn btn-primary" href="#">Detail</a>
+    <div class="card-deck row row-cols-1 row-cols-md-3">
+        <div class="col mb-4">
+            <div class="card h-100">
+                <img alt="..." class="card-img-top" th:src="@{images/space.jpg}">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">This is a <code>wider</code> card with supporting text below as a natural lead-in to
+                        additional content. This content is a little bit longer.</p>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">Last updated 3 mins ago</small>
+                </div>
+            </div>
         </div>
     </div>
 
 </div>
 
-<div th:replace="fragments/common :: footer"/>
+<div th:replace="fragments/common :: footer"></div>
 
 </body>
 </html>

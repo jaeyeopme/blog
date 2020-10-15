@@ -9,9 +9,19 @@ let index = {
             username: $('#username').val(),
             password: $('#password').val(),
             email: $('#email').val()
-        }
+        };
 
-        $.ajax().done().fail();
+        $.ajax({
+            url: '/blog/api/users',
+            type: 'POST',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8'
+        }).done(function (response) {
+            console.log(response)
+        }).fail(function (error) {
+            console.log(error)
+        });
     }
 }
 

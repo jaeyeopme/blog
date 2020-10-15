@@ -25,13 +25,13 @@ public class User {
     private UserRole role;
 
     @Column(unique = true, nullable = false, length = 45)
+    private String email;
+
+    @Column(nullable = false, length = 45)
     private String username;
 
     @Column(nullable = false, length = 68)
     private String password;
-
-    @Column(nullable = false, length = 45)
-    private String email;
 
     @CreationTimestamp
     private Timestamp createdAt;
