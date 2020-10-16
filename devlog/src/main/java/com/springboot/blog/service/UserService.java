@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Transactional
 @Service
@@ -34,10 +35,23 @@ public class UserService {
     }
 
     public ResponseEntity<ApiResponse> login(User user, HttpSession session) {
-        User principal = userRepository.findByEmailAndPassword(user.getEmail(), user.getPassword()).
-                orElseThrow(() -> new RuntimeException("Incorrect username or password."));
+        User principal = userRepository.findByEmailAndPassword(user.getEmail(), user.getPassword())
+                .orElseThrow(() -> new RuntimeException("Incorrect username or password."));
 
         session.setAttribute("principal", principal);
+
+        HttpStatus ok = HttpStatus.OK;
+        ApiResponse success = new ApiResponse(ok, "success", System.currentTimeMillis());
+
+        return new ResponseEntity<>(success, ok);
+    }
+
+    public ResponseEntity<ApiResponse> validationEmail(String email) {
+        Optional<User> findUser = userRepository.findByEmail(email);
+
+        if (findUser.isPresent()) {
+            throw new RuntimeException("error");
+        }
 
         HttpStatus ok = HttpStatus.OK;
         ApiResponse success = new ApiResponse(ok, "success", System.currentTimeMillis());
