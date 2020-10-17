@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:th="https://www.thymeleaf.org">
 <head>
     <div th:replace="layout/default :: head"></div>
     <title>Blog</title>
@@ -13,12 +14,13 @@
 <div class="container">
     <h1 sec:authentication="name"></h1>
     <div class="card-deck row row-cols-1 row-cols-md-3">
-        <div class="col mb-4">
+        <div class="col mb-4" th:each="board: ${boards}">
             <div class="card h-100">
                 <img alt="..." class="card-img-top" th:src="@{images/space.jpg}">
                 <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">This is a <code>wider</code> card with supporting text below as a natural lead-in to
+                    <h5 class="card-title" th:text="${board.title}">Card title</h5>
+                    <p class="card-text" th:utext="${board.content}">This is a <code>wider</code> card with supporting
+                        text below as a natural lead-in to
                         additional content. This content is a little bit longer.</p>
                 </div>
                 <div class="card-footer">
@@ -28,9 +30,7 @@
         </div>
     </div>
 
-</div>
-
-<div th:replace="layout/default :: footer"></div>
+    <div th:replace="layout/default :: footer"></div>
 
 </body>
 </html>
