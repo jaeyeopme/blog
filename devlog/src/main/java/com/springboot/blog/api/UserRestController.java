@@ -5,6 +5,8 @@ import com.springboot.blog.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
+
 @RestController
 public class UserRestController {
 
@@ -16,12 +18,12 @@ public class UserRestController {
 
     @PostMapping("users")
     public ResponseEntity<ApiResponse> join(@RequestBody User user) {
-        return userService.join(user);
+        return userService.save(user);
     }
 
     @GetMapping("users/{email}")
     public ResponseEntity<ApiResponse> validationEmail(@PathVariable String email) {
-        return userService.validationEmail(email.trim());
+        return userService.validationEmail(email);
     }
 
 //    @PostMapping("users/login")

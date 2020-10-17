@@ -6,6 +6,7 @@ import com.springboot.blog.entity.UserRole;
 import com.springboot.blog.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +25,7 @@ public class UserService {
     }
 
     @Transactional
-    public ResponseEntity<ApiResponse> join(User user) {
+    public ResponseEntity<ApiResponse> save(User user) {
         try {
             user.setRole(UserRole.ROLE_USER);
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
@@ -39,7 +40,21 @@ public class UserService {
         return new ResponseEntity<>(success, ok);
     }
 
-//    @Transactional(readOnly = true) // 정합성
+    @Transactional(readOnly = true)
+    public ResponseEntity<ApiResponse> validationEmail(String email) {
+        Optional<User> findUser = userRepository.findByEmail(email);
+
+        if (findUser.isPresent()) {
+            throw new UsernameNotFoundException("Email " + email + " is invalid or already taken");
+        }
+
+        HttpStatus ok = HttpStatus.OK;
+        ApiResponse success = new ApiResponse(ok, "Email " + email + " is available", System.currentTimeMillis());
+
+        return new ResponseEntity<>(success, ok);
+    }
+
+    //    @Transactional(readOnly = true) // 정합성
 //    public ResponseEntity<ApiResponse> login(User user, HttpSession httpSession) { // HttpSession -> AUTO DI
 //        User principal = userRepository.findByEmailAndPassword(user.getEmail(), user.getPassword())
 //                .orElseThrow(() -> new RuntimeException("Incorrect email or password."));
@@ -51,19 +66,5 @@ public class UserService {
 //
 //        return new ResponseEntity<>(success, ok);
 //    }
-
-    @Transactional(readOnly = true)
-    public ResponseEntity<ApiResponse> validationEmail(String email) {
-        Optional<User> findUser = userRepository.findByEmail(email);
-
-        if (findUser.isPresent()) {
-            throw new RuntimeException("Email " + email + " is invalid or already taken");
-        }
-
-        HttpStatus ok = HttpStatus.OK;
-        ApiResponse success = new ApiResponse(ok, "Email " + email + " is available", System.currentTimeMillis());
-
-        return new ResponseEntity<>(success, ok);
-    }
 
 }
