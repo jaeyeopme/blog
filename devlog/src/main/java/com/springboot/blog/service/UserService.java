@@ -35,18 +35,18 @@ public class UserService {
         return new ResponseEntity<>(success, ok);
     }
 
-    @Transactional(readOnly = true) // 정합성 ()
-    public ResponseEntity<ApiResponse> login(User user, HttpSession httpSession) {
-        User principal = userRepository.findByEmailAndPassword(user.getEmail(), user.getPassword())
-                .orElseThrow(() -> new RuntimeException("Incorrect email or password."));
-
-        httpSession.setAttribute("principal", principal);
-
-        HttpStatus ok = HttpStatus.OK;
-        ApiResponse success = new ApiResponse(ok, "success", System.currentTimeMillis());
-
-        return new ResponseEntity<>(success, ok);
-    }
+//    @Transactional(readOnly = true) // 정합성 ()
+//    public ResponseEntity<ApiResponse> login(User user, HttpSession httpSession) { // HttpSession -> AUTO DI
+//        User principal = userRepository.findByEmailAndPassword(user.getEmail(), user.getPassword())
+//                .orElseThrow(() -> new RuntimeException("Incorrect email or password."));
+//
+//        httpSession.setAttribute("principal", principal);
+//
+//        HttpStatus ok = HttpStatus.OK;
+//        ApiResponse success = new ApiResponse(ok, "success", System.currentTimeMillis());
+//
+//        return new ResponseEntity<>(success, ok);
+//    }
 
     @Transactional(readOnly = true)
     public ResponseEntity<ApiResponse> validationEmail(String email) {

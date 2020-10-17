@@ -25,18 +25,18 @@ let index = {
         };
 
         $.ajax({
-            url: '/blog/api/users/join',
+            url: '/api/users/join',
             type: 'POST',
             data: JSON.stringify(data),
             dataType: 'json',
             contentType: 'application/json; charset=utf-8'
         }).done(function (response) {
             alert(response.message);
-            location.href = '/blog';
+            location.href = '/';
         }).fail(function (error) {
             // error body message (Object -> Json)
             alert(error.responseJSON.message);
-            location.href = '/blog';
+            location.href = '/';
         });
     },
 
@@ -50,13 +50,13 @@ let index = {
         };
 
         $.ajax({
-            url: '/blog/api/users/login',
+            url: '/api/users/login',
             type: 'POST',
             data: JSON.stringify(data),
             dataType: 'json',
             contentType: 'application/json; charset=utf-8'
         }).done(function () {
-            location.href = '/blog';
+            location.href = '/';
         }).fail(function (error) {
             email.value = "";
             email.classList.add('is-invalid');
@@ -74,7 +74,7 @@ function joinFormValidate(target) {
         case 'email':
             if (target.checkValidity() && (target.value.indexOf(' ') === -1) && (target.value.indexOf('@') > 0)) {
                 $.ajax({
-                    url: '/blog/api/users/' + target.value,
+                    url: '/api/users/' + target.value,
                     type: 'GET'
                 }).done(function () {
                         target.classList.remove('is-invalid');

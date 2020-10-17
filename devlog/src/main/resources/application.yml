@@ -1,7 +1,3 @@
-server:
-  servlet:
-    context-path: /blog
-
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -12,7 +8,7 @@ spring:
   jpa:
     open-in-view: true # transaction!!
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
       # naming: physical-strategy: org.hibernate.boot.model.naming.SpringPhysicalNamingStrategy -> underscore (default)
       # naming: physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl -> original naming
       # use-new-id-generator-mappings: false -> @GeneratedValue(strategy = GenerationType.IDENTITY)
