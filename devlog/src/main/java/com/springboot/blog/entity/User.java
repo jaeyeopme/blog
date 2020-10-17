@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Entity
 public class User {
-
+    
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
