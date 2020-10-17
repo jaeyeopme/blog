@@ -4,6 +4,8 @@ import com.springboot.blog.repository.UserRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import javax.servlet.http.HttpSession;
+
 @Controller
 public class UserController {
 
@@ -22,6 +24,14 @@ public class UserController {
     public String loginForm() {
         return "user/login-form";
     }
+
+    @GetMapping("logout")
+    public String logout(HttpSession httpSession) {
+        httpSession.invalidate();
+        return "redirect:";
+    }
+
+
 
 //    @GetMapping("/")
 //    public List<User> findAll(@PageableDefault(size = 2, sort = "id") Pageable pageable) {
