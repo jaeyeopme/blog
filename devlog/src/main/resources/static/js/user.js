@@ -6,26 +6,22 @@ let index = {
             }
         });
 
-        $('#btn-login').on('click', () => {
-            if (document.getElementsByClassName('is-valid').length === 2) {
-                this.login();
-            }
-        });
+        // $('#btn-login').on('click', () => {
+        //     if (document.getElementsByClassName('is-valid').length === 2) {
+        //         this.login();
+        //     }
+        // });
     },
 
     join: function () {
-        let email = document.getElementById('email');
-        let password = document.getElementById('password');
-        let username = document.getElementById('username');
-
         let data = {
-            email: email.value,
-            password: password.value,
-            username: username.value
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value,
+            username: document.getElementById('username').value
         };
 
         $.ajax({
-            url: '/api/users/join',
+            url: 'users',
             type: 'POST',
             data: JSON.stringify(data),
             dataType: 'json',
@@ -50,7 +46,7 @@ let index = {
         };
 
         $.ajax({
-            url: '/api/users/login',
+            url: '/users/login',
             type: 'POST',
             data: JSON.stringify(data),
             dataType: 'json',
@@ -74,7 +70,7 @@ function joinFormValidate(target) {
         case 'email':
             if (target.checkValidity() && (target.value.indexOf(' ') === -1) && (target.value.indexOf('@') > 0)) {
                 $.ajax({
-                    url: '/api/users/' + target.value,
+                    url: 'users/' + target.value,
                     type: 'GET'
                 }).done(function () {
                         target.classList.remove('is-invalid');

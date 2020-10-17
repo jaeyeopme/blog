@@ -1,12 +1,10 @@
 package com.springboot.blog.api;
 
 import com.springboot.blog.entity.User;
-import com.springboot.blog.entity.UserRole;
 import com.springboot.blog.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/api")
 @RestController
 public class UserRestController {
 
@@ -16,10 +14,14 @@ public class UserRestController {
         this.userService = userService;
     }
 
-    @PostMapping("users/join")
+    @PostMapping("users")
     public ResponseEntity<ApiResponse> join(@RequestBody User user) {
-        user.setRole(UserRole.ROLE_USER);
         return userService.join(user);
+    }
+
+    @GetMapping("users/{email}")
+    public ResponseEntity<ApiResponse> validationEmail(@PathVariable String email) {
+        return userService.validationEmail(email.trim());
     }
 
 //    @PostMapping("users/login")
@@ -27,9 +29,5 @@ public class UserRestController {
 //        return userService.login(user, httpSession);
 //    }
 
-    @GetMapping("users/{email}")
-    public ResponseEntity<ApiResponse> validationEmail(@PathVariable String email) {
-        return userService.validationEmail(email.trim());
-    }
 
 }

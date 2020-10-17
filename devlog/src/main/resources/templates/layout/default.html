@@ -1,5 +1,6 @@
-<html lang="en" xmlns:th="https://www.thymeleaf.org">
-
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:th="https://www.thymeleaf.org">
 <head>
     <div th:fragment="head">
         <meta charset="UTF-8">
@@ -19,8 +20,8 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div class="collapse navbar-collapse" id="collapsibleNavbar" th:switch="${session.isEmpty()}">
-                <div th:case="${true}">
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <div sec:authorize="isAnonymous()">
                     <ul class="navbar-nav">
                         <li class="nav-item">
                             <a class="nav-link" th:href="@{/join}">Sign up</a>
@@ -30,7 +31,7 @@
                         </li>
                     </ul>
                 </div>
-                <div th:case="${false}">
+                <div sec:authorize="isAuthenticated()">
                     <ul class="navbar-nav">
                         <li class="nav-item">
                             <a class="nav-link" th:href="@{/write}">Write</a>
