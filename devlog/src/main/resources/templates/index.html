@@ -1,16 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       xmlns:th="https://www.thymeleaf.org">
-<head>
-    <div th:replace="layout/default :: head"></div>
-    <title>Blog</title>
-</head>
+<head th:replace="layout/default :: head('Blog')"/>
 <body>
-
-<div th:replace="layout/default :: header"></div>
-
+<header th:replace="layout/default :: header('index')"/>
 <br>
-
 <div class="container">
     <h1 sec:authentication="name"></h1>
     <div class="card-deck row row-cols-1 row-cols-md-3">
@@ -29,9 +23,8 @@
             </div>
         </div>
     </div>
-
-    <div th:replace="layout/default :: footer"></div>
-
+</div>
+<footer th:replace="layout/default :: footer"/>
 </body>
 </html>
 

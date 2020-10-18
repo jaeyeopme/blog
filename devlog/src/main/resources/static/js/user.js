@@ -72,10 +72,10 @@ function joinFormValidate(target) {
                 $.ajax({
                     url: 'users/' + target.value,
                     type: 'GET'
-                }).done(function () {
+                }).done(function (response) {
                         target.classList.remove('is-invalid');
                         target.classList.add('is-valid');
-                        document.getElementById('email-valid-feedback').innerText = "Email " + target.value + " is available";
+                        document.getElementById('email-valid-feedback').innerText = response.message;
                     }
                 ).fail(function (error) {
                     target.classList.remove('is-valid');

@@ -1,20 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
-<head>
-    <div th:replace="layout/default :: head"/>
-    <title>Sign in to Blog</title>
-</head>
+<head th:replace="layout/default :: head('Sign in to Blog')"/>
 <body>
-
-<div th:replace="layout/default :: header"/>
-
+<header th:replace="layout/default :: header('login')"/>
 <br>
-
 <div class="container">
     <form id="form-login" method="post" th:action="@{/users/login}">
         <div class="form-group">
             <label for="email">Email address:</label>
-            <input class="form-control" id="email" name="username" onblur="loginFormValidate(this)"
+            <input class="form-control" id="email" name="email" onblur="loginFormValidate(this)"
                    placeholder="Enter email" required th:classappend="${param.error} ? 'is-invalid'"
                    type="text">
         </div>
@@ -32,10 +26,8 @@
     </form>
     <button class="btn btn-primary" id="btn-login" type="submit">Sign in</button>
 </div>
-
-<div th:replace="layout/default :: footer"/>
-
-<script src="js/user.js"></script>
+<footer th:replace="layout/default :: footer"/>
+<script th:src="@{/js/user.js}"></script>
 </body>
 </html>
 

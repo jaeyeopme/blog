@@ -1,17 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
-<head>
-    <div th:replace="layout/default :: head"></div>
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
-    <title>Write</title>
-</head>
+<head th:replace="layout/default :: head('Write')"/>
 <body>
-
-<div th:replace="layout/default :: header"></div>
-
+<header th:replace="layout/default :: header('write')"/>
 <br>
-
 <div class="container">
     <div class="form-group">
         <label for="title">Title:</label>
@@ -25,9 +17,7 @@
 
     <button class="btn btn-primary" id="btn-write">Submit</button>
 </div>
-
-<div th:replace="layout/default :: footer"></div>
-
+<footer th:replace="layout/default :: footer"/>
 <script>
     $('.summernote').summernote({
         placeholder: 'Write',
