@@ -1,6 +1,6 @@
 package com.springboot.blog.service;
 
-import com.springboot.blog.api.ApiResponse;
+import com.springboot.blog.controller.rest.ApiResponse;
 import com.springboot.blog.entity.Board;
 import com.springboot.blog.entity.User;
 import com.springboot.blog.repository.BoardRepository;
@@ -33,10 +33,10 @@ public class BoardService {
             throw new RuntimeException("server error");
         }
 
-        HttpStatus ok = HttpStatus.OK;
-        ApiResponse success = new ApiResponse(ok, "success", System.currentTimeMillis());
+        HttpStatus created = HttpStatus.CREATED;
+        ApiResponse success = new ApiResponse(created, "success", System.currentTimeMillis());
 
-        return new ResponseEntity<>(success, ok);
+        return new ResponseEntity<>(success, created);
     }
 
 }

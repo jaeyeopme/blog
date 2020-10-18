@@ -1,6 +1,6 @@
 package com.springboot.blog.exception;
 
-import com.springboot.blog.api.ApiResponse;
+import com.springboot.blog.controller.rest.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

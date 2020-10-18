@@ -1,4 +1,4 @@
-package com.springboot.blog.api;
+package com.springboot.blog.controller.rest;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

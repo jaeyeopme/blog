@@ -1,4 +1,4 @@
-package com.springboot.blog.api;
+package com.springboot.blog.controller.rest;
 
 import com.springboot.blog.entity.Board;
 import com.springboot.blog.entity.User;

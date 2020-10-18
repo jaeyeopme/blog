@@ -6,7 +6,6 @@
 <header th:replace="layout/default :: header('index')"/>
 <br>
 <div class="container">
-    <h1 sec:authentication="name"></h1>
     <div class="card-deck row row-cols-1 row-cols-md-3">
         <div class="col mb-4" th:each="board: ${boards}">
             <div class="card h-100">
@@ -18,7 +17,7 @@
                         additional content. This content is a little bit longer.</p>
                 </div>
                 <div class="card-footer">
-                    <small class="text-muted">Last updated 3 mins ago</small>
+                    <small class="text-muted" th:text="${board.getUser().getUsername()}">Last updated 3 mins ago</small>
                 </div>
             </div>
         </div>

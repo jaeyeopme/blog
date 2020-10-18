@@ -1,21 +1,21 @@
 package com.springboot.blog.service;
 
-import com.springboot.blog.api.ApiResponse;
+import com.springboot.blog.controller.rest.ApiResponse;
 import com.springboot.blog.entity.User;
 import com.springboot.blog.entity.UserRole;
 import com.springboot.blog.repository.UserRepository;
+import netscape.security.ForbiddenTargetException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.management.InstanceAlreadyExistsException;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -38,17 +38,18 @@ public class UserService implements UserDetailsService {
             throw new RuntimeException("server error");
         }
 
-        HttpStatus ok = HttpStatus.OK;
-        ApiResponse success = new ApiResponse(ok, "Welcome to Blog", System.currentTimeMillis());
+        HttpStatus created = HttpStatus.CREATED;
+        ApiResponse success = new ApiResponse(created, "Welcome to Blog", System.currentTimeMillis());
 
 
-        return new ResponseEntity<>(success, ok);
+        return new ResponseEntity<>(success, created);
     }
 
     @Transactional(readOnly = true)
     public ResponseEntity<ApiResponse> validationEmail(String email) {
         if (userRepository.findByEmail(email).isPresent()) {
-            throw new UsernameNotFoundException("Email " + email + " is already taken");
+            throw new RuntimeException
+                    ("Email " + email + " is already taken");
         }
 
         HttpStatus ok = HttpStatus.OK;
@@ -57,8 +58,8 @@ public class UserService implements UserDetailsService {
         return new ResponseEntity<>(success, ok);
     }
 
-    @Override // set spring security session
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    @Override // set spring security session (login)
+    public UserDetails loadUserByUsername(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Email " + email + " is not found"));
 //        List<GrantedAuthority> authorities = new ArrayList<>();
 //        authorities.add(new SimpleGrantedAuthority(String.valueOf(user.getRole())));
