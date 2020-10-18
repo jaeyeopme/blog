@@ -5,8 +5,6 @@ import com.springboot.blog.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
-
 @RestController
 public class UserRestController {
 

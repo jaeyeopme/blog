@@ -1,13 +1,13 @@
 package com.springboot.blog.api;
 
-import com.springboot.blog.config.auth.PrincipalDetail;
-import com.springboot.blog.config.auth.PrincipalDetailService;
 import com.springboot.blog.entity.Board;
 import com.springboot.blog.entity.User;
 import com.springboot.blog.service.BoardService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class BoardRestController {
@@ -19,8 +19,8 @@ public class BoardRestController {
     }
 
     @PostMapping("boards")
-    public ResponseEntity<ApiResponse> save(@RequestBody Board board, @AuthenticationPrincipal PrincipalDetail principalDetail) {
-        return boardService.save(board, principalDetail.getUser());
+    public ResponseEntity<ApiResponse> save(@RequestBody Board board, @AuthenticationPrincipal User user) {
+        return boardService.save(board, user);
     }
 
 }

@@ -1,12 +1,9 @@
 package com.springboot.blog.controller;
 
-import com.springboot.blog.entity.Board;
 import com.springboot.blog.service.BoardService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import java.util.List;
 
 @Controller
 public class BoardController {
@@ -19,8 +16,7 @@ public class BoardController {
 
     @GetMapping("/")
     public String index(Model model) {
-        List<Board> boards = boardService.findAll();
-        model.addAttribute("boards", boards);
+        model.addAttribute("boards", boardService.findAll());
         return "index";
     }
 
@@ -28,4 +24,5 @@ public class BoardController {
     public String writeForm() {
         return "board/write-form";
     }
+
 }

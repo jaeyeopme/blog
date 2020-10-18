@@ -115,28 +115,13 @@ function joinFormValidate(target) {
 }
 
 function loginFormValidate(target) {
-
-    switch (target.id) {
-        case 'email':
-            if (target.checkValidity() && (target.value.indexOf(' ') < 0) && (target.value.indexOf('@') > 0)) {
-                target.classList.remove('is-invalid');
-                target.classList.add('is-valid');
-            } else {
-                target.classList.remove('is-valid');
-                target.classList.add('is-invalid');
-            }
-            break;
-        case 'password':
-            if (target.checkValidity() && (target.value.indexOf(' ')) < 0) {
-                target.classList.remove('is-invalid');
-                target.classList.add('is-valid');
-            } else {
-                target.classList.remove('is-valid');
-                target.classList.add('is-invalid');
-            }
-            break;
+    if (target.checkValidity()) {
+        target.classList.remove('is-invalid');
+        target.classList.add('is-valid');
+    } else {
+        target.classList.remove('is-valid');
+        target.classList.add('is-invalid');
     }
-
 }
 
 index.init();
