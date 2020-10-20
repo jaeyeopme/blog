@@ -27,14 +27,14 @@ public class BoardController {
 
     @GetMapping("write")
     public String writeForm() {
-        return "board/write-form";
+        return "board/board-write-form";
     }
 
     @GetMapping("modify/{boardId}")
     public String modifyForm(Model model, @PathVariable Long boardId) {
         Board board = boardService.findById(boardId);
         model.addAttribute("board", board);
-        return "board/modify-form";
+        return "board/board-modify-form";
     }
 
     @GetMapping("detail/{boardId}")

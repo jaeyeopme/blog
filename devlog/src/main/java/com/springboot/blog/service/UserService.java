@@ -54,6 +54,18 @@ public class UserService implements UserDetailsService {
         return new ResponseEntity<>(success, ok);
     }
 
+    @Transactional
+    public ResponseEntity<ApiResponse> update(User user) {
+        User found_user = userRepository.findByEmail(user.getEmail()).orElseThrow(() -> new IllegalArgumentException("not found user"));
+        found_user.setUsername(user.getUsername());
+        found_user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        HttpStatus ok = HttpStatus.OK;
+        ApiResponse success = new ApiResponse(ok, "success", System.currentTimeMillis());
+
+        return new ResponseEntity<>(success, ok);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Email " + email + " is not found"));

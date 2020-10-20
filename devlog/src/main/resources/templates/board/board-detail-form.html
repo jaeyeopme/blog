@@ -12,7 +12,7 @@
         <span th:text="${board.title}"></span>
         <span>
             <button class="btn btn-outline-secondary" onclick="history.back()" type="button">Back</button>
-            <button class="btn btn-outline-info" id="btn-modify"
+            <button class="btn btn-outline-info" id="btn-board-modify"
                     th:if="${#authentication.principal.id} == ${board.user.id}"
                     th:onclick="'location.href = \'' + @{'/modify/' + ${board.id}} + '\''" type="button">Modify</button>
             <button class="btn btn-outline-danger" id="btn-delete"

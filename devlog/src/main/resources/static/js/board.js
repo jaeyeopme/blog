@@ -1,7 +1,7 @@
 let index = {
     init: function () {
         $('#btn-write').on('click', () => {
-            if (document.getElementsByClassName('is-valid').length === 1) {
+            if (document.getElementsByClassName('is-valid').length === 2) {
                 this.write();
             }
         });
@@ -12,9 +12,9 @@ let index = {
             }
         });
 
-        $('#btn-modify').on('click', () => {
-            if (document.getElementsByClassName('is-valid').length === 1 && confirm("modify?")) {
-                this.modify();
+        $('#btn-board-modify').on('click', () => {
+            if (document.getElementsByClassName('is-valid').length === 2 && confirm("modify?")) {
+                this.boardModify();
             }
         });
 
@@ -59,7 +59,7 @@ let index = {
         });
     },
 
-    modify: function () {
+    boardModify: function () {
         let data = {
             id: document.getElementById('id').value,
             title: document.getElementById('title').value,

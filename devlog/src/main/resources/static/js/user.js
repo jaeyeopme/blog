@@ -1,14 +1,14 @@
 let index = {
     init: function () {
-        $('#btn-join').on('click', () => {
-            if (document.getElementsByClassName('is-valid').length === 3) {
+        $('#btn-user-join').on('click', () => {
+            if (document.getElementsByClassName('is-valid').length === 4) {
                 this.join();
             }
         });
 
-        $('#btn-login').on('click', () => {
+        $('#btn-user-modify').on('click', () => {
             if (document.getElementsByClassName('is-valid').length === 2) {
-                document.getElementById('form-login').submit();
+                this.userModify();
             }
         });
     },
@@ -22,13 +22,36 @@ let index = {
 
         $.ajax({
             url: 'users',
-            type: 'POST',
+            type: 'post',
             data: JSON.stringify(data),
             dataType: 'json',
             contentType: 'application/json; charset=utf-8'
         }).done(function (response) {
             alert(response.message);
             location.href = '/';
+        }).fail(function (error) {
+            // error body message (Object -> Json)
+            alert(error.responseJSON.message);
+            location.href = '/';
+        });
+    },
+
+    userModify: function () {
+        let data = {
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value,
+            username: document.getElementById('username').value
+        };
+
+        $.ajax({
+            url: 'users',
+            type: 'put',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8'
+        }).done(function (response) {
+            alert(response.message);
+            location.href = '/logout';
         }).fail(function (error) {
             // error body message (Object -> Json)
             alert(error.responseJSON.message);
@@ -88,7 +111,7 @@ function joinFormValidate(target) {
 
 }
 
-function loginFormValidate(target) {
+function formValidate(target) {
     if (target.checkValidity()) {
         target.classList.remove('is-invalid');
         target.classList.add('is-valid');

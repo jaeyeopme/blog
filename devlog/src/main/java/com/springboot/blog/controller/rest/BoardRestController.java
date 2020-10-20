@@ -23,7 +23,6 @@ public class BoardRestController {
 
     @PutMapping("boards")
     public ResponseEntity<ApiResponse> update(@RequestBody Board board) {
-        System.out.println(board.toString());
         return boardService.update(board);
     }
 

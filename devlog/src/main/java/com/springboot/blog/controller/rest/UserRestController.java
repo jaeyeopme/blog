@@ -24,4 +24,9 @@ public class UserRestController {
         return userService.validationEmail(email);
     }
 
+    @PutMapping("users")
+    public ResponseEntity<ApiResponse> update(@RequestBody User user) {
+        return userService.update(user);
+    }
+
 }
