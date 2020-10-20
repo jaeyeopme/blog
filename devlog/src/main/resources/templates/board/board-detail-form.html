@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <head th:replace="layout/default :: head('Detail')"/>
+    <title>Title</title>
+</head>
+<body>
+<header th:replace="layout/default :: header('Detail')"/>
+<br>
+<div class="container">
+    <h1 class="d-flex justify-content-between">
+        <span th:text="${board.title}"></span>
+        <span>
+            <button class="btn btn-outline-secondary" onclick="history.back()" type="button">Back</button>
+            <button class="btn btn-outline-info" id="btn-modify"
+                    th:if="${#authentication.principal.id} == ${board.user.id}"
+                    th:onclick="'location.href = \'' + @{'/modify/' + ${board.id}} + '\''" type="button">Modify</button>
+            <button class="btn btn-outline-danger" id="btn-delete"
+                    th:if="${#authentication.principal.id} == ${board.user.id}"
+                    type="button">Delete</button>
+        </span>
+    </h1>
+    <span style="font-weight: bold; font-size: 20px" th:text="${board.user.username}"></span>
+    &nbsp;·&nbsp;
+    <span th:text="${board.createdAt}"></span>
+    <hr>
+    <div th:utext="${board.content}"></div>
+    <hr>
+    <input id="id" th:value="${board.id}" type="hidden">
+</div>
+<footer th:replace="layout/default :: footer"/>
+<script th:src="@{/js/board.js}"></script>
+</body>
+</html>

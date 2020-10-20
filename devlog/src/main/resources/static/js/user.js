@@ -34,34 +34,8 @@ let index = {
             alert(error.responseJSON.message);
             location.href = '/';
         });
-    },
+    }
 
-    // login: function () {
-    //     let email = document.getElementById('email');
-    //     let password = document.getElementById('password');
-    //
-    //     let data = {
-    //         email: email.value,
-    //         password: password.value
-    //     };
-    //
-    //     $.ajax({
-    //         url: '/users/login',
-    //         type: 'POST',
-    //         data: JSON.stringify(data),
-    //         dataType: 'json',
-    //         contentType: 'application/json; charset=utf-8'
-    //     }).done(function () {
-    //         location.href = '/';
-    //     }).fail(function (error) {
-    //         email.value = "";
-    //         email.classList.add('is-invalid');
-    //         document.getElementById('email-invalid-feedback').innerText = error.responseJSON.message;
-    //         password.value = "";
-    //         password.classList.add('is-invalid');
-    //         document.getElementById('password-invalid-feedback').innerText = error.responseJSON.message;
-    //     });
-    // }
 }
 
 function joinFormValidate(target) {

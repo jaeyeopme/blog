@@ -5,9 +5,7 @@ import com.springboot.blog.entity.User;
 import com.springboot.blog.service.BoardService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class BoardRestController {
@@ -21,6 +19,17 @@ public class BoardRestController {
     @PostMapping("boards")
     public ResponseEntity<ApiResponse> save(@RequestBody Board board, @AuthenticationPrincipal User user) {
         return boardService.save(board, user);
+    }
+
+    @PutMapping("boards")
+    public ResponseEntity<ApiResponse> update(@RequestBody Board board) {
+        System.out.println(board.toString());
+        return boardService.update(board);
+    }
+
+    @DeleteMapping("boards/{boardsId}")
+    public ResponseEntity<ApiResponse> deleteById(@PathVariable Long boardsId) {
+        return boardService.deleteById(boardsId);
     }
 
 }

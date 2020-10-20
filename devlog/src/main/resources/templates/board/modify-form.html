@@ -1,25 +1,28 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
-<head th:replace="layout/default :: head('Write')"/>
+<head th:replace="layout/default :: head('Modify')"/>
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 <body>
-<header th:replace="layout/default :: header('write')"/>
+<header th:replace="layout/default :: header('modify')"/>
 <br>
 <div class="container">
     <div class="form-group">
         <label for="title">Title:</label>
-        <input class="form-control" id="title" onblur="writeFormValidate(this)" placeholder="Enter title" required>
+        <input class="form-control is-valid" id="title" onblur="writeFormValidate(this)" placeholder="Enter title"
+               required
+               th:value="${board.title}">
     </div>
 
     <div class="form-group">
         <label for="content">Content:</label>
         <textarea class="form-control summernote" id="content"
                   placeholder="Enter content"
-                  rows="5"></textarea>
+                  rows="5" th:utext="${board.content}"></textarea>
     </div>
+    <button class="btn btn-primary" id="btn-modify">Modify</button>
     <hr>
-    <button class="btn btn-primary" id="btn-write">Submit</button>
+    <input id="id" th:value="${board.id}" type="hidden">
 </div>
 <footer th:replace="layout/default :: footer"/>
 <script>
@@ -28,7 +31,6 @@
         tabsize: 10,
         height: 500,
         disableResizeEditor: true,
-        focus: true,
         toolbar: [
             ['style', ['style']],
             ['font', ['bold', 'underline', 'clear']],

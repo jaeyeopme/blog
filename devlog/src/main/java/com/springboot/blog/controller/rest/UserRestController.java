@@ -24,10 +24,4 @@ public class UserRestController {
         return userService.validationEmail(email);
     }
 
-//    @PostMapping("users/login")
-//    public ResponseEntity<ApiResponse> login(@RequestBody User user, HttpSession httpSession) {
-//        return userService.login(user, httpSession);
-//    }
-
-
 }

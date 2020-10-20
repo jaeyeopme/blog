@@ -22,11 +22,14 @@ public class Board {
     @Id
     private Long id;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String title;
 
-    @Lob // big data
+    @Lob
     private String content;
+
+//    @Lob
+//    private String thumbnail;
 
     @ColumnDefault("0")
     private Long views;

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+<html lang="en"
       xmlns:th="https://www.thymeleaf.org">
 <head th:replace="layout/default :: head('Blog')"/>
 <body>
@@ -7,49 +7,36 @@
 <br>
 <div class="container">
     <div class="card-deck row row-cols-1 row-cols-md-3">
-        <div class="col mb-4" th:each="board: ${boards}">
-            <div class="card h-100">
-                <img alt="..." class="card-img-top" th:src="@{images/space.jpg}">
+        <div class="col mb-4" th:each="board: ${boards.content}">
+            <div class="card" style="cursor: pointer"
+                 th:onclick="'location.href = \'' + @{'/detail/' + ${board.id}} + '\''">
+                <!--                <img alt="..." class="card-img-top" th:src="@{images/space.jpg}">-->
                 <div class="card-body">
-                    <h5 class="card-title" th:text="${board.title}">Card title</h5>
-                    <p class="card-text" th:utext="${board.content}">This is a <code>wider</code> card with supporting
-                        text below as a natural lead-in to
-                        additional content. This content is a little bit longer.</p>
+                    <h1 class="card-title" th:text="${board.title}">
+                        Card title
+                    </h1>
+                    <!--                    <p class="card-text" th:utext="${board.content}">This is a <code>wider</code> card with supporting-->
+                    <!--                        text below as a natural lead-in to-->
+                    <!--                        additional content. This content is a little bit longer.</p>-->
                 </div>
                 <div class="card-footer">
-                    <small class="text-muted" th:text="${board.getUser().getUsername()}">Last updated 3 mins ago</small>
-                </div>
-            </div>
-        </div>
-        <div class="col mb-4">
-            <div class="card h-100">
-                <img alt="..." class="card-img-top" th:src="@{images/space.jpg}">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">This is a <code>wider</code> card with supporting
-                        text below as a natural lead-in to
-                        additional content. This content is a little bit longer.</p>
-                </div>
-                <div class="card-footer">
-                    <small class="text-muted">Last updated 3 mins ago</small>
-                </div>
-            </div>
-        </div>
-        <div class="col mb-4">
-            <div class="card h-100">
-                <img alt="..." class="card-img-top" th:src="@{images/space.jpg}">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">This is a <code>wider</code> card with supporting
-                        text below as a natural lead-in to
-                        additional content. This content is a little bit longer.</p>
-                </div>
-                <div class="card-footer">
-                    <small class="text-muted">Last updated 3 mins ago</small>
+                    <small class="text-muted" th:text="${board.createdAt}">Last updated 3 mins ago</small>
                 </div>
             </div>
         </div>
     </div>
+    <ul class="pagination justify-content-center" th:if="${boards.totalPages > 0}">
+        <li class="page-item" th:classappend="${boards.first} ? 'disabled'">
+            <a class="page-link" th:href="@{/(page=${boards.number - 1})}">Previous</a>
+        </li>
+        <li class="page-item" th:classappend="${boards.number == i} ? 'disabled'"
+            th:each="i : ${#numbers.sequence(0, boards.totalPages - 1)}">
+            <a class="page-link" th:href="@{/(page=${i})}" th:text="${i + 1}"></a>
+        </li>
+        <li class="page-item" th:classappend="${boards.last} ? 'disabled'">
+            <a class="page-link" th:href="@{/(page=${boards.number + 1})}">Next</a>
+        </li>
+    </ul>
 </div>
 <footer th:replace="layout/default :: footer"/>
 </body>
