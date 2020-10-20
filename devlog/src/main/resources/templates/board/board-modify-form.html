@@ -6,7 +6,7 @@
 <body>
 <header th:replace="layout/default :: header('modify')"/>
 <br>
-<div class="container">
+<div class="container w-50 p-3">
     <div class="form-group">
         <label for="title">Title:</label>
         <input class="form-control is-valid" id="title" onblur="writeFormValidate(this)" placeholder="Enter title"
@@ -20,9 +20,14 @@
                   placeholder="Enter content"
                   rows="5" th:utext="${board.content}"></textarea>
     </div>
-    <button class="btn btn-primary" id="btn-modify">Modify</button>
+
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" id="btn-board-modify">Modify</button>
+    </div>
+
     <hr>
-    <input id="id" th:value="${board.id}" type="hidden">
+
+    <input id="boardId" th:value="${board.id}" type="hidden">
 </div>
 <footer th:replace="layout/default :: footer"/>
 <script>

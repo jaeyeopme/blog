@@ -41,7 +41,8 @@ public class Board {
     @JoinColumn(name = "userId")
     private User user;
 
-    @OneToMany(mappedBy = "board", fetch = FetchType.EAGER) // default fetch = FetchType.LAZY
+    @OrderBy(value = "id desc")
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY) // default fetch = FetchType.LAZY
     private List<Reply> replies;
 
 }

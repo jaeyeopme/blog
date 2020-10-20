@@ -4,7 +4,7 @@
 <body>
 <header th:replace="layout/default :: header('setting')"/>
 <br>
-<div class="container">
+<div class="container w-50 p-3">
     <div class="form-group">
         <label for="email">Email address:</label>
         <input class="form-control" id="email" placeholder="Enter email"
@@ -29,7 +29,10 @@
         <div class="valid-feedback" id="password-valid-feedback"></div>
         <div class="invalid-feedback" id="password-invalid-feedback"></div>
     </div>
-    <button class="btn btn-primary" id="btn-user-modify">Modify</button>
+    <br>
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" id="btn-user-modify">Modify</button>
+    </div>
 </div>
 <footer th:replace="layout/default :: footer"/>
 <script th:src="@{/js/user.js}"></script>

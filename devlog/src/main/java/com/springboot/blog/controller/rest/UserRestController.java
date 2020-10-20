@@ -20,8 +20,8 @@ public class UserRestController {
     }
 
     @GetMapping("users/{email}")
-    public ResponseEntity<ApiResponse> validationEmail(@PathVariable String email) {
-        return userService.validationEmail(email);
+    public ResponseEntity<ApiResponse> findByEmail(@PathVariable String email) {
+        return userService.findByEmail(email);
     }
 
     @PutMapping("users")

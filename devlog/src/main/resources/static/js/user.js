@@ -1,7 +1,7 @@
 let index = {
     init: function () {
         $('#btn-user-join').on('click', () => {
-            if (document.getElementsByClassName('is-valid').length === 4) {
+            if (document.getElementsByClassName('is-valid').length === 3) {
                 this.join();
             }
         });

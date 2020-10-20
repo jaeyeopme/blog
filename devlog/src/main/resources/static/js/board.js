@@ -1,27 +1,30 @@
 let index = {
     init: function () {
-        $('#btn-write').on('click', () => {
-            if (document.getElementsByClassName('is-valid').length === 2) {
-                this.write();
+        $('#btn-board-write').on('click', () => {
+            if (document.getElementsByClassName('is-valid').length === 1) {
+                this.boardWrite();
             }
         });
 
-        $('#btn-delete').on('click', () => {
+        $('#btn-board-delete').on('click', () => {
             if (confirm("delete?")) {
-                this.deleteById();
+                this.boardDelete();
             }
         });
 
         $('#btn-board-modify').on('click', () => {
-            if (document.getElementsByClassName('is-valid').length === 2 && confirm("modify?")) {
+            if (document.getElementsByClassName('is-valid').length === 1 && confirm("modify?")) {
                 this.boardModify();
             }
         });
 
+        $('#btn-reply-write').on('click', () => {
+            this.replyWrite();
+        });
+
     },
 
-
-    write: function () {
+    boardWrite: function () {
         let data = {
             title: document.getElementById('title').value,
             content: document.getElementById('content').value
@@ -43,15 +46,14 @@ let index = {
         });
     },
 
-    deleteById: function () {
-        let boardId = document.getElementById('id').value;
+    boardDelete: function () {
+        let boardId = document.getElementById('boardId').value;
 
         $.ajax({
             url: '/boards/' + boardId,
             type: 'delete',
             dataType: 'json',
-        }).done(function (response) {
-            alert(response.message);
+        }).done(function () {
             location.href = '/';
         }).fail(function (error) {
             alert(error.responseJSON.message);
@@ -61,7 +63,7 @@ let index = {
 
     boardModify: function () {
         let data = {
-            id: document.getElementById('id').value,
+            id: document.getElementById('boardId').value,
             title: document.getElementById('title').value,
             content: document.getElementById('content').value
         };
@@ -72,9 +74,28 @@ let index = {
             data: JSON.stringify(data),
             dataType: 'json',
             contentType: 'application/json; charset=utf-8'
-        }).done(function (response) {
-            alert(response.message);
+        }).done(function () {
             location.href = '/detail/' + data.id;
+        }).fail(function (error) {
+            alert(error.responseJSON.message);
+            location.href = '/';
+        });
+    },
+
+    replyWrite: function () {
+        let boardId = document.getElementById('boardId').value;
+        let data = {
+            content: document.getElementById('reply-write-form').value
+        };
+
+        $.ajax({
+            url: '/replies/' + boardId,
+            type: 'post',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8'
+        }).done(function () {
+            location.href = '/detail/' + boardId;
         }).fail(function (error) {
             alert(error.responseJSON.message);
             location.href = '/';

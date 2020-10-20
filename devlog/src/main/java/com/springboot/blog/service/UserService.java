@@ -42,7 +42,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<ApiResponse> validationEmail(String email) {
+    public ResponseEntity<ApiResponse> findByEmail(String email) {
         if (userRepository.findByEmail(email).isPresent()) {
             throw new RuntimeException
                     ("Email " + email + " is already taken");

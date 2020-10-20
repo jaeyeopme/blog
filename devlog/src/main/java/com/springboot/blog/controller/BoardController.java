@@ -2,6 +2,7 @@ package com.springboot.blog.controller;
 
 import com.springboot.blog.entity.Board;
 import com.springboot.blog.service.BoardService;
+import com.springboot.blog.service.ReplyService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -14,9 +15,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class BoardController {
 
     private final BoardService boardService;
+    private final ReplyService replyService;
 
-    public BoardController(BoardService boardService) {
+    public BoardController(BoardService boardService, ReplyService replyService) {
         this.boardService = boardService;
+        this.replyService = replyService;
     }
 
     @GetMapping("/")

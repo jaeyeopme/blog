@@ -6,7 +6,7 @@
 <body>
 <header th:replace="layout/default :: header('write')"/>
 <br>
-<div class="container">
+<div class="container w-50 p-3">
     <div class="form-group">
         <label for="title">Title:</label>
         <input class="form-control" id="title" onblur="writeFormValidate(this)" placeholder="Enter title" required>
@@ -18,8 +18,12 @@
                   placeholder="Enter content"
                   rows="5"></textarea>
     </div>
+
     <hr>
-    <button class="btn btn-primary" id="btn-write">Submit</button>
+
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" id="btn-board-write">Write</button>
+    </div>
 </div>
 <footer th:replace="layout/default :: footer"/>
 <script>
@@ -28,7 +32,6 @@
         tabsize: 10,
         height: 500,
         disableResizeEditor: true,
-        focus: true,
         toolbar: [
             ['style', ['style']],
             ['font', ['bold', 'underline', 'clear']],

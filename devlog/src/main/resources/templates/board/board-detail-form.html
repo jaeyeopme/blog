@@ -7,28 +7,67 @@
 <body>
 <header th:replace="layout/default :: header('Detail')"/>
 <br>
-<div class="container">
-    <h1 class="d-flex justify-content-between">
-        <span th:text="${board.title}"></span>
+<div class="container w-50 p-3">
+
+    <h1 th:text="${board.title}"></h1>
+
+    <div class="d-flex justify-content-between">
         <span>
-            <button class="btn btn-outline-secondary" onclick="history.back()" type="button">Back</button>
-            <button class="btn btn-outline-info" id="btn-board-modify"
-                    th:if="${#authentication.principal.id} == ${board.user.id}"
-                    th:onclick="'location.href = \'' + @{'/modify/' + ${board.id}} + '\''" type="button">Modify</button>
-            <button class="btn btn-outline-danger" id="btn-delete"
-                    th:if="${#authentication.principal.id} == ${board.user.id}"
-                    type="button">Delete</button>
+            <span style="font-weight: bold; font-size: 16px" th:text="${board.user.username}"></span>
+            &nbsp;·&nbsp;
+            <span th:text="${board.createdAt}"></span>
         </span>
-    </h1>
-    <span style="font-weight: bold; font-size: 20px" th:text="${board.user.username}"></span>
-    &nbsp;·&nbsp;
-    <span th:text="${board.createdAt}"></span>
+        <span>
+            <button class="btn btn-secondary btn-sm" onclick="history.back()" type="button">Back</button>
+        <button class="btn btn-info btn-sm" id="btn-board-modify"
+                th:if="${#authentication.principal.id} == ${board.user.id}"
+                th:onclick="'location.href = \'' + @{'/modify/' + ${board.id}} + '\''" type="button">Modify
+        </button>
+        <button class="btn btn-danger btn-sm" id="btn-board-delete"
+                th:if="${#authentication.principal.id} == ${board.user.id}"
+                type="button">Delete
+        </button>
+        </span>
+    </div>
     <hr>
     <div th:utext="${board.content}"></div>
     <hr>
-    <input id="id" th:value="${board.id}" type="hidden">
+    <div style="font-weight: bold; font-size: 15px"
+         th:text="${board.replies.size()} + ' comments'"></div>
+    <br>
+    <textarea class="form-control" id="reply-write-form" placeholder="Enter Comment" rows="2"
+              style="overflow: hidden; resize: none;"></textarea>
+    <br>
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-success" id="btn-reply-write">submit</button>
+    </div>
+    <br>
+    <div th:each="reply : ${board.replies}">
+        <div class="d-flex justify-content-start" style="margin-bottom: 15px">
+            <div>
+                <span style="font-weight: bold; font-size: 16px; margin-right: 50px"
+                      th:text="${reply.user.username}">Jaeyeop</span>
+                <br>
+                <span style="font-size: 15px"><i th:text="${reply.createdAt}"> 2020-10-20 19:21:33.751</i></span>
+            </div>
+            <div style="margin: 9px 0 0 20px" th:if="${#authentication.principal.id} == ${reply.user.id}">
+                <button class="btn btn-primary btn-sm" style="height: 30px">modify</button>
+                <button class="btn btn-dark btn-sm" style="height: 30px">delete</button>
+            </div>
+        </div>
+        <div class="reply-modify-form" style="font-size: 17px;" th:text="${reply.content}"></div>
+        <hr>
+    </div>
+    <input id="boardId" th:value="${board.id}" type="hidden">
 </div>
 <footer th:replace="layout/default :: footer"/>
+<script>
+    $('#reply-write-form').on('input', function () {
+        this.style.height = 'auto';
+        this.style.height =
+            (this.scrollHeight) + 'px';
+    });
+</script>
 <script th:src="@{/js/board.js}"></script>
 </body>
 </html>
