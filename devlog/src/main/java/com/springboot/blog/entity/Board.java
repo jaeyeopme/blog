@@ -8,7 +8,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Builder
@@ -36,14 +36,15 @@ public class Board {
     private Long views;
 
     @CreationTimestamp
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 
     @ManyToOne // default fetch = FetchType.EAGER
     @JoinColumn(name = "userId")
     private User user;
 
     @OrderBy(value = "id desc")
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY) // default fetch = FetchType.LAZY
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    // default fetch = FetchType.LAZY
     private List<Reply> replies;
 
 }

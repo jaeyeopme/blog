@@ -22,14 +22,15 @@ public class BoardRestController {
         return boardService.save(board, file, user);
     }
 
+    // multipart/form-data -> @ModelAttribute
     @PutMapping("boards")
     public ResponseEntity<ApiResponse> update(@ModelAttribute Board board, @RequestPart(required = false) MultipartFile file) {
         return boardService.update(board, file);
     }
 
-    @DeleteMapping("boards/{boardsId}")
-    public ResponseEntity<ApiResponse> deleteById(@PathVariable Long boardsId) {
-        return boardService.deleteById(boardsId);
+    @DeleteMapping("boards/{id}")
+    public ResponseEntity<ApiResponse> deleteById(@PathVariable Long id) {
+        return boardService.deleteById(id);
     }
 
 }

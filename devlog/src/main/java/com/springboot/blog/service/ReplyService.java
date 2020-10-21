@@ -27,6 +27,7 @@ public class ReplyService {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new IllegalArgumentException("not fount board"));
         reply.setUser(user);
         reply.setBoard(board);
+
         try {
             replyRepository.save(reply);
         } catch (Exception e) {
@@ -37,5 +38,30 @@ public class ReplyService {
         ApiResponse success = new ApiResponse(created, "success", System.currentTimeMillis());
 
         return new ResponseEntity<>(success, created);
+    }
+
+    @Transactional
+    public ResponseEntity<ApiResponse> update(Reply reply) {
+        Reply found_reply = replyRepository.findById(reply.getId()).orElseThrow(() -> new IllegalArgumentException("not found reply"));
+        found_reply.setContent(reply.getContent());
+
+        HttpStatus ok = HttpStatus.OK;
+        ApiResponse success = new ApiResponse(ok, "success", System.currentTimeMillis());
+
+        return new ResponseEntity<>(success, ok);
+    }
+
+    @Transactional
+    public ResponseEntity<ApiResponse> deleteById(Long id) {
+        try {
+            replyRepository.deleteById(id);
+        } catch (Exception e) {
+            new IllegalArgumentException("not found reply");
+        }
+
+        HttpStatus ok = HttpStatus.OK;
+        ApiResponse success = new ApiResponse(ok, "success", System.currentTimeMillis());
+
+        return new ResponseEntity<>(success, ok);
     }
 }

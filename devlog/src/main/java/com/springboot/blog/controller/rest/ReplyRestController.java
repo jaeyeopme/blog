@@ -5,10 +5,7 @@ import com.springboot.blog.entity.User;
 import com.springboot.blog.service.ReplyService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ReplyRestController {
@@ -24,4 +21,13 @@ public class ReplyRestController {
         return replyService.save(boardId, user, reply);
     }
 
+    @PutMapping("replies")
+    public ResponseEntity<ApiResponse> update(@RequestBody Reply reply) {
+        return replyService.update(reply);
+    }
+
+    @DeleteMapping("replies/{id}")
+    public ResponseEntity<ApiResponse> delete(@PathVariable Long id) {
+        return replyService.deleteById(id);
+    }
 }

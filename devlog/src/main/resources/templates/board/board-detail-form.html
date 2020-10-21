@@ -15,7 +15,7 @@
         <span>
             <span style="font-weight: bold; font-size: 16px" th:text="${board.user.username}"></span>
             &nbsp;·&nbsp;
-            <span th:text="${board.createdAt}"></span>
+            <span th:text="${#temporals.format(board.createdAt, 'yyyy년 MM월 dd일')}"></span>
         </span>
         <span>
             <button class="btn btn-secondary btn-sm" onclick="history.back()" type="button">Back</button>
@@ -35,7 +35,7 @@
     <div style="font-weight: bold; font-size: 15px"
          th:text="${board.replies.size()} + ' comments'"></div>
     <br>
-    <textarea class="form-control" id="reply-write-form" placeholder="Enter Comment" rows="2"
+    <textarea class="form-control" id="reply-write-content" placeholder="Enter Comment" rows="2"
               style="overflow: hidden; resize: none;"></textarea>
     <br>
     <div class="d-flex justify-content-end">
@@ -43,17 +43,29 @@
     </div>
     <br>
     <div th:each="reply : ${board.replies}">
-        <div style="font-weight: bold; font-size: 16px; margin-right: 50px"
+        <div style="font-weight: bold; font-size: 17px; margin-right: 50px"
              th:text="${reply.user.username}">Jaeyeop
         </div>
-        <span style="font-size: 14px"><i th:text="${reply.createdAt}"> 2020-10-20 19:21:33.751</i></span>
+        <span style="font-size: 14px"><i style="font-size: 14px"
+                                         th:text="${#temporals.format(board.createdAt, 'yyyy년 MM월 dd일')}"> 2020-10-20 19:21:33.751</i></span>
         &nbsp;
         <span th:if="${#authentication.principal.id} == ${reply.user.id}">
-                <a href="" style="font-size: 13px">modify</a>
-                <a href="" style="font-size: 13px">delete</a>
-                </span>
-        <div class="reply-modify-form" style="font-size: 14px;" th:text="${reply.content}"></div>
+                <button class="btn btn-success btn-sm" id="btn-reply-modify" style="font-size: 13px; display: none;"
+                        th:onclick="replyModify([[${reply.id}]])">submit</button>
+                <button class="btn btn-secondary btn-sm" id="btn-reply-cancel"
+                        onclick="location.reload()" style="font-size: 13px; display: none;">cancel</button>
+                <button class="btn btn-primary btn-sm" style="font-size: 13px;"
+                        th:onclick="replyModifyForm([[${reply.id}]], this)"
+                        type="button">modify</button>
+                <button class="btn btn-danger btn-sm" style="font-size: 13px;"
+                        th:onclick="replyDelete([[${reply.id}]])" type="button">delete</button>
+        </span>
+        <div>
+            <input class="form-control" readonly style="font-size: 16px; border: none; margin-top: 10px"
+                   th:id="'reply-modify-content-' + ${reply.id}" th:value="${reply.content}" type="text">
+        </div>
         <hr>
+        <input id="replyId" th:value="${reply.id}" type="hidden">
     </div>
     <input id="boardId" th:value="${board.id}" type="hidden">
 </div>

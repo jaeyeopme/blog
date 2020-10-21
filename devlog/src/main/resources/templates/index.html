@@ -10,7 +10,7 @@
         <div class="col mb-4" th:each="board: ${boards.content}">
             <div class="card h-100" style="cursor: pointer;"
                  th:onclick="'location.href = \'' + @{'/detail/' + ${board.id}} + '\''">
-                <div style="height: 150px; overflow: hidden; position: relative">
+                <div style="height: 150px; overflow: hidden; position: relative" th:if="${board.thumbnail} != null">
                     <img alt="..." class="card-img-top"
                          style="position: absolute; top: -100%; bottom: -100%; margin: auto"
                          th:src="'/images/' + ${board.thumbnail}">
@@ -20,7 +20,8 @@
                     <p class="card-text" style="font-size: 14px" th:utext="${board.description}"></p>
                 </div>
                 <div class="card-footer">
-                    <small class="text-muted" th:text="${board.createdAt}">Last updated 3 mins ago</small>
+                    <small class="text-muted" th:text="${#temporals.format(board.createdAt, 'yyyy년 MM월 dd일')}">Last
+                        updated 3 mins ago</small>
                 </div>
             </div>
         </div>

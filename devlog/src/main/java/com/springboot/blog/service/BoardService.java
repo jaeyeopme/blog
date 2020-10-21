@@ -56,8 +56,7 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public Board findById(Long boardsId) {
-        Board board = boardRepository.findById(boardsId).orElseThrow(() -> new IllegalArgumentException("not found board"));
-        return board;
+        return boardRepository.findById(boardsId).orElseThrow(() -> new IllegalArgumentException("not found board"));
     }
 
     @Transactional
@@ -91,9 +90,14 @@ public class BoardService {
     }
 
     @Transactional
-    public ResponseEntity<ApiResponse> deleteById(Long boardId) {
+    public ResponseEntity<ApiResponse> deleteById(Long id) {
+        Board found_board = boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("not found board"));
+
         try {
-            boardRepository.deleteById(boardId);
+            if (found_board.getThumbnail() != null) {
+                new File("C:\\Users\\Jaeyeop\\IdeaProjects\\blog\\src\\main\\resources\\static\\images\\" + found_board.getThumbnail()).delete();
+            }
+            boardRepository.deleteById(id);
         } catch (Exception e) {
             throw new RuntimeException("not found board");
         }

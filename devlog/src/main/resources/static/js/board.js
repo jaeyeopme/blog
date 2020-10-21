@@ -8,15 +8,15 @@ let index = {
             }
         });
 
-        $('#btn-board-delete').on('click', () => {
-            if (confirm("delete?")) {
-                this.boardDelete();
-            }
-        });
-
         $('#btn-board-modify').on('click', () => {
             if (document.getElementsByClassName('is-valid').length === 1 && confirm("modify?")) {
                 this.boardModify();
+            }
+        });
+
+        $('#btn-board-delete').on('click', () => {
+            if (confirm("delete?")) {
+                this.boardDelete();
             }
         });
 
@@ -28,7 +28,6 @@ let index = {
 
     boardWrite: function () {
         let data = new FormData();
-
 
         let title = document.getElementById('title').value;
         let content = document.getElementById('content').value;
@@ -57,10 +56,10 @@ let index = {
     },
 
     boardDelete: function () {
-        let boardId = document.getElementById('boardId').value;
+        let id = document.getElementById('boardId').value;
 
         $.ajax({
-            url: '/boards/' + boardId,
+            url: '/boards/' + id,
             type: 'delete',
             dataType: 'json',
         }).done(function () {
@@ -74,7 +73,7 @@ let index = {
     boardModify: function () {
         let data = new FormData();
 
-        let id = document.getElementById('id').value;
+        let id = document.getElementById('boardId').value;
         let title = document.getElementById('title').value;
         let content = document.getElementById('content').value;
         let description = document.getElementById('description').value;
@@ -105,8 +104,9 @@ let index = {
 
     replyWrite: function () {
         let boardId = document.getElementById('boardId').value;
+
         let data = {
-            content: document.getElementById('reply-write-form').value
+            content: document.getElementById('reply-write-content').value
         };
 
         $.ajax({
@@ -123,6 +123,55 @@ let index = {
         });
     },
 
+}
+
+function replyModifyForm(replyId, replyModifyButton) {
+    let form = document.getElementById('reply-modify-content-' + replyId);
+    form.readOnly = false;
+    replyModifyButton.style.display = 'none'
+
+    document.getElementById('btn-reply-modify').style.display = 'revert'
+    document.getElementById('btn-reply-cancel').style.display = 'revert'
+}
+
+function replyModify(replyId) {
+    if (confirm('modify?')) {
+        let data = {
+            id: replyId,
+            content: document.getElementById('reply-modify-content-' + replyId).value
+        };
+
+        $.ajax({
+            url: '/replies',
+            type: 'put',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8'
+        }).done(function () {
+            location.reload();
+        }).fail(function (error) {
+            alert(error.responseJSON.message);
+            location.href = '/';
+        });
+    }
+}
+
+function replyDelete(replyId) {
+    if (confirm('delete?')) {
+        let id = replyId;
+
+        $.ajax({
+            url: '/replies/' + id,
+            type: 'delete',
+            dataType: 'json',
+        }).done(function () {
+            location.reload();
+        }).fail(function (error) {
+            alert(error.responseJSON.message);
+            location.href = '/';
+        });
+
+    }
 }
 
 function writeFormValidate(target) {

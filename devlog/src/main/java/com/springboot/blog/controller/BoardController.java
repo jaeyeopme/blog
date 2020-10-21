@@ -2,7 +2,6 @@ package com.springboot.blog.controller;
 
 import com.springboot.blog.entity.Board;
 import com.springboot.blog.service.BoardService;
-import com.springboot.blog.service.ReplyService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -15,15 +14,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class BoardController {
 
     private final BoardService boardService;
-    private final ReplyService replyService;
 
-    public BoardController(BoardService boardService, ReplyService replyService) {
+    public BoardController(BoardService boardService) {
         this.boardService = boardService;
-        this.replyService = replyService;
     }
 
     @GetMapping("/")
-    public String index(Model model, @PageableDefault(size = 9, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+    public String index(Model model, @PageableDefault(size = 6, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         model.addAttribute("boards", boardService.findAll(pageable));
         return "index";
     }
