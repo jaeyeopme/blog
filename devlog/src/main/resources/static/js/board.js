@@ -1,8 +1,10 @@
 let index = {
     init: function () {
         $('#btn-board-write').on('click', () => {
-            if (document.getElementsByClassName('is-valid').length === 1) {
+            if (document.getElementById('title').checkValidity()) {
                 this.boardWrite();
+            } else {
+                document.getElementById('title').classList.add('is-invalid');
             }
         });
 
@@ -25,22 +27,30 @@ let index = {
     },
 
     boardWrite: function () {
-        let data = {
-            title: document.getElementById('title').value,
-            content: document.getElementById('content').value
-        };
+        let data = new FormData();
+
+
+        let title = document.getElementById('title').value;
+        let content = document.getElementById('content').value;
+        let description = document.getElementById('description').value;
+        let thumbnail = document.getElementById('thumbnail').files[0];
+
+        data.append('file', thumbnail)
+        data.append('title', title);
+        data.append('content', content);
+        data.append('description', description);
 
         $.ajax({
             url: '/boards',
             type: 'post',
-            data: JSON.stringify(data),
+            data: data,
+            contentType: false,
+            processData: false,
             dataType: 'json',
-            contentType: 'application/json; charset=utf-8'
+            // contentType: 'multipart/form-data'
         }).done(function (response) {
-            alert(response.message);
-            location.href = '/';
+            location.href = response.message;
         }).fail(function (error) {
-            // error body message (Object -> Json)
             alert(error.responseJSON.message);
             location.href = '/';
         });
@@ -62,20 +72,31 @@ let index = {
     },
 
     boardModify: function () {
-        let data = {
-            id: document.getElementById('boardId').value,
-            title: document.getElementById('title').value,
-            content: document.getElementById('content').value
-        };
+        let data = new FormData();
+
+        let id = document.getElementById('id').value;
+        let title = document.getElementById('title').value;
+        let content = document.getElementById('content').value;
+        let description = document.getElementById('description').value;
+        let thumbnail = document.getElementById('thumbnail').files[0];
+
+        data.append('file', thumbnail)
+        data.append('id', id);
+        data.append('title', title);
+        data.append('content', content);
+        data.append('description', description);
+
 
         $.ajax({
             url: '/boards',
             type: 'put',
-            data: JSON.stringify(data),
+            data: data,
+            contentType: false,
+            processData: false,
             dataType: 'json',
-            contentType: 'application/json; charset=utf-8'
-        }).done(function () {
-            location.href = '/detail/' + data.id;
+            // contentType: 'multipart/form-data'
+        }).done(function (response) {
+            location.href = response.message;
         }).fail(function (error) {
             alert(error.responseJSON.message);
             location.href = '/';

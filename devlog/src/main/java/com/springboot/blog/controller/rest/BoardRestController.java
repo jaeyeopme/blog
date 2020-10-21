@@ -6,6 +6,7 @@ import com.springboot.blog.service.BoardService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 public class BoardRestController {
@@ -17,13 +18,13 @@ public class BoardRestController {
     }
 
     @PostMapping("boards")
-    public ResponseEntity<ApiResponse> save(@RequestBody Board board, @AuthenticationPrincipal User user) {
-        return boardService.save(board, user);
+    public ResponseEntity<ApiResponse> save(@ModelAttribute Board board, @RequestPart(required = false) MultipartFile file, @AuthenticationPrincipal User user) {
+        return boardService.save(board, file, user);
     }
 
     @PutMapping("boards")
-    public ResponseEntity<ApiResponse> update(@RequestBody Board board) {
-        return boardService.update(board);
+    public ResponseEntity<ApiResponse> update(@ModelAttribute Board board, @RequestPart(required = false) MultipartFile file) {
+        return boardService.update(board, file);
     }
 
     @DeleteMapping("boards/{boardsId}")

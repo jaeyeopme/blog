@@ -28,8 +28,9 @@ public class Board {
     @Lob
     private String content;
 
-//    @Lob
-//    private String thumbnail;
+    private String thumbnail;
+
+    private String description;
 
     @ColumnDefault("0")
     private Long views;

@@ -10,6 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.util.UUID;
 
 @Service
 public class BoardService {
@@ -26,8 +30,18 @@ public class BoardService {
     }
 
     @Transactional
-    public ResponseEntity<ApiResponse> save(Board board, User user) {
+    public ResponseEntity<ApiResponse> save(Board board, MultipartFile file, User user) {
         try {
+            if (file != null) {
+                UUID uuid = UUID.randomUUID();
+
+                String absolutePath = "C:\\Users\\Jaeyeop\\IdeaProjects\\blog\\src\\main\\resources\\static\\images\\" + uuid + "_" + file.getOriginalFilename();
+                file.transferTo(new File(absolutePath));
+
+                String relativePath = uuid + "_" + file.getOriginalFilename();
+                board.setThumbnail(relativePath);
+            }
+
             board.setUser(user);
             boardRepository.save(board);
         } catch (Exception e) {
@@ -35,7 +49,7 @@ public class BoardService {
         }
 
         HttpStatus created = HttpStatus.CREATED;
-        ApiResponse success = new ApiResponse(created, "success", System.currentTimeMillis());
+        ApiResponse success = new ApiResponse(created, "/detail/" + board.getId(), System.currentTimeMillis());
 
         return new ResponseEntity<>(success, created);
     }
@@ -47,13 +61,31 @@ public class BoardService {
     }
 
     @Transactional
-    public ResponseEntity<ApiResponse> update(Board board) {
+    public ResponseEntity<ApiResponse> update(Board board, MultipartFile file) {
         Board found_board = boardRepository.findById(board.getId()).orElseThrow(() -> new IllegalArgumentException("not found board"));
         found_board.setTitle(board.getTitle());
         found_board.setContent(board.getContent());
 
+        if (file != null) {
+            try {
+                if (found_board.getThumbnail() != null) {
+                    new File("C:\\Users\\Jaeyeop\\IdeaProjects\\blog\\src\\main\\resources\\static\\images\\" + found_board.getThumbnail()).delete();
+                }
+
+                UUID uuid = UUID.randomUUID();
+
+                String absolutePath = "C:\\Users\\Jaeyeop\\IdeaProjects\\blog\\src\\main\\resources\\static\\images\\" + uuid + "_" + file.getOriginalFilename();
+                file.transferTo(new File(absolutePath));
+
+                String relativePath = uuid + "_" + file.getOriginalFilename();
+                found_board.setThumbnail(relativePath);
+            } catch (Exception e) {
+                throw new IllegalArgumentException("server error");
+            }
+        }
+
         HttpStatus ok = HttpStatus.OK;
-        ApiResponse success = new ApiResponse(ok, "success", System.currentTimeMillis());
+        ApiResponse success = new ApiResponse(ok, "/detail/" + board.getId(), System.currentTimeMillis());
 
         return new ResponseEntity<>(success, ok);
     }

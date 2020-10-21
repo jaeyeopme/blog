@@ -9,7 +9,7 @@
 <br>
 <div class="container w-50 p-3">
 
-    <h1 th:text="${board.title}"></h1>
+    <h2 style="font-weight: bold" th:text="${board.title}"></h2>
 
     <div class="d-flex justify-content-between">
         <span>
@@ -43,19 +43,16 @@
     </div>
     <br>
     <div th:each="reply : ${board.replies}">
-        <div class="d-flex justify-content-start" style="margin-bottom: 15px">
-            <div>
-                <span style="font-weight: bold; font-size: 16px; margin-right: 50px"
-                      th:text="${reply.user.username}">Jaeyeop</span>
-                <br>
-                <span style="font-size: 15px"><i th:text="${reply.createdAt}"> 2020-10-20 19:21:33.751</i></span>
-            </div>
-            <div style="margin: 9px 0 0 20px" th:if="${#authentication.principal.id} == ${reply.user.id}">
-                <button class="btn btn-primary btn-sm" style="height: 30px">modify</button>
-                <button class="btn btn-dark btn-sm" style="height: 30px">delete</button>
-            </div>
+        <div style="font-weight: bold; font-size: 16px; margin-right: 50px"
+             th:text="${reply.user.username}">Jaeyeop
         </div>
-        <div class="reply-modify-form" style="font-size: 17px;" th:text="${reply.content}"></div>
+        <span style="font-size: 14px"><i th:text="${reply.createdAt}"> 2020-10-20 19:21:33.751</i></span>
+        &nbsp;
+        <span th:if="${#authentication.principal.id} == ${reply.user.id}">
+                <a href="" style="font-size: 13px">modify</a>
+                <a href="" style="font-size: 13px">delete</a>
+                </span>
+        <div class="reply-modify-form" style="font-size: 14px;" th:text="${reply.content}"></div>
         <hr>
     </div>
     <input id="boardId" th:value="${board.id}" type="hidden">

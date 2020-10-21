@@ -7,6 +7,39 @@
 <header th:replace="layout/default :: header('modify')"/>
 <br>
 <div class="container w-50 p-3">
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog" style="margin-top: 250px">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title">Preview settings</h4>
+                    <button class="close" data-dismiss="modal" type="button">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="input-group">
+                        <div class="custom-file">
+                            <input accept="image/**" class="custom-file-input" id="thumbnail" type="file">
+                            <label class="custom-file-label" for="thumbnail">Choose your thumbnail</label>
+                        </div>
+                    </div>
+                    <hr>
+                    <div style="text-align: center">
+                        <i style="font-size: 14px">max length 100</i>
+                    </div>
+                    <textarea class="form-control" id="description" maxLength="100" placeholder="Enter description"
+                              rows="5"
+                              style="resize: none;" th:text="${board.description}"></textarea>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary btn-sm" data-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn btn-primary btn-sm" id="btn-board-modify">Modify</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
     <div class="form-group">
         <label for="title">Title:</label>
         <input class="form-control is-valid" id="title" onblur="writeFormValidate(this)" placeholder="Enter title"
@@ -22,15 +55,20 @@
     </div>
 
     <div class="d-flex justify-content-end">
-        <button class="btn btn-primary" id="btn-board-modify">Modify</button>
+        <button class="btn btn-primary" data-target="#myModal" data-toggle="modal" id="btn-modal-form">Modify</button>
     </div>
 
     <hr>
 
-    <input id="boardId" th:value="${board.id}" type="hidden">
+    <input id="id" th:value="${board.id}" type="hidden">
 </div>
 <footer th:replace="layout/default :: footer"/>
 <script>
+    $(".custom-file-input").on("change", function () {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+
     $('.summernote').summernote({
         placeholder: 'Enter content',
         tabsize: 10,
