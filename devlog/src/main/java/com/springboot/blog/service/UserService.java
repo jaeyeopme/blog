@@ -37,7 +37,6 @@ public class UserService implements UserDetailsService {
         HttpStatus created = HttpStatus.CREATED;
         ApiResponse success = new ApiResponse(created, "Welcome to Blog", System.currentTimeMillis());
 
-
         return new ResponseEntity<>(success, created);
     }
 

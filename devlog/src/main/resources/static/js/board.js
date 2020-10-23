@@ -2,7 +2,11 @@ let index = {
     init: function () {
         $('#btn-board-write').on('click', () => {
             if (document.getElementById('title').checkValidity()) {
-                this.boardWrite();
+                if (document.getElementById('thumbnail').files[0] > 52428800) {
+                    alert('Max Size (50MB)')
+                } else {
+                    this.boardWrite();
+                }
             } else {
                 document.getElementById('title').classList.add('is-invalid');
             }
@@ -10,7 +14,11 @@ let index = {
 
         $('#btn-board-modify').on('click', () => {
             if (document.getElementsByClassName('is-valid').length === 1 && confirm("modify?")) {
-                this.boardModify();
+                if (document.getElementById('thumbnail').files[0] > 52428800) {
+                    alert('Max Size (50MB)')
+                } else {
+                    this.boardModify();
+                }
             }
         });
 

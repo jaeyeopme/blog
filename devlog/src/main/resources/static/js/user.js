@@ -23,10 +23,10 @@ let index = {
         $.ajax({
             url: 'users',
             type: 'post',
-            data: JSON.stringify(data),
-            dataType: 'json',
-            contentType: 'application/json; charset=utf-8'
-        }).done(function (response) {
+            data: JSON.stringify(data), // -> http body
+            dataType: 'json', // 응답받는 데이터 형식
+            contentType: 'application/json; charset=utf-8' // 보내는 데이터 형식 // http header
+        }).done(function (response) { // response
             alert(response.message);
             location.href = '/';
         }).fail(function (error) {

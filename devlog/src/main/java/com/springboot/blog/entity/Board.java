@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -31,9 +30,6 @@ public class Board {
     private String thumbnail;
 
     private String description;
-
-    @ColumnDefault("0")
-    private Long views;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
