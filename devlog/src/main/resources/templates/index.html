@@ -19,7 +19,8 @@
                     <h5 class="card-title" style="font-weight: bold" th:text="${board.title}">Card title</h5>
                     <p class="card-text" style="font-size: 14px" th:utext="${board.description}"></p>
                 </div>
-                <div class="card-footer">
+                <div class="card-footer d-flex justify-content-between">
+                    <small class="text-muted" th:text="'by ' + ${board.user.email}"></small>
                     <small class="text-muted" th:text="${#temporals.format(board.createdAt, 'yyyy년 MM월 dd일')}">Last
                         updated 3 mins ago</small>
                 </div>

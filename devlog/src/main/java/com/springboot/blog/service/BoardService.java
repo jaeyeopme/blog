@@ -64,6 +64,7 @@ public class BoardService {
         Board found_board = boardRepository.findById(board.getId()).orElseThrow(() -> new IllegalArgumentException("not found board"));
         found_board.setTitle(board.getTitle());
         found_board.setContent(board.getContent());
+        found_board.setDescription(board.getDescription());
 
         if (file != null) {
             try {

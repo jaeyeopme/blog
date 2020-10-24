@@ -7,7 +7,7 @@ let index = {
         });
 
         $('#btn-user-modify').on('click', () => {
-            if (document.getElementsByClassName('is-valid').length === 2) {
+            if (document.getElementsByClassName('is-valid').length === 2 && confirm('modify?')) {
                 this.userModify();
             }
         });
@@ -23,9 +23,9 @@ let index = {
         $.ajax({
             url: 'users',
             type: 'post',
-            data: JSON.stringify(data), // -> http body
-            dataType: 'json', // 응답받는 데이터 형식
-            contentType: 'application/json; charset=utf-8' // 보내는 데이터 형식 // http header
+            data: JSON.stringify(data),
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8'
         }).done(function (response) { // response
             alert(response.message);
             location.href = '/';
@@ -57,7 +57,7 @@ let index = {
             alert(error.responseJSON.message);
             location.href = '/';
         });
-    }
+    },
 
 }
 

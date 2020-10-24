@@ -34,6 +34,7 @@
         <button class="btn btn-primary" id="btn-user-modify">Modify</button>
     </div>
 </div>
+<input id="userId" th:value="${user.id}" type="hidden">
 <footer th:replace="layout/default :: footer"/>
 <script th:src="@{/js/user.js}"></script>
 </body>

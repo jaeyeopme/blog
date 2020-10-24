@@ -65,6 +65,20 @@ public class UserService implements UserDetailsService {
         return new ResponseEntity<>(success, ok);
     }
 
+    @Transactional
+    public ResponseEntity<ApiResponse> deleteById(Long id) {
+        try {
+            userRepository.deleteById(id);
+        } catch (Exception e) {
+            new IllegalArgumentException("not found user");
+        }
+
+        HttpStatus ok = HttpStatus.OK;
+        ApiResponse success = new ApiResponse(ok, "success", System.currentTimeMillis());
+
+        return new ResponseEntity<>(success, ok);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String email) {
         return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Email " + email + " is not found"));
