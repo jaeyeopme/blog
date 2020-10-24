@@ -1,9 +1,13 @@
 package com.springboot.blog.service;
 
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.springboot.blog.config.AmazonConfig;
 import com.springboot.blog.controller.rest.ApiResponse;
 import com.springboot.blog.entity.Board;
 import com.springboot.blog.entity.User;
 import com.springboot.blog.repository.BoardRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -19,9 +23,14 @@ import java.util.UUID;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final AmazonConfig amazonConfig;
 
-    public BoardService(BoardRepository boardRepository) {
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
+
+    public BoardService(BoardRepository boardRepository, AmazonConfig amazonConfig) {
         this.boardRepository = boardRepository;
+        this.amazonConfig = amazonConfig;
     }
 
     @Transactional(readOnly = true)
@@ -30,16 +39,20 @@ public class BoardService {
     }
 
     @Transactional
-    public ResponseEntity<ApiResponse> save(Board board, MultipartFile file, User user) {
+    public ResponseEntity<ApiResponse> save(Board board, MultipartFile multipartFile, User user) {
         try {
-            if (file != null) {
+            if (multipartFile != null) {
                 UUID uuid = UUID.randomUUID();
 
-                String absolutePath = "C:\\Users\\Jaeyeop\\IdeaProjects\\blog\\src\\main\\resources\\static\\images\\" + uuid + "_" + file.getOriginalFilename();
-                file.transferTo(new File(absolutePath));
+                String fileName = uuid + "-" + multipartFile.getOriginalFilename();
 
-                String relativePath = uuid + "_" + file.getOriginalFilename();
-                board.setThumbnail(relativePath);
+                ObjectMetadata objectMetadata = new ObjectMetadata();
+                objectMetadata.setContentType(multipartFile.getContentType());
+                objectMetadata.setContentLength(multipartFile.getSize());
+
+                amazonConfig.amazonS3().putObject(new PutObjectRequest(bucket, fileName, multipartFile.getInputStream(), objectMetadata));
+
+                board.setThumbnail(fileName);
             }
 
             board.setUser(user);
