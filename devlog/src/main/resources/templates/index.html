@@ -13,7 +13,7 @@
                 <div style="height: 150px; overflow: hidden; position: relative" th:if="${board.thumbnail} != null">
                     <img alt="..." class="card-img-top"
                          style="position: absolute; top: -100%; bottom: -100%; margin: auto"
-                         th:src="'/images/' + ${board.thumbnail}">
+                         th:src="${board.thumbnail}">
                 </div>
                 <div class="card-body">
                     <h5 class="card-title" style="font-weight: bold" th:text="${board.title}">Card title</h5>

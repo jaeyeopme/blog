@@ -1,8 +1,9 @@
 package com.springboot.blog.service;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.springboot.blog.config.AmazonConfig;
 import com.springboot.blog.controller.rest.ApiResponse;
 import com.springboot.blog.entity.Board;
 import com.springboot.blog.entity.User;
@@ -16,21 +17,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
+import java.io.IOException;
 import java.util.UUID;
 
 @Service
 public class BoardService {
 
     private final BoardRepository boardRepository;
-    private final AmazonConfig amazonConfig;
+    private final AmazonS3 amazonS3;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public BoardService(BoardRepository boardRepository, AmazonConfig amazonConfig) {
+    public BoardService(BoardRepository boardRepository, AmazonS3 amazonS3) {
         this.boardRepository = boardRepository;
-        this.amazonConfig = amazonConfig;
+        this.amazonS3 = amazonS3;
     }
 
     @Transactional(readOnly = true)
@@ -39,20 +40,10 @@ public class BoardService {
     }
 
     @Transactional
-    public ResponseEntity<ApiResponse> save(Board board, MultipartFile multipartFile, User user) {
+    public ResponseEntity<ApiResponse> save(Board board, MultipartFile file, User user) {
         try {
-            if (multipartFile != null) {
-                UUID uuid = UUID.randomUUID();
-
-                String fileName = uuid + "-" + multipartFile.getOriginalFilename();
-
-                ObjectMetadata objectMetadata = new ObjectMetadata();
-                objectMetadata.setContentType(multipartFile.getContentType());
-                objectMetadata.setContentLength(multipartFile.getSize());
-
-                amazonConfig.amazonS3().putObject(new PutObjectRequest(bucket, fileName, multipartFile.getInputStream(), objectMetadata));
-
-                board.setThumbnail(fileName);
+            if (file != null) {
+                putThumbnail(board, file);
             }
 
             board.setUser(user);
@@ -82,16 +73,11 @@ public class BoardService {
         if (file != null) {
             try {
                 if (found_board.getThumbnail() != null) {
-                    new File("C:\\Users\\Jaeyeop\\IdeaProjects\\blog\\src\\main\\resources\\static\\images\\" + found_board.getThumbnail()).delete();
+                    amazonS3.deleteObject(new DeleteObjectRequest(bucket, found_board.getThumbnail()));
                 }
 
-                UUID uuid = UUID.randomUUID();
+                putThumbnail(found_board, file);
 
-                String absolutePath = "C:\\Users\\Jaeyeop\\IdeaProjects\\blog\\src\\main\\resources\\static\\images\\" + uuid + "_" + file.getOriginalFilename();
-                file.transferTo(new File(absolutePath));
-
-                String relativePath = uuid + "_" + file.getOriginalFilename();
-                found_board.setThumbnail(relativePath);
             } catch (Exception e) {
                 throw new IllegalArgumentException("server error");
             }
@@ -109,7 +95,7 @@ public class BoardService {
 
         try {
             if (found_board.getThumbnail() != null) {
-                new File("C:\\Users\\Jaeyeop\\IdeaProjects\\blog\\src\\main\\resources\\static\\images\\" + found_board.getThumbnail()).delete();
+                amazonS3.deleteObject(new DeleteObjectRequest(bucket, found_board.getThumbnail()));
             }
             boardRepository.deleteById(id);
         } catch (Exception e) {
@@ -120,6 +106,20 @@ public class BoardService {
         ApiResponse success = new ApiResponse(ok, "success", System.currentTimeMillis());
 
         return new ResponseEntity<>(success, ok);
+    }
+
+    private void putThumbnail(Board board, MultipartFile file) throws IOException {
+        UUID uuid = UUID.randomUUID();
+
+        String fileName = "images/" + uuid + "-" + file.getOriginalFilename();
+
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentType(file.getContentType());
+        metadata.setContentLength(file.getSize());
+
+        amazonS3.putObject(new PutObjectRequest(bucket, fileName, file.getInputStream(), metadata));
+
+        board.setThumbnail("https://jaeyeop-blog-project.s3.ap-northeast-2.amazonaws.com/" + fileName);
     }
 
 }
