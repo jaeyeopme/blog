@@ -27,7 +27,7 @@ public class Board {
     @Lob
     private String content;
 
-    private String thumbnail;
+    private String thumbnailUrl;
 
     private String description;
 

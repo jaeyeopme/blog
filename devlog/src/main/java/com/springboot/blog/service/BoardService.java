@@ -1,5 +1,6 @@
 package com.springboot.blog.service;
 
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -29,6 +30,9 @@ public class BoardService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
+    @Value("${cloud.aws.s3.objectUrl}")
+    private String objectUrl;
+
     public BoardService(BoardRepository boardRepository, AmazonS3 amazonS3) {
         this.boardRepository = boardRepository;
         this.amazonS3 = amazonS3;
@@ -41,11 +45,14 @@ public class BoardService {
 
     @Transactional
     public ResponseEntity<ApiResponse> save(Board board, MultipartFile file, User user) {
-        try {
-            if (file != null) {
-                putThumbnail(board, file);
-            }
 
+        if (file != null) {
+            String filename = String.format("%s-%s", UUID.randomUUID(), file.getOriginalFilename());
+            putThumbnail(file, filename);
+            board.setThumbnailUrl(String.format("%s/%s", objectUrl, filename));
+        }
+
+        try {
             board.setUser(user);
             boardRepository.save(board);
         } catch (Exception e) {
@@ -53,35 +60,33 @@ public class BoardService {
         }
 
         HttpStatus created = HttpStatus.CREATED;
-        ApiResponse success = new ApiResponse(created, "/detail/" + board.getId(), System.currentTimeMillis());
+        ApiResponse success = new ApiResponse(created, String.format("/detail/%d", board.getId()), System.currentTimeMillis());
 
         return new ResponseEntity<>(success, created);
     }
 
     @Transactional(readOnly = true)
-    public Board findById(Long boardsId) {
-        return boardRepository.findById(boardsId).orElseThrow(() -> new IllegalArgumentException("not found board"));
+    public Board findById(Long id) {
+        return boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException(String.format("not found board - %d", id)));
     }
 
     @Transactional
     public ResponseEntity<ApiResponse> update(Board board, MultipartFile file) {
         Board found_board = boardRepository.findById(board.getId()).orElseThrow(() -> new IllegalArgumentException("not found board"));
+
+        if (file != null) {
+            String thumbnailUrl = found_board.getThumbnailUrl();
+            if (thumbnailUrl != null) {
+                deleteThumbnail(thumbnailUrl);
+            }
+            String filename = String.format("%s-%s", UUID.randomUUID(), file.getOriginalFilename());
+            putThumbnail(file, filename);
+            found_board.setThumbnailUrl(String.format("%s/%s", objectUrl, filename));
+        }
+
         found_board.setTitle(board.getTitle());
         found_board.setContent(board.getContent());
         found_board.setDescription(board.getDescription());
-
-        if (file != null) {
-            try {
-                if (found_board.getThumbnail() != null) {
-                    amazonS3.deleteObject(new DeleteObjectRequest(bucket, found_board.getThumbnail()));
-                }
-
-                putThumbnail(found_board, file);
-
-            } catch (Exception e) {
-                throw new IllegalArgumentException("server error");
-            }
-        }
 
         HttpStatus ok = HttpStatus.OK;
         ApiResponse success = new ApiResponse(ok, "/detail/" + board.getId(), System.currentTimeMillis());
@@ -92,14 +97,16 @@ public class BoardService {
     @Transactional
     public ResponseEntity<ApiResponse> deleteById(Long id) {
         Board found_board = boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("not found board"));
+        String thumbnail = found_board.getThumbnailUrl();
+
+        if (thumbnail != null) {
+            deleteThumbnail(thumbnail);
+        }
 
         try {
-            if (found_board.getThumbnail() != null) {
-                amazonS3.deleteObject(new DeleteObjectRequest(bucket, found_board.getThumbnail()));
-            }
             boardRepository.deleteById(id);
         } catch (Exception e) {
-            throw new RuntimeException("not found board");
+            throw new IllegalArgumentException(String.format("not found board - %d", id));
         }
 
         HttpStatus ok = HttpStatus.OK;
@@ -108,18 +115,25 @@ public class BoardService {
         return new ResponseEntity<>(success, ok);
     }
 
-    private void putThumbnail(Board board, MultipartFile file) throws IOException {
-        UUID uuid = UUID.randomUUID();
-
-        String fileName = "images/" + uuid + "-" + file.getOriginalFilename();
-
+    private void putThumbnail(MultipartFile file, String filename) {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType(file.getContentType());
         metadata.setContentLength(file.getSize());
 
-        amazonS3.putObject(new PutObjectRequest(bucket, fileName, file.getInputStream(), metadata));
+        try {
+            amazonS3.putObject(new PutObjectRequest(bucket, filename, file.getInputStream(), metadata));
+        } catch (AmazonServiceException | IOException e) {
+            throw new IllegalArgumentException("Failed to store file to S3", e);
+        }
 
-        board.setThumbnail("https://jaeyeop-blog-project.s3.ap-northeast-2.amazonaws.com/" + fileName);
+    }
+
+    private void deleteThumbnail(String filename) {
+        try {
+            amazonS3.deleteObject(new DeleteObjectRequest(bucket, filename.replace(objectUrl, "")));
+        } catch (AmazonServiceException e) {
+            throw new IllegalArgumentException("Failed to delete file to S3", e);
+        }
     }
 
 }

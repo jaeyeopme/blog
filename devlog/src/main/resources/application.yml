@@ -1,7 +1,8 @@
 cloud:
   aws:
     s3:
-      bucket: jaeyeop-blog-project
+      bucket: jaeyeop-blog-project/images
+      objectUrl: https://jaeyeop-blog-project.s3.ap-northeast-2.amazonaws.com/images
     region:
       static: ap-northeast-2
     stack:
@@ -12,6 +13,7 @@ cloud:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://jaeyeop-blog-project.czeadcaqy0xy.ap-northeast-2.rds.amazonaws.com:3306/blog?serverTimezone=UTC&useSSL=false
     url: jdbc:mysql://localhost:3306/blog?serverTimezone=UTC&useSSL=false
     username: root
     password: password

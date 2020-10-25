@@ -22,7 +22,6 @@ public class BoardRestController {
         return boardService.save(board, file, user);
     }
 
-    // multipart/form-data -> @ModelAttribute
     @PutMapping("boards")
     public ResponseEntity<ApiResponse> update(@ModelAttribute Board board, @RequestPart(required = false) MultipartFile file) {
         return boardService.update(board, file);

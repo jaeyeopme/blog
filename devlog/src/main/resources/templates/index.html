@@ -10,10 +10,10 @@
         <div class="col mb-4" th:each="board: ${boards.content}">
             <div class="card h-100" style="cursor: pointer;"
                  th:onclick="'location.href = \'' + @{'/detail/' + ${board.id}} + '\''">
-                <div style="height: 150px; overflow: hidden; position: relative" th:if="${board.thumbnail} != null">
+                <div style="height: 150px; overflow: hidden; position: relative" th:if="${board.thumbnailUrl} != null">
                     <img alt="..." class="card-img-top"
                          style="position: absolute; top: -100%; bottom: -100%; margin: auto"
-                         th:src="${board.thumbnail}">
+                         th:src="${board.thumbnailUrl}">
                 </div>
                 <div class="card-body">
                     <h5 class="card-title" style="font-weight: bold" th:text="${board.title}">Card title</h5>
