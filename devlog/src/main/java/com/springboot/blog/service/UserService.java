@@ -4,6 +4,7 @@ import com.springboot.blog.controller.rest.ApiResponse;
 import com.springboot.blog.entity.User;
 import com.springboot.blog.entity.UserRole;
 import com.springboot.blog.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +20,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -55,7 +57,7 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public ResponseEntity<ApiResponse> update(User user) {
-        User found_user = userRepository.findByEmail(user.getEmail()).orElseThrow(() -> new IllegalArgumentException("not found user"));
+        User found_user = userRepository.findByEmail(user.getEmail()).orElseThrow(() -> new IllegalArgumentException(String.format("not found user - %d", user.getId())));
         found_user.setUsername(user.getUsername());
         found_user.setPassword(passwordEncoder.encode(user.getPassword()));
 
@@ -70,7 +72,7 @@ public class UserService implements UserDetailsService {
         try {
             userRepository.deleteById(id);
         } catch (Exception e) {
-            new IllegalArgumentException("not found user");
+            new IllegalArgumentException(String.format("not found user - %d", id));
         }
 
         HttpStatus ok = HttpStatus.OK;

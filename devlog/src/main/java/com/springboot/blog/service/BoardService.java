@@ -9,6 +9,7 @@ import com.springboot.blog.controller.rest.ApiResponse;
 import com.springboot.blog.entity.Board;
 import com.springboot.blog.entity.User;
 import com.springboot.blog.repository.BoardRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +34,7 @@ public class BoardService {
     @Value("${cloud.aws.s3.objectUrl}")
     private String objectUrl;
 
+    @Autowired
     public BoardService(BoardRepository boardRepository, AmazonS3 amazonS3) {
         this.boardRepository = boardRepository;
         this.amazonS3 = amazonS3;
@@ -47,9 +49,9 @@ public class BoardService {
     public ResponseEntity<ApiResponse> save(Board board, MultipartFile file, User user) {
 
         if (file != null) {
-            String filename = String.format("%s-%s", UUID.randomUUID(), file.getOriginalFilename());
+            String filename = String.format("images/%s-%s", UUID.randomUUID(), file.getOriginalFilename());
             putThumbnail(file, filename);
-            board.setThumbnailUrl(String.format("%s/%s", objectUrl, filename));
+            board.setThumbnailUrl(String.format("%s%s", objectUrl, filename));
         }
 
         try {
@@ -72,16 +74,16 @@ public class BoardService {
 
     @Transactional
     public ResponseEntity<ApiResponse> update(Board board, MultipartFile file) {
-        Board found_board = boardRepository.findById(board.getId()).orElseThrow(() -> new IllegalArgumentException("not found board"));
+        Board found_board = boardRepository.findById(board.getId()).orElseThrow(() -> new IllegalArgumentException(String.format("not found board - %d", board.getId())));
 
         if (file != null) {
             String thumbnailUrl = found_board.getThumbnailUrl();
             if (thumbnailUrl != null) {
                 deleteThumbnail(thumbnailUrl);
             }
-            String filename = String.format("%s-%s", UUID.randomUUID(), file.getOriginalFilename());
+            String filename = String.format("images/%s-%s", UUID.randomUUID(), file.getOriginalFilename());
             putThumbnail(file, filename);
-            found_board.setThumbnailUrl(String.format("%s/%s", objectUrl, filename));
+            found_board.setThumbnailUrl(String.format("%s%s", objectUrl, filename));
         }
 
         found_board.setTitle(board.getTitle());
@@ -97,10 +99,10 @@ public class BoardService {
     @Transactional
     public ResponseEntity<ApiResponse> deleteById(Long id) {
         Board found_board = boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("not found board"));
-        String thumbnail = found_board.getThumbnailUrl();
+        String thumbnailUrl = found_board.getThumbnailUrl();
 
-        if (thumbnail != null) {
-            deleteThumbnail(thumbnail);
+        if (thumbnailUrl != null) {
+            deleteThumbnail(thumbnailUrl);
         }
 
         try {
@@ -128,9 +130,9 @@ public class BoardService {
 
     }
 
-    private void deleteThumbnail(String filename) {
+    private void deleteThumbnail(String thumbnailUrl) {
         try {
-            amazonS3.deleteObject(new DeleteObjectRequest(bucket, filename.replace(objectUrl, "")));
+            amazonS3.deleteObject(new DeleteObjectRequest(bucket, thumbnailUrl.replace(objectUrl, "")));
         } catch (AmazonServiceException e) {
             throw new IllegalArgumentException("Failed to delete file to S3", e);
         }

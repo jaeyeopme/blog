@@ -14,8 +14,6 @@ public class UserRestController {
         this.userService = userService;
     }
 
-
-    // http 헤더와 http 바디에 대해서 깊은 이해가 필요해
     @PostMapping("users")
     public ResponseEntity<ApiResponse> join(@RequestBody User user) {
         return userService.save(user);
