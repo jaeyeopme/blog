@@ -32,6 +32,3 @@ out/
 
 ### VS Code ###
 .vscode/
-
-### my ignore ###
-*.yml
