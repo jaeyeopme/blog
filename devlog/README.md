@@ -8,7 +8,7 @@
 - Spring Boot
 - Spring Data JPA
 - Spring Security
-- Ajax **RESTful API**
+- Ajax **RESTful**
 - Thymeleaf, Bootstrap, HTML, Javascript, Bootstrap
 - Mysql
 - AWS EC2, S3, RDS
