@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity"
+<html lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       xmlns:th="https://www.thymeleaf.org">
 <head th:fragment="head(title)">
     <meta charset="UTF-8">
@@ -15,6 +15,7 @@
 <header th:fragment="header(page)">
     <nav class="navbar navbar-expand-md bg-dark navbar-dark fixed-top">
         <a class="navbar-brand" th:href="@{/}">Blog</a>
+
         <button class="navbar-toggler" data-target="#collapsibleNavbar" data-toggle="collapse" type="button">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -32,6 +33,7 @@
                     </li>
                 </ul>
             </div>
+
             <div sec:authorize="isAuthenticated()">
                 <ul class="navbar-nav">
                     <li class="nav-item">
@@ -48,7 +50,7 @@
         </div>
     </nav>
 </header>
-<footer class="jumbotron text-center" style="margin-bottom:0" th:fragment="footer">
+<footer class="jumbotron text-center" style="margin-bottom:0; height: 205px" th:fragment="footer">
     <p>Created by <a href="https://github.com/dev-jaeyeop">Jaeyeop</a></p>
     <p><a href="mailto: woduq1204@gmail.com">woduq1204@gmail.com</a></p>
     <p><a href="tel:010-3478-1342">010-3478-1342</a></p>

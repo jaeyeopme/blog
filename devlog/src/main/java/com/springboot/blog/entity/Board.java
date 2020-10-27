@@ -39,8 +39,7 @@ public class Board {
     private User user;
 
     @OrderBy(value = "id desc")
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    // default fetch = FetchType.LAZY
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE) // default fetch = FetchType.LAZY
     private List<Reply> replies;
 
 }

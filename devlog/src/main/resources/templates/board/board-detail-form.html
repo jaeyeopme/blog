@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org">
-<head>
-    <head th:replace="layout/default :: head('Detail')"/>
-    <title>Title</title>
-</head>
+<html lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity"
+      xmlns:th="https://www.thymeleaf.org">
+<head th:replace="layout/default :: head('Detail')"/>
 <body>
 <header th:replace="layout/default :: header('Detail')"/>
-<br>
-<div class="container w-50 p-3">
 
+<br>
+
+<div class="container w-50 p-3">
     <h2 style="font-weight: bold" th:text="${board.title}"></h2>
 
     <div class="d-flex justify-content-between">
@@ -19,37 +18,53 @@
         </span>
         <span>
             <button class="btn btn-secondary btn-sm" onclick="history.back()" type="button">Back</button>
-        <button class="btn btn-info btn-sm" id="btn-board-modify"
-                th:if="${#authentication.principal.id} == ${board.user.id}"
-                th:onclick="'location.href = \'' + @{'/modify/' + ${board.id}} + '\''" type="button">Modify
-        </button>
-        <button class="btn btn-danger btn-sm" id="btn-board-delete"
-                th:if="${#authentication.principal.id} == ${board.user.id}"
-                type="button">Delete
-        </button>
+
+            <span sec:authorize="isAuthenticated()">
+                <button class="btn btn-info btn-sm" id="btn-board-modify"
+                        th:if="${#authentication.principal.id} == ${board.user.id}"
+                        th:onclick="'location.href = \'' + @{'/modify/' + ${board.id}} + '\''" type="button">Modify
+                </button>
+                <button class="btn btn-danger btn-sm" id="btn-board-delete"
+                        th:if="${#authentication.principal.id} == ${board.user.id}"
+                        type="button">Delete
+                </button>
+            </span>
         </span>
     </div>
+
     <hr>
+
     <div th:utext="${board.content}"></div>
+
     <hr>
+
     <div style="font-weight: bold; font-size: 15px"
-         th:text="${board.replies.size()} + ' comments'"></div>
+         th:text="${board.replies.size()} + ' comments'">
+    </div>
+
     <br>
+
     <textarea class="form-control" id="reply-write-content" placeholder="Enter Comment" rows="2"
               style="overflow: hidden; resize: none;"></textarea>
+
     <br>
+
     <div class="d-flex justify-content-end">
-        <button class="btn btn-success" id="btn-reply-write">submit</button>
+        <button class="btn btn-success" id="btn-reply-write" sec:authorize="isAuthenticated()">submit</button>
+        <button class="btn btn-success" onclick="location.href='/login'" sec:authorize="isAnonymous()">submit</button>
     </div>
+
     <br>
+
     <div th:each="reply : ${board.replies}">
         <div style="font-weight: bold; font-size: 17px; margin-right: 50px"
              th:text="${reply.user.username}">Jaeyeop
         </div>
-        <span style="font-size: 14px"><i style="font-size: 14px"
-                                         th:text="${#temporals.format(board.createdAt, 'yyyy년 MM월 dd일')}"> 2020-10-20 19:21:33.751</i></span>
-        &nbsp;
-        <span th:if="${#authentication.principal.id} == ${reply.user.id}">
+        <span style="font-size: 14px">
+            <i style="font-size: 14px" th:text="${#temporals.format(board.createdAt, 'yyyy년 MM월 dd일')}"> 2020-10-20 19:21:33.751</i>
+        </span>&nbsp;
+
+        <span sec:authorize="isAuthenticated()" th:if="${#authentication.principal.id} == ${reply.user.id}">
                 <button class="btn btn-success btn-sm" id="btn-reply-modify" style="font-size: 13px; display: none;"
                         th:onclick="replyModify([[${reply.id}]])">submit</button>
                 <button class="btn btn-secondary btn-sm" id="btn-reply-cancel"
@@ -60,15 +75,20 @@
                 <button class="btn btn-danger btn-sm" style="font-size: 13px;"
                         th:onclick="replyDelete([[${reply.id}]])" type="button">delete</button>
         </span>
+
         <div>
             <input class="form-control" readonly style="font-size: 16px; border: none; margin-top: 10px"
                    th:id="'reply-modify-content-' + ${reply.id}" th:value="${reply.content}" type="text">
         </div>
+
         <hr>
+
         <input id="replyId" th:value="${reply.id}" type="hidden">
     </div>
+
     <input id="boardId" th:value="${board.id}" type="hidden">
 </div>
+
 <footer th:replace="layout/default :: footer"/>
 <script>
     $('#reply-write-form').on('input', function () {
