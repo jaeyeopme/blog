@@ -111,13 +111,13 @@ function joinFormValidate(target) {
 
 }
 
-function formValidate(target) {
-    if (target.checkValidity()) {
-        target.classList.remove('is-invalid');
-        target.classList.add('is-valid');
+function validate(form) {
+    if (form.checkValidity()) {
+        form.classList.remove('is-invalid');
+        form.classList.add('is-valid');
     } else {
-        target.classList.remove('is-valid');
-        target.classList.add('is-invalid');
+        form.classList.remove('is-valid');
+        form.classList.add('is-invalid');
     }
 }
 

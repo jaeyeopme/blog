@@ -37,7 +37,7 @@ public class BoardController {
         return "board/board-modify-form";
     }
 
-    @GetMapping("detail/{boardId}")
+    @GetMapping("boards/detail/{boardId}")
     public String boardsDetailForm(Model model, @PathVariable Long boardId) {
         model.addAttribute("board", boardService.findById(boardId));
         return "board/board-detail-form";

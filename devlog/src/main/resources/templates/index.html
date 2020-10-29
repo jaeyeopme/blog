@@ -1,46 +1,36 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="https://www.thymeleaf.org">
-<head th:replace="layout/default :: head('Blog')"/>
+<head th:replace="layout/default :: head('Bucket')"/>
 <body>
-<header th:replace="layout/default :: header('index')"/>
-<br>
-<div class="container">
-    <div class="row row-cols-1 row-cols-md-3">
+<header th:replace="layout/default :: header"/>
+<div class="container-fluid" style="width: 70%; margin-top:50px">
+    <br><br>
+    <div class="row row-cols-1 row-cols-xl-4 row-cols-md-2">
         <div class="col mb-4" th:each="board: ${boards.content}">
-            <div class="card h-100" style="cursor: pointer;"
-                 th:onclick="'location.href = \'' + @{'/detail/' + ${board.id}} + '\''">
-                <div style="height: 150px; overflow: hidden; position: relative" th:if="${board.thumbnailUrl} != null">
-                    <img alt="..." class="card-img-top"
-                         style="position: absolute; top: -100%; bottom: -100%; margin: auto"
-                         th:src="${board.thumbnailUrl}">
+            <div class="card shadow-sm" style="height: 20rem;">
+                <img class="card-img-top img-fluid" style="width: 100%; height: 9rem; object-fit: cover;"
+                     th:if="${board.thumbnailUrl} != null" th:src="${board.thumbnailUrl}">
+                <div class="card-body px-2 py-1">
+                    <h5 class="card-title" th:text="${board.title}"></h5>
+                    <p class="card-text" th:text="${board.description}"></p>
                 </div>
-                <div class="card-body">
-                    <h5 class="card-title" style="font-weight: bold" th:text="${board.title}">Card title</h5>
-                    <p class="card-text" style="font-size: 14px" th:utext="${board.description}"></p>
+                <div class="footer px-3 py-1">
+                    <p class="card-text d-flex justify-content-between">
+                        <span>
+                            <small class="text-muted">by</small>
+                            <small th:text="${board.user.email}"></small>
+                        </span>
+                        <small class="text-muted"
+                               th:text="${#temporals.format(board.createdAt, 'yyyy년 MM월 dd일')}"></small>
+                    </p>
                 </div>
-                <div class="card-footer d-flex justify-content-between">
-                    <small class="text-muted" th:text="'by ' + ${board.user.email}"></small>
-                    <small class="text-muted" th:text="${#temporals.format(board.createdAt, 'yyyy년 MM월 dd일')}">Last
-                        updated 3 mins ago</small>
-                </div>
+                <a class="stretched-link" th:href="@{boards/detail/{id}(id=${board.id})}"></a>
             </div>
         </div>
     </div>
-    <ul class="pagination justify-content-center" th:if="${boards.totalPages > 0}">
-        <li class="page-item" th:classappend="${boards.first} ? 'disabled'">
-            <a class="page-link" th:href="@{/(page=${boards.number - 1})}">Previous</a>
-        </li>
-        <li class="page-item" th:classappend="${boards.number == i} ? 'disabled'"
-            th:each="i : ${#numbers.sequence(0, boards.totalPages - 1)}">
-            <a class="page-link" th:href="@{/(page=${i})}" th:text="${i + 1}"></a>
-        </li>
-        <li class="page-item" th:classappend="${boards.last} ? 'disabled'">
-            <a class="page-link" th:href="@{/(page=${boards.number + 1})}">Next</a>
-        </li>
-    </ul>
 </div>
-<footer th:replace="layout/default :: footer"/>
+<div th:replace="layout/default :: script"></div>
 <script th:src="@{/js/user.js}"></script>
 </body>
 </html>
