@@ -14,20 +14,20 @@ public class UserRestController {
         this.userService = userService;
     }
 
-    @PostMapping("users")
-    public ResponseEntity<ApiResponse> join(@RequestBody User user) {
-        return userService.save(user);
+    @PostMapping("signup")
+    public ResponseEntity<> signup(@RequestBody User user) {
+        return userService.signup(user);
     }
 
-    @GetMapping("users/{email}")
-    public ResponseEntity<ApiResponse> findByEmail(@PathVariable String email) {
-        return userService.findByEmail(email);
-    }
-
-    @PutMapping("users")
-    public ResponseEntity<ApiResponse> update(@RequestBody User user) {
-        return userService.update(user);
-    }
+//    @GetMapping("users/{email}")
+//    public ResponseEntity<ApiResponse> findByEmail(@PathVariable String email) {
+//        return userService.findByEmail(email);
+//    }
+//
+//    @PutMapping("users")
+//    public ResponseEntity<ApiResponse> update(@RequestBody User user) {
+//        return userService.update(user);
+//    }
 
 //    @DeleteMapping("users/{id}")
 //    public ResponseEntity delete(@PathVariable Long id) {

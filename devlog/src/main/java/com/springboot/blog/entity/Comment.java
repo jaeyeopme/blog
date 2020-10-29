@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Reply {
+public class Comment {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

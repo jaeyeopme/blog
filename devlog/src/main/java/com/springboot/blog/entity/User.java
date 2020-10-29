@@ -32,11 +32,10 @@ public class User implements UserDetails {
     @Column(unique = true, nullable = false, length = 45)
     private String email;
 
-    @Column(nullable = false, length = 45)
-    private String username;
-
     @Column(nullable = false, length = 68)
     private String password;
+
+    private String introduction;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -46,6 +45,11 @@ public class User implements UserDetails {
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         grantedAuthorities.add(() -> String.valueOf(getRole()));
         return grantedAuthorities;
+    }
+
+    @Override
+    public String getUsername() {
+        return getEmail();
     }
 
     @Override

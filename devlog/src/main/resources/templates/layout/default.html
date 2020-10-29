@@ -6,22 +6,14 @@
     <meta content="width=device-width, initial-scale=1" name="viewport">
     <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
           integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" rel="stylesheet">
-    <title th:text="${title}"></title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap"
+          rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap');
-
-        .card:hover {
-            transform: scale(1.02);
-        }
-
-        .card {
-            transition: .3s;
-        }
-
         body {
             font-family: 'Noto Sans KR', sans-serif;
         }
     </style>
+    <title th:text="${title}"></title>
 </head>
 <body>
 <header th:fragment="header">
@@ -30,7 +22,7 @@
             <a class="navbar-brand" th:href="@{/}">Bucket</a>
             <ul class="navbar-nav">
                 <li class="nav-item" sec:authorize="isAnonymous()">
-                    <button class="btn btn-dark btn-sm rounded-pill" data-target="#exampleModal" data-toggle="modal"
+                    <button class="btn btn-dark btn-sm rounded-pill" data-target="#modal" data-toggle="modal"
                             type="button">&nbsp;&nbsp;로그인&nbsp;&nbsp;
                     </button>
                 </li>
@@ -42,42 +34,41 @@
     </nav>
 
     <!-- Modal -->
-    <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="exampleModal" tabindex="-1">
+    <div aria-hidden="true" class="modal fade" id="modal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">로그인</h5>
+                    <h5 class="modal-title" id="modal-header">로그인</h5>
                     <span aria-hidden="true" aria-label="Close" class="close" data-dismiss="modal"
                           style="cursor: pointer">&times;</span>
                 </div>
                 <div class="modal-body">
-                    <form th:action="@{users/login}" th:method="post">
-                        <div class="form-group">
-                            <label for="email">이메일</label>
-                            <input class="form-control" id="email" name="email" onblur="validate(this)"
-                                   placeholder="이메일을 입력하세요." required
-                                   type="email">
-                            <div class="invalid-feedback">
-                                이메일을 확인해주세요.
-                            </div>
+                    <div class="form-group">
+                        <label for="email">이메일</label>
+                        <input class="form-control" id="email" onblur="validate(this)"
+                               placeholder="이메일을 입력하세요." required
+                               type="email">
+                        <div id="email-feedback" class="invalid-feedback">
+                            이메일을 확인해주세요.
                         </div>
-                        <div class="form-group">
-                            <label for="password">비밀번호</label>
-                            <input class="form-control" id="password" name="password" onblur="validate(this)"
-                                   placeholder="비밀번호를 입력하세요." required
-                                   type="password">
-                            <div class="invalid-feedback">
-                                비밀번호를 확인해주세요.
-                            </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">비밀번호</label>
+                        <input class="form-control" id="password" onblur="validate(this)"
+                               placeholder="비밀번호를 입력하세요." required
+                               type="password">
+                        <div class="invalid-feedback">
+                            비밀번호를 확인해주세요.
                         </div>
-                        <div class="form-group text-right">
-                            <button class="btn btn-success" type="submit">로그인</button>
-                        </div>
-                    </form>
+                    </div>
+                    <div class="form-group text-right">
+                        <button class="btn btn-success" id="btn-submit" type="button" onclick="submitData(this)">로그인</button>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <small>
-                        아직 회원이 아니신가요? <a class="text-success" href="#">회원가입</a>
+                    <small id="footer">
+                        아직 회원이 아니신가요? <a class="text-success" onclick="changeModal(this)"
+                                         style="cursor: pointer">회원가입</a>
                     </small>
                 </div>
             </div>

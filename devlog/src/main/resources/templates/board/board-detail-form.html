@@ -1,15 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity"
+<html lang="en"
       xmlns:th="https://www.thymeleaf.org">
 <head th:replace="layout/default :: head('Detail')"/>
 <body>
 <header th:replace="layout/default :: header"/>
-
-<br>
-
-<div class="container w-50 p-3">
-    <h2 style="font-weight: bold" th:text="${board.title}"></h2>
-
+<br><br>
+<!--/*
+<div th:utext="${board.content}" style="width: 10px;height: 10px"></div>
+<h2 th:text="${board.title}"></h2>
     <div class="d-flex justify-content-between">
         <span>
             <span style="font-weight: bold; font-size: 16px" th:text="${board.user.username}"></span>
@@ -31,19 +29,9 @@
             </span>
         </span>
     </div>
-
-    <hr>
-
-    <div th:utext="${board.content}"></div>
-
-    <hr>
-
-    <div style="font-weight: bold; font-size: 15px"
-         th:text="${board.replies.size()} + ' comments'">
-    </div>
-
-    <br>
-
+<div style="font-weight: bold; font-size: 15px"
+     th:text="${board.replies.size()} + ' comments'">
+</div>
     <textarea class="form-control" id="reply-write-content" placeholder="Enter Comment" rows="2"
               style="overflow: hidden; resize: none;"></textarea>
 
@@ -82,21 +70,44 @@
         </div>
 
         <hr>
-
         <input id="replyId" th:value="${reply.id}" type="hidden">
     </div>
-
     <input id="boardId" th:value="${board.id}" type="hidden">
-</div>
+*/-->
+<div class="container-fluid" style="width: 50%; margin-top:5%">
+    <div class="mb-5 text-center">
+        <div class="mb-5">
+            <h1 style="font-weight: bold" th:text="${board.title}"></h1>
+        </div>
+        <div class="mb-5">
+            <h5>
+                <a class="text-dark" href="#" th:text="${board.user.username}"></a> · <small class="text-muted"
+                                                                                             th:text="${#temporals.format(board.createdAt, 'yyyy년 MM월 dd일')}"></small>
+            </h5>
+        </div>
+    </div>
 
-<footer th:replace="layout/default :: footer"/>
-<script>
-    $('#reply-write-form').on('input', function () {
-        this.style.height = 'auto';
-        this.style.height =
-            (this.scrollHeight) + 'px';
-    });
-</script>
-<script th:src="@{/js/board.js}"></script>
+    <div class="lead mb-5" th:utext="${board.content}"></div>
+
+    <div class="align-middle"style="height: 128px;">
+        <img class="rounded-circle img-thumbnail" style="width: 128px;" th:src="@{/images/img.jpg}">
+        &nbsp;&nbsp;
+        <div class="d-inline-block">
+            <h4><a class="text-dark font-weight-bold" href="#" th:text="${board.user.username}"></a></h4>
+            <p class="lead">소개글</p>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="form-group">
+        <label for="commentTextarea" th:text="${board.comments.size} + '개의 댓글'"></label>
+        <textarea class="form-control" id="commentTextarea" rows="3"></textarea>
+    </div>
+
+</div>
+<div th:replace="layout/default :: script"></div>
+<script th:src="@{js/user.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js"></script>
 </body>
 </html>

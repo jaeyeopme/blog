@@ -30,16 +30,16 @@ public class BoardController {
         return "board/board-write-form";
     }
 
-    @GetMapping("modify/{boardId}")
-    public String modifyForm(Model model, @PathVariable Long boardId) {
-        Board board = boardService.findById(boardId);
-        model.addAttribute("board", board);
-        return "board/board-modify-form";
-    }
-
-    @GetMapping("boards/detail/{boardId}")
-    public String boardsDetailForm(Model model, @PathVariable Long boardId) {
-        model.addAttribute("board", boardService.findById(boardId));
-        return "board/board-detail-form";
-    }
+//    @GetMapping("modify/{boardId}")
+//    public String modifyForm(Model model, @PathVariable Long boardId) {
+//        Board board = boardService.findById(boardId);
+//        model.addAttribute("board", board);
+//        return "board/board-modify-form";
+//    }
+//
+//    @GetMapping("boards/detail/{boardId}")
+//    public String boardsDetailForm(Model model, @PathVariable Long boardId) {
+//        model.addAttribute("board", boardService.findById(boardId));
+//        return "board/board-detail-form";
+//    }
 }
