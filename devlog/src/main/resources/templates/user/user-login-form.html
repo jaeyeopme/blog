@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
-<head th:replace="layout/default :: head('Sign in to Blog')"/>
+<head th:replace="layout/default :: head('Sign in to Blog')"></head>
+<script defer th:src="@{js/user.js}"></script>
 <body>
-<header th:replace="layout/default :: header"/>
+<header th:replace="layout/default :: header"></header>
+<div th:replace="layout/default :: modal"></div>
 <br><br>
 <div class="container">
     <div class="text-center">
-        <img th:src="@{/images/bmo.png}">
+        <img th:src="@{images/bmo.png}">
         <br><br>
         <h3 th:text="${param.error} ? '이메일과 비밀번호를 확인해주세요.' : '로그인 후 이용해주세요.'"></h3>
     </div>
 </div>
-<div th:replace="layout/default :: script"></div>
-<script th:src="@{js/user.js}"></script>
 </body>
 </html>
 

@@ -25,9 +25,4 @@ public class UserRestController {
         return userService.update(newUser, id);
     }
 
-//    @DeleteMapping("users/{id}")
-//    public ResponseEntity delete(@PathVariable Long id) {
-//        return userService.deleteById(id);
-//    }
-
 }

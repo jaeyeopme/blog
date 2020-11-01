@@ -165,21 +165,7 @@ function submitData(action) {
                 });
                 break;
             case '로그인':
-                $.ajax({
-                    url: 'signin',
-                    type: 'POST',
-                    contentType: 'application/json; charset=UTF-8',
-                    data: JSON.stringify({
-                        email: emailForm.value,
-                        password: passwordForm.value
-                    })
-                }).done(() => {
-                    location.href = '/';
-                }).fail(error => {
-                    emailFeedback.innerText = error.responseJSON.message;
-                    emailForm.classList.add('is-invalid');
-                    passwordForm.classList.add('is-invalid')
-                });
+                document.getElementById('signinForm').submit();
                 break;
         }
     }

@@ -2,6 +2,7 @@
 <html lang="en"
       xmlns:th="https://www.thymeleaf.org">
 <head th:replace="layout/default :: head('Bucket')"></head>
+<script defer th:src="@{js/user.js}"></script>
 <style>
     .card:hover {
         transform: scale(1.02);
@@ -16,6 +17,7 @@
 <div th:replace="layout/default :: modal"></div>
 <br><br>
 <div class="container-fluid" style="width: 70%; margin-top:5%">
+    <a href="/write">asd</a>
     <div class="row row-cols-1 row-cols-xl-4 row-cols-md-2">
         <div class="col mb-4" th:each="board: ${boards}">
             <div class="card shadow-sm" style="height: 20rem;">
@@ -41,8 +43,6 @@
         </div>
     </div>
 </div>
-<div th:replace="layout/default :: script"></div>
-<script th:src="@{js/user.js}"></script>
 </body>
 </html>
 
