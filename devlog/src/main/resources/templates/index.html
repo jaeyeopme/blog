@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="https://www.thymeleaf.org">
-<head th:replace="layout/default :: head('Bucket')"/>
-<body>
-<header th:replace="layout/default :: header"/>
+<head th:replace="layout/default :: head('Bucket')"></head>
 <style>
     .card:hover {
         transform: scale(1.02);
@@ -13,13 +11,17 @@
         transition: .3s;
     }
 </style>
+<body>
+<header th:replace="layout/default :: header"></header>
+<div th:replace="layout/default :: modal"></div>
 <br><br>
 <div class="container-fluid" style="width: 70%; margin-top:5%">
     <div class="row row-cols-1 row-cols-xl-4 row-cols-md-2">
-        <div class="col mb-4" th:each="board: ${boards.content}">
+        <div class="col mb-4" th:each="board: ${boards}">
             <div class="card shadow-sm" style="height: 20rem;">
-                <img class="card-img-top img-fluid" style="height: 9rem; object-fit: cover;"
-                     th:if="${board.thumbnailUrl} != null" th:src="${board.thumbnailUrl}">
+                <img alt="thumbnail" class="card-img-top img-fluid"
+                     style="height: 9rem; object-fit: cover;" th:if="${board.thumbnailUrl} != null"
+                     th:src="${board.thumbnailUrl}">
                 <div class="card-body px-2 py-1">
                     <h5 class="card-title" th:text="${board.title}"></h5>
                     <p class="card-text" th:text="${board.description}"></p>
@@ -28,7 +30,7 @@
                     <p class="card-text d-flex justify-content-between">
                         <span>
                             <small class="text-muted">by</small>
-<!--                            <small th:text="${board.user.email}"></small>-->
+                            <!--                            <small th:text="${board.user.email}"></small>-->
                         </span>
                         <small class="text-muted"
                                th:text="${#temporals.format(board.createdAt, 'yyyy년 MM월 dd일')}"></small>

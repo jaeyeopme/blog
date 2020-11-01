@@ -1,12 +1,10 @@
 package com.springboot.blog.service;
 
+import com.springboot.blog.controller.rest.UserRestController;
 import com.springboot.blog.entity.User;
 import com.springboot.blog.entity.UserRole;
 import com.springboot.blog.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.IanaLinkRelations;
-import org.springframework.hateoas.server.mvc.ControllerLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,10 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import javax.persistence.EntityNotFoundException;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -35,31 +33,28 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public ResponseEntity signup(User user) {
-        if (userRepository.findByEmail(user.getEmail()).isPresent())
+    public ResponseEntity<String> signup(User newUser) {
+        if (userRepository.findByEmail(newUser.getEmail()).isPresent())
             throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 사용중인 이메일 입니다.");
 
-        user.setRole(UserRole.ROLE_USER);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        newUser.setRole(UserRole.ROLE_USER);
+        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        Long userId = userRepository.save(newUser).getId();
 
-//        EntityModel<User> entityModel = assembler.toModel(userRepository.save(user));
-
-//        return ResponseEntity
-//                .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
-//                .body(entityModel);
-        return null;
+        return ResponseEntity.created(linkTo(methodOn(UserRestController.class)
+                .signup(newUser)).slash(userId).withSelfRel().toUri()).body("{}");
     }
 
-//    @Transactional
-//    public ResponseEntity<ApiResponse> update(User user) {
-//        User found_user = userRepository.findByEmail(user.getEmail()).orElseThrow(() -> new IllegalArgumentException(String.format("not found user - %d", user.getId())));
-//        found_user.setPassword(passwordEncoder.encode(user.getPassword()));
-//
-//        HttpStatus ok = HttpStatus.OK;
-//        ApiResponse success = new ApiResponse(ok, "success", System.currentTimeMillis());
-//
-//        return new ResponseEntity<>(success, ok);
-//    }
+    @Transactional
+    public ResponseEntity<?> update(User newUser, Long id) {
+        return userRepository.findById(id)
+                .map(user -> { // stream
+                    user.setPassword(passwordEncoder.encode(newUser.getPassword()));
+                    user.setIntroduction(newUser.getIntroduction());
+                    return new ResponseEntity(HttpStatus.OK);
+                })
+                .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다."));
+    }
 //
 //    @Transactional
 //    public ResponseEntity<ApiResponse> deleteById(Long id) {
@@ -77,7 +72,7 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Email " + email + " is not found"));
+        return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("이메일을 확인해주세요."));
     }
 
 }

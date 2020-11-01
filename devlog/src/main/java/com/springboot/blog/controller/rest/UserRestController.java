@@ -2,6 +2,7 @@ package com.springboot.blog.controller.rest;
 
 import com.springboot.blog.entity.User;
 import com.springboot.blog.service.UserService;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,20 +15,15 @@ public class UserRestController {
         this.userService = userService;
     }
 
-    @PostMapping("signup")
-    public ResponseEntity<> signup(@RequestBody User user) {
-        return userService.signup(user);
+    @PostMapping(value = "users", produces = MediaTypes.HAL_JSON_VALUE)
+    public ResponseEntity<String> signup(@RequestBody User newUser) {
+        return userService.signup(newUser);
     }
 
-//    @GetMapping("users/{email}")
-//    public ResponseEntity<ApiResponse> findByEmail(@PathVariable String email) {
-//        return userService.findByEmail(email);
-//    }
-//
-//    @PutMapping("users")
-//    public ResponseEntity<ApiResponse> update(@RequestBody User user) {
-//        return userService.update(user);
-//    }
+    @PutMapping("users/{id}")
+    public ResponseEntity<?> update(@RequestBody User newUser, @PathVariable Long id) {
+        return userService.update(newUser, id);
+    }
 
 //    @DeleteMapping("users/{id}")
 //    public ResponseEntity delete(@PathVariable Long id) {

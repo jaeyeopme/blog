@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+<html lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity"
       xmlns:th="https://www.thymeleaf.org">
 <head th:fragment="head(title)">
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1" name="viewport">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
     <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
           integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap"
@@ -16,6 +19,8 @@
     <title th:text="${title}"></title>
 </head>
 <body>
+
+<!-- Header -->
 <header th:fragment="header">
     <nav class="navbar navbar-expand-lg navbar-light fixed-top">
         <div class="container-fluid d-flex justify-content-between mb-0 h5" style="width: 70%;">
@@ -29,59 +34,59 @@
                 <li class="nav-item" sec:authorize="isAuthenticated()">
                     <button class="btn btn-dark btn-sm rounded-pill" type="button">글 작성</button>
                 </li>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="btn btn-dark btn-sm rounded-pill" href="/logout" type="button">로그아웃</a>
+                </li>
             </ul>
         </div>
     </nav>
+</header>
 
-    <!-- Modal -->
-    <div aria-hidden="true" class="modal fade" id="modal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modal-header">로그인</h5>
-                    <span aria-hidden="true" aria-label="Close" class="close" data-dismiss="modal"
-                          style="cursor: pointer">&times;</span>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="email">이메일</label>
-                        <input class="form-control" id="email" onblur="validate(this)"
-                               placeholder="이메일을 입력하세요." required
-                               type="email">
-                        <div id="email-feedback" class="invalid-feedback">
-                            이메일을 확인해주세요.
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">비밀번호</label>
-                        <input class="form-control" id="password" onblur="validate(this)"
-                               placeholder="비밀번호를 입력하세요." required
-                               type="password">
-                        <div class="invalid-feedback">
-                            비밀번호를 확인해주세요.
-                        </div>
-                    </div>
-                    <div class="form-group text-right">
-                        <button class="btn btn-success" id="btn-submit" type="button" onclick="submitData(this)">로그인</button>
+<!-- Modal -->
+<div aria-hidden="true" class="modal fade" id="modal" tabindex="-1" th:fragment="modal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-header">로그인</h5>
+                <span aria-hidden="true" aria-label="Close" class="close" data-dismiss="modal"
+                      style="cursor: pointer">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="email">이메일</label>
+                    <input class="form-control" id="email" onblur="validate(this)"
+                           placeholder="이메일을 입력하세요." required
+                           type="email">
+                    <div class="invalid-feedback" id="email-feedback">
+                        이메일을 확인해주세요.
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <small id="footer">
-                        아직 회원이 아니신가요? <a class="text-success" onclick="changeModal(this)"
-                                         style="cursor: pointer">회원가입</a>
-                    </small>
+                <div class="form-group">
+                    <label for="password">비밀번호</label>
+                    <input class="form-control" id="password" onblur="validate(this)"
+                           placeholder="비밀번호를 입력하세요." required
+                           type="password">
+                    <div class="invalid-feedback">
+                        비밀번호를 확인해주세요.
+                    </div>
                 </div>
+                <div class="form-group text-right">
+                    <button class="btn btn-success" id="btn-submit" onclick="submitData(this.innerText)" type="button">
+                        로그인
+                    </button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <small id="footer">
+                    아직 회원이 아니신가요? <a class="text-success" onclick="changeModal(this)"
+                                     style="cursor: pointer">회원가입</a>
+                </small>
             </div>
         </div>
     </div>
-</header>
+</div>
 <div th:fragment="script">
-    <script crossorigin="anonymous"
-            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-            src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script crossorigin="anonymous"
-            integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
-            src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
 </div>
 </body>
 </html>

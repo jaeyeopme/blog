@@ -1,3 +1,5 @@
+'use strict';
+
 let index = {
     init: function () {
         $('#btn-board-write').on('click', () => {

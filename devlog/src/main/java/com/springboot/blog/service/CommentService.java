@@ -1,15 +1,9 @@
 package com.springboot.blog.service;
 
-import com.springboot.blog.entity.Board;
-import com.springboot.blog.entity.Comment;
-import com.springboot.blog.entity.User;
 import com.springboot.blog.repository.BoardRepository;
 import com.springboot.blog.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CommentService {
