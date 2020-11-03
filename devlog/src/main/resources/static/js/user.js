@@ -113,6 +113,14 @@
 //
 // }
 
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 10) {
+        document.getElementById('navbar').classList.add('shadow-sm');
+    } else {
+        document.getElementById('navbar').classList.remove('shadow-sm');
+    }
+})
+
 function validate(element) {
     if (element.checkValidity() && element.value.search(' ') === -1) {
         element.classList.remove('is-invalid');
@@ -137,7 +145,7 @@ function changeModal(element) {
     }
 
     document.getElementById('modal-header').innerText = text;
-    document.getElementById('btn-submit').innerText = text;
+    document.getElementById('btn-sign').innerText = text;
 
 }
 

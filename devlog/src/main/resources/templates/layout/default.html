@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity"
       xmlns:th="https://www.thymeleaf.org">
-<head th:fragment="head(title)">
+<head th:fragment="head(current)">
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1" name="viewport">
     <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -16,35 +16,37 @@
             font-family: 'Noto Sans KR', sans-serif;
         }
     </style>
-    <title th:text="${title}"></title>
+    <title th:text="${current}"></title>
 </head>
 <body>
 
 <!-- Header -->
 <header th:fragment="header">
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
-        <div class="container-fluid d-flex justify-content-between mb-0 h5" style="width: 70%;">
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="navbar"
+         style="background-color: white;width: 100vw; height: 7vh">
+        <div class="container-fluid p-0" style="width: 90vw;">
             <a class="navbar-brand" th:href="@{/}">Bucket</a>
-            <ul class="navbar-nav">
-                <li class="nav-item" sec:authorize="isAnonymous()">
-                    <button class="btn btn-dark btn-sm rounded-pill" data-target="#modal" data-toggle="modal"
-                            type="button">&nbsp;&nbsp;로그인&nbsp;&nbsp;
+            <ul class="navbar-nav justify-content-end">
+                <li class="nav-item p-2" sec:authorize="isAnonymous()">
+                    <button class="btn btn-outline-dark btn-sm" data-target="#sign-modal" data-toggle="modal"
+                            type="button">로그인
                     </button>
                 </li>
-                <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <button class="btn btn-dark btn-sm rounded-pill" type="button">글 작성</button>
-                </li>
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a class="btn btn-dark btn-sm rounded-pill" href="/logout" type="button">로그아웃</a>
+                <li class="nav-item p-2" sec:authorize="isAuthenticated()">
+                    <a class="btn btn-outline-dark btn-sm mx-1" href="/write" id="btn-write-modal" type="button">
+                        새 글 작성
+                    </a>
+                    <a class="btn btn-outline-dark btn-sm mx-1" href="/logout" type="button">
+                        로그아웃
+                    </a>
                 </li>
             </ul>
         </div>
     </nav>
 </header>
 
-<!-- Modal -->
-<div aria-hidden="true" class="modal fade" id="modal" tabindex="-1" th:fragment="modal">
+<!-- Sign in Modal -->
+<div aria-hidden="true" class="modal fade" id="sign-modal" tabindex="-1" th:fragment="sign-modal">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -52,8 +54,8 @@
                 <span aria-hidden="true" aria-label="Close" class="close" data-dismiss="modal"
                       style="cursor: pointer">&times;</span>
             </div>
-            <form id="signinForm" th:action="@{/signin}" th:method="POST">
-                <div class="modal-body">
+            <div class="modal-body">
+                <form id="signinForm" th:action="@{/signin}" th:method="POST">
                     <div class="form-group">
                         <label for="email">이메일</label>
                         <input class="form-control" id="email" name="email" onblur="validate(this)"
@@ -73,13 +75,13 @@
                         </div>
                     </div>
                     <div class="form-group text-right">
-                        <button class="btn btn-success" id="btn-submit" onclick="submitData(this.innerText)"
+                        <button class="btn btn-success" id="btn-sign" onclick="submitData(this.innerText)"
                                 type="button">
                             로그인
                         </button>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
             <div class="modal-footer">
                 <small id="footer">
                     아직 회원이 아니신가요? <a class="text-success" onclick="changeModal(this)"
@@ -90,12 +92,47 @@
     </div>
 </div>
 
-<!-- Alert -->
-<div class="alert alert-warning alert-dismissible fade" role="alert">
-    <strong>Holy guacamole!</strong> You should check in on some of those fields below.
-    <button aria-label="Close" class="close" data-dismiss="alert" type="button">
-        <span aria-hidden="true">&times;</span>
-    </button>
+<!-- Write Modal -->
+<div aria-hidden="true" class="modal fade" id="write-modal" tabindex="-1" th:fragment="write-modal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">미리보기</h5>
+                <span aria-hidden="true" aria-label="Close" class="close" data-dismiss="modal"
+                      style="cursor: pointer">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group text-center">
+                    <img alt="thumbnail" id="blah"
+                         src="https://dapp.dblog.org/img/default.jpg"
+                         style="height: 20vh; object-fit: cover;">
+                </div>
+                <div class="form-group">
+                    <div class="custom-file">
+                        <input accept="image/**" class="custom-file-input" id="preview-image"
+                               onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])"
+                               type="file">
+                        <small><label class="custom-file-label" for="preview-image">미리보기 사진 (50MB)</label></small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" id="title"
+                           placeholder="제목을 입력해주세요." required
+                           type="text">
+                </div>
+                <div class="form-group">
+                    <small><textarea class="form-control" id="introduction" placeholder="소개글을 작성해주세요. (최대 100자)" maxlength="100"
+                                     style="height: 12vh; resize: none"></textarea></small>
+                </div>
+                <div class="form-group text-right">
+                    <button class="btn btn-success" id="btn-write"
+                            type="button">
+                        새 글 작성
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

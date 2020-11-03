@@ -29,7 +29,7 @@ public class Board {
 
     private String thumbnailUrl;
 
-    private String description;
+    private String introduction;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
