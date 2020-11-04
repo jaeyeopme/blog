@@ -99,7 +99,7 @@ switch (document.title) {
     case 'detail':
         const detailContent = new SimpleMDE({
             element: document.getElementById('board-content'),
-            status : false,
+            status: false,
             toolbar: false,
         });
         detailContent.togglePreview();

@@ -37,7 +37,7 @@
 <body>
 <header th:replace="layout/default :: header"/>
 <div th:replace="layout/default :: modify-modal"></div>
-<textarea id="mde" th:text="${board.getContent()}"></textarea>
-<input id="id" th:value="${board.getId()}" type="hidden">
+<textarea id="board-content" th:text="${board.getContent()}"></textarea>
+<input id="board-id" th:value="${board.getId()}" type="hidden">
 </body>
 </html>

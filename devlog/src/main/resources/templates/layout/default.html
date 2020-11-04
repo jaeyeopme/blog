@@ -126,7 +126,7 @@
                                      placeholder="소개 글을 작성해주세요. (최대 100자)" style="height: 12vh; resize: none"></textarea></small>
                 </div>
                 <div class="form-group text-right">
-                    <button class="btn btn-success" id="btn-write"
+                    <button class="btn btn-success" id="btn-board-write"
                             type="button">
                         새 글 작성
                     </button>
@@ -171,7 +171,7 @@
                                      th:text="${board.getIntroduction()}"></textarea></small>
                 </div>
                 <div class="form-group text-right">
-                    <button class="btn btn-success" id="btn-modify"
+                    <button class="btn btn-success" id="btn-board-modify"
                             type="button">
                         글 수정
                     </button>
@@ -180,5 +180,27 @@
         </div>
     </div>
 </div>
+
+<!-- Delete Modal -->
+<div aria-hidden="true" class="modal fade" id="delete-modal" tabindex="-1" th:fragment="delete-modal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">게시글 삭제</h5>
+                <span aria-hidden="true" aria-label="Close" class="close" data-dismiss="modal"
+                      style="cursor: pointer">&times;</span>
+            </div>
+            <div class="modal-body">
+                삭제하시겠습니까?
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger btn-sm" id="btn-board-delete" type="button">삭제</button>
+                <button class="btn btn-secondary btn-sm" data-dismiss="modal" type="button">취소</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 </body>
 </html>

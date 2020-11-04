@@ -1,11 +1,25 @@
 <!DOCTYPE html>
-<html lang="en"
+<html lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       xmlns:th="https://www.thymeleaf.org">
 <head th:replace="layout/default :: head('detail')"/>
+<link href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<script defer th:src="@{/js/user.js}"></script>
+<script defer th:src="@{/js/board.js}"></script>
+<script defer th:src="@{/js/comment.js}"></script>
+<style>
+    .editor-preview, .CodeMirror {
+        background-color: white;
+        border: none;
+    }
+</style>
 <body>
 <header th:replace="layout/default :: header"/>
+<div th:replace="layout/default :: sign-modal"></div>
+<div th:replace="layout/default :: delete-modal"></div>
+
 <div class="container-fluid" style="width: 50vw;padding-top: 20vh;">
-    <div class="d-flex justify-content-between" style="margin-bottom: 20vh">
+    <div class="d-flex justify-content-between" style="margin-bottom: 10vh">
         <div>
             <h1 style="margin-bottom: 5vh" th:text="${board.getTitle()}"></h1>
             <span th:text="${board.getUser().getEmail()}  + '   ·   '">
@@ -13,18 +27,23 @@
             <span style="font-weight: lighter"
                   th:text="${#temporals.format(board.getCreatedAt(), 'yyyy년 MM월 dd일 hh시 mm분')}"></span>
         </div>
-        <div>
-            <a class="btn btn-primary btn-sm mx-1 px-3" id="btn-board-modify"
+        <div class="align-self-bottom" sec:authorize="isAuthenticated()"
+             th:if="${#authentication.principal.id} == ${board.getUser().getId()}">
+            <a class="btn btn-dark btn-sm mx-1 px-3 align-self-bottom" id="btn-board-modify"
                th:href="@{/modify/{id}(id=${board.getId()})}" type="button">
                 수정
             </a>
-            <button class="btn btn-danger btn-sm mx-1 px-3" id="btn-board-delete"
-                    type="button">
+            <a class="btn btn-danger btn-sm mx-1 px-3" data-target="#delete-modal" data-toggle="modal"
+               type="button">
                 삭제
-            </button>
+            </a>
         </div>
     </div>
-    <div style="margin-bottom: 20vh" th:utext="${board.getContent()}"></div>
+
+    <div style="margin-bottom: 20vh">
+        <textarea id="board-content" style="width: 100%; height: auto;" th:text="${board.getContent()}"></textarea>
+    </div>
+
     <div class="d-flex" style="margin-bottom: 5vh">
         <div style="width: 128px; height: 128px; border-radius: 50%; overflow: hidden; display: inline-block; margin-right: 2vw;">
             <img style="object-fit: cover;width: 128px; height: 128px;" th:src="@{/images/img.jpg}">
@@ -43,12 +62,12 @@
         <h6>
             <div class="p-2" th:text="${board.getComments().size()} + '개의 댓글'"></div>
         </h6>
-        <textarea class="p-3"
-                  placeholder="댓글을 작성해주세요."
-                  style="width: 100%; height: 10vh; resize: none; border: 0.5px solid lightgray; outline: none;"></textarea>
+        <textarea class="p-3" id="comment-content" placeholder="댓글을 작성해주세요."
+                  style="width: 100%; height: 15vh; resize: none; border: 0.5px solid lightgray; outline: none;"></textarea>
         <div class="text-right">
-            <button class="btn btn-success btn-sm my-3 px-3" id="btn-comment-write"
-                    type="button">
+            <a class="btn btn-success btn-sm my-3 px-3" sec:authorize="!isAuthenticated()" th:href="@{/login?err}"
+               type="button">댓글 작성</a>
+            <button class="btn btn-success btn-sm my-3 px-3" id="btn-comment-write" sec:authorize="isAuthenticated()">
                 댓글 작성
             </button>
         </div>
@@ -61,7 +80,9 @@
             </div>
             <div class="align-self-center" style="display: inline-block">
                 <div th:text="${comment.getUser().getEmail()}"></div>
-                <div style="font-weight: lighter" th:text="${comment.getCreatedAt()}">작성일</div>
+                <div style="font-weight: lighter"
+                     th:text="${#temporals.format(board.getCreatedAt(), 'yyyy년 MM월 dd일 hh시 mm분')}">작성일
+                </div>
             </div>
         </div>
         <div style="margin-bottom: 3vh" th:text="${comment.getContent()}">
@@ -69,6 +90,7 @@
         </div>
         <hr style="margin-bottom: 3vh">
     </div>
+    <input id="board-id" th:value="${board.getId()}" type="hidden">
 </div>
 </body>
 </html>

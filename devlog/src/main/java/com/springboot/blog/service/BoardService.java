@@ -49,7 +49,7 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public Board findById(Long id) {
-        return boardRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
+        return boardRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."));
     }
 
     @Transactional
@@ -67,6 +67,7 @@ public class BoardService {
                 .write(board, thumbnail, user)).slash(id).withSelfRel().toUri()).body("{}");
     }
 
+    @Transactional
     public ResponseEntity<String> modify(Long id, Board newBoard, MultipartFile newThumbnail) {
         return boardRepository.findById(id)
                 .map(board -> {
@@ -84,54 +85,23 @@ public class BoardService {
                     }
 
                     return ResponseEntity.ok().header("Location", "/boards/" + board.getId()).body("{}");
-                }).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."));
+                }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."));
     }
 
-    //    @Transactional
-//    public ResponseEntity<String> update(Board board, MultipartFile file) {
-//        Board found_board = boardRepository.findById(board.getId()).orElseThrow(() -> new IllegalArgumentException(String.format("not found board - %d", board.getId())));
-//
-//        if (file != null) {
-//            String thumbnailUrl = found_board.getThumbnailUrl();
-//            if (thumbnailUrl != null) {
-//                deleteThumbnail(thumbnailUrl);
-//            }
-//            String filename = String.format("images/%s-%s", UUID.randomUUID(), file.getOriginalFilename());
-//            putThumbnail(file, filename);
-//            found_board.setThumbnailUrl(String.format("%s%s", objectUrl, filename));
-//        }
-//
-//        found_board.setTitle(board.getTitle());
-//        found_board.setContent(board.getContent());
-//        found_board.setDescription(board.getDescription());
-//
-//        HttpStatus ok = HttpStatus.OK;
-//        ApiResponse success = new ApiResponse(ok, "/detail/" + board.getId(), System.currentTimeMillis());
-//
-//        return new ResponseEntity<>(success, ok);
-//    }
-//
-//    @Transactional
-//    public ResponseEntity<ApiResponse> deleteById(Long id) {
-//        Board found_board = boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("not found board"));
-//        String thumbnailUrl = found_board.getThumbnailUrl();
-//
-//        if (thumbnailUrl != null) {
-//            deleteThumbnail(thumbnailUrl);
-//        }
-//
-//        try {
-//            boardRepository.deleteById(id);
-//        } catch (Exception e) {
-//            throw new IllegalArgumentException(String.format("not found board - %d", id));
-//        }
-//
-//        HttpStatus ok = HttpStatus.OK;
-//        ApiResponse success = new ApiResponse(ok, "success", System.currentTimeMillis());
-//
-//        return new ResponseEntity<>(success, ok);
-//    }
-//
+    @Transactional
+    public ResponseEntity<String> deleteById(Long id) {
+        Board board = boardRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."));
+        String thumbnail = board.getThumbnailUrl();
+
+        if (thumbnail != null) {
+            deleteThumbnail(thumbnail);
+        }
+
+        boardRepository.deleteById(id);
+
+        return ResponseEntity.ok("{}");
+    }
+
     private void putThumbnail(MultipartFile thumbnail, String thumbnailName) {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType(thumbnail.getContentType());

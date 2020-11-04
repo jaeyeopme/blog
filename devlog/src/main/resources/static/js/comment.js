@@ -13,6 +13,5 @@ document.getElementById('btn-comment-write').addEventListener('click', () => {
         window.location.href = xhr.getResponseHeader('Location');
     }).fail(error => {
         alert(error.message)
-        window.location.href = '/';
     });
 })
