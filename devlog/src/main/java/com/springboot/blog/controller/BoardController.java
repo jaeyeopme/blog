@@ -7,6 +7,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class BoardController {
@@ -23,9 +24,21 @@ public class BoardController {
         return "index";
     }
 
+    @GetMapping("boards/{id}")
+    public String one(Model model, @PathVariable Long id) {
+        model.addAttribute("board", boardService.findById(id));
+        return "board/board-detail-form";
+    }
+
     @GetMapping("write")
     public String writeForm() {
         return "board/board-write-form";
+    }
+
+    @GetMapping("modify/{id}")
+    public String modifyForm(Model model, @PathVariable Long id) {
+        model.addAttribute("board", boardService.findById(id));
+        return "board/board-modify-form";
     }
 
 //    @GetMapping("modify/{boardId}")

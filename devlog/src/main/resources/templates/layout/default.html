@@ -33,7 +33,7 @@
                     </button>
                 </li>
                 <li class="nav-item p-2" sec:authorize="isAuthenticated()">
-                    <a class="btn btn-outline-dark btn-sm mx-1" href="/write" id="btn-write-modal" type="button">
+                    <a class="btn btn-outline-dark btn-sm mx-1" href="/write" id="btn-modal" type="button">
                         새 글 작성
                     </a>
                     <a class="btn btn-outline-dark btn-sm mx-1" href="/logout" type="button">
@@ -103,16 +103,16 @@
             </div>
             <div class="modal-body">
                 <div class="form-group text-center">
-                    <img alt="thumbnail" id="blah"
+                    <img alt="thumbnail" id="thumbnail"
                          src="https://dapp.dblog.org/img/default.jpg"
                          style="height: 20vh; object-fit: cover;">
                 </div>
                 <div class="form-group">
                     <div class="custom-file">
-                        <input accept="image/**" class="custom-file-input" id="preview-image"
-                               onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])"
+                        <input accept="image/**" class="custom-file-input" id="btn-thumbnail"
+                               onchange="preview(this)"
                                type="file">
-                        <small><label class="custom-file-label" for="preview-image">미리보기 사진 (50MB)</label></small>
+                        <small><label class="custom-file-label" for="btn-thumbnail">미리보기 사진 (50MB)</label></small>
                     </div>
                 </div>
                 <div class="form-group">
@@ -121,13 +121,59 @@
                            type="text">
                 </div>
                 <div class="form-group">
-                    <small><textarea class="form-control" id="introduction" placeholder="소개글을 작성해주세요. (최대 100자)" maxlength="100"
-                                     style="height: 12vh; resize: none"></textarea></small>
+                    <small><textarea class="form-control" id="introduction" maxlength="100"
+                                     onkeyup="introductionValidate(this)"
+                                     placeholder="소개 글을 작성해주세요. (최대 100자)" style="height: 12vh; resize: none"></textarea></small>
                 </div>
                 <div class="form-group text-right">
                     <button class="btn btn-success" id="btn-write"
                             type="button">
                         새 글 작성
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modify Modal -->
+<div aria-hidden="true" class="modal fade" id="modify-modal" tabindex="-1" th:fragment="modify-modal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">미리보기</h5>
+                <span aria-hidden="true" aria-label="Close" class="close" data-dismiss="modal"
+                      style="cursor: pointer">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group text-center">
+                    <img alt="thumbnail" id="thumbnail"
+                         style="height: 20vh; object-fit: cover;"
+                         th:src="${board.getThumbnailUrl()}">
+                </div>
+                <div class="form-group">
+                    <div class="custom-file">
+                        <input accept="image/**" class="custom-file-input" id="btn-thumbnail"
+                               onchange="preview(this)"
+                               type="file">
+                        <small><label class="custom-file-label" for="btn-thumbnail">미리보기 사진 (50MB)</label></small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" id="title"
+                           placeholder="제목을 입력해주세요." required
+                           th:value="${board.getTitle()}" type="text">
+                </div>
+                <div class="form-group">
+                    <small><textarea class="form-control" id="introduction" maxlength="100"
+                                     onkeyup="introductionValidate(this)"
+                                     placeholder="소개 글을 작성해주세요. (최대 100자)" style="height: 12vh; resize: none"
+                                     th:text="${board.getIntroduction()}"></textarea></small>
+                </div>
+                <div class="form-group text-right">
+                    <button class="btn btn-success" id="btn-modify"
+                            type="button">
+                        글 수정
                     </button>
                 </div>
             </div>

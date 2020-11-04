@@ -15,14 +15,14 @@ public class UserRestController {
         this.userService = userService;
     }
 
-    @PostMapping(value = "users", produces = MediaTypes.HAL_JSON_VALUE)
-    public ResponseEntity<String> signup(@RequestBody User newUser) {
-        return userService.signup(newUser);
+    @PostMapping(value = "/users", produces = MediaTypes.HAL_JSON_VALUE)
+    public ResponseEntity<String> signup(@RequestBody User user) {
+        return userService.signup(user);
     }
 
-    @PutMapping("users/{id}")
-    public ResponseEntity<?> update(@RequestBody User newUser, @PathVariable Long id) {
-        return userService.update(newUser, id);
-    }
+//    @PutMapping("users/{id}")
+//    public ResponseEntity<?> update(@RequestBody User newUser, @PathVariable Long id) {
+//        return userService.update(newUser, id);
+//    }
 
 }

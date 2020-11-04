@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<html lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity"
+      xmlns:th="https://www.thymeleaf.org">
 <head th:replace="layout/default :: head('Sign in to Blog')"></head>
 <script defer th:src="@{js/user.js}"></script>
 <body>
@@ -10,7 +11,10 @@
     <div class="text-center">
         <img th:src="@{images/bmo.png}">
         <br><br>
-        <h3 th:text="${param.error} ? '이메일과 비밀번호를 확인해주세요.' : '로그인 후 이용해주세요.'"></h3>
+        <h3 th:if="${param.error} and ${#authentication.isAuthenticated()}">이메일과 비밀번호를 확인해주세요.</h3>
+        <h3 th:if="${param.error} and !${#authentication.isAuthenticated()}">잘못된 접근입니다.</h3>
+        <h3 th:if="!${param.error} and ${#authentication.isAuthenticated()}">로그인 후 이용해주세요.</h3>
+        <h3 th:if="!${param.error} and !${#authentication.isAuthenticated()}">잘못된 접근입니다.</h3>
     </div>
 </div>
 </body>

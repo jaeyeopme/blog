@@ -3,7 +3,7 @@
 <head th:replace="layout/default :: head('write')"/>
 <link href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css" rel="stylesheet">
 <script defer src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-<script defer th:src="@{js/board.js}"></script>
+<script defer th:src="@{/js/board.js}"></script>
 <style>
     body {
         font-size: 18px;
@@ -25,6 +25,11 @@
         margin-top: 18px;
     }
 
+    .editor-preview-side img {
+        height: 50vh;
+        object-fit: cover;
+    }
+
     .fa.fa-columns, .fa.fa-arrows-alt {
         display: none;
     }
@@ -32,7 +37,7 @@
 <body>
 <header th:replace="layout/default :: header"/>
 <div th:replace="layout/default :: write-modal"></div>
-<textarea id="content"></textarea>
+<textarea id="mde"></textarea>
 </body>
 </html>
 

@@ -158,13 +158,14 @@ function submitData(action) {
         switch (action) {
             case '회원가입':
                 $.ajax({
-                    url: 'users',
+                    url: '/users',
                     type: 'POST',
                     contentType: 'application/json; charset=UTF-8',
                     data: JSON.stringify({
                         email: emailForm.value,
                         password: passwordForm.value
-                    })
+                    }),
+                    dataType: 'json'
                 }).done(() => {
                     location.href = '/';
                 }).fail(error => {

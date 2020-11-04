@@ -17,50 +17,26 @@
 <div th:replace="layout/default :: sign-modal"></div>
 <div class="container-fluid px-0" style="padding-top: 7vh;">
     <div class="m-0 row row-cols-1 row-cols-xl-5 row-cols-lg-3 row-cols-md-2">
-        <!--        <div class="col mb-4" th:each="board: ${boards}">-->
-        <!--            <div class="card shadow-sm" style="height: 20rem;">-->
-        <!--                <img alt="thumbnail" class="card-img-top img-fluid"-->
-        <!--                     style="height: 9rem; object-fit: cover;" th:if="${board.thumbnailUrl} != null"-->
-        <!--                     th:src="${board.thumbnailUrl}">-->
-        <!--                <div class="card-body px-2 py-1">-->
-        <!--                    <h5 class="card-title" th:text="${board.title}"></h5>-->
-        <!--                    <p class="card-text" th:text="${board.description}"></p>-->
-        <!--                </div>-->
-        <!--                <div class="footer px-3 py-1">-->
-        <!--                    <p class="card-text d-flex justify-content-between">-->
-        <!--                        <span>-->
-        <!--                            <small class="text-muted">by</small>-->
-        <!--                            &lt;!&ndash;                            <small th:text="${board.user.email}"></small>&ndash;&gt;-->
-        <!--                        </span>-->
-        <!--                        <small class="text-muted"-->
-        <!--                               th:text="${#temporals.format(board.createdAt, 'yyyy년 MM월 dd일')}"></small>-->
-        <!--                    </p>-->
-        <!--                </div>-->
-        <!--                <a class="stretched-link" th:href="@{boards/detail/{id}(id=${board.id})}"></a>-->
-        <!--            </div>-->
-        <!--        </div>-->
-        <div class="col p-4" style="height: 28rem" th:each="num: ${#numbers.sequence(1, 20)}">
+        <div class="col p-4" style="height: 28rem" th:each="board : ${boards}">
             <div class="card shadow-sm" style="height: 100%">
                 <img alt="thumbnail" class="card-img-top img-fluid"
                      style="height: 17vh; object-fit: cover;"
-                     th:src="@{images/bmo.png}">
+                     th:src="${board.getThumbnailUrl()}">
                 <div class="card-body p-2" style="height: 10rem">
-                    <h5 class="card-title m-0" style="font-weight: 400">제목 입니다.🤣🤣</h5>
-                    <p class="card-text" style="font-weight: 300">
-                        김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김김
-                    </p>
+                    <h5 class="card-title m-0" style="font-weight: 400" th:text="${board.getTitle()}">제목 입니다.🤣🤣</h5>
+                    <p class="card-text" style="font-weight: 300" th:text="${board.getIntroduction()}"></p>
                 </div>
                 <div class="footer px-2 py-1">
                     <p class="card-text d-flex justify-content-between">
                         <span>
                             <small class="text-muted">by</small>
-                            <small>user email</small>
+                            <small th:text="${board.getUser().getEmail()}"></small>
                         </span>
                         <small class="text-muted"
-                        >2020년 11월 1일</small>
+                               th:text="${#temporals.format(board.getCreatedAt(), 'yyyy년 MM월 dd일')}"></small>
                     </p>
                 </div>
-                <a class="stretched-link" href="/detail"></a>
+                <a class="stretched-link" th:href="@{boards/{id}(id=${board.getId()})}"></a>
             </div>
         </div>
     </div>

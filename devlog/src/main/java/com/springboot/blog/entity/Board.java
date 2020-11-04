@@ -34,7 +34,7 @@ public class Board {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @ManyToOne // default fetch = FetchType.EAGER
+    @ManyToOne(fetch = FetchType.LAZY) // default fetch = FetchType.EAGER
     @JoinColumn(name = "userId")
     private User user;
 

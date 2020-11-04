@@ -1,96 +1,43 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
-<head th:replace="layout/default :: head('Modify')"/>
-<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+<head th:replace="layout/default :: head('modify')"/>
+<link href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css" rel="stylesheet">
+<script defer src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<script defer th:src="@{/js/board.js}"></script>
+<style>
+    body {
+        font-size: 18px;
+    }
+
+    .editor-toolbar.fullscreen {
+        margin-top: 7vh;
+        width: 50%;
+        border: 1px solid #ddd;
+        border-bottom: none;
+    }
+
+    .CodeMirror-sided, .CodeMirror-wrap {
+        margin-top: 7vh;
+    }
+
+    .editor-preview-side {
+        z-index: 10;
+        margin-top: 18px;
+    }
+
+    .editor-preview-side img {
+        height: 50vh;
+        object-fit: cover;
+    }
+
+    .fa.fa-columns, .fa.fa-arrows-alt {
+        display: none;
+    }
+</style>
 <body>
 <header th:replace="layout/default :: header"/>
-<br>
-<div class="container w-50 p-3">
-    <div class="modal fade" id="myModal">
-        <div class="modal-dialog" style="margin-top: 250px">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Preview settings</h4>
-                    <button class="close" data-dismiss="modal" type="button">&times;</button>
-                </div>
-
-                <div class="modal-body">
-                    <div class="input-group">
-                        <div class="custom-file">
-                            <input accept="image/**" class="custom-file-input" id="thumbnail" type="file">
-                            <label class="custom-file-label" for="thumbnail">Choose your thumbnail (50MB)</label>
-                        </div>
-                    </div>
-
-                    <hr>
-
-                    <div style="text-align: center">
-                        <i style="font-size: 14px">max length 100</i>
-                    </div>
-
-                    <textarea class="form-control" id="description" maxLength="100" placeholder="Enter description"
-                              rows="5"
-                              style="resize: none;" th:text="${board.description}"></textarea>
-                </div>
-
-                <div class="modal-footer">
-                    <button class="btn btn-secondary btn-sm" data-dismiss="modal" type="button">Close</button>
-                    <button class="btn btn btn-primary btn-sm" id="btn-board-modify">Modify</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label for="title">Title:</label>
-        <input class="form-control is-valid" id="title" onblur="writeFormValidate(this)" placeholder="Enter title"
-               required
-               th:value="${board.title}">
-    </div>
-
-    <div class="form-group">
-        <label for="content">Content:</label>
-        <textarea class="form-control summernote" id="content"
-                  placeholder="Enter content"
-                  rows="5" th:utext="${board.content}"></textarea>
-    </div>
-
-    <div class="d-flex justify-content-end">
-        <button class="btn btn-primary" data-target="#myModal" data-toggle="modal" id="btn-modal-form">Modify</button>
-    </div>
-
-    <hr>
-
-    <input id="boardId" th:value="${board.id}" type="hidden">
-</div>
-<footer th:replace="layout/default :: footer"/>
-<script>
-    $(".custom-file-input").on("change", function () {
-        var fileName = $(this).val().split("\\").pop();
-        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-    });
-
-    $('.summernote').summernote({
-        placeholder: 'Enter content',
-        tabsize: 10,
-        height: 400,
-        disableResizeEditor: true,
-        toolbar: [
-            ['style', ['style']],
-            ['font', ['bold', 'underline', 'clear']],
-            ['fontname', ['fontname']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['table', ['table']],
-            ['insert', ['link', 'picture']],
-            ['view', ['help']],
-        ],
-    });
-</script>
-<script th:src="@{/js/board.js}"></script>
+<div th:replace="layout/default :: modify-modal"></div>
+<textarea id="mde" th:text="${board.getContent()}"></textarea>
+<input id="id" th:value="${board.getId()}" type="hidden">
 </body>
 </html>
-
-

@@ -39,10 +39,10 @@ public class UserService implements UserDetailsService {
 
         newUser.setRole(UserRole.ROLE_USER);
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
-        Long userId = userRepository.save(newUser).getId();
+        Long id = userRepository.save(newUser).getId();
 
         return ResponseEntity.created(linkTo(methodOn(UserRestController.class)
-                .signup(newUser)).slash(userId).withSelfRel().toUri()).body("{}");
+                .signup(newUser)).slash(id).withSelfRel().toUri()).body("{}");
     }
 
     @Transactional

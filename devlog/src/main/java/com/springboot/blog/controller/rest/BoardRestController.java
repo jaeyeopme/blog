@@ -1,7 +1,12 @@
 package com.springboot.blog.controller.rest;
 
+import com.springboot.blog.entity.Board;
+import com.springboot.blog.entity.User;
 import com.springboot.blog.service.BoardService;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 public class BoardRestController {
@@ -12,15 +17,15 @@ public class BoardRestController {
         this.boardService = boardService;
     }
 
-//    @PostMapping("boards")
-//    public ResponseEntity<ApiResponse> save(@ModelAttribute Board board, @RequestPart(required = false) MultipartFile file, @AuthenticationPrincipal User user) {
-//        return boardService.save(board, file, user);
-//    }
-//
-//    @PutMapping("boards")
-//    public ResponseEntity<ApiResponse> update(@ModelAttribute Board board, @RequestPart(required = false) MultipartFile file) {
-//        return boardService.update(board, file);
-//    }
+    @PostMapping("boards")
+    public ResponseEntity<String> write(@ModelAttribute Board board, @RequestPart(required = false) MultipartFile thumbnail, @AuthenticationPrincipal User user) {
+        return boardService.write(board, thumbnail, user);
+    }
+
+    @PutMapping("boards/{id}")
+    public ResponseEntity<String> modify(@PathVariable Long id, @ModelAttribute Board board, @RequestPart(required = false) MultipartFile thumbnail) {
+        return boardService.modify(id, board, thumbnail);
+    }
 //
 //    @DeleteMapping("boards/{id}")
 //    public ResponseEntity<ApiResponse> deleteById(@PathVariable Long id) {
