@@ -11,6 +11,8 @@
     .editor-preview, .CodeMirror {
         background-color: white;
         border: none;
+        width: 100%;
+        height: auto;
     }
 </style>
 <body>
@@ -41,7 +43,7 @@
     </div>
 
     <div style="margin-bottom: 20vh">
-        <textarea id="board-content" style="width: 100%; height: auto;" th:text="${board.getContent()}"></textarea>
+        <textarea id="board-content" th:text="${board.getContent()}"></textarea>
     </div>
 
     <div class="d-flex" style="margin-bottom: 5vh">
