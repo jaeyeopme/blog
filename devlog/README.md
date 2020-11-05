@@ -1,14 +1,11 @@
 # spring-boot-jpa-blog
 주소 http://ec2-3-35-127-254.ap-northeast-2.compute.amazonaws.com:8080/
 
-## 사용 기술
-- Spring Boot
-- Spring Data JPA
-- Spring Security
+## Skill
+- Spring Boot, Spring MVC, Spring Security, Spring Data JPA
 - Ajax
 - Thymeleaf, Bootstrap, HTML, Javascript, Bootstrap
-- Mysql
-- AWS EC2, S3, RDS
+- AWS EC2, S3, RDS (Mysql)
 - SimpleMDE (MarkDown editor)
 
 ## 추가될 예정
