@@ -9,7 +9,7 @@
 - Thymeleaf, Bootstrap, HTML, Javascript, Bootstrap
 - Mysql
 - AWS EC2, S3, RDS
-- SimpleMDE
+- SimpleMDE (MarkDown editor)
 
 ## 추가될 예정
 - 사용자 프로필 이미지, 소개 추가하기
