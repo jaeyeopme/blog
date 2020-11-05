@@ -1,20 +1,20 @@
 # spring-boot-jpa-blog
-웹 사이트 주소 http://ec2-3-35-127-254.ap-northeast-2.compute.amazonaws.com:8080/
-
-## 만들게 된 계기
-프로젝트명은 **blog**인데 **블로그를 만들자!** 라는 생각보다는 **하고 싶던거 다 해보자!** 하고 만든 개인프로젝트입니다!
+주소 http://ec2-3-35-127-254.ap-northeast-2.compute.amazonaws.com:8080/
 
 ## 사용 기술
 - Spring Boot
 - Spring Data JPA
 - Spring Security
-- Ajax **RESTful**
+- Ajax
 - Thymeleaf, Bootstrap, HTML, Javascript, Bootstrap
 - Mysql
 - AWS EC2, S3, RDS
+- SimpleMDE
 
-## 추가될 예정 (하고 싶은거)
+## 추가될 예정
+- 사용자 프로필 이미지, 소개 추가하기
+- 사용자 환경설정
+- 스크롤 데이터 가져오기
 - DNS SSL 적용하기
 - Docker 사용해보기
 - Jenkins 로 무중단 자동 배포 환경 만들어보기
-
