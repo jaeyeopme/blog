@@ -62,7 +62,8 @@
         <h6>
             <div class="p-2" th:text="${board.getComments().size()} + '개의 댓글'"></div>
         </h6>
-        <textarea class="p-3" id="comment-content" placeholder="댓글을 작성해주세요."
+        <textarea class="p-3" id="comment-content" maxlength="150"
+                  placeholder="댓글을 작성해주세요. (최대 150자)"
                   style="width: 100%; height: 15vh; resize: none; border: 0.5px solid lightgray; outline: none;"></textarea>
         <div class="text-right">
             <a class="btn btn-success btn-sm my-3 px-3" sec:authorize="!isAuthenticated()" th:href="@{/login?err}"
@@ -74,20 +75,35 @@
     </div>
 
     <div th:each="comment : ${board.getComments()}">
-        <div class="d-flex" style="margin-bottom: 2vh">
-            <div style="width: 54px; height: 54px; border-radius: 50%; overflow: hidden; display: inline-block; margin-right: 1vw;">
-                <img style="object-fit: cover;width: 54px; height: 54px;" th:src="@{/images/img.jpg}">
-            </div>
-            <div class="align-self-center" style="display: inline-block">
-                <div th:text="${comment.getUser().getEmail()}"></div>
-                <div style="font-weight: lighter"
-                     th:text="${#temporals.format(board.getCreatedAt(), 'yyyy년 MM월 dd일 hh시 mm분')}">작성일
+        <div class="d-flex justify-content-between" style="margin-bottom: 2vh">
+            <div>
+                <div style="width: 54px; height: 54px; border-radius: 50%; overflow: hidden; display: inline-block; margin-right: 1vw;">
+                    <img style="object-fit: cover;width: 54px; height: 54px;" th:src="@{/images/img.jpg}">
+                </div>
+                <div class="align-self-center" style="display: inline-block">
+                    <div th:text="${comment.getUser().getEmail()}"></div>
+                    <div style="font-weight: lighter"
+                         th:text="${#temporals.format(board.getCreatedAt(), 'yyyy년 MM월 dd일 hh시 mm분')}">작성일
+                    </div>
                 </div>
             </div>
+            <div class="align-self-center" sec:authorize="isAuthenticated()"
+                 th:if="${#authentication.principal.id} == ${comment.getUser().getId()}">
+                <a class="btn btn-outline-secondary btn-sm px-3"
+                   th:onclick="'commentModify(this, ' + ${comment.getId()} + ')'" type="button">
+                    수정
+                </a>
+                <a class="btn btn-outline-danger btn-sm px-3"
+                   th:onclick="'commentDelete(' + ${comment.getId()} + ')'"
+                   type="button">
+                    삭제
+                </a>
+            </div>
         </div>
-        <div style="margin-bottom: 3vh" th:text="${comment.getContent()}">
-            댓글
-        </div>
+        <textarea class="p-3" maxlength="150" placeholder="댓글을 작성해주세요. (최대 150자)"
+                  readonly
+                  style="width: 100%; min-height: 15vh; resize: none; border: none; outline: none; margin-bottom: 3vh;"
+                  th:id="'comment-' + ${comment.getId()}" th:text="${comment.getContent()}"></textarea>
         <hr style="margin-bottom: 3vh">
     </div>
     <input id="board-id" th:value="${board.getId()}" type="hidden">

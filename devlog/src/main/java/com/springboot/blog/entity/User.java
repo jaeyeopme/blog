@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-// @DynamicInsert -> except null
 @EqualsAndHashCode(callSuper = true)
 @Builder
 @Data
@@ -28,7 +27,7 @@ public class User extends RepresentationModel<User> implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String email;
 
     @Column(nullable = false)

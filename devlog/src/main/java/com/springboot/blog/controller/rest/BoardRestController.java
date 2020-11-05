@@ -23,12 +23,12 @@ public class BoardRestController {
         return boardService.write(board, thumbnail, user);
     }
 
-    @PutMapping("/boards/{id}")
+    @PutMapping(value = "/boards/{id}", produces = MediaTypes.HAL_JSON_VALUE)
     public ResponseEntity<String> modify(@PathVariable Long id, @ModelAttribute Board board, @RequestPart(required = false) MultipartFile thumbnail) {
         return boardService.modify(id, board, thumbnail);
     }
 
-    @DeleteMapping("/boards/{id}")
+    @DeleteMapping(value = "/boards/{id}", produces = MediaTypes.HAL_JSON_VALUE)
     public ResponseEntity<String> deleteById(@PathVariable Long id) {
         return boardService.deleteById(id);
     }

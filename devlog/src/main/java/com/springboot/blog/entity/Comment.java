@@ -20,6 +20,7 @@ public class Comment {
     @Id
     private Long id;
 
+    @Lob
     private String content;
 
     @CreationTimestamp

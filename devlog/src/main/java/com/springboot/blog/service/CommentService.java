@@ -37,29 +37,21 @@ public class CommentService {
 
         return ResponseEntity.created(URI.create("/boards/" + boardId)).body("{}");
     }
-//
-//    @Transactional
-//    public ResponseEntity<ApiResponse> update(Comment comment) {
-//        Comment found_comment = commentRepository.findById(comment.getId()).orElseThrow(() -> new IllegalArgumentException(String.format("not found comment - %d", comment.getId())));
-//        found_comment.setContent(comment.getContent());
-//
-//        HttpStatus ok = HttpStatus.OK;
-//        ApiResponse success = new ApiResponse(ok, "success", System.currentTimeMillis());
-//
-//        return new ResponseEntity<>(success, ok);
-//    }
-//
-//    @Transactional
-//    public ResponseEntity<ApiResponse> deleteById(Long id) {
-//        try {
-//            commentRepository.deleteById(id);
-//        } catch (Exception e) {
-//            new IllegalArgumentException(String.format("not found reply - %d", id));
-//        }
-//
-//        HttpStatus ok = HttpStatus.OK;
-//        ApiResponse success = new ApiResponse(ok, "success", System.currentTimeMillis());
-//
-//        return new ResponseEntity<>(success, ok);
-//    }
+
+    @Transactional
+    public ResponseEntity<String> modify(Long id, Comment newComment) {
+        return commentRepository.findById(id)
+                .map(comment -> {
+                    comment.setContent(newComment.getContent());
+                    return ResponseEntity.ok().body("{}");
+                })
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다."));
+    }
+
+    @Transactional
+    public ResponseEntity<String> delete(Long id) {
+        commentRepository.deleteById(id);
+
+        return ResponseEntity.ok("{}");
+    }
 }

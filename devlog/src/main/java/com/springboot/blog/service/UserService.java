@@ -43,17 +43,6 @@ public class UserService implements UserDetailsService {
                 .signup(newUser)).slash(id).withSelfRel().toUri()).body("{}");
     }
 
-//    @Transactional
-//    public ResponseEntity<?> update(User newUser, Long id) {
-//        return userRepository.findById(id)
-//                .map(user -> { // stream
-//                    user.setPassword(passwordEncoder.encode(newUser.getPassword()));
-//                    user.setIntroduction(newUser.getIntroduction());
-//                    return new ResponseEntity(HttpStatus.OK);
-//                })
-//                .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다."));
-//    }
-
     @Override
     public UserDetails loadUserByUsername(String email) {
         return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("이메일을 확인해주세요."));

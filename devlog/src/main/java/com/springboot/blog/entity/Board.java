@@ -34,11 +34,11 @@ public class Board {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @ManyToOne(fetch = FetchType.LAZY) // default fetch = FetchType.EAGER
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE) // default fetch = FetchType.LAZY
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
     private List<Comment> comments;
 
 }

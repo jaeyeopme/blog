@@ -6,10 +6,7 @@ import com.springboot.blog.service.CommentService;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class CommentRestController {
@@ -21,7 +18,17 @@ public class CommentRestController {
     }
 
     @PostMapping(value = "/boards/{boardId}/comments", produces = MediaTypes.HAL_JSON_VALUE)
-    public ResponseEntity<String> write(@AuthenticationPrincipal User user, @PathVariable("boardId") Long boardId, @RequestBody Comment comment) {
+    public ResponseEntity<String> write(@AuthenticationPrincipal User user, @PathVariable Long boardId, @RequestBody Comment comment) {
         return commentService.write(user, boardId, comment);
+    }
+
+    @PutMapping(value = "/comments/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    public ResponseEntity<String> modify(@PathVariable Long id, @RequestBody Comment newComment) {
+        return commentService.modify(id, newComment);
+    }
+
+    @DeleteMapping(value = "/comments/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        return commentService.delete(id);
     }
 }

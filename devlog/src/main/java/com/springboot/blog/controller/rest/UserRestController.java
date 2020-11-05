@@ -22,9 +22,4 @@ public class UserRestController {
         return userService.signup(user);
     }
 
-//    @PutMapping("users/{id}")
-//    public ResponseEntity<?> update(@RequestBody User newUser, @PathVariable Long id) {
-//        return userService.update(newUser, id);
-//    }
-
 }
