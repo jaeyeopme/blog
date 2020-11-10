@@ -34,7 +34,6 @@ public class CommentService {
         comment.setBoard(board);
         commentRepository.save(comment);
 
-
         return ResponseEntity.created(URI.create("/boards/" + boardId)).body("{}");
     }
 

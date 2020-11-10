@@ -4,9 +4,8 @@ import com.springboot.blog.entity.User;
 import com.springboot.blog.service.UserService;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 public class UserRestController {
@@ -20,6 +19,11 @@ public class UserRestController {
     @PostMapping(value = "/users", produces = MediaTypes.HAL_JSON_VALUE)
     public ResponseEntity<String> signup(@RequestBody User user) {
         return userService.signup(user);
+    }
+
+    @PutMapping(value = "/users/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    public ResponseEntity<String> modify(@PathVariable Long id, @ModelAttribute User newUser, @RequestPart(required = false) MultipartFile newPhoto) {
+        return userService.modify(id, newUser, newPhoto);
     }
 
 }

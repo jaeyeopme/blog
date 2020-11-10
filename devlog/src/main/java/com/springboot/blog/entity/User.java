@@ -33,6 +33,8 @@ public class User extends RepresentationModel<User> implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+    private String photoUrl;
+
     private String introduction;
 
     @CreationTimestamp

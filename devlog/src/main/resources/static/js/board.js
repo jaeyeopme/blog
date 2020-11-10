@@ -1,6 +1,4 @@
-'use strict';
-
-const modalButton = document.getElementById('btn-modal')
+const modalButton = document.getElementById('btn-board-modal');
 
 switch (document.title) {
     case 'bucket':
@@ -34,19 +32,16 @@ switch (document.title) {
                 data.append('thumbnail', thumbnail.files[0])
                 data.append('introduction', document.getElementById('introduction').value)
 
-                $.ajax({
+                axios({
+                    method: 'post',
                     url: '/boards',
-                    type: 'POST',
-                    processData: false,
-                    contentType: false,
-                    data: data,
-                    dataType: 'json'
-                }).done((data, status, xhr) => {
-                    window.location.href = xhr.getResponseHeader('Location');
-                }).fail(error => {
-                    alert(error.message)
-                    window.location.href = '/';
-                })
+                    headers: {'content-type': 'application/json'},
+                    data: data
+                }).then(response => window.location.href = response.headers.location)
+                    .catch(error => {
+                        alert(error.response.data.message);
+                        window.location.href = '/'
+                    });
             }
         });
         break;
@@ -80,19 +75,16 @@ switch (document.title) {
                 data.append('thumbnail', thumbnail.files[0])
                 data.append('introduction', document.getElementById('introduction').value)
 
-                $.ajax({
-                    url: '/boards/' + modifyId,
-                    type: 'PUT',
-                    processData: false,
-                    contentType: false,
-                    data: data,
-                    dataType: 'json'
-                }).done((data, status, xhr) => {
-                    window.location.href = xhr.getResponseHeader('Location');
-                }).fail(error => {
-                    alert(error.message)
-                    window.location.href = '/';
-                })
+                axios({
+                    method: 'put',
+                    url: `/boards/${modifyId}`,
+                    headers: {'content-type': 'application/json'},
+                    data: data
+                }).then(response => window.location.href = response.headers.location)
+                    .catch(error => {
+                        alert(error.response.data.message);
+                        window.location.href = '/'
+                    });
             }
         })
         break;
@@ -107,15 +99,15 @@ switch (document.title) {
         const deleteId = document.getElementById('board-id').value;
 
         document.getElementById('btn-board-delete').addEventListener('click', () => {
-            $.ajax({
-                url: '/boards/' + deleteId,
-                type: 'DELETE',
-                dataType: 'json'
-            }).done(location.href = '/')
-                .fail(error => {
-                    alert(error.message)
-                    window.location.href = '/';
-                })
+            axios({
+                method: 'delete',
+                url: `/boards/${deleteId}`,
+                headers: {'content-type': 'application/json'},
+            }).then(location.href = '/')
+                .catch(error => {
+                    alert(error.response.data.message);
+                    window.location.href = '/'
+                });
         });
         break;
 }

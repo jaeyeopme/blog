@@ -1,9 +1,16 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
-<head th:replace="layout/default :: head('modify')"/>
-<link href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css" rel="stylesheet">
-<script defer src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<head th:replace="layout/default :: head('modify')"></head>
+<link
+        href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css"
+        rel="stylesheet"
+/>
+<script
+        defer
+        src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"
+></script>
 <script defer th:src="@{/js/board.js}"></script>
+<script defer th:src="@{/js/user.js}"></script>
 <style>
     body {
         font-size: 18px;
@@ -16,7 +23,8 @@
         border-bottom: none;
     }
 
-    .CodeMirror-sided, .CodeMirror-wrap {
+    .CodeMirror-sided,
+    .CodeMirror-wrap {
         margin-top: 7vh;
     }
 
@@ -30,14 +38,15 @@
         object-fit: cover;
     }
 
-    .fa.fa-columns, .fa.fa-arrows-alt {
+    .fa.fa-columns,
+    .fa.fa-arrows-alt {
         display: none;
     }
 </style>
 <body>
-<header th:replace="layout/default :: header"/>
+<header th:replace="layout/default :: header"></header>
 <div th:replace="layout/default :: modify-modal"></div>
 <textarea id="board-content" th:text="${board.getContent()}"></textarea>
-<input id="board-id" th:value="${board.getId()}" type="hidden">
+<input id="board-id" th:value="${board.getId()}" type="hidden"/>
 </body>
 </html>

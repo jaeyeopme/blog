@@ -1,51 +1,50 @@
-document.getElementById('btn-comment-write').addEventListener('click', () => {
+function commentWrite() {
     const boardId = document.getElementById('board-id').value;
 
-    $.ajax({
-        url: '/boards/' + boardId + '/comments',
-        type: 'POST',
-        contentType: 'application/json; charset=UTF-8',
+    axios({
+        method: 'post',
+        url: `/boards/${boardId}/comments`,
+        headers: {'content-type': 'application/json'},
         data: JSON.stringify({
             content: document.getElementById('comment-content').value
         }),
-        dataType: 'json'
-    }).done((data, status, xhr) => {
-        window.location.href = xhr.getResponseHeader('Location');
-    }).fail(error => {
-        alert(error.message)
-    });
-})
+    }).then(response => window.location.href = response.headers.location)
+        .catch(error => {
+            alert(error.response.data.message);
+            window.location.href = '/'
+        });
+}
 
 function commentModify(element, commentId) {
     if (element.innerText === '수정') {
-        document.getElementById('comment-' + commentId).removeAttribute('readOnly');
-        document.getElementById('comment-' + commentId).setAttribute('outline', 'revert');
-        document.getElementById('comment-' + commentId).style.border = '0.5px solid lightgray';
+        document.getElementById(`comment-${commentId}`).removeAttribute('readOnly');
+        document.getElementById(`comment-${commentId}`).setAttribute('outline', 'revert');
+        document.getElementById(`comment-${commentId}`).style.border = '0.5px solid lightgray';
         element.innerText = '완료';
     } else if (element.innerText === '완료') {
-        $.ajax({
-            url: '/comments/' + commentId,
-            type: 'PUT',
-            contentType: 'application/json; charset=UTF-8',
+        axios({
+            method: 'put',
+            url: `/comments/${commentId}`,
+            headers: {'content-type': 'application/json'},
             data: JSON.stringify({
-                content: document.getElementById('comment-' + commentId).value
+                content: document.getElementById(`comment-${commentId}`).value
             }),
-            dataType: 'json'
-        }).done(window.location.reload())
-            .fail(error => {
-                alert(error.message);
-                window.location.href = '/';
+        }).then(window.location.reload())
+            .catch(error => {
+                alert(error);
+                window.location.href = '/'
             });
     }
 }
 
 function commentDelete(commentId) {
-    $.ajax({
-        url: '/comments/' + commentId,
-        type: 'DELETE',
-    }).done(window.location.reload())
-        .fail(error => {
-            alert(error.message);
-            window.location.href = '/';
+    axios({
+        method: 'delete',
+        url: `/comments/${commentId}`,
+        headers: {'content-type': 'application/json'},
+    }).then(window.location.reload())
+        .catch(error => {
+            alert(error);
+            window.location.href = '/'
         });
 }

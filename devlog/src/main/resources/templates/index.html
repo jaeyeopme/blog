@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="https://www.thymeleaf.org">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head th:replace="layout/default :: head('bucket')"></head>
 <script defer th:src="@{/js/user.js}"></script>
 <style>
@@ -9,39 +8,55 @@
     }
 
     .card {
-        transition: .3s;
+        transition: 0.3s;
     }
 </style>
 <body>
 <header th:replace="layout/default :: header"></header>
 <div th:replace="layout/default :: sign-modal"></div>
-<div class="container-fluid px-0" style="padding-top: 7vh;">
+<div class="container-fluid px-0" style="padding-top: 7vh">
     <div class="m-0 row row-cols-1 row-cols-xl-5 row-cols-lg-3 row-cols-md-2">
         <div class="col p-4" style="height: 28rem" th:each="board : ${boards}">
             <div class="card shadow-sm" style="height: 100%">
-                <img alt="thumbnail" class="card-img-top img-fluid"
-                     style="height: 17vh; object-fit: cover;"
-                     th:src="${board.getThumbnailUrl()}">
+                <img
+                        alt="thumbnail"
+                        class="card-img-top img-fluid"
+                        style="height: 17vh; object-fit: cover"
+                        th:if="${board.getThumbnailUrl()} != null" th:src="${board.getThumbnailUrl()}"
+                />
                 <div class="card-body p-2" style="height: 10rem">
-                    <h5 class="card-title m-0" style="font-weight: 400" th:text="${board.getTitle()}">제목 입니다.🤣🤣</h5>
-                    <p class="card-text" style="font-weight: 300" th:text="${board.getIntroduction()}"></p>
+                    <h5
+                            class="card-title m-0"
+                            style="font-weight: 400"
+                            th:text="${board.getTitle()}"
+                    >
+                        제목 입니다.🤣🤣
+                    </h5>
+                    <p
+                            class="card-text"
+                            style="font-weight: 300"
+                            th:text="${board.getIntroduction()}"
+                    ></p>
                 </div>
                 <div class="footer px-2 py-1">
                     <p class="card-text d-flex justify-content-between">
-                        <span>
-                            <small class="text-muted">by</small>
-                            <small th:text="${board.getUser().getEmail()}"></small>
-                        </span>
-                        <small class="text-muted"
-                               th:text="${#temporals.format(board.getCreatedAt(), 'yyyy년 MM월 dd일')}"></small>
+                <span>
+                  <small class="text-muted">by</small>
+                  <small th:text="${board.getUser().getEmail()}"></small>
+                </span>
+                        <small
+                                class="text-muted"
+                                th:text="${#temporals.format(board.getCreatedAt(), 'yyyy년 MM월 dd일')}"
+                        ></small>
                     </p>
                 </div>
-                <a class="stretched-link" th:href="@{boards/{id}(id=${board.getId()})}"></a>
+                <a
+                        class="stretched-link"
+                        th:href="@{boards/{id}(id=${board.getId()})}"
+                ></a>
             </div>
         </div>
     </div>
 </div>
 </body>
 </html>
-
-

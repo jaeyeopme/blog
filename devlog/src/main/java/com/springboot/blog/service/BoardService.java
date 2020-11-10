@@ -69,23 +69,22 @@ public class BoardService {
 
     @Transactional
     public ResponseEntity<String> modify(Long id, Board newBoard, MultipartFile newThumbnail) {
-        return boardRepository.findById(id)
-                .map(board -> {
-                    board.setTitle(newBoard.getTitle());
-                    board.setContent(newBoard.getContent());
-                    board.setIntroduction(newBoard.getIntroduction());
+        return boardRepository.findById(id).map(board -> {
+            board.setTitle(newBoard.getTitle());
+            board.setContent(newBoard.getContent());
+            board.setIntroduction(newBoard.getIntroduction());
 
-                    if (newThumbnail != null) {
-                        if (board.getThumbnailUrl() != null) {
-                            deleteThumbnail(board.getThumbnailUrl());
-                        }
-                        String newThumbnailName = String.format("images/%s-%s", UUID.randomUUID(), newThumbnail.getOriginalFilename());
-                        putThumbnail(newThumbnail, newThumbnailName);
-                        board.setThumbnailUrl(String.format("%s%s", objectUrl, newThumbnailName));
-                    }
+            if (newThumbnail != null) {
+                if (board.getThumbnailUrl() != null) {
+                    deleteThumbnail(board.getThumbnailUrl());
+                }
+                String newThumbnailName = String.format("images/%s-%s", UUID.randomUUID(), newThumbnail.getOriginalFilename());
+                putThumbnail(newThumbnail, newThumbnailName);
+                board.setThumbnailUrl(String.format("%s%s", objectUrl, newThumbnailName));
+            }
 
-                    return ResponseEntity.ok().header("Location", "/boards/" + board.getId()).body("{}");
-                }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."));
+            return ResponseEntity.ok().header("Location", "/boards/" + board.getId()).body("{}");
+        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."));
     }
 
     @Transactional
@@ -99,7 +98,7 @@ public class BoardService {
 
         boardRepository.deleteById(id);
 
-        return ResponseEntity.ok("{}");
+        return ResponseEntity.ok("{message: 게시글이 삭제되었습니다.}");
     }
 
     private void putThumbnail(MultipartFile thumbnail, String thumbnailName) {
