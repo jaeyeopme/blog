@@ -119,7 +119,7 @@ public class UserService implements UserDetailsService {
                 user.setPhotoUrl(String.format("%s%s", url, photoName));
                 amazonS3.putObject(new PutObjectRequest(bucket, photoName, photo.getInputStream(), metadata));
             } catch (Exception e) {
-                throw new IllegalArgumentException("프로필 사진 저장에 실패했습니다.");
+                throw new IllegalArgumentException("사진 저장에 실패했습니다.");
             }
         } else {
             user.setPhotoUrl(defaultImage);
@@ -133,7 +133,7 @@ public class UserService implements UserDetailsService {
             if (!photo.equals(defaultImage))
                 amazonS3.deleteObject(new DeleteObjectRequest(bucket, photo.replace(url, "")));
         } catch (Exception e) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("사진 삭제에 실패했습니다.");
         }
     }
 
@@ -142,7 +142,7 @@ public class UserService implements UserDetailsService {
             if (!thumbnail.equals(defaultImage))
                 amazonS3.deleteObject(new DeleteObjectRequest(bucket, thumbnail.replace(url, "")));
         } catch (Exception e) {
-            throw new IllegalArgumentException("파일 삭제에 실패했습니다.");
+            throw new IllegalArgumentException("사진 삭제에 실패했습니다.");
         }
     }
 

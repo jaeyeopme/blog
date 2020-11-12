@@ -99,7 +99,7 @@ public class BoardService {
                 amazonS3.putObject(new PutObjectRequest(bucket, thumbnailName, thumbnail.getInputStream(), metadata));
                 board.setThumbnailUrl(String.format("%s%s", url, thumbnailName));
             } catch (Exception e) {
-                throw new IllegalArgumentException("파일 저장에 실패했습니다.");
+                throw new IllegalArgumentException("사진 저장에 실패했습니다.");
             }
         }
     }
@@ -109,7 +109,7 @@ public class BoardService {
             if (thumbnail != null && !thumbnail.equals(defaultImage))
                 amazonS3.deleteObject(new DeleteObjectRequest(bucket, thumbnail.replace(url, "")));
         } catch (Exception e) {
-            throw new IllegalArgumentException("파일 삭제에 실패했습니다.");
+            throw new IllegalArgumentException("사진 삭제에 실패했습니다.");
         }
     }
 
