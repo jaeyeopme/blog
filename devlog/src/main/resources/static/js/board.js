@@ -1,9 +1,6 @@
 const modalButton = document.getElementById('btn-board-modal');
 
 switch (document.title) {
-    case 'bucket':
-        modalButton.setAttribute('href', '/write');
-        break;
     case 'write':
         const writeContent = new SimpleMDE({
             element: document.getElementById("board-content"),
@@ -18,7 +15,7 @@ switch (document.title) {
         });
         writeContent.toggleSideBySide();
 
-        modalButton.setAttribute('data-target', '#write-modal');
+        modalButton.setAttribute('data-target', '#board-write-modal');
         modalButton.setAttribute('data-toggle', 'modal');
         modalButton.removeAttribute('href')
 
@@ -60,7 +57,7 @@ switch (document.title) {
         modifyContent.toggleSideBySide();
 
         const modifyId = document.getElementById('board-id').value;
-        modalButton.setAttribute('data-target', '#modify-modal');
+        modalButton.setAttribute('data-target', '#board-modify-modal');
         modalButton.setAttribute('data-toggle', 'modal');
         modalButton.removeAttribute('href')
         modalButton.innerText = '글 수정';
@@ -116,7 +113,7 @@ function introductionValidate(element) {
     element.value.length > 99 ? element.classList.add('is-invalid') : element.classList.remove('is-invalid');
 }
 
-function preview(element) {
+function thumbnailPreview(element) {
     const thumbnail = document.getElementById('thumbnail');
     thumbnail.src = window.URL.createObjectURL(element.files[0]);
     thumbnail.onload = () => window.URL.revokeObjectURL(thumbnail.src)

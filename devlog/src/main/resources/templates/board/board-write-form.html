@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
-<head th:replace="layout/default :: head('write')"></head>
-<link
-        href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css"
-        rel="stylesheet"
-/>
+<head th:replace="components/commons/head :: head('write')"></head>
 <script
         defer
         src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"
 ></script>
-<script defer th:src="@{/js/board.js}"></script>
-<script defer th:src="@{/js/user.js}"></script>
+<script defer th:src="@{js/user.js}"></script>
+<script defer th:src="@{js/board.js}"></script>
+<link
+        href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css"
+        rel="stylesheet"
+/>
 <style>
     .editor-toolbar.fullscreen {
         margin-top: 7vh;
@@ -40,8 +40,9 @@
     }
 </style>
 <body>
-<header th:replace="layout/default :: header"></header>
-<div th:replace="layout/default :: write-modal"></div>
+<header th:replace="components/commons/header :: header"></header>
+<div th:replace="components/modal :: user-setting-modal"></div>
+<div th:replace="components/modal :: board-write-modal"></div>
 <textarea id="board-content"></textarea>
 </body>
 </html>

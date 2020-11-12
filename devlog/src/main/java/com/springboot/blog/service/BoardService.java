@@ -33,8 +33,11 @@ public class BoardService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    @Value("${cloud.aws.s3.objectUrl}")
-    private String objectUrl;
+    @Value("${cloud.aws.s3.url}")
+    private String url;
+
+    @Value("${cloud.aws.s3.defaultImage}")
+    private String defaultImage;
 
     @Autowired
     public BoardService(BoardRepository boardRepository, AmazonS3 amazonS3) {
@@ -54,13 +57,8 @@ public class BoardService {
 
     @Transactional
     public ResponseEntity<String> write(Board board, MultipartFile thumbnail, User user) {
-        if (thumbnail != null) {
-            String thumbnailName = String.format("images/%s-%s", UUID.randomUUID(), thumbnail.getOriginalFilename());
-            putThumbnail(thumbnail, thumbnailName);
-            board.setThumbnailUrl(String.format("%s%s", objectUrl, thumbnailName));
-        }
-
         board.setUser(user);
+        putThumbnail(board, thumbnail);
         Long id = boardRepository.save(board).getId();
 
         return ResponseEntity.created(linkTo(methodOn(BoardRestController.class)
@@ -73,15 +71,8 @@ public class BoardService {
             board.setTitle(newBoard.getTitle());
             board.setContent(newBoard.getContent());
             board.setIntroduction(newBoard.getIntroduction());
-
-            if (newThumbnail != null) {
-                if (board.getThumbnailUrl() != null) {
-                    deleteThumbnail(board.getThumbnailUrl());
-                }
-                String newThumbnailName = String.format("images/%s-%s", UUID.randomUUID(), newThumbnail.getOriginalFilename());
-                putThumbnail(newThumbnail, newThumbnailName);
-                board.setThumbnailUrl(String.format("%s%s", objectUrl, newThumbnailName));
-            }
+            deleteThumbnail(board.getThumbnailUrl());
+            putThumbnail(newBoard, newThumbnail);
 
             return ResponseEntity.ok().header("Location", "/boards/" + board.getId()).body("{}");
         }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."));
@@ -89,34 +80,34 @@ public class BoardService {
 
     @Transactional
     public ResponseEntity<String> deleteById(Long id) {
-        Board board = boardRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."));
-        String thumbnail = board.getThumbnailUrl();
-
-        if (thumbnail != null) {
-            deleteThumbnail(thumbnail);
-        }
-
+        deleteThumbnail(boardRepository.findById(id).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다.")
+        ).getThumbnailUrl());
         boardRepository.deleteById(id);
 
-        return ResponseEntity.ok("{message: 게시글이 삭제되었습니다.}");
+        return ResponseEntity.ok("{}");
     }
 
-    private void putThumbnail(MultipartFile thumbnail, String thumbnailName) {
-        ObjectMetadata metadata = new ObjectMetadata();
-        metadata.setContentType(thumbnail.getContentType());
-        metadata.setContentLength(thumbnail.getSize());
+    private void putThumbnail(Board board, MultipartFile thumbnail) {
+        if (thumbnail != null) {
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentType(thumbnail.getContentType());
+            metadata.setContentLength(thumbnail.getSize());
 
-        try {
-            amazonS3.putObject(new PutObjectRequest(bucket, thumbnailName, thumbnail.getInputStream(), metadata));
-        } catch (Exception e) {
-            throw new IllegalArgumentException("파일 저장에 실패했습니다.");
+            try {
+                String thumbnailName = String.format("images/%s-%s", UUID.randomUUID(), thumbnail.getOriginalFilename());
+                amazonS3.putObject(new PutObjectRequest(bucket, thumbnailName, thumbnail.getInputStream(), metadata));
+                board.setThumbnailUrl(String.format("%s%s", url, thumbnailName));
+            } catch (Exception e) {
+                throw new IllegalArgumentException("파일 저장에 실패했습니다.");
+            }
         }
-
     }
 
     private void deleteThumbnail(String thumbnail) {
         try {
-            amazonS3.deleteObject(new DeleteObjectRequest(bucket, thumbnail.replace(objectUrl, "")));
+            if (thumbnail != null && !thumbnail.equals(defaultImage))
+                amazonS3.deleteObject(new DeleteObjectRequest(bucket, thumbnail.replace(url, "")));
         } catch (Exception e) {
             throw new IllegalArgumentException("파일 삭제에 실패했습니다.");
         }

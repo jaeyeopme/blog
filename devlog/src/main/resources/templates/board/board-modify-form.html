@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
-<head th:replace="layout/default :: head('modify')"></head>
-<link
-        href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css"
-        rel="stylesheet"
-/>
+<head th:replace="components/commons/head :: head('modify')"></head>
 <script
         defer
         src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"
 ></script>
-<script defer th:src="@{/js/board.js}"></script>
 <script defer th:src="@{/js/user.js}"></script>
+<script defer th:src="@{/js/board.js}"></script>
+<link
+        href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css"
+        rel="stylesheet"
+/>
 <style>
     body {
         font-size: 18px;
@@ -44,8 +44,9 @@
     }
 </style>
 <body>
-<header th:replace="layout/default :: header"></header>
-<div th:replace="layout/default :: modify-modal"></div>
+<header th:replace="components/commons/header :: header"></header>
+<div th:replace="components/modal :: user-setting-modal"></div>
+<div th:replace="components/modal :: board-modify-modal"></div>
 <textarea id="board-content" th:text="${board.getContent()}"></textarea>
 <input id="board-id" th:value="${board.getId()}" type="hidden"/>
 </body>

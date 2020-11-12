@@ -3,15 +3,14 @@
 
 ## Skill
 - Spring Boot, Spring MVC, Spring Security, Spring Data JPA
-- Ajax
+- Ajax(jQuery -> Axios)
 - Thymeleaf, Bootstrap, HTML, Javascript, Bootstrap
 - AWS EC2, S3, RDS (Mysql)
 - SimpleMDE (MarkDown editor)
 
 ## 추가될 예정
-- 사용자 프로필 이미지, 소개 추가하기
-- 사용자 환경설정
-- 스크롤 데이터 가져오기
+- ~~사용자 프로필 이미지, 소개 추가하기~~
+- ~~사용자 환경설정~~
 - DNS SSL 적용하기
 - Docker 사용해보기
 - Jenkins 로 무중단 자동 배포 환경 만들어보기

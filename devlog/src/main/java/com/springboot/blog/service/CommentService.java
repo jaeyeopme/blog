@@ -50,7 +50,6 @@ public class CommentService {
     @Transactional
     public ResponseEntity<String> delete(Long id) {
         commentRepository.deleteById(id);
-
         return ResponseEntity.ok("{}");
     }
 }

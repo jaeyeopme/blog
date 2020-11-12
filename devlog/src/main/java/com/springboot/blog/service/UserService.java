@@ -30,6 +30,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+
     private final PasswordEncoder passwordEncoder;
 
     private final AmazonS3 amazonS3;
@@ -37,8 +38,11 @@ public class UserService implements UserDetailsService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    @Value("${cloud.aws.s3.objectUrl}")
-    private String objectUrl;
+    @Value("${cloud.aws.s3.url}")
+    private String url;
+
+    @Value("${cloud.aws.s3.defaultImage}")
+    private String defaultImage;
 
     @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AmazonS3 amazonS3) {
@@ -48,34 +52,55 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public ResponseEntity<String> modify(Long id, User newUser, MultipartFile newPhoto) {
-        return userRepository.findById(id).map(user -> {
-            user.setIntroduction(newUser.getIntroduction());
-
-            if (newPhoto != null) {
-                if (newUser.getPhotoUrl() != null) {
-                    deletePhoto(newUser.getPhotoUrl());
-                }
-                String newPhotoName = String.format("images/%s-%s", UUID.randomUUID(), newPhoto.getOriginalFilename());
-                putPhoto(newPhoto, newPhotoName);
-                user.setPhotoUrl(String.format("%s%s", objectUrl, newPhotoName));
-            }
-
-            return ResponseEntity.ok("{}");
-        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
-    }
-
-    @Transactional
     public ResponseEntity<String> signup(User newUser) {
         if (userRepository.findByEmail(newUser.getEmail()).isPresent())
             throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 사용중인 이메일 입니다.");
 
         newUser.setRole(UserRole.ROLE_USER);
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        newUser.setPhotoUrl(defaultImage);
+
         Long id = userRepository.save(newUser).getId();
 
         return ResponseEntity.created(linkTo(methodOn(UserRestController.class)
                 .signup(newUser)).slash(id).withSelfRel().toUri()).body("{}");
+    }
+
+    @Transactional
+    public ResponseEntity<String> modify(Long id, User newUser) {
+        return userRepository.findById(id).map(user -> {
+            user.setIntroduction(newUser.getIntroduction());
+            return ResponseEntity.ok("{}");
+        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
+    }
+
+    @Transactional
+    public ResponseEntity<String> deleteById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
+        deletePhoto(user.getPhotoUrl());
+        user.getBoards().forEach(board -> deleteThumbnail(board.getThumbnailUrl()));
+        userRepository.deleteById(id);
+
+        return ResponseEntity.ok("{}");
+    }
+
+    @Transactional
+    public ResponseEntity<String> modifyUserPhoto(Long id, MultipartFile newPhoto) {
+        return userRepository.findById(id).map(user -> {
+            deletePhoto(user.getPhotoUrl());
+            String photoUrl = putPhoto(user, newPhoto);
+
+            return ResponseEntity.ok(photoUrl);
+        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
+    }
+
+    @Transactional
+    public ResponseEntity<String> deleteUserPhoto(Long id) {
+        return userRepository.findById(id).map(user -> {
+            deletePhoto(user.getPhotoUrl());
+            user.setPhotoUrl(defaultImage);
+            return ResponseEntity.ok(defaultImage);
+        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
     }
 
     @Override
@@ -83,24 +108,41 @@ public class UserService implements UserDetailsService {
         return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("이메일을 확인해주세요."));
     }
 
-    private void putPhoto(MultipartFile photo, String photoName) {
-        ObjectMetadata metadata = new ObjectMetadata();
-        metadata.setContentType(photo.getContentType());
-        metadata.setContentLength(photo.getSize());
+    private String putPhoto(User user, MultipartFile photo) {
+        if (photo != null) {
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentType(photo.getContentType());
+            metadata.setContentLength(photo.getSize());
 
-        try {
-            amazonS3.putObject(new PutObjectRequest(bucket, photoName, photo.getInputStream(), metadata));
-        } catch (Exception e) {
-            throw new IllegalArgumentException("프로필 사진 저장에 실패했습니다.");
+            try {
+                String photoName = String.format("images/%s-%s", UUID.randomUUID(), photo.getOriginalFilename());
+                user.setPhotoUrl(String.format("%s%s", url, photoName));
+                amazonS3.putObject(new PutObjectRequest(bucket, photoName, photo.getInputStream(), metadata));
+            } catch (Exception e) {
+                throw new IllegalArgumentException("프로필 사진 저장에 실패했습니다.");
+            }
+        } else {
+            user.setPhotoUrl(defaultImage);
         }
 
+        return user.getPhotoUrl();
     }
 
     private void deletePhoto(String photo) {
         try {
-            amazonS3.deleteObject(new DeleteObjectRequest(bucket, photo.replace(objectUrl, "")));
+            if (!photo.equals(defaultImage))
+                amazonS3.deleteObject(new DeleteObjectRequest(bucket, photo.replace(url, "")));
         } catch (Exception e) {
-            throw new IllegalArgumentException("프로필 사진 삭제에 실패했습니다.");
+            throw new IllegalArgumentException();
+        }
+    }
+
+    private void deleteThumbnail(String thumbnail) {
+        try {
+            if (!thumbnail.equals(defaultImage))
+                amazonS3.deleteObject(new DeleteObjectRequest(bucket, thumbnail.replace(url, "")));
+        } catch (Exception e) {
+            throw new IllegalArgumentException("파일 삭제에 실패했습니다.");
         }
     }
 

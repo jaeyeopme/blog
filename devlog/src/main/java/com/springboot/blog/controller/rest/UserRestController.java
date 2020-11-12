@@ -22,8 +22,23 @@ public class UserRestController {
     }
 
     @PutMapping(value = "/users/{id}", produces = MediaTypes.HAL_JSON_VALUE)
-    public ResponseEntity<String> modify(@PathVariable Long id, @ModelAttribute User newUser, @RequestPart(required = false) MultipartFile newPhoto) {
-        return userService.modify(id, newUser, newPhoto);
+    public ResponseEntity<String> modify(@PathVariable Long id, @RequestBody User user) {
+        return userService.modify(id, user);
+    }
+
+    @DeleteMapping(value = "/users/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        return userService.deleteById(id);
+    }
+
+    @PutMapping(value = "/users/photo/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    public ResponseEntity<String> modify(@PathVariable Long id, @RequestPart MultipartFile photo) {
+        return userService.modifyUserPhoto(id, photo);
+    }
+
+    @DeleteMapping(value = "/users/photo/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    public ResponseEntity<String> modify(@PathVariable Long id) {
+        return userService.deleteUserPhoto(id);
     }
 
 }

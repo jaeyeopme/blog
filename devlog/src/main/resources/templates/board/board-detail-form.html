@@ -1,14 +1,21 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
-      xmlns:th="https://www.thymeleaf.org">
-<head th:replace="layout/default :: head('detail')"></head>
-<link href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css"
-      rel="stylesheet"/>
-<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<html
+        lang="en"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+        xmlns:th="https://www.thymeleaf.org"
+>
+<head th:replace="components/commons/head :: head('detail')"></head>
+<script
+        defer
+        src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"
+></script>
 <script defer th:src="@{/js/user.js}"></script>
 <script defer th:src="@{/js/board.js}"></script>
 <script defer th:src="@{/js/comment.js}"></script>
+<link
+        href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css"
+        rel="stylesheet"
+/>
 <style>
     .editor-preview,
     .CodeMirror {
@@ -18,9 +25,12 @@
     }
 </style>
 <body>
-<header th:replace="layout/default :: header"></header>
-<div th:replace="layout/default :: sign-modal"></div>
-<div th:replace="layout/default :: delete-modal"></div>
+<header th:replace="components/commons/header :: header"></header>
+<div th:replace="components/modal :: sign-modal"></div>
+<div sec:authorize="isAuthenticated()">
+    <div th:replace="components/modal :: user-setting-modal"></div>
+    <div th:replace="components/modal :: board-delete-modal"></div>
+</div>
 
 <div class="container-fluid" style="width: 60vw; padding-top: 20vh">
     <div class="d-flex justify-content-between" style="margin-bottom: 10vh">
@@ -47,7 +57,7 @@
             </a>
             <a
                     class="btn btn-danger btn-sm mx-1 px-3"
-                    data-target="#delete-modal"
+                    data-target="#board-delete-modal"
                     data-toggle="modal"
                     type="button"
             >
@@ -73,14 +83,14 @@
         >
             <img
                     style="object-fit: cover; width: 128px; height: 128px"
-                    th:src="@{/images/img.jpg}"
+                    th:src="${board.getUser().getPhotoUrl()} != null ? ${board.getUser().getPhotoUrl()}"
             />
         </div>
         <div class="align-self-center" style="display: inline-block">
             <h4>
                 <div th:text="${board.getUser().getEmail()}"></div>
             </h4>
-            <div>소개글</div>
+            <div th:text="${board.getUser().getIntroduction()}"></div>
         </div>
     </div>
 

@@ -64,3 +64,74 @@ function submitData(action) {
         }
     }
 }
+
+function putPhoto(element) {
+    const userId = document.getElementById('user-id').value
+    const photo = document.getElementById('photo');
+    const data = new FormData();
+    data.append('photo', element.files[0]);
+
+    axios({
+        method: 'put',
+        url: `/users/photo/${userId}`,
+        headers: {'content-type': 'application/json'},
+        data: data
+    }).then(response =>
+        photo.src = response.data
+    ).catch(error => {
+        alert(error.response.data.message);
+        window.location.href = '/';
+    })
+}
+
+function deletePhoto() {
+    const userId = document.getElementById('user-id').value
+    const photo = document.getElementById('photo');
+
+    axios({
+        method: 'delete',
+        url: `/users/photo/${userId}`,
+        headers: {'content-type': 'application/json'},
+    }).then(response =>
+        photo.src = response.data
+    ).catch(error => {
+        alert(error.response.data.message);
+        window.location.href = '/';
+    })
+}
+
+function userModify() {
+    const userId = document.getElementById('user-id').value
+
+    axios({
+        method: 'put',
+        url: `/users/${userId}`,
+        headers: {'content-type': 'application/json'},
+        data: JSON.stringify({
+            introduction: document.getElementById('user-introduction').value
+        })
+    }).then(window.location.href = '/'
+    ).catch(error => {
+        alert(error.response.data.message);
+        window.location.href = '/';
+    })
+
+}
+
+function userDeleteModal() {
+    $('#setting-modal').modal('hide');
+}
+
+function userDelete() {
+    const userId = document.getElementById('user-id').value;
+
+    axios({
+        method: 'delete',
+        url: `/users/${userId}`,
+        headers: {'content-type': 'application/json'},
+    }).then(location.href = '/')
+        .catch(error => {
+            alert(error.response.data.message);
+            window.location.href = '/';
+        });
+}

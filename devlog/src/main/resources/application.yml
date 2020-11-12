@@ -1,8 +1,8 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://jaeyeop-blog-project.czeadcaqy0xy.ap-northeast-2.rds.amazonaws.com:3306/blog?serverTimezone=UTC&useSSL=false
-    #    url: jdbc:mysql://localhost:3306/blog?serverTimezone=UTC&useSSL=false
+    url: jdbc:mysql://jaeyeop-blog-project.czeadcaqy0xy.ap-northeast-2.rds.amazonaws.com:3306/blog?serverTimezone=Asia/Seoul&useSSL=false
+    #    url: jdbc:mysql://localhost:3306/blog?serverTimezone=Asia/Seoul&useSSL=false
     username: root
     password: password
 
@@ -15,7 +15,9 @@ spring:
       # use-new-id-generator-mappings: false -> @GeneratedValue(strategy = GenerationType.IDENTITY)
     show-sql: false
     properties:
-      hibernate.format_sql: true
+      hibernate:
+        time_zone: Asia/Seoul
+        format_sql: true
 
   jackson:
     serialization:
@@ -30,7 +32,9 @@ cloud:
   aws:
     s3:
       bucket: jaeyeop-blog-project
-      objectUrl: https://jaeyeop-blog-project.s3.ap-northeast-2.amazonaws.com/
+      url: https://jaeyeop-blog-project.s3.ap-northeast-2.amazonaws.com/
+      defaultImage: https://jaeyeop-blog-project.s3.ap-northeast-2.amazonaws.com/images/default.jpg
+
     region:
       static: ap-northeast-2
     stack:
