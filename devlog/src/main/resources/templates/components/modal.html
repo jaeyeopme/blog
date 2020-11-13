@@ -120,7 +120,7 @@
                             <img
                                     id="photo"
                                     style="object-fit: cover; width: 128px; height: 128px"
-                                    th:src="${#authentication.principal.photoUrl}"
+                                    th:src="${user.getPhotoUrl()}"
                             />
                         </div>
                         <div>
@@ -139,7 +139,7 @@
                         </div>
                     </div>
                     <div class="form-group mx-4">
-                        <h3 class="mb-3" th:text="${#authentication.principal.email}"></h3>
+                        <h3 class="mb-3" th:text="${user.getEmail()}"></h3>
                         <textarea
                                 id="user-introduction"
                                 maxlength="50"
@@ -151,7 +151,7 @@
                 outline: none;
                 border: none;
               "
-                                th:text="${#authentication.principal.introduction}"
+                                th:text="${user.getIntroduction()}"
                         ></textarea>
                     </div>
                 </div>
@@ -177,7 +177,7 @@
     </div>
     <input
             id="user-id"
-            th:value="${#authentication.principal.id}"
+            th:value="${user.getId()}"
             type="hidden"
     />
 </div>

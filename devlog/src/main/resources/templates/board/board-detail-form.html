@@ -45,7 +45,7 @@
         <div
                 class="align-self-bottom"
                 sec:authorize="isAuthenticated()"
-                th:if="${#authentication.principal.id} == ${board.getUser().getId()}"
+                th:if="${user.getId()} == ${board.getUser().getId()}"
         >
             <a
                     class="btn btn-dark btn-sm mx-1 px-3 align-self-bottom"
@@ -165,7 +165,7 @@
             <div
                     class="align-self-center"
                     sec:authorize="isAuthenticated()"
-                    th:if="${#authentication.principal.id} == ${comment.getUser().getId()}"
+                    th:if="${user.getId()} == ${comment.getUser().getId()}"
             >
                 <a
                         class="btn btn-outline-secondary btn-sm px-3"

@@ -9,7 +9,6 @@
 <body>
 <header th:replace="components/commons/header :: header"></header>
 <div th:replace="components/modal :: sign-modal"></div>
-<div sec:authorize="isAuthenticated()" th:replace="components/modal :: user-setting-modal"></div>
 <br/><br/>
 <div class="container p-0" style="margin-top: 10vh">
     <div class="text-center">
