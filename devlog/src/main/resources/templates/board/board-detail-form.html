@@ -149,7 +149,7 @@
                 >
                     <img
                             style="object-fit: cover; width: 54px; height: 54px"
-                            th:src="@{/images/img.jpg}"
+                            th:src="${comment.getUser().getPhotoUrl()}"
                     />
                 </div>
                 <div class="align-self-center" style="display: inline-block">

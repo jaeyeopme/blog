@@ -72,7 +72,7 @@ public class BoardService {
             board.setContent(newBoard.getContent());
             board.setIntroduction(newBoard.getIntroduction());
             deleteThumbnail(board.getThumbnailUrl());
-            putThumbnail(newBoard, newThumbnail);
+            putThumbnail(board, newThumbnail);
 
             return ResponseEntity.ok().header("Location", "/boards/" + board.getId()).body("{}");
         }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."));
