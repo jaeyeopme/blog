@@ -1,7 +1,9 @@
 package com.springboot.blog.config;
 
+import com.springboot.blog.entity.User;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -22,7 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/login", "/signin", "/boards/*", "/users", "/js/**", "/css/**", "/images/**")
+                .antMatchers("/", "/login", "/signin", "/boards/*", "/api/users", "/js/**", "/css/**", "/images/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
@@ -30,8 +32,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .usernameParameter("email")
                 .passwordParameter("password")
-                .loginPage("/login")
-                .loginProcessingUrl("/signin")
+                .loginPage("/signin")
+                .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/")
                 .and()
                 .logout()

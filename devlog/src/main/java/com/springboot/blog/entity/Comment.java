@@ -1,16 +1,16 @@
 package com.springboot.blog.entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Builder
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -21,6 +21,7 @@ public class Comment {
     private Long id;
 
     @Lob
+    @Column(nullable = false)
     private String content;
 
     @CreationTimestamp

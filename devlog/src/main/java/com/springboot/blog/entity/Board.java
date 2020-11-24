@@ -1,17 +1,17 @@
 package com.springboot.blog.entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Builder
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -27,7 +27,7 @@ public class Board {
     @Lob
     private String content;
 
-    private String thumbnailUrl;
+    private String photo;
 
     private String introduction;
 

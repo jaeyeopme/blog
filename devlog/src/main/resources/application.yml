@@ -1,18 +1,15 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://jaeyeop-blog-project.czeadcaqy0xy.ap-northeast-2.rds.amazonaws.com:3306/blog?serverTimezone=Asia/Seoul&useSSL=false
-    #    url: jdbc:mysql://localhost:3306/blog?serverTimezone=Asia/Seoul&useSSL=false
+    #    url: jdbc:mysql://jaeyeop-blog-project.czeadcaqy0xy.ap-northeast-2.rds.amazonaws.com:3306/blog?serverTimezone=Asia/Seoul&useSSL=false
+    url: jdbc:mysql://localhost:3306/blog?serverTimezone=Asia/Seoul&useSSL=false
     username: root
     password: password
 
   jpa:
-    open-in-view: true # transaction!!
+    open-in-view: true
     hibernate:
       ddl-auto: update
-      # naming: physical-strategy: org.hibernate.boot.model.naming.SpringPhysicalNamingStrategy -> underscore (default)
-      # naming: physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl -> original naming
-      # use-new-id-generator-mappings: false -> @GeneratedValue(strategy = GenerationType.IDENTITY)
     show-sql: false
     properties:
       hibernate:
@@ -33,10 +30,8 @@ cloud:
     s3:
       bucket: jaeyeop-blog-project
       url: https://jaeyeop-blog-project.s3.ap-northeast-2.amazonaws.com/
-      defaultImage: https://jaeyeop-blog-project.s3.ap-northeast-2.amazonaws.com/images/default.jpg
-
-    region:
-      static: ap-northeast-2
+#      defaultImage: https://jaeyeop-blog-project.s3.ap-northeast-2.amazonaws.com/images/default.jpg
+    region: ap-northeast-2
     stack:
       auto: false
     credentials:

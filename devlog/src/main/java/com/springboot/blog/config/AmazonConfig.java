@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AmazonConfig {
 
-    @Value("${cloud.aws.region.static}")
+    @Value("${cloud.aws.region}")
     private String region;
 
     @Bean
@@ -24,5 +24,6 @@ public class AmazonConfig {
                 .withRegion(region)
                 .build();
     }
+
 
 }

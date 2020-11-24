@@ -1,20 +1,24 @@
 package com.springboot.blog.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-@EqualsAndHashCode(callSuper = true)
-@Builder
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -27,13 +31,13 @@ public class User extends RepresentationModel<User> implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
     @Column(nullable = false)
     private String password;
 
-    private String photoUrl;
+    private String photo;
 
     private String introduction;
 
@@ -45,9 +49,7 @@ public class User extends RepresentationModel<User> implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        grantedAuthorities.add(() -> String.valueOf(getRole()));
-        return grantedAuthorities;
+        return Stream.of(getRole()).map(userRole -> new SimpleGrantedAuthority(String.valueOf(userRole))).collect(Collectors.toList());
     }
 
     @Override
