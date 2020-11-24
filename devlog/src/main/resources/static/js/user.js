@@ -46,7 +46,7 @@ function submitData(action) {
             case '회원가입':
                 axios({
                     method: 'post',
-                    url: '/users',
+                    url: '/api/users',
                     headers: {'content-type': 'application/json'},
                     data: JSON.stringify({
                         email: emailForm.value,
