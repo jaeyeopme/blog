@@ -1,69 +1,88 @@
 <!DOCTYPE html>
-<html
-        lang="en"
-        xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-        xmlns:th="https://www.thymeleaf.org"
->
-<head th:replace="components/commons/head :: head('bucket')"></head>
-<script defer th:src="@{/js/user.js}"></script>
-<script defer th:src="@{/js/board.js}"></script>
-<style>
-    .card:hover {
-        transform: scale(1.02);
-    }
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" rel="stylesheet" />
+        <link
+            crossorigin="anonymous"
+            href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css"
+            integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX"
+            rel="stylesheet"
+        />
+        <link rel="icon" href="https://img.icons8.com/dusk/40/000000/box.png" />
+        <style>
+            .card {
+                cursor: pointer;
+                transition: 0.3s;
+            }
+            .card:hover {
+                transform: scale(1.02);
+            }
+        </style>
+        <title>box</title>
+    </head>
+    <body>
+        <nav class="navbar sticky-top navbar-light" id="nav" style="background-color: #fafafa; box-shadow: none">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <img src="https://img.icons8.com/dusk/40/000000/box.png" />
+                    <span class="align-middle">Box</span>
+                </a>
 
-    .card {
-        transition: 0.3s;
-    }
-</style>
-<body>
-<header th:replace="components/commons/header :: header"></header>
-<div th:replace="components/modal :: sign-modal"></div>
-<div sec:authorize="isAuthenticated()">
-    <div th:replace="components/modal :: user-setting-modal"></div>
-    <div th:replace="components/modal :: user-delete-modal"></div>
-</div>
-<div class="container-fluid px-0" style="padding-top: 7vh">
-    <div class="m-0 row row-cols-1 row-cols-xl-5 row-cols-lg-3 row-cols-md-2">
-        <div class="col p-4" style="height: 28rem" th:each="board : ${boards}">
-            <div class="card shadow-sm" style="height: 100%">
-                <img
-                        alt="thumbnail"
-                        class="card-img-top img-fluid"
-                        style="height: 17vh; object-fit: cover"
-                        th:if="${board.getThumbnailUrl()} != null" th:src="${board.getThumbnailUrl()}"
-                />
-                <div class="card-body p-2" style="height: 10rem">
-                    <h5
-                            class="card-title m-0"
-                            style="font-weight: 400"
-                            th:text="${board.getTitle()}"
-                    ></h5>
-                    <p
-                            class="card-text"
-                            style="font-weight: 300"
-                            th:text="${board.getIntroduction()}"
-                    ></p>
-                </div>
-                <div class="footer px-2 py-1">
-                    <p class="card-text d-flex justify-content-between">
-                <span>
-                  <small class="text-muted">by</small>
-                  <small th:text="${board.getUser().getEmail()}"></small>
-                </span>
-                        <small
-                                class="text-muted"
-                                th:text="${#temporals.format(board.getCreatedAt(), 'yyyy년 MM월 dd일')}"
-                        ></small>
-                    </p>
-                </div>
-                <a
-                        class="stretched-link"
-                        th:href="@{/boards/{id}(id=${board.getId()})}"
-                ></a>
+                <ul class="nav mx-3">
+                    <li class="nav-item">
+                        <button class="btn btn-dark btn-sm text-capitalize" type="button" onclick="location.href='/login'">
+                            <span class="align-middle">sign in</span>
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-dark btn-sm text-capitalize" type="button" onclick="location.href='/join'">
+                            <span class="align-middle">sign up</span>
+                        </button>
+                    </li>
+                </ul>
             </div>
-        </div>
-    </div>
-</div>
-</body>
+        </nav>
+
+        <main class="container-fluid" style="max-width: 80%">
+            <div class="row">
+                <div class="col-xl-3 col-md-6 p-4" th:each="n: ${#numbers.sequence(1, 20)}">
+                    <div class="card m-0">
+                        <img alt="Card image cap" class="card-img-top" src="/images/bmo.png" style="height: 15vh; object-fit: cover" />
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text" style="height: 15vh">
+                                This is a wider card with supporting text below as a natural lead-in to additional content. This content is
+                                a little bit longer.
+                            </p>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">Last updated 3 mins ago</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <script
+            crossorigin="anonymous"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        ></script>
+        <script
+            crossorigin="anonymous"
+            integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U"
+            src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js"
+        ></script>
+        <script
+            crossorigin="anonymous"
+            integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9"
+            src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js"
+        ></script>
+        <script defer>
+            $(document).ready(function () {
+                $('body').bootstrapMaterialDesign();
+            });
+        </script>
+    </body>
 </html>
