@@ -31,8 +31,8 @@ public class UserRestController {
      */
 
     @PostMapping
-    public ResponseEntity signup(@RequestBody User newUser) {
-        User user = userService.signup(newUser);
+    public ResponseEntity join(@RequestBody User newUser) {
+        User user = userService.join(newUser);
 
         Link selfRel = linkTo(this.getClass())
                 .slash(user.getId()).withSelfRel();

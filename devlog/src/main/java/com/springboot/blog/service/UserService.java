@@ -22,6 +22,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
+
     private final AmazonService amazonService;
 
 
@@ -33,10 +34,11 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public User signup(User newUser) {
+    public User join(User newUser) {
         userRepository.findByEmail(newUser.getEmail())
-                .ifPresent(findUser -> new ResponseStatusException(HttpStatus.CONFLICT, "이미 사용중인 이메일 입니다."));
-
+                .ifPresent(findUser -> {
+                    throw new ResponseStatusException(HttpStatus.CONFLICT, String.format("Email <strong>%s</strong> is not available.", findUser.getEmail()));
+                });
         newUser.setRole(UserRole.ROLE_USER);
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
 
@@ -79,9 +81,10 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
     }
 
+    // TODO: 11/26/2020 에러 메세지 연결
     @Override
     public UserDetails loadUserByUsername(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("이메일을 찾을 수 없습니다."));
+        return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("not fount email"));
     }
 
 }

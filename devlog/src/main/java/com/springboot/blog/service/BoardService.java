@@ -1,8 +1,5 @@
 package com.springboot.blog.service;
 
-import com.amazonaws.services.s3.model.DeleteObjectRequest;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.springboot.blog.common.AmazonService;
 import com.springboot.blog.entity.Board;
 import com.springboot.blog.entity.User;
@@ -12,13 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.UUID;
 
 @Service
 public class BoardService {

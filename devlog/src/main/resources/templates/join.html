@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
         <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" rel="stylesheet" />
         <link
             crossorigin="anonymous"
@@ -10,62 +10,60 @@
             integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX"
             rel="stylesheet"
         />
-        <link rel="icon" href="https://img.icons8.com/dusk/40/000000/box.png" />
+        <link href="https://img.icons8.com/dusk/40/000000/box.png" rel="icon" />
         <title>join</title>
     </head>
     <body>
         <main class="d-flex align-items-center flex-column">
             <div style="width: 400px; margin-top: 100px">
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <small>Email <strong>?</strong> is not available.</small>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">&times;</button>
+                <div id="email-invalid-alert" class="alert alert-danger alert-dismissible fade" role="alert">
+                    <small id="email-invalid-feedback">Email is not available.</small>
+                    <button aria-label="Close" class="close" data-dismiss="alert" type="button">&times;</button>
                 </div>
 
-                <form method="post" action="/users">
-                    <div class="card">
-                        <div class="card-body px-5">
-                            <div class="card-title text-center">
-                                <h2 style="margin-bottom: 20px">
-                                    <a href="/">
-                                        <img src="https://img.icons8.com/dusk/40/000000/box.png" />
-                                    </a>
-                                </h2>
-                                <h5>Join Box</h5>
-                            </div>
-
-                            <div class="card-text">
-                                <div class="form-group text-danger">
-                                    <label for="email" class="bmd-label-static">Email</label>
-                                    <input type="text" class="form-control" id="email" name="email" />
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="password" class="bmd-label-static">Password</label>
-                                    <input type="password" class="form-control" id="password" name="password" />
-                                </div>
-
-                                <div class="form-group">
-                                    <button type="button" class="btn btn-raised btn-primary btn-block">Create Account</button>
-                                </div>
-
-                                <div class="d-flex justify-content-around p-3">
-                                    <button type="button" class="btn bmd-btn-fab bmd-btn-fab-sm">
-                                        <img src="https://img.icons8.com/dusk/40/000000/github.png" />
-                                    </button>
-                                    <button type="button" class="btn bmd-btn-fab bmd-btn-fab-sm">
-                                        <img src="https://img.icons8.com/dusk/40/000000/google-logo.png" />
-                                    </button>
-                                    <button type="button" class="btn bmd-btn-fab bmd-btn-fab-sm">
-                                        <img src="https://img.icons8.com/dusk/40/000000/facebook-new.png" />
-                                    </button>
-                                </div>
-                            </div>
+                <div class="card">
+                    <div class="card-body px-5">
+                        <div class="card-title text-center">
+                            <h2 style="margin-bottom: 20px">
+                                <a href="/">
+                                    <img src="https://img.icons8.com/dusk/40/000000/box.png" />
+                                </a>
+                            </h2>
+                            <h5>Join Box</h5>
                         </div>
-                        <div class="card-text text-right p-3">
-                            <small> Already on Box? <a href="/login">Sign in</a> </small>
+
+                        <div class="card-text">
+                            <div class="form-group text-danger">
+                                <label class="bmd-label-static" for="email">Email</label>
+                                <input class="form-control" id="email" name="email" type="email" />
+                            </div>
+
+                            <div class="form-group">
+                                <label class="bmd-label-static" for="password">Password</label>
+                                <input class="form-control" id="password" name="password" type="password" />
+                            </div>
+
+                            <div class="form-group">
+                                <button class="btn btn-raised btn-primary btn-block" type="button" onclick="join()">Create Account</button>
+                            </div>
+
+                            <div class="d-flex justify-content-around p-3">
+                                <button class="btn bmd-btn-fab bmd-btn-fab-sm" type="button">
+                                    <img src="https://img.icons8.com/dusk/40/000000/github.png" />
+                                </button>
+                                <button class="btn bmd-btn-fab bmd-btn-fab-sm" type="button">
+                                    <img src="https://img.icons8.com/dusk/40/000000/google-logo.png" />
+                                </button>
+                                <button class="btn bmd-btn-fab bmd-btn-fab-sm" type="button">
+                                    <img src="https://img.icons8.com/dusk/40/000000/facebook-new.png" />
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </form>
+                    <div class="card-text text-right p-3">
+                        <small> Already on Box? <a href="/login">Sign in</a> </small>
+                    </div>
+                </div>
             </div>
         </main>
         <script
@@ -83,10 +81,25 @@
             integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9"
             src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js"
         ></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script>
             $(document).ready(function () {
                 $('body').bootstrapMaterialDesign();
             });
+
+            function join() {
+                $('.alert').alert();
+                axios
+                    .post('/api/users', {
+                        email: document.getElementById('email').value,
+                        password: document.getElementById('password').value,
+                    })
+                    .then(() => (window.location.href = '/login?join'))
+                    .catch((error) => {
+                        document.getElementById('email-invalid-alert').classList.add('show');
+                        document.getElementById('email-invalid-feedback').innerHTML = error.response.data.message;
+                    });
+            }
         </script>
     </body>
 </html>

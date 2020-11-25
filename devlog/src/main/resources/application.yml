@@ -30,7 +30,7 @@ cloud:
     s3:
       bucket: jaeyeop-blog-project
       url: https://jaeyeop-blog-project.s3.ap-northeast-2.amazonaws.com/
-#      defaultImage: https://jaeyeop-blog-project.s3.ap-northeast-2.amazonaws.com/images/default.jpg
+    #      defaultImage: https://jaeyeop-blog-project.s3.ap-northeast-2.amazonaws.com/images/default.jpg
     region: ap-northeast-2
     stack:
       auto: false
