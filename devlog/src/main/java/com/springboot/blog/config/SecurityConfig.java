@@ -22,7 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/login", "/signin", "/signup", "/boards/*", "/users", "/js/**", "/css/**", "/images/**")
+                .antMatchers("/", "/login", "/join", "/boards/*", "/users", "/js/**", "/css/**", "/images/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
@@ -31,7 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter("email")
                 .passwordParameter("password")
                 .loginPage("/login")
-                .loginProcessingUrl("/signin")
+                .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/")
                 .and()
                 .logout()
