@@ -1,11 +1,83 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" rel="stylesheet" />
+        <link
+            crossorigin="anonymous"
+            href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css"
+            integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX"
+            rel="stylesheet"
+        />
+        <script
+            crossorigin="anonymous"
+            defer
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        ></script>
+        <script
+            crossorigin="anonymous"
+            defer
+            integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U"
+            src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js"
+        ></script>
+        <script
+            crossorigin="anonymous"
+            defer
+            integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9"
+            src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js"
+        ></script>
+        <link rel="icon" href="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/microsoft/209/scroll_1f4dc.png">
+        <style>
+            .card {
+                cursor: pointer;
+                transition: 0.3s;
+            }
+            .card:hover {
+                transform: scale(1.02);
+            }
+        </style>
+        <title>Scroll</title>
     </head>
     <body>
-        asdasdas
+        <nav class="navbar sticky-top navbar-light" id="nav" style="background-color: #fafafa; box-shadow: none">
+            <div class="container">
+                <a class="navbar-brand" href="#">📜 Scroll</a>
+
+                <ul class="nav mx-3">
+                    <li class="nav-item">
+                        <button class="btn btn-dark btn-sm text-capitalize" type="button" onclick="location.href='/signin'">
+                            <span class="align-middle">Sign in</span>
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-dark btn-sm text-capitalize" type="button" onclick="location.href='/signup'">
+                            <span class="align-middle">Sign up</span>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <main class="container-fluid" style="max-width: 80%">
+            <div class="row">
+                <div class="col-xl-3 col-md-6 p-4" th:each="n: ${#numbers.sequence(1, 20)}">
+                    <div class="card m-0">
+                        <img alt="Card image cap" class="card-img-top" src="/images/bmo.png" style="height: 15vh; object-fit: cover" />
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text" style="height: 15vh">
+                                This is a wider card with supporting text below as a natural lead-in to additional content. This content is
+                                a little bit longer.
+                            </p>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">Last updated 3 mins ago</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </body>
 </html>
