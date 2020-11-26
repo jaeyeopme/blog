@@ -47,7 +47,7 @@
 <header th:replace="components/commons/header :: header"></header>
 <div th:replace="components/modal :: user-setting-modal"></div>
 <div th:replace="components/modal :: board-modify-modal"></div>
-<textarea id="board-content" th:text="${board.getContent()}"></textarea>
-<input id="board-id" th:value="${board.getId()}" type="hidden"/>
+<textarea id="board-content"></textarea>
+<input id="board-id" type="hidden"/>
 </body>
 </html>

@@ -36,7 +36,7 @@ public class BoardController {
     @GetMapping("write")
     public String writeForm(@AuthenticationPrincipal User user, Model model) {
         model.addAttribute("user", user);
-        return "board/board-write-form";
+        return "write";
     }
 
     @GetMapping("modify/{id}")

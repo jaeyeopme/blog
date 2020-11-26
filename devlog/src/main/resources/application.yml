@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    #    url: jdbc:mysql://jaeyeop-blog-project.czeadcaqy0xy.ap-northeast-2.rds.amazonaws.com:3306/blog?serverTimezone=Asia/Seoul&useSSL=false
+#    url: jdbc:mysql://jaeyeop-blog-project.czeadcaqy0xy.ap-northeast-2.rds.amazonaws.com:3306/blog?serverTimezone=Asia/Seoul&useSSL=false
     url: jdbc:mysql://localhost:3306/blog?serverTimezone=Asia/Seoul&useSSL=false
     username: root
     password: password

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <head>
         <meta charset="UTF-8" />
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
@@ -25,22 +25,68 @@
     </head>
     <body>
         <nav class="navbar sticky-top navbar-light" id="nav" style="background-color: #fafafa; box-shadow: none">
-            <div class="container">
+            <div class="container-fluid" style="max-width: 80vw">
                 <a class="navbar-brand" href="#">
                     <img src="https://img.icons8.com/dusk/40/000000/box.png" />
+
                     <span class="align-middle">Box</span>
                 </a>
 
-                <ul class="nav mx-3">
-                    <li class="nav-item">
-                        <button class="btn btn-dark btn-sm text-capitalize" onclick="location.href='/login'" type="button">
-                            <span class="align-middle">sign in</span>
+                <ul class="nav" sec:authorize="isAnonymous()">
+                    <li class="nav-item mx-1">
+                        <button class="btn btn-sm text-capitalize" onclick="window.location.href='/login'" type="button">
+                            <img src="https://img.icons8.com/dusk/30/000000/login-rounded-right.png" />
+
+                            <span class="align-middle"> Sign in </span>
                         </button>
                     </li>
-                    <li class="nav-item">
-                        <button class="btn btn-dark btn-sm text-capitalize" onclick="location.href='/join'" type="button">
-                            <span class="align-middle">sign up</span>
+
+                    <li class="nav-item mx-1">
+                        <button class="btn btn-sm text-capitalize" onclick="window.location.href='/join'" type="button">
+                            <img src="https://img.icons8.com/dusk/30/000000/easy.png" />
+
+                            <span class="align-middle"> Sign up </span>
                         </button>
+                    </li>
+                </ul>
+
+                <ul class="nav" sec:authorize="isAuthenticated()">
+                    <li class="nav-item mx-1">
+                        <button class="btn btn-sm text-capitalize" onclick="window.location.href='/write'" type="button">
+                            <img src="https://img.icons8.com/dusk/30/000000/pencil.png" />
+
+                            <span class="align-middle"> write </span>
+                        </button>
+                    </li>
+
+                    <li class="nav-item dropdown mx-1">
+                        <button
+                            class="btn btn-sm dropdown-toggle"
+                            type="button"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                        >
+                            <img
+                                style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover"
+                                src="/images/1111.gif"
+                                alt="profile"
+                            />
+                        </button>
+
+                        <div style="left: -127%" class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href="/settings">
+                                <img src="https://img.icons8.com/dusk/30/000000/gear.png" />
+
+                                <small> &nbsp; Settings </small>
+                            </a>
+
+                            <a class="dropdown-item" href="/logout">
+                                <img src="https://img.icons8.com/dusk/30/000000/logout-rounded-left.png" />
+
+                                <small> &nbsp; Sign out </small>
+                            </a>
+                        </div>
                     </li>
                 </ul>
             </div>
@@ -51,13 +97,15 @@
                 <div class="col-xl-3 col-md-6 p-4" th:each="n: ${#numbers.sequence(1, 20)}">
                     <div class="card m-0">
                         <img alt="Card image cap" class="card-img-top" src="/images/bmo.png" style="height: 15vh; object-fit: cover" />
+
                         <div class="card-body">
                             <h5 class="card-title">Card title</h5>
+
                             <p class="card-text" style="height: 15vh">
                                 This is a wider card with supporting text below as a natural lead-in to additional content. This content is
-                                a little bit longer.
                             </p>
                         </div>
+
                         <div class="card-footer">
                             <small class="text-muted">Last updated 3 mins ago</small>
                         </div>
@@ -80,7 +128,7 @@
             integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9"
             src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js"
         ></script>
-        <script defer>
+        <script>
             $(document).ready(function () {
                 $('body').bootstrapMaterialDesign();
             });

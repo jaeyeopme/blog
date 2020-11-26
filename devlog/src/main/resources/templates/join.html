@@ -16,9 +16,17 @@
     <body>
         <main class="d-flex align-items-center flex-column">
             <div style="width: 400px; margin-top: 100px">
-                <div id="email-invalid-alert" class="alert alert-danger alert-dismissible fade" role="alert">
+                <div style="display: none" id="email-invalid-alert" class="alert alert-danger alert-dismissible" role="alert">
                     <small id="email-invalid-feedback">Email is not available.</small>
-                    <button aria-label="Close" class="close" data-dismiss="alert" type="button">&times;</button>
+
+                    <button
+                        aria-label="Close"
+                        class="close"
+                        onclick="document.getElementById('email-invalid-alert').style.display = 'none'"
+                        type="button"
+                    >
+                        &times;
+                    </button>
                 </div>
 
                 <div class="card">
@@ -29,17 +37,20 @@
                                     <img src="https://img.icons8.com/dusk/40/000000/box.png" />
                                 </a>
                             </h2>
+
                             <h5>Join Box</h5>
                         </div>
 
                         <div class="card-text">
                             <div class="form-group text-danger">
                                 <label class="bmd-label-static" for="email">Email</label>
+
                                 <input class="form-control" id="email" name="email" type="email" />
                             </div>
 
                             <div class="form-group">
                                 <label class="bmd-label-static" for="password">Password</label>
+
                                 <input class="form-control" id="password" name="password" type="password" />
                             </div>
 
@@ -51,9 +62,11 @@
                                 <button class="btn bmd-btn-fab bmd-btn-fab-sm" type="button">
                                     <img src="https://img.icons8.com/dusk/40/000000/github.png" />
                                 </button>
+
                                 <button class="btn bmd-btn-fab bmd-btn-fab-sm" type="button">
                                     <img src="https://img.icons8.com/dusk/40/000000/google-logo.png" />
                                 </button>
+
                                 <button class="btn bmd-btn-fab bmd-btn-fab-sm" type="button">
                                     <img src="https://img.icons8.com/dusk/40/000000/facebook-new.png" />
                                 </button>
@@ -65,7 +78,6 @@
                     </div>
                 </div>
             </div>
-        </main>
         <script
             crossorigin="anonymous"
             integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
@@ -83,12 +95,11 @@
         ></script>
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script>
-            $(document).ready(function () {
+            $(document).ready(() => {
                 $('body').bootstrapMaterialDesign();
             });
 
             function join() {
-                $('.alert').alert();
                 axios
                     .post('/api/users', {
                         email: document.getElementById('email').value,
@@ -96,7 +107,7 @@
                     })
                     .then(() => (window.location.href = '/login?join'))
                     .catch((error) => {
-                        document.getElementById('email-invalid-alert').classList.add('show');
+                        document.getElementById('email-invalid-alert').style.display = 'block';
                         document.getElementById('email-invalid-feedback').innerHTML = error.response.data.message;
                     });
             }

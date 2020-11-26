@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" rel="stylesheet" />
+        <link
+            crossorigin="anonymous"
+            href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css"
+            integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX"
+            rel="stylesheet"
+        />
+        <link href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css" rel="stylesheet" />
+        <link href="https://img.icons8.com/dusk/40/000000/box.png" rel="icon" />
+        <style>
+            .fa.fa-columns,
+            .fa.fa-arrows-alt {
+                display: none;
+            }
+
+            .CodeMirror-fullscreen,
+            .editor-preview-side {
+                margin-bottom: 50px;
+                min-height: auto;
+            }
+        </style>
+        <title>write</title>
+    </head>
+    <body>
+        <textarea id="content"></textarea>
+
+        <div style="position: absolute; bottom: 0; right: 2%">
+            <button class="btn btn-sm text-capitalize" onclick="window.history.back()" type="button">
+                <img src="https://img.icons8.com/dusk/30/000000/circled-left.png" />
+                Back
+            </button>
+
+            <button class="btn btn-sm text-capitalize" type="button" data-toggle="modal" data-target="#modal">
+                <img src="https://img.icons8.com/dusk/30/000000/ok.png" />
+                Save
+            </button>
+        </div>
+
+        <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">...</div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm text-capitalize" data-dismiss="modal">
+                            <img src="https://img.icons8.com/dusk/30/000000/delete-sign.png"/>
+                            Close
+                        </button>
+
+                        <button class="btn btn-sm text-capitalize" type="button" data-toggle="modal" data-target="#modal">
+                            <img src="https://img.icons8.com/dusk/30/000000/ok.png" />
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script
+            crossorigin="anonymous"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        ></script>
+        <script
+            crossorigin="anonymous"
+            integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U"
+            src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js"
+        ></script>
+        <script
+            crossorigin="anonymous"
+            integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9"
+            src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js"
+        ></script>
+        <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const writeContent = new SimpleMDE({
+                    element: document.getElementById('content'),
+                    // placeholder: "Please enter a text.",
+                    status: false,
+                    toolbar: [
+                        'bold',
+                        'italic',
+                        'heading',
+                        '|',
+                        'code',
+                        'quote',
+                        'unordered-list',
+                        'ordered-list',
+                        '|',
+                        'link',
+                        'image',
+                        'table',
+                        '|',
+                        'guide',
+                        'side-by-side',
+                        'fullscreen',
+                    ],
+                    spellChecker: false,
+                });
+
+                writeContent.toggleSideBySide();
+            });
+        </script>
+    </body>
+</html>
