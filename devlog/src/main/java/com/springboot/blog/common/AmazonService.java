@@ -28,29 +28,24 @@ public class AmazonService {
 
     public String putPhoto(MultipartFile newPhoto) {
         try {
-            if (newPhoto.isEmpty()) {
-                return null;
-            }
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentType(newPhoto.getContentType());
             metadata.setContentLength(newPhoto.getSize());
 
-            String photoName = String.format("images/%s-%s", UUID.randomUUID(), newPhoto.getOriginalFilename());
-            amazonS3.putObject(new PutObjectRequest(bucket, photoName, newPhoto.getInputStream(), metadata));
-            return String.format("%s%s", url, photoName);
+            String newPhotoName = String.format("images/%s-%s", UUID.randomUUID(), newPhoto.getOriginalFilename());
+            amazonS3.putObject(new PutObjectRequest(bucket, newPhotoName, newPhoto.getInputStream(), metadata));
+
+            return String.format("%s%s", url, newPhotoName);
         } catch (Exception e) {
-            throw new AmazonS3Exception("사진 저장에 실패했습니다.");
+            throw new AmazonS3Exception("Photo save error");
         }
     }
 
     public void deletePhoto(String photoName) {
         try {
-            if (photoName.isEmpty()) {
-                return;
-            }
             amazonS3.deleteObject(new DeleteObjectRequest(bucket, photoName));
         } catch (Exception e) {
-            throw new AmazonS3Exception("사진 삭제에 실패했습니다.");
+            throw new AmazonS3Exception("Photo remove error.");
         }
     }
 }

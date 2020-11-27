@@ -27,23 +27,20 @@ public class BoardController {
     }
 
     @GetMapping("boards/{id}")
-    public String detailForm(@AuthenticationPrincipal User user, Model model, @PathVariable Long id) {
-        model.addAttribute("user", user);
+    public String boardForm(@PathVariable Long id, Model model) {
         model.addAttribute("board", boardService.findById(id));
         return "board/board-detail-form";
     }
 
     @GetMapping("write")
-    public String writeForm(@AuthenticationPrincipal User user, Model model) {
-        model.addAttribute("user", user);
+    public String writeForm() {
         return "write";
     }
 
-    @GetMapping("modify/{id}")
-    public String modifyForm(@AuthenticationPrincipal User user, Model model, @PathVariable Long id) {
-        model.addAttribute("user", user);
+    @GetMapping("edit/{id}")
+    public String editForm(@PathVariable Long id, Model model) {
         model.addAttribute("board", boardService.findById(id));
-        return "board/board-modify-form";
+        return "edit";
     }
 
 }

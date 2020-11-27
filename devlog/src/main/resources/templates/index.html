@@ -20,12 +20,16 @@
             .card:hover {
                 transform: scale(1.02);
             }
+
+            .nav-item {
+                height: 40px;
+            }
         </style>
         <title>box</title>
     </head>
     <body>
         <nav class="navbar sticky-top navbar-light" id="nav" style="background-color: #fafafa; box-shadow: none">
-            <div class="container-fluid" style="max-width: 80vw">
+            <div class="container">
                 <a class="navbar-brand" href="#">
                     <img src="https://img.icons8.com/dusk/40/000000/box.png" />
 
@@ -55,7 +59,7 @@
                         <button class="btn btn-sm text-capitalize" onclick="window.location.href='/write'" type="button">
                             <img src="https://img.icons8.com/dusk/30/000000/pencil.png" />
 
-                            <span class="align-middle"> write </span>
+                            <span class="align-middle"> Write </span>
                         </button>
                     </li>
 
@@ -96,12 +100,12 @@
             <div class="row">
                 <div class="col-xl-3 col-md-6 p-4" th:each="n: ${#numbers.sequence(1, 20)}">
                     <div class="card m-0">
-                        <img alt="Card image cap" class="card-img-top" src="/images/bmo.png" style="height: 15vh; object-fit: cover" />
+                        <img alt="Card image cap" class="card-img-top" src="/images/bmo.png" style="height: 145px; object-fit: cover" />
 
                         <div class="card-body">
                             <h5 class="card-title">Card title</h5>
 
-                            <p class="card-text" style="height: 15vh">
+                            <p class="card-text" style="height: 145px">
                                 This is a wider card with supporting text below as a natural lead-in to additional content. This content is
                             </p>
                         </div>
@@ -129,9 +133,7 @@
             src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js"
         ></script>
         <script>
-            $(document).ready(function () {
-                $('body').bootstrapMaterialDesign();
-            });
+            $('body').bootstrapMaterialDesign();
         </script>
     </body>
 </html>

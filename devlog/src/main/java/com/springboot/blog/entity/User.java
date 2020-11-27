@@ -39,7 +39,7 @@ public class User extends RepresentationModel<User> implements UserDetails {
 
     private String photo;
 
-    private String introduction;
+    private String introduce;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

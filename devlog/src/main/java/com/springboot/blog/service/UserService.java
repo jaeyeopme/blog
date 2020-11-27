@@ -1,6 +1,5 @@
 package com.springboot.blog.service;
 
-import com.amazonaws.services.s3.AmazonS3;
 import com.springboot.blog.common.AmazonService;
 import com.springboot.blog.entity.User;
 import com.springboot.blog.entity.UserRole;
@@ -25,9 +24,8 @@ public class UserService implements UserDetailsService {
 
     private final AmazonService amazonService;
 
-
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AmazonS3 amazonS3, AmazonService amazonService) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AmazonService amazonService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.amazonService = amazonService;
@@ -39,6 +37,7 @@ public class UserService implements UserDetailsService {
                 .ifPresent(findUser -> {
                     throw new ResponseStatusException(HttpStatus.CONFLICT, String.format("Email <strong>%s</strong> is not available.", findUser.getEmail()));
                 });
+
         newUser.setRole(UserRole.ROLE_USER);
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
 
@@ -49,22 +48,23 @@ public class UserService implements UserDetailsService {
     public User modify(Long id, User newUser, MultipartFile newPhoto) {
         return userRepository.findById(id)
                 .map(user -> {
-                    user.setIntroduction(newUser.getIntroduction());
+                    user.setIntroduce(newUser.getIntroduce());
 
                     if (!newPhoto.isEmpty()) {
                         if (!user.getPhoto().isEmpty()) {
                             amazonService.deletePhoto(user.getPhoto());
                         }
-                        user.setPhoto(amazonService.putPhoto(newPhoto));
+                        amazonService.putPhoto(newPhoto);
                     }
 
                     return user;
-                }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
+                })
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found user."));
     }
 
     @Transactional
-    public void delete(Long id) {
-        userRepository.findById(id)
+    public User delete(Long id) {
+        return userRepository.findById(id)
                 .map(user -> {
                     if (!user.getPhoto().isEmpty()) {
                         amazonService.deletePhoto(user.getPhoto());
@@ -76,15 +76,16 @@ public class UserService implements UserDetailsService {
                             .forEach(board -> amazonService.deletePhoto(board.getPhoto()));
 
                     userRepository.deleteById(user.getId());
+
                     return user;
                 })
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found user."));
     }
 
-    // TODO: 11/26/2020 에러 메세지 연결
     @Override
     public UserDetails loadUserByUsername(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("not fount email"));
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Not found user."));
     }
 
 }

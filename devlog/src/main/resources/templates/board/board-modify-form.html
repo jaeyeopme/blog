@@ -1,53 +1,47 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
-<head th:replace="components/commons/head :: head('modify')"></head>
-<script
-        defer
-        src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"
-></script>
-<script defer th:src="@{/js/user.js}"></script>
-<script defer th:src="@{/js/board.js}"></script>
-<link
-        href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css"
-        rel="stylesheet"
-/>
-<style>
-    body {
-        font-size: 18px;
-    }
+    <head th:replace="components/commons/head :: head('modify')"></head>
+    <script defer src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+    <script defer th:src="@{/js/user.js}"></script>
+    <script defer th:src="@{/js/board.js}"></script>
+    <link href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css" rel="stylesheet" />
+    <style>
+        body {
+            font-size: 18px;
+        }
 
-    .editor-toolbar.fullscreen {
-        margin-top: 7vh;
-        width: 50%;
-        border: 1px solid #ddd;
-        border-bottom: none;
-    }
+        .editor-toolbar.fullscreen {
+            margin-top: 7vh;
+            width: 50%;
+            border: 1px solid #ddd;
+            border-bottom: none;
+        }
 
-    .CodeMirror-sided,
-    .CodeMirror-wrap {
-        margin-top: 7vh;
-    }
+        .CodeMirror-sided,
+        .CodeMirror-wrap {
+            margin-top: 7vh;
+        }
 
-    .editor-preview-side {
-        z-index: 10;
-        margin-top: 18px;
-    }
+        .editor-preview-side {
+            z-index: 10;
+            margin-top: 18px;
+        }
 
-    .editor-preview-side img {
-        height: 50vh;
-        object-fit: cover;
-    }
+        .editor-preview-side img {
+            height: 50vh;
+            object-fit: cover;
+        }
 
-    .fa.fa-columns,
-    .fa.fa-arrows-alt {
-        display: none;
-    }
-</style>
-<body>
-<header th:replace="components/commons/header :: header"></header>
-<div th:replace="components/modal :: user-setting-modal"></div>
-<div th:replace="components/modal :: board-modify-modal"></div>
-<textarea id="board-content"></textarea>
-<input id="board-id" type="hidden"/>
-</body>
+        .fa.fa-columns,
+        .fa.fa-arrows-alt {
+            display: none;
+        }
+    </style>
+    <body>
+        <header th:replace="components/commons/header :: header"></header>
+        <div th:replace="components/modal :: user-setting-modal"></div>
+        <div th:replace="components/modal :: board-modify-modal"></div>
+        <textarea id="board-content"></textarea>
+        <input id="board-id" type="hidden" />
+    </body>
 </html>

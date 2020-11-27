@@ -29,7 +29,7 @@ public class Board {
 
     private String photo;
 
-    private String introduction;
+    private String introduce;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

@@ -16,13 +16,13 @@
     <body>
         <main class="d-flex align-items-center flex-column">
             <div style="width: 400px; margin-top: 100px">
-                <div style="display: none" id="email-invalid-alert" class="alert alert-danger alert-dismissible" role="alert">
-                    <small id="email-invalid-feedback">Email is not available.</small>
+                <div style="display: none" id="invalid-alert" class="alert alert-danger alert-dismissible" role="alert">
+                    <small id="invalid-feedback">Value is not available.</small>
 
                     <button
                         aria-label="Close"
                         class="close"
-                        onclick="document.getElementById('email-invalid-alert').style.display = 'none'"
+                        onclick="document.getElementById('invalid-alert').style.display = 'none'"
                         type="button"
                     >
                         &times;
@@ -45,17 +45,17 @@
                             <div class="form-group text-danger">
                                 <label class="bmd-label-static" for="email">Email</label>
 
-                                <input class="form-control" id="email" name="email" type="email" />
+                                <input class="form-control" id="email" type="email" required />
                             </div>
 
                             <div class="form-group">
                                 <label class="bmd-label-static" for="password">Password</label>
 
-                                <input class="form-control" id="password" name="password" type="password" />
+                                <input class="form-control" id="password" type="password" required />
                             </div>
 
                             <div class="form-group">
-                                <button class="btn btn-raised btn-primary btn-block" type="button" onclick="join()">Create Account</button>
+                                <button class="btn btn-raised btn-primary btn-block" type="button" onclick="_join()">Create Account</button>
                             </div>
 
                             <div class="d-flex justify-content-around p-3">
@@ -73,11 +73,13 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="card-text text-right p-3">
                         <small> Already on Box? <a href="/login">Sign in</a> </small>
                     </div>
                 </div>
             </div>
+        </main>
         <script
             crossorigin="anonymous"
             integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
@@ -95,21 +97,24 @@
         ></script>
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script>
-            $(document).ready(() => {
-                $('body').bootstrapMaterialDesign();
-            });
+            $('body').bootstrapMaterialDesign();
 
-            function join() {
-                axios
-                    .post('/api/users', {
-                        email: document.getElementById('email').value,
-                        password: document.getElementById('password').value,
-                    })
-                    .then(() => (window.location.href = '/login?join'))
-                    .catch((error) => {
-                        document.getElementById('email-invalid-alert').style.display = 'block';
-                        document.getElementById('email-invalid-feedback').innerHTML = error.response.data.message;
-                    });
+            function _join() {
+                const email = document.getElementById('email');
+                const password = document.getElementById('password');
+
+                if (email.checkValidity() && password.checkValidity()) {
+                    axios
+                        .post('/users', {
+                            email: email.value,
+                            password: password.value,
+                        })
+                        .then(() => (window.location.href = '/login?join'))
+                        .catch((error) => {
+                            document.getElementById('invalid-alert').style.display = 'block';
+                            document.getElementById('invalid-feedback').innerHTML = error.response.data.message;
+                        });
+                }
             }
         </script>
     </body>
