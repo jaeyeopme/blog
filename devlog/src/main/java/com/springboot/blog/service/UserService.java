@@ -33,31 +33,31 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public User join(User newUser) {
-        userRepository.findByEmail(newUser.getEmail())
-                .ifPresent(findUser -> {
+        return (User) userRepository.findByEmail(newUser.getEmail())
+                .map(findUser -> {
                     throw new ResponseStatusException(HttpStatus.CONFLICT, String.format("Email <strong>%s</strong> is not available.", findUser.getEmail()));
+                })
+                .orElseGet(() -> {
+                    newUser.setRole(UserRole.ROLE_USER);
+                    newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+                    return userRepository.save(newUser);
                 });
-
-        newUser.setRole(UserRole.ROLE_USER);
-        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
-
-        return userRepository.save(newUser);
     }
 
     @Transactional
     public User modify(Long id, User newUser, MultipartFile newPhoto) {
         return userRepository.findById(id)
-                .map(user -> {
-                    user.setIntroduce(newUser.getIntroduce());
+                .map(findUser -> {
+                    findUser.setIntroduce(newUser.getIntroduce());
 
                     if (!newPhoto.isEmpty()) {
-                        if (!user.getPhoto().isEmpty()) {
-                            amazonService.deletePhoto(user.getPhoto());
+                        if (!findUser.getPhoto().isEmpty()) {
+                            amazonService.deletePhoto(findUser.getPhoto());
                         }
                         amazonService.putPhoto(newPhoto);
                     }
 
-                    return user;
+                    return findUser;
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found user."));
     }
@@ -65,19 +65,19 @@ public class UserService implements UserDetailsService {
     @Transactional
     public User delete(Long id) {
         return userRepository.findById(id)
-                .map(user -> {
-                    if (!user.getPhoto().isEmpty()) {
-                        amazonService.deletePhoto(user.getPhoto());
+                .map(findUser -> {
+                    if (!findUser.getPhoto().isEmpty()) {
+                        amazonService.deletePhoto(findUser.getPhoto());
                     }
 
-                    user.getBoards()
+                    findUser.getBoards()
                             .stream()
                             .filter(board -> !board.getPhoto().isEmpty())
                             .forEach(board -> amazonService.deletePhoto(board.getPhoto()));
 
-                    userRepository.deleteById(user.getId());
+                    userRepository.deleteById(findUser.getId());
 
-                    return user;
+                    return findUser;
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found user."));
     }

@@ -14,7 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import static com.springboot.blog.controller.rest.UserRestController.BASE_URL;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
-@RequestMapping(value = BASE_URL, produces = MediaTypes.HAL_JSON_VALUE)
+@RequestMapping(value = UserRestController.BASE_URL, produces = MediaTypes.HAL_JSON_VALUE)
 @RestController
 public class UserRestController {
 

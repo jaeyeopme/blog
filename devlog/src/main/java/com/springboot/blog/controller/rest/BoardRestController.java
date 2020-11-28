@@ -32,14 +32,14 @@ public class BoardRestController {
     /**
      * 게시글 작성
      *
-     * @param newUser
+     * @param user
      * @param newBoard
      * @param newPhoto
      * @return
      */
     @PostMapping
-    public ResponseEntity<String> write(@AuthenticationPrincipal User newUser, @ModelAttribute Board newBoard, @RequestPart(required = false) MultipartFile newPhoto) {
-        Board board = boardService.write(newUser, formValidation(newBoard), newPhoto);
+    public ResponseEntity<String> write(@AuthenticationPrincipal User user, @ModelAttribute Board newBoard, @RequestPart(required = false) MultipartFile newPhoto) {
+        Board board = boardService.write(user, formValidation(newBoard), newPhoto);
 
         Link selfRel = linkTo(this.getClass())
                 .slash(board.getId()).withSelfRel();

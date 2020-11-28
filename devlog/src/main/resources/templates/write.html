@@ -30,22 +30,24 @@
         <textarea id="content"></textarea>
 
         <div style="position: absolute; bottom: 0; right: 2%">
-            <button class="btn btn-sm text-capitalize" onclick="window.location.href = '/'" type="button">
+            <a class="btn btn-sm text-capitalize" href="#" onclick="window.history.back()" role="button">
                 <img src="https://img.icons8.com/dusk/30/000000/circled-left.png" />
-                Back
-            </button>
 
-            <button class="btn btn-sm text-capitalize" type="button" data-toggle="modal" data-target="#modal">
+                <span class="align-middle"> Back </span>
+            </a>
+
+            <button class="btn btn-sm text-capitalize" type="button" data-toggle="modal" data-target="#board_write_modal">
                 <img src="https://img.icons8.com/dusk/30/000000/ok.png" />
-                Save
+
+                <span class="align-middle"> Save </span>
             </button>
         </div>
 
-        <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+        <div class="modal fade" id="board_write_modal" tabindex="-1" role="dialog" aria-labelledby="board_write_modal" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Preview</h5>
+                        <h5 class="modal-title">Preview</h5>
 
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -54,7 +56,7 @@
 
                     <div class="modal-body">
                         <div class="form-group text-center">
-                            <input hidden type="file" id="photo" accept="image/**" onchange="_addPhoto()" />
+                            <input hidden type="file" id="photo" accept="image/**" onchange="_add_board_photo()" />
 
                             <div id="before-upload">
                                 <label for="photo">
@@ -66,8 +68,10 @@
                                 <label for="photo">
                                     <small class="btn-link" style="cursor: pointer"> reupload </small>
                                 </label>
+
                                 ·
-                                <small class="btn-link" style="cursor: pointer" onclick="_removePhoto()"> remove </small>
+
+                                <small class="btn-link" style="cursor: pointer" onclick="_delete_board_photo()"> remove </small>
                             </div>
 
                             <img
@@ -94,12 +98,14 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-sm text-capitalize" data-dismiss="modal">
                             <img src="https://img.icons8.com/dusk/30/000000/delete-sign.png" />
-                            Close
+
+                            <span class="align-middle"> Close </span>
                         </button>
 
-                        <button class="btn btn-sm text-capitalize" type="button" onclick="_write()">
+                        <button class="btn btn-sm text-capitalize" type="button" onclick="_write_board()">
                             <img src="https://img.icons8.com/dusk/30/000000/ok.png" />
-                            Save
+
+                            <span class="align-middle"> Save </span>
                         </button>
                     </div>
                 </div>
@@ -159,7 +165,7 @@
             const before_upload = document.getElementById('before-upload');
             const after_upload = document.getElementById('after-upload');
 
-            function _addPhoto() {
+            function _add_board_photo() {
                 if (photo.files[0] === undefined) {
                     // before
                     before_upload.style.display = 'block';
@@ -178,14 +184,14 @@
                 }
             }
 
-            function _removePhoto() {
+            function _delete_board_photo() {
                 photo.value = '';
                 preview.src = defaultPhoto;
                 before_upload.style.display = 'block';
                 after_upload.style.display = 'none';
             }
 
-            function _write() {
+            function _write_board() {
                 const title = document.getElementById('title');
 
                 if (title.checkValidity()) {

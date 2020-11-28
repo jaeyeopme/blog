@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8" />
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
@@ -16,13 +16,13 @@
     <body>
         <main class="d-flex align-items-center flex-column">
             <div style="width: 400px; margin-top: 100px">
-                <div style="display: none" id="invalid-alert" class="alert alert-danger alert-dismissible" role="alert">
-                    <small id="invalid-feedback">Value is not available.</small>
+                <div style="display: none" id="invalid_alert" class="alert alert-danger alert-dismissible" role="alert">
+                    <small id="invalid_feedback">Value is not available.</small>
 
                     <button
                         aria-label="Close"
                         class="close"
-                        onclick="document.getElementById('invalid-alert').style.display = 'none'"
+                        onclick="document.getElementById('invalid_alert').style.display = 'none'"
                         type="button"
                     >
                         &times;
@@ -33,7 +33,7 @@
                     <div class="card-body px-5">
                         <div class="card-title text-center">
                             <h2 style="margin-bottom: 20px">
-                                <a href="/">
+                                <a th:href="@{/}">
                                     <img src="https://img.icons8.com/dusk/40/000000/box.png" />
                                 </a>
                             </h2>
@@ -55,7 +55,9 @@
                             </div>
 
                             <div class="form-group">
-                                <button class="btn btn-raised btn-primary btn-block" type="button" onclick="_join()">Create Account</button>
+                                <button class="btn btn-raised btn-primary btn-block" type="button" onclick="_join_user()">
+                                    Create Account
+                                </button>
                             </div>
 
                             <div class="d-flex justify-content-around p-3">
@@ -75,7 +77,7 @@
                     </div>
 
                     <div class="card-text text-right p-3">
-                        <small> Already on Box? <a href="/login">Sign in</a> </small>
+                        <small> Already on Box? <a th:href="@{/login}">Sign in</a> </small>
                     </div>
                 </div>
             </div>
@@ -99,7 +101,7 @@
         <script>
             $('body').bootstrapMaterialDesign();
 
-            function _join() {
+            function _join_user() {
                 const email = document.getElementById('email');
                 const password = document.getElementById('password');
 
@@ -111,8 +113,8 @@
                         })
                         .then(() => (window.location.href = '/login?join'))
                         .catch((error) => {
-                            document.getElementById('invalid-alert').style.display = 'block';
-                            document.getElementById('invalid-feedback').innerHTML = error.response.data.message;
+                            document.getElementById('invalid_alert').style.display = 'block';
+                            document.getElementById('invalid_feedback').innerHTML = error.response.data.message;
                         });
                 }
             }

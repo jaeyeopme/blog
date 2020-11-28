@@ -27,14 +27,13 @@ public class CommentService {
     }
 
     @Transactional
-    public ResponseEntity<String> write(User user, Long boardId, Comment comment) {
-        Board board = boardRepository.findById(boardId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."));
-
-        comment.setUser(user);
-        comment.setBoard(board);
-        commentRepository.save(comment);
-
-        return ResponseEntity.created(URI.create("/boards/" + boardId)).body("{}");
+    public Comment write(User user, Long boardId, Comment newComment) {
+        return boardRepository.findById(boardId)
+                .map(findBoard -> {
+                    newComment.setUser(user);
+                    newComment.setBoard(findBoard);
+                    return commentRepository.save(newComment);
+                }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found board."));
     }
 
     @Transactional

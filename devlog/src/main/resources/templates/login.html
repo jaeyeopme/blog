@@ -28,12 +28,12 @@
                     <button aria-label="Close" class="close" data-dismiss="alert" type="button">&times;</button>
                 </div>
 
-                <form action="/login" method="post">
+                <form th:action="@{/login}" method="post">
                     <div class="card">
                         <div class="card-body px-5">
                             <div class="card-title text-center">
                                 <h2 style="margin-bottom: 20px">
-                                    <a href="/">
+                                    <a th:href="@{/}">
                                         <img src="https://img.icons8.com/dusk/40/000000/box.png" />
                                     </a>
                                 </h2>
@@ -74,7 +74,7 @@
                             </div>
                         </div>
                         <div class="card-text text-right p-3">
-                            <small> New to Box? <a href="/join">Create an account.</a> </small>
+                            <small> New to Box? <a th:href="@{/join}">Create an account.</a> </small>
                         </div>
                     </div>
                 </form>

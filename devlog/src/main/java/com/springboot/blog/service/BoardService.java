@@ -29,15 +29,17 @@ public class BoardService {
     }
 
     @Transactional
-    public Board write(User newUser, Board newBoard, MultipartFile newPhoto) {
-        newBoard.setUser(userRepository.findById(newUser.getId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found user.")));
+    public Board write(User user, Board newBoard, MultipartFile newPhoto) {
+        return userRepository.findById(user.getId())
+                .map(findUser -> {
+                    newBoard.setUser(findUser);
 
-        if (newPhoto != null) {
-            newBoard.setPhoto(amazonService.putPhoto(newPhoto));
-        }
+                    if (newPhoto != null) {
+                        newBoard.setPhoto(amazonService.putPhoto(newPhoto));
+                    }
 
-        return boardRepository.save(newBoard);
+                    return boardRepository.save(newBoard);
+                }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found user."));
     }
 
     @Transactional(readOnly = true)
@@ -54,19 +56,19 @@ public class BoardService {
     @Transactional
     public Board edit(Long id, Board newBoard, MultipartFile newPhoto) {
         return boardRepository.findById(id)
-                .map(board -> {
-                    board.setTitle(newBoard.getTitle());
-                    board.setContent(newBoard.getContent());
-                    board.setIntroduce(newBoard.getIntroduce());
+                .map(findBoard -> {
+                    findBoard.setTitle(newBoard.getTitle());
+                    findBoard.setContent(newBoard.getContent());
+                    findBoard.setIntroduce(newBoard.getIntroduce());
 
                     if (newPhoto != null) {
-                        if (!board.getPhoto().isEmpty()) {
-                            amazonService.deletePhoto(board.getPhoto());
+                        if (!findBoard.getPhoto().isEmpty()) {
+                            amazonService.deletePhoto(findBoard.getPhoto());
                         }
-                        board.setPhoto(amazonService.putPhoto(newPhoto));
+                        findBoard.setPhoto(amazonService.putPhoto(newPhoto));
                     }
 
-                    return board;
+                    return findBoard;
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found board."));
     }
@@ -74,14 +76,14 @@ public class BoardService {
     @Transactional
     public Board delete(Long id) {
         return boardRepository.findById(id)
-                .map(board -> {
-                    if (!board.getPhoto().isEmpty()) {
-                        amazonService.deletePhoto(board.getPhoto());
+                .map(findBoard -> {
+                    if (!findBoard.getPhoto().isEmpty()) {
+                        amazonService.deletePhoto(findBoard.getPhoto());
                     }
 
-                    boardRepository.deleteById(board.getId());
+                    boardRepository.deleteById(findBoard.getId());
 
-                    return board;
+                    return findBoard;
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found board."));
     }
