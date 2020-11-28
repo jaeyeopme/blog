@@ -126,7 +126,7 @@
         <script>
             $('body').bootstrapMaterialDesign();
 
-            const MDE = new SimpleMDE({
+            const content = new SimpleMDE({
                 element: document.getElementById('content'),
                 // placeholder: "Please enter a text.",
                 status: false,
@@ -151,7 +151,7 @@
                 spellChecker: false,
             });
 
-            MDE.toggleSideBySide();
+            content.toggleSideBySide();
 
             const photo = document.getElementById('photo');
             const preview = document.getElementById('preview');
@@ -191,7 +191,7 @@
                 if (title.checkValidity()) {
                     const data = new FormData();
                     data.append('title', title.value);
-                    data.append('content', document.getElementById('content').value);
+                    data.append('content', content.value());
                     data.append('introduce', document.getElementById('introduce').value);
                     data.append('newPhoto', photo.files[0]);
 
