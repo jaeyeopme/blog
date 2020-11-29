@@ -118,7 +118,8 @@
                                 </p>
                             </div>
 
-                            <div class="card-footer">
+                            <div class="card-footer d-flex justify-content-between">
+                                <small class="text-muted" th:text="|by ${board.user.username}|">Jaeyeop</small>
                                 <small class="text-muted" th:text="${board.createdAt}">Last updated 3 mins ago</small>
                             </div>
                         </div>

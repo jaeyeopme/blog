@@ -1,18 +1,14 @@
 package com.springboot.blog.service;
 
-import com.springboot.blog.entity.Board;
 import com.springboot.blog.entity.Comment;
 import com.springboot.blog.entity.User;
 import com.springboot.blog.repository.BoardRepository;
 import com.springboot.blog.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.net.URI;
 
 @Service
 public class CommentService {
@@ -26,29 +22,55 @@ public class CommentService {
         this.boardRepository = boardRepository;
     }
 
+    /**
+     * 댓글 작성
+     *
+     * @param user
+     * @param boardId
+     * @param newComment
+     * @return
+     */
     @Transactional
     public Comment write(User user, Long boardId, Comment newComment) {
         return boardRepository.findById(boardId)
                 .map(findBoard -> {
                     newComment.setUser(user);
                     newComment.setBoard(findBoard);
+
                     return commentRepository.save(newComment);
                 }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found board."));
     }
 
+    /**
+     * 댓글 수정
+     *
+     * @param id
+     * @param newComment
+     * @return
+     */
     @Transactional
-    public ResponseEntity<String> modify(Long id, Comment newComment) {
+    public Comment edit(Long id, Comment newComment) {
         return commentRepository.findById(id)
-                .map(comment -> {
-                    comment.setContent(newComment.getContent());
-                    return ResponseEntity.ok().body("{}");
+                .map(findComment -> {
+                    findComment.setContent(newComment.getContent());
+
+                    return findComment;
                 })
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found comment."));
     }
 
+    /**
+     * 댓글 삭제
+     *
+     * @param id
+     */
     @Transactional
-    public ResponseEntity<String> delete(Long id) {
-        commentRepository.deleteById(id);
-        return ResponseEntity.ok("{}");
+    public void delete(Long id) {
+        commentRepository.findById(id)
+                .map(findComment -> {
+                    commentRepository.delete(findComment);
+
+                    return findComment;
+                }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found comment."));
     }
 }

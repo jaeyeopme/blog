@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.hateoas.RepresentationModel;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +21,7 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class User extends RepresentationModel<User> implements UserDetails {
+public class User implements UserDetails {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -32,10 +31,16 @@ public class User extends RepresentationModel<User> implements UserDetails {
     private UserRole role;
 
     @Column(unique = true, nullable = false)
-    private String email;
+    private String username;
 
     @Column(nullable = false)
     private String password;
+
+//    @Column(unique = true, nullable = false)
+//    private String email;
+
+    @Column(nullable = false)
+    private String name;
 
     private String photo;
 
@@ -54,7 +59,7 @@ public class User extends RepresentationModel<User> implements UserDetails {
 
     @Override
     public String getUsername() {
-        return getEmail();
+        return this.username;
     }
 
     @Override

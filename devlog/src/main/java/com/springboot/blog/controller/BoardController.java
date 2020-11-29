@@ -26,18 +26,18 @@ public class BoardController {
         return "index";
     }
 
-    @GetMapping("boards/{id}")
+    @GetMapping("/board/{id}")
     public String boardForm(@PathVariable Long id, Model model) {
         model.addAttribute("board", boardService.findById(id));
         return "board";
     }
 
-    @GetMapping("write")
+    @GetMapping("/write")
     public String writeForm() {
         return "write";
     }
 
-    @GetMapping("edit/{id}")
+    @GetMapping("/edit/{id}")
     public String editForm(@PathVariable Long id, Model model) {
         model.addAttribute("board", boardService.findById(id));
         return "edit";

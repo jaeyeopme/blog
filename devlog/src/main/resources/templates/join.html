@@ -34,7 +34,7 @@
                         <div class="card-title text-center">
                             <h2 style="margin-bottom: 20px">
                                 <a th:href="@{/}">
-                                    <img src="https://img.icons8.com/dusk/40/000000/box.png" />
+                                    <img src="https://img.icons8.com/dusk/40/000000/box.png"/>
                                 </a>
                             </h2>
 
@@ -42,16 +42,22 @@
                         </div>
 
                         <div class="card-text">
-                            <div class="form-group text-danger">
-                                <label class="bmd-label-static" for="email">Email</label>
+                            <div class="form-group">
+                                <label class="bmd-label-static" for="username">Username</label>
 
-                                <input class="form-control" id="email" type="email" required />
+                                <input class="form-control" id="username" type="text" required />
                             </div>
 
                             <div class="form-group">
                                 <label class="bmd-label-static" for="password">Password</label>
 
                                 <input class="form-control" id="password" type="password" required />
+                            </div>
+
+                            <div class="form-group">
+                                <label class="bmd-label-static" for="name">Name</label>
+
+                                <input class="form-control" id="name" type="text" required />
                             </div>
 
                             <div class="form-group">
@@ -102,21 +108,21 @@
             $('body').bootstrapMaterialDesign();
 
             function _join_user() {
-                const email = document.getElementById('email');
+                const username = document.getElementById('username');
                 const password = document.getElementById('password');
+                const name = document.getElementById('name');
 
-                if (email.checkValidity() && password.checkValidity()) {
-                    axios
-                        .post('/users', {
-                            email: email.value,
-                            password: password.value,
-                        })
-                        .then(() => (window.location.href = '/login?join'))
-                        .catch((error) => {
-                            document.getElementById('invalid_alert').style.display = 'block';
-                            document.getElementById('invalid_feedback').innerHTML = error.response.data.message;
-                        });
-                }
+                axios
+                    .post('/join', {
+                        username: username.value,
+                        password: password.value,
+                        name: name.value,
+                    })
+                    .then(() => (window.location.href = '/login?join'))
+                    .catch((error) => {
+                        document.getElementById('invalid_alert').style.display = 'block';
+                        document.getElementById('invalid_feedback').innerHTML = error.response.data.message;
+                    });
             }
         </script>
     </body>

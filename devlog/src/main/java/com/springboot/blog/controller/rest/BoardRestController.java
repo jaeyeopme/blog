@@ -17,11 +17,11 @@ import org.springframework.web.server.ResponseStatusException;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-@RequestMapping(value = BoardRestController.BASE_URL, produces = MediaTypes.HAL_JSON_VALUE)
+@RequestMapping(produces = MediaTypes.HAL_JSON_VALUE)
 @RestController
 public class BoardRestController {
 
-    public static final String BASE_URL = "/boards";
+
     private final BoardService boardService;
 
     @Autowired
@@ -29,56 +29,34 @@ public class BoardRestController {
         this.boardService = boardService;
     }
 
-    /**
-     * 게시글 작성
-     *
-     * @param user
-     * @param newBoard
-     * @param newPhoto
-     * @return
-     */
-    @PostMapping
+    @PostMapping(value = "/boards")
     public ResponseEntity<String> write(@AuthenticationPrincipal User user, @ModelAttribute Board newBoard, @RequestPart(required = false) MultipartFile newPhoto) {
         Board board = boardService.write(user, formValidation(newBoard), newPhoto);
 
-        Link selfRel = linkTo(this.getClass())
+        Link selfRel = linkTo("/boards")
                 .slash(board.getId()).withSelfRel();
 
-        return ResponseEntity.created(selfRel.toUri()).build();
+        return ResponseEntity.created(selfRel.toUri()).body(String.format("{id: %d}", board.getId()));
     }
 
-    /**
-     * 게시글 수정
-     *
-     * @param id
-     * @param newBoard
-     * @param newPhoto
-     * @return
-     */
-    @PutMapping(value = "/{id}")
+    @PutMapping(value = "/boards/{id}")
     public ResponseEntity<String> edit(@PathVariable Long id, @ModelAttribute Board newBoard, @RequestPart(required = false) MultipartFile newPhoto) {
         Board board = boardService.edit(id, newBoard, newPhoto);
 
-        Link selfRel = linkTo(this.getClass())
+        Link selfRel = linkTo("/boards")
                 .slash(board.getId()).withSelfRel();
 
         return ResponseEntity.created(selfRel.toUri()).build();
     }
 
-    /**
-     * 게시글 삭제
-     *
-     * @param id
-     * @return
-     */
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(value = "/boards/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
         boardService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     /**
-     * 게시글 유효성 검사
+     * 입력 값 유효성 검사
      *
      * @param newBoard
      * @return

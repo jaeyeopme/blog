@@ -28,6 +28,14 @@ public class BoardService {
         this.amazonService = amazonService;
     }
 
+    /**
+     * 게시글 작성
+     *
+     * @param user
+     * @param newBoard
+     * @param newPhoto
+     * @return
+     */
     @Transactional
     public Board write(User user, Board newBoard, MultipartFile newPhoto) {
         return userRepository.findById(user.getId())
@@ -53,6 +61,14 @@ public class BoardService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found board."));
     }
 
+    /**
+     * 게시글 수정
+     *
+     * @param id
+     * @param newBoard
+     * @param newPhoto
+     * @return
+     */
     @Transactional
     public Board edit(Long id, Board newBoard, MultipartFile newPhoto) {
         return boardRepository.findById(id)
@@ -73,11 +89,17 @@ public class BoardService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found board."));
     }
 
+    /**
+     * 게시글 삭제
+     *
+     * @param id
+     * @return
+     */
     @Transactional
-    public Board delete(Long id) {
-        return boardRepository.findById(id)
+    public void delete(Long id) {
+        boardRepository.findById(id)
                 .map(findBoard -> {
-                    if (!findBoard.getPhoto().isEmpty()) {
+                    if (findBoard.getPhoto() != null) {
                         amazonService.deletePhoto(findBoard.getPhoto());
                     }
 

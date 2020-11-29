@@ -11,14 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import static com.springboot.blog.controller.rest.UserRestController.BASE_URL;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
-@RequestMapping(value = UserRestController.BASE_URL, produces = MediaTypes.HAL_JSON_VALUE)
+@RequestMapping(produces = MediaTypes.HAL_JSON_VALUE)
 @RestController
 public class UserRestController {
 
-    public static final String BASE_URL = "/users";
     private final UserService userService;
 
     @Autowired
@@ -26,65 +24,57 @@ public class UserRestController {
         this.userService = userService;
     }
 
-    /**
-     * 회원 가입
-     *
-     * @param newUser
-     * @return
-     */
-    @PostMapping
+    // TODO: 11/29/2020 REST HATEOAS link 수정 해야함
+    @PostMapping(value = {"/users", "/join"})
     public ResponseEntity join(@RequestBody User newUser) {
         User user = userService.join(formValidation(newUser));
 
-        Link selfRel = linkTo(this.getClass())
+        Link selfRel = linkTo("/users")
                 .slash(user.getId()).withSelfRel();
 
         return ResponseEntity.created(selfRel.toUri()).build();
     }
 
-    /**
-     * 회원 수정
-     *
-     * @param id
-     * @param newUser
-     * @param newPhoto
-     * @return
-     */
-    @PutMapping(value = "/{id}")
+    @PutMapping(value = "/users/{id}")
     public ResponseEntity<String> modify(@PathVariable Long id, @RequestBody User newUser, @RequestPart MultipartFile newPhoto) {
         User user = userService.modify(id, formValidation(newUser), newPhoto);
 
-        Link selfRel = linkTo(this.getClass())
+        Link selfRel = linkTo("/users")
                 .slash(user.getId()).withSelfRel();
 
         return ResponseEntity.created(selfRel.toUri()).build();
     }
 
-    /**
-     * 회원 삭제
-     *
-     * @param id
-     * @return
-     */
-    @DeleteMapping(value = "/{id}")
+
+    @DeleteMapping(value = "/users/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
         userService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     /**
-     * 회원 유효성 검사
+     * 입력 값 유효성 검사
      *
      * @param newUser
      * @return
      */
     private User formValidation(User newUser) {
-        if (newUser.getEmail().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email cannot be <strong>null</strong>.");
+        if (newUser.getUsername().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username cannot be <strong>null</strong>.");
         }
+
         if (newUser.getPassword().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password cannot be <strong>null</strong>.");
         }
+
+//        if (newUser.getEmail().isEmpty()) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email cannot be <strong>null</strong>.");
+//        }
+
+        if (newUser.getName().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name cannot be <strong>null</strong>.");
+        }
+
         return newUser;
     }
 

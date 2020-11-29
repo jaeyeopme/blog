@@ -93,13 +93,13 @@
             <div class="d-flex justify-content-between mb-5" style="height: 40px">
                 <div>
                     <h6 style="display: inline">
-                        <a href="#" th:text="${board.user.email}"> Email </a>
+                        <a href="#" th:text="${board.user.username}"> Username </a>
                     </h6>
                     ·
                     <span class="font-weight-light" th:text="${#temporals.format(board.createdAt, 'yyyy-MM-dd HH:mm')}"> 2020/12/04 </span>
                 </div>
 
-                <div sec:authorize="isAuthenticated()" th:if="${board.user.id} == ${#authentication.principal.id}">
+                <div sec:authorize="isAuthenticated()" th:if="${board.user.username} == ${#authentication.principal.username}">
                     <a class="btn btn-sm text-capitalize" href="#" role="button" th:href="@{|/edit/${board.id}|}">
                         <img src="https://img.icons8.com/dusk/20/000000/edit.png" />
 
@@ -165,7 +165,7 @@
 
                 <div class="mx-4 media-body">
                     <h6>
-                        <a href="#" th:text="${board.user.email}"> Email </a>
+                        <a href="#" th:text="${board.user.username}"> Username </a>
                     </h6>
 
                     <div class="font-weight-light" th:text="${board.user.introduce}">Introduce</div>
@@ -187,7 +187,12 @@
                     style="width: 100%; border: 1px solid rgba(0, 0, 0, 0.1); outline: none; resize: none"
                 ></textarea>
                 <div class="text-right">
-                    <button aria-pressed="true" class="btn btn-sm text-capitalize" th:onclick="|_write_comment(${board.id})|" type="button">
+                    <a sec:authorize="isAnonymous()" aria-pressed="true" class="btn btn-sm text-capitalize" th:href="@{/login}" role="button">
+                        <img src="https://img.icons8.com/dusk/30/000000/paper-plane.png" />
+
+                        <span class="align-middle"> Comment </span>
+                    </a>
+                    <button sec:authorize="isAuthenticated()" aria-pressed="true" class="btn btn-sm text-capitalize" th:onclick="|_write_comment(${board.id})|" type="button">
                         <img src="https://img.icons8.com/dusk/30/000000/paper-plane.png" />
 
                         <span class="align-middle"> Comment </span>
@@ -207,7 +212,7 @@
 
                         <div class="mx-3">
                             <small>
-                                <a href="#" th:text="${comment.user.email}"> Email </a>
+                                <a href="#" th:text="${comment.user.username}"> Username </a>
                             </small>
 
                             <div>
@@ -217,7 +222,7 @@
                             </div>
                         </div>
                     </div>
-                    <div>
+                    <div sec:authorize="isAuthenticated()" th:if="${board.user.id} == ${#authentication.principal.id}">
                         <button class="btn btn-sm text-capitalize" type="button">
                             <img src="https://img.icons8.com/dusk/20/000000/edit.png" />
 
@@ -274,7 +279,7 @@
                                     Close
                                 </button>
 
-                                <button class="btn btn-sm text-capitalize" type="button" th:onclick="|_delete_comment(${comment.id})|">
+                                <button class="btn btn-sm text-capitalize" type="button" th:onclick="|_delete_comment(${comment.board.id}, ${comment.id})|">
                                     <img src="https://img.icons8.com/dusk/20/000000/delete-forever.png" />
                                     Delete
                                 </button>
@@ -319,26 +324,26 @@
                     .post(`/boards/${board_id}/comments`, {
                         content: write_comment_content,
                     })
-                    .then(() => window.location.reload())
+                    .then((response) => console.log(response))
                     .catch((error) => alert(error.response.data.message));
             }
 
             function _show_comment_edit_form() {}
 
-            function _edit_comment(comment_id) {
+            function _edit_comment(board_id, comment_id) {
                 const edit_comment_content = document.getElementById('edit_comment_content').value;
 
                 axios
-                    .put(`/boards/${board_id}/comments`, {
+                    .put(`/boards/${board_id}/comments/${comment_id}`, {
                         content: edit_comment_content,
                     })
                     .then((response) => (window.location.href = response.headers.location))
                     .catch((error) => alert(error.response.data.message));
             }
 
-            function _delete_comment(comment_id) {
+            function _delete_comment(board_id, comment_id) {
                 axios
-                    .delete(`/comments/${comment_id}`)
+                    .delete(`/boards/${board_id}/comments/${comment_id}`)
                     .then((response) => (window.location.href = response.headers.location))
                     .catch((error) => alert(error.response.data.message));
             }

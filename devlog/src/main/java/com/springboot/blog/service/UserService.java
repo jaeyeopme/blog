@@ -31,30 +31,42 @@ public class UserService implements UserDetailsService {
         this.amazonService = amazonService;
     }
 
+    /**
+     * 회원 가입
+     *
+     * @param newUser
+     * @return
+     */
     @Transactional
     public User join(User newUser) {
-        return (User) userRepository.findByEmail(newUser.getEmail())
-                .map(findUser -> {
-                    throw new ResponseStatusException(HttpStatus.CONFLICT, String.format("Email <strong>%s</strong> is not available.", findUser.getEmail()));
-                })
-                .orElseGet(() -> {
-                    newUser.setRole(UserRole.ROLE_USER);
-                    newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
-                    return userRepository.save(newUser);
-                });
+        User validUser = userValidation(newUser);
+
+        validUser.setRole(UserRole.ROLE_USER);
+        validUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+
+        return userRepository.save(validUser);
     }
 
+    /**
+     * 회원 수정
+     *
+     * @param id
+     * @param newUser
+     * @param newPhoto
+     * @return
+     */
     @Transactional
     public User modify(Long id, User newUser, MultipartFile newPhoto) {
         return userRepository.findById(id)
                 .map(findUser -> {
+                    findUser.setName(newUser.getName());
                     findUser.setIntroduce(newUser.getIntroduce());
 
-                    if (!newPhoto.isEmpty()) {
-                        if (!findUser.getPhoto().isEmpty()) {
+                    if (newPhoto != null) {
+                        if (findUser.getPhoto() != null) {
                             amazonService.deletePhoto(findUser.getPhoto());
                         }
-                        amazonService.putPhoto(newPhoto);
+                        findUser.setPhoto(amazonService.putPhoto(newPhoto));
                     }
 
                     return findUser;
@@ -62,17 +74,23 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found user."));
     }
 
+    /**
+     * 회원 삭제
+     *
+     * @param id
+     * @return
+     */
     @Transactional
-    public User delete(Long id) {
-        return userRepository.findById(id)
+    public void delete(Long id) {
+        userRepository.findById(id)
                 .map(findUser -> {
-                    if (!findUser.getPhoto().isEmpty()) {
+                    if (findUser.getPhoto() != null) {
                         amazonService.deletePhoto(findUser.getPhoto());
                     }
 
                     findUser.getBoards()
                             .stream()
-                            .filter(board -> !board.getPhoto().isEmpty())
+                            .filter(board -> board.getPhoto() != null)
                             .forEach(board -> amazonService.deletePhoto(board.getPhoto()));
 
                     userRepository.deleteById(findUser.getId());
@@ -82,9 +100,29 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found user."));
     }
 
+    /**
+     * 회원 유효성 검사
+     *
+     * @param newUser
+     * @return
+     */
+    @Transactional
+    public User userValidation(User newUser) {
+        userRepository.findByUsername(newUser.getUsername()).ifPresent(
+                findUser -> {
+                    throw new ResponseStatusException(HttpStatus.CONFLICT, String.format("Username <strong>%s</strong> is already taken.", findUser.getUsername()));
+                });
+//        userRepository.findByEmail(newUser.getEmail()).ifPresent(
+//                findUser -> {
+//                    throw new ResponseStatusException(HttpStatus.CONFLICT, String.format("Email <strong>%s</strong> is already taken.", findUser.getEmail()));
+//                });
+
+        return newUser;
+    }
+
     @Override
-    public UserDetails loadUserByUsername(String email) {
-        return userRepository.findByEmail(email)
+    public UserDetails loadUserByUsername(String username) {
+        return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Not found user."));
     }
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
     <head>
         <meta charset="UTF-8" />
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
@@ -202,9 +202,9 @@
                     data.append('newPhoto', photo.files[0]);
 
                     axios
-                        .post('/boards', data)
+                        .post(`/boards`, data)
                         .then((response) => {
-                            window.location.href = response.headers.location;
+                            console.log(response)
                         })
                         .catch((error) => {
                             alert(error.response.data.message);

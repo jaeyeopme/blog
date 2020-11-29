@@ -8,9 +8,16 @@
 - AWS EC2, S3, RDS (Mysql)
 - SimpleMDE (MarkDown editor)
 
-## 추가될 예정
+## 추가 예정
 - ~~사용자 프로필 이미지, 소개 추가하기~~
 - ~~사용자 환경설정~~
-- DNS SSL 적용하기
-- Docker 사용해보기
-- Jenkins 로 무중단 자동 배포 환경 만들어보기
+- 디자인 개편
+- 무한 스크롤
+- email 인증
+- Oauth2.0 적용
+- DNS SSL 적용
+- Docker 사용
+- Jenkins 무중단 자동 배포
+
+# 생각
+- spring security 사용을 고려해볼것
