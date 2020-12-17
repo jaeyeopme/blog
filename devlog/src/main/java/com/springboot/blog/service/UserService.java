@@ -1,6 +1,6 @@
 package com.springboot.blog.service;
 
-import com.springboot.blog.common.AmazonService;
+import com.springboot.blog.util.AmazonService;
 import com.springboot.blog.entity.User;
 import com.springboot.blog.entity.UserRole;
 import com.springboot.blog.repository.UserRepository;
@@ -19,9 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
-
     private final PasswordEncoder passwordEncoder;
-
     private final AmazonService amazonService;
 
     @Autowired
@@ -45,6 +43,23 @@ public class UserService implements UserDetailsService {
         validUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
 
         return userRepository.save(validUser);
+    }
+
+    /**
+     * 회원 조회
+     *
+     * @param id
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public User
+    findById(Long id) {
+        return userRepository.findById(id)
+                .map(findUser -> {
+                    findUser.setPassword(null);
+                    return findUser;
+                })
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found user."));
     }
 
     /**

@@ -3,7 +3,6 @@ package com.springboot.blog.controller.rest;
 import com.springboot.blog.entity.User;
 import com.springboot.blog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,9 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-
-@RequestMapping(produces = MediaTypes.HAL_JSON_VALUE)
+@RequestMapping(value = "/users", produces = MediaTypes.HAL_JSON_VALUE)
 @RestController
 public class UserRestController {
 
@@ -24,29 +21,20 @@ public class UserRestController {
         this.userService = userService;
     }
 
-    // TODO: 11/29/2020 REST HATEOAS link 수정 해야함
-    @PostMapping(value = {"/users", "/join"})
-    public ResponseEntity join(@RequestBody User newUser) {
-        User user = userService.join(formValidation(newUser));
-
-        Link selfRel = linkTo("/users")
-                .slash(user.getId()).withSelfRel();
-
-        return ResponseEntity.created(selfRel.toUri()).build();
+    @PostMapping
+    public ResponseEntity<String> join(@RequestBody User newUser) {
+        userService.join(formValidation(newUser));
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PutMapping(value = "/users/{id}")
+    @PutMapping(value = "/{id}")
     public ResponseEntity<String> modify(@PathVariable Long id, @RequestBody User newUser, @RequestPart MultipartFile newPhoto) {
-        User user = userService.modify(id, formValidation(newUser), newPhoto);
-
-        Link selfRel = linkTo("/users")
-                .slash(user.getId()).withSelfRel();
-
-        return ResponseEntity.created(selfRel.toUri()).build();
+        userService.modify(id, formValidation(newUser), newPhoto);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 
-    @DeleteMapping(value = "/users/{id}")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
         userService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

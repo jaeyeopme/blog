@@ -27,22 +27,14 @@ public class CommentRestController {
 
     @PostMapping(value = "/boards/{boardId}/comments")
     public ResponseEntity<String> write(@AuthenticationPrincipal User user, @PathVariable Long boardId, @RequestBody Comment newComment) {
-        Comment comment = commentService.write(user, boardId, newComment);
-
-        Link selfRel = linkTo(BoardController.class)
-                .slash(comment.getBoard().getId()).withSelfRel();
-
-        return ResponseEntity.created(selfRel.toUri()).build();
+        commentService.write(user, boardId, newComment);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PutMapping(value = "/comments/{id}")
     public ResponseEntity<String> modify(@PathVariable Long id, @RequestBody Comment newComment) {
-        Comment comment = commentService.edit(id, newComment);
-
-        Link selfRel = linkTo(BoardController.class)
-                .slash(comment.getBoard().getId()).withSelfRel();
-
-        return ResponseEntity.created(selfRel.toUri()).build();
+        commentService.edit(id, newComment);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @DeleteMapping(value = "/comments/{id}")

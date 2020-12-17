@@ -1,6 +1,6 @@
 package com.springboot.blog.service;
 
-import com.springboot.blog.common.AmazonService;
+import com.springboot.blog.util.AmazonService;
 import com.springboot.blog.entity.Board;
 import com.springboot.blog.entity.User;
 import com.springboot.blog.repository.BoardRepository;
