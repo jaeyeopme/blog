@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="nav">
+    <nav class="navbar sticky-top navbar-light" id="nav" style="background-color: #fafafa; box-shadow: none">
+        <div class="container">
+            <a class="navbar-brand" th:href="@{/}">
+                <img src="https://img.icons8.com/dusk/40/000000/box.png"/>
+
+                <span class="align-middle">Box</span>
+            </a>
+
+            <ul class="nav" sec:authorize="isAnonymous()">
+                <li class="nav-item mx-1">
+                    <a class="btn btn-sm text-capitalize" href="#" role="button" th:href="@{/login}">
+                        <img src="https://img.icons8.com/dusk/30/000000/login-rounded-right.png"/>
+
+                        <span class="align-middle"> Sign in </span>
+                    </a>
+                </li>
+
+                <li class="nav-item mx-1">
+                    <a class="btn btn-sm text-capitalize" href="#" role="button" th:href="@{/join}">
+                        <img src="https://img.icons8.com/dusk/30/000000/easy.png"/>
+
+                        <span class="align-middle"> Sign up </span>
+                    </a>
+                </li>
+            </ul>
+
+            <ul class="nav" sec:authorize="isAuthenticated()">
+                <li class="nav-item mx-1">
+                    <a class="btn btn-sm text-capitalize" href="#" role="button" th:href="@{/write}">
+                        <img src="https://img.icons8.com/dusk/30/000000/pencil.png"/>
+
+                        <span class="align-middle"> Write </span>
+                    </a>
+                </li>
+
+                <li class="nav-item dropdown mx-1">
+                    <button
+                            aria-expanded="false"
+                            aria-haspopup="true"
+                            class="btn btn-sm dropdown-toggle"
+                            data-toggle="dropdown"
+                            type="button"
+                    >
+                        <img
+                                alt="profile photo"
+                                src="/images/1111.gif"
+                                style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover"
+                        />
+                    </button>
+
+                    <div class="dropdown-menu dropdown-menu-right" style="left: -127%">
+                        <a class="dropdown-item" th:href="@{/setting}">
+                            <img src="https://img.icons8.com/dusk/30/000000/gear.png"/>
+
+                            <small> &nbsp; Setting </small>
+                        </a>
+
+                        <a class="dropdown-item" th:href="@{/logout}">
+                            <img src="https://img.icons8.com/dusk/30/000000/logout-rounded-left.png"/>
+
+                            <small> &nbsp; Sign out </small>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</th:block>
+
+</html>
