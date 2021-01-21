@@ -3,20 +3,7 @@
 <head>
     <meta charset="UTF-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" rel="stylesheet"/>
-    <link
-            crossorigin="anonymous"
-            href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css"
-            integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX"
-            rel="stylesheet"
-    />
-    <link href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css" rel="stylesheet"/>
-    <link href="https://img.icons8.com/dusk/40/000000/box.png" rel="icon"/>
-    <style>
-        .nav-item {
-            height: 40px;
-        }
-    </style>
+    <th:block th:replace="/fragments/css :: common_css"></th:block>
     <title th:text="${board.title}">board</title>
 </head>
 <body>
@@ -228,7 +215,6 @@
                 </div>
             </div>
 
-
             <div sec:authorize="isAuthenticated()" th:if="${comment.user.id} == ${#authentication.principal.id}">
                 <div th:id="|before_edit_comment_buttons_${comment.id}|">
                     <button class="btn btn-sm text-capitalize" th:onclick="|_show_edit_comment_buttons(${comment.id})|"
@@ -318,79 +304,8 @@
         </div>
     </div>
 </main>
-
-<script
-        crossorigin="anonymous"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-></script>
-<script
-        crossorigin="anonymous"
-        integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U"
-        src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js"
-></script>
-<script
-        crossorigin="anonymous"
-        integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9"
-        src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js"
-></script>
-<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script>
-    $('body').bootstrapMaterialDesign();
-
-    function _write_comment(board_id) {
-        const content = document.getElementById('write_comment_content_form').value;
-
-        axios
-            .post(`/boards/${board_id}/comments`, {
-                content,
-            })
-            .then(() => window.location.reload())
-            .catch((error) => alert(error.response.data.message));
-    }
-
-    function _delete_board(board_id) {
-        axios
-            .delete(`/boards/${board_id}`)
-            .then(() => window.location.href = '/')
-            .catch((error) => alert(error.response.data.message));
-    }
-
-    function _edit_comment(comment_id) {
-        const content = document.getElementById(`edit_comment_content_form_${comment_id}`).value;
-
-        axios
-            .put(`/comments/${comment_id}`, {
-                content,
-            })
-            .then(() => window.location.reload())
-            .catch((error) => alert(error.response.data.message));
-    }
-
-    function _delete_comment(comment_id) {
-        axios
-            .delete(`/comments/${comment_id}`)
-            .then(() => window.location.reload())
-            .catch((error) => alert(error.response.data.message));
-    }
-
-    function _show_edit_comment_buttons(comment_id) {
-        const edit_comment_content_form = document.getElementById(`edit_comment_content_form_${comment_id}`);
-        const before_edit_comment_buttons = document.getElementById(`before_edit_comment_buttons_${comment_id}`);
-        const after_edit_comment_buttons = document.getElementById(`after_edit_comment_buttons_${comment_id}`);
-
-        edit_comment_content_form.style.border = '1px solid rgba(0, 0, 0, 0.1)';
-        edit_comment_content_form.style.backgroundColor = 'revert';
-        edit_comment_content_form.toggleAttribute('readOnly');
-        before_edit_comment_buttons.toggleAttribute('hidden');
-        after_edit_comment_buttons.toggleAttribute('hidden');
-    };
-
-    function _show_delete_comment_buttons(comment_id) {
-        const delete_comment_button = document.getElementById('delete_comment_button');
-        delete_comment_button.setAttribute('onClick', `_delete_comment(${comment_id})`);
-    }
-</script>
+<th:block th:replace="/fragments/script :: common_script"></th:block>
+<th:block th:replace="/fragments/script :: axios_script"></th:block>
+<th:block th:replace="/fragments/script :: comment_script"></th:block>
 </body>
 </html>

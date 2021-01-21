@@ -11,18 +11,18 @@ public class UserController {
 
     @GetMapping("/login")
     public String loginForm() {
-        return "login";
+        return "user/login";
     }
 
     @GetMapping("/join")
     public String joinForm() {
-        return "join";
+        return "user/join";
     }
 
     @GetMapping("/setting")
     public String settingForm(@AuthenticationPrincipal User user, Model model) {
         model.addAttribute("user", user);
-        return "setting";
+        return "user/setting";
     }
 
 }

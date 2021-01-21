@@ -1,55 +1,45 @@
-function commentWrite() {
-    const boardId = document.getElementById('board-id').value;
+function _write_comment(board_id) {
+    const content = document.getElementById('write_comment_content_form').value;
 
-    axios({
-        method: 'post',
-        url: `/boards/${boardId}/comments`,
-        headers: {'content-type': 'application/json'},
-        data: JSON.stringify({
-            content: document.getElementById('comment-content').value
-        }),
-    }).then(response => window.location.href = response.headers.location)
-        .catch(error => {
-            alert(error.response.data.message);
-            window.location.href = '/'
-        });
+    axios
+        .post(`/boards/${board_id}/comments`, {
+            content,
+        })
+        .then(() => window.location.reload())
+        .catch((error) => alert(error.response.data.message));
 }
 
-function commentModify(element, commentId) {
-    let status = element.innerText;
+function _edit_comment(comment_id) {
+    const content = document.getElementById(`edit_comment_content_form_${comment_id}`).value;
 
-    switch (status) {
-        case '수정':
-            document.getElementById(`comment-${commentId}`).removeAttribute('readOnly');
-            document.getElementById(`comment-${commentId}`).setAttribute('outline', 'revert');
-            document.getElementById(`comment-${commentId}`).style.border = '0.5px solid lightgray';
-            status = '완료';
-            break;
-        case '완료':
-            axios({
-                method: 'put',
-                url: `/comments/${commentId}`,
-                headers: {'content-type': 'application/json'},
-                data: JSON.stringify({
-                    content: document.getElementById(`comment-${commentId}`).value
-                }),
-            }).then(window.location.reload())
-                .catch(error => {
-                    alert(error);
-                    window.location.href = '/'
-                });
-            break;
-    }
+    axios
+        .put(`/comments/${comment_id}`, {
+            content,
+        })
+        .then(() => window.location.reload())
+        .catch((error) => alert(error.response.data.message));
 }
 
-function commentDelete(commentId) {
-    axios({
-        method: 'delete',
-        url: `/comments/${commentId}`,
-        headers: {'content-type': 'application/json'},
-    }).then(window.location.reload())
-        .catch(error => {
-            alert(error);
-            window.location.href = '/'
-        });
+function _delete_comment(comment_id) {
+    axios
+        .delete(`/comments/${comment_id}`)
+        .then(() => window.location.reload())
+        .catch((error) => alert(error.response.data.message));
+}
+
+function _show_edit_comment_buttons(comment_id) {
+    const edit_comment_content_form = document.getElementById(`edit_comment_content_form_${comment_id}`);
+    const before_edit_comment_buttons = document.getElementById(`before_edit_comment_buttons_${comment_id}`);
+    const after_edit_comment_buttons = document.getElementById(`after_edit_comment_buttons_${comment_id}`);
+
+    edit_comment_content_form.style.border = '1px solid rgba(0, 0, 0, 0.1)';
+    edit_comment_content_form.style.backgroundColor = 'revert';
+    edit_comment_content_form.toggleAttribute('readOnly');
+    before_edit_comment_buttons.toggleAttribute('hidden');
+    after_edit_comment_buttons.toggleAttribute('hidden');
+}
+
+function _show_delete_comment_buttons(comment_id) {
+    const delete_comment_button = document.getElementById('delete_comment_button');
+    delete_comment_button.setAttribute('onClick', `_delete_comment(${comment_id})`);
 }

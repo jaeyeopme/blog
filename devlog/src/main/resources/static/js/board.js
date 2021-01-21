@@ -1,120 +1,107 @@
-const modalButton = document.getElementById('btn-board-modal');
+const content_form = new SimpleMDE({
+    element: document.getElementById('content_form'),
+    status: false,
+    toolbar: [
+        'bold',
+        'italic',
+        'heading',
+        '|',
+        'code',
+        'quote',
+        'unordered-list',
+        'ordered-list',
+        '|',
+        'link',
+        'image',
+        'table',
+        '|',
+        'guide',
+        'side-by-side',
+        'fullscreen',
+    ],
+    spellChecker: false,
+});
+content_form.toggleSideBySide();
 
-switch (document.title) {
-    case 'write':
-        const writeContent = new SimpleMDE({
-            element: document.getElementById("board-content"),
-            placeholder: "글을 입력해주세요.",
-            status: false,
-            toolbar: ["bold", "italic", "heading", "|",
-                "code", "quote", "unordered-list", "ordered-list", "|",
-                "link", "image", "table", "|",
-                "guide", "side-by-side", "fullscreen"
-            ],
-            spellChecker: false
-        });
-        writeContent.toggleSideBySide();
+const photo_form = document.getElementById('photo_form');
+const preview = document.getElementById('preview');
+const defaultPhoto = 'https://jaeyeop-blog-project.s3.ap-northeast-2.amazonaws.com/images/default.jpg';
+const before_upload = document.getElementById('before_upload');
+const after_upload = document.getElementById('after_upload');
 
-        modalButton.setAttribute('data-target', '#board-write-modal');
-        modalButton.setAttribute('data-toggle', 'modal');
-        modalButton.removeAttribute('href')
+function _add_board_photo() {
+    const newPhoto = photo_form.files[0];
 
-        document.getElementById('btn-board-write').addEventListener('click', () => {
-            const thumbnail = document.getElementById('btn-thumbnail');
+    if (newPhoto === undefined) {
+        // before
+        before_upload.style.display = 'block';
+        after_upload.style.display = 'none';
 
-            if (thumbnail.size < 52428800) {
-                const data = new FormData();
-                data.append("content", writeContent.value())
-                data.append('title', document.getElementById('title').value)
-                data.append('thumbnail', thumbnail.files[0])
-                data.append('introduction', document.getElementById('introduction').value)
+        preview.src = defaultPhoto;
+    } else {
+        // after
+        before_upload.style.display = 'none';
+        after_upload.style.display = 'block';
 
-                axios({
-                    method: 'post',
-                    url: '/boards',
-                    headers: {'content-type': 'application/json'},
-                    data: data
-                }).then(response => window.location.href = response.headers.location)
-                    .catch(error => {
-                        alert(error.response.data.message);
-                        window.location.href = '/'
-                    });
-            }
-        });
-        break;
-    case 'modify':
-        const modifyContent = new SimpleMDE({
-            element: document.getElementById("board-content"),
-            placeholder: "글을 입력해주세요.",
-            status: false,
-            toolbar: ["bold", "italic", "heading", "|",
-                "code", "quote", "unordered-list", "ordered-list", "|",
-                "link", "image", "table", "|",
-                "guide", "side-by-side", "fullscreen"
-            ],
-            spellChecker: false
-        });
-        modifyContent.toggleSideBySide();
-
-        const modifyId = document.getElementById('board-id').value;
-        modalButton.setAttribute('data-target', '#board-modify-modal');
-        modalButton.setAttribute('data-toggle', 'modal');
-        modalButton.removeAttribute('href')
-        modalButton.innerText = '글 수정';
-
-        document.getElementById('btn-board-modify').addEventListener('click', () => {
-            const thumbnail = document.getElementById('btn-thumbnail');
-
-            if (thumbnail.size < 52428800) {
-                const data = new FormData();
-                data.append('content', modifyContent.value())
-                data.append('title', document.getElementById('title').value)
-                data.append('thumbnail', thumbnail.files[0])
-                data.append('introduction', document.getElementById('introduction').value)
-
-                axios({
-                    method: 'put',
-                    url: `/boards/${modifyId}`,
-                    headers: {'content-type': 'application/json'},
-                    data: data
-                }).then(response => window.location.href = response.headers.location)
-                    .catch(error => {
-                        alert(error.response.data.message);
-                        window.location.href = '/'
-                    });
-            }
-        })
-        break;
-    case 'detail':
-        const detailContent = new SimpleMDE({
-            element: document.getElementById('board-content'),
-            status: false,
-            toolbar: false,
-        });
-        detailContent.togglePreview();
-
-        const deleteId = document.getElementById('board-id').value;
-
-        document.getElementById('btn-board-delete').addEventListener('click', () => {
-            axios({
-                method: 'delete',
-                url: `/boards/${deleteId}`,
-                headers: {'content-type': 'application/json'},
-            }).then(location.href = '/')
-                .catch(error => {
-                    alert(error.response.data.message);
-                    window.location.href = '/'
-                });
-        });
-        break;
+        preview.src = window.URL.createObjectURL(newPhoto);
+        preview.onload = () => window.URL.revokeObjectURL(preview.src);
+    }
 }
 
-function introductionValidate(element) {
-    element.value.length > 99 ? element.classList.add('is-invalid') : element.classList.remove('is-invalid');
+function _delete_board_photo() {
+    photo_form.value = '';
+    preview.src = defaultPhoto;
+    before_upload.style.display = 'block';
+    after_upload.style.display = 'none';
 }
 
-function thumbnailPreview(element) {
-    const thumbnail = document.getElementById('thumbnail');
-    thumbnail.src = window.URL.createObjectURL(element.files[0]);
-    thumbnail.onload = () => window.URL.revokeObjectURL(thumbnail.src)
+function _write_board() {
+    const title_form = document.getElementById('title_form');
+    const title = title_form.value;
+    const content = content_form.value();
+    const introduce = document.getElementById('introduce_form').value;
+    const newPhoto = photo_form.files[0];
+
+    if (title_form.checkValidity()) {
+        const data = new FormData();
+        data.append('title', title);
+        data.append('content', content);
+        data.append('introduce', introduce);
+        data.append('newPhoto', newPhoto);
+
+        axios
+            .post(`/boards`, data)
+            .then(() => window.location.href = '/')
+            .catch((error) => alert(error.response.data.message));
+    }
 }
+
+function _edit_board(board_id) {
+    const title_form = document.getElementById('title_form');
+    const title = title_form.value;
+    const content = content_form.value();
+    const introduce = document.getElementById('introduce_form').value;
+    const newPhoto = photo_form.files[0];
+
+    if (title_form.checkValidity()) {
+        const data = new FormData();
+
+        data.append('title', title);
+        data.append('content', content);
+        data.append('introduce', introduce);
+        data.append('newPhoto', newPhoto);
+
+        axios
+            .put(`/boards/${board_id}`, data)
+            .then(() => (window.location.href = `/board/${board_id}`))
+            .catch((error) => alert(error.response.data.message));
+    }
+}
+
+function _delete_board(board_id) {
+    axios
+        .delete(`/boards/${board_id}`)
+        .then(() => window.location.href = '/')
+        .catch((error) => alert(error.response.data.message));
+}
+

@@ -1,0 +1,10 @@
+.fa.fa-columns,
+.fa.fa-arrows-alt {
+    display: none;
+}
+
+.CodeMirror-fullscreen,
+.editor-preview-side {
+    margin-bottom: 50px;
+    min-height: auto;
+}
