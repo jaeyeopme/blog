@@ -2,7 +2,6 @@ package com.springboot.blog.controller.rest;
 
 import com.springboot.blog.entity.User;
 import com.springboot.blog.service.UserService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-@Slf4j
 @RequestMapping(value = "/users")
 @RestController
 public class UserRestController {
@@ -33,7 +31,6 @@ public class UserRestController {
         userService.modify(id, formValidation(newUser), newPhoto);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {

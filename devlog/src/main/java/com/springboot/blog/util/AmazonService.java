@@ -48,4 +48,5 @@ public class AmazonService {
             throw new AmazonS3Exception("Photo remove error.");
         }
     }
+
 }
