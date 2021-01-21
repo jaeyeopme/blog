@@ -1,216 +1,218 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" rel="stylesheet" />
-        <link
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" rel="stylesheet"/>
+    <link
             crossorigin="anonymous"
             href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css"
             integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX"
             rel="stylesheet"
-        />
-        <link href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css" rel="stylesheet" />
-        <link href="https://img.icons8.com/dusk/40/000000/box.png" rel="icon" />
-        <style>
-            .fa.fa-columns,
-            .fa.fa-arrows-alt {
-                display: none;
-            }
+    />
+    <link href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css" rel="stylesheet"/>
+    <link href="https://img.icons8.com/dusk/40/000000/box.png" rel="icon"/>
+    <style>
+        .fa.fa-columns,
+        .fa.fa-arrows-alt {
+            display: none;
+        }
 
-            .CodeMirror-fullscreen,
-            .editor-preview-side {
-                margin-bottom: 50px;
-                min-height: auto;
-            }
-        </style>
-        <title>write</title>
-    </head>
-    <body>
-        <textarea id="content"></textarea>
+        .CodeMirror-fullscreen,
+        .editor-preview-side {
+            margin-bottom: 50px;
+            min-height: auto;
+        }
+    </style>
+    <title>write</title>
+</head>
+<body>
+<textarea id="content_form"></textarea>
 
-        <div style="position: absolute; bottom: 0; right: 2%">
-            <a class="btn btn-sm text-capitalize" href="#" onclick="window.history.back()" role="button">
-                <img src="https://img.icons8.com/dusk/30/000000/circled-left.png" />
+<div style="position: absolute; bottom: 0; right: 2%">
+    <a class="btn btn-sm text-capitalize" href="#" onclick="window.history.back()" role="button">
+        <img src="https://img.icons8.com/dusk/30/000000/circled-left.png"/>
 
-                <span class="align-middle"> Back </span>
-            </a>
+        <span class="align-middle"> Back </span>
+    </a>
 
-            <button class="btn btn-sm text-capitalize" type="button" data-toggle="modal" data-target="#board_write_modal">
-                <img src="https://img.icons8.com/dusk/30/000000/ok.png" />
+    <button class="btn btn-sm text-capitalize" data-target="#write_board_modal" data-toggle="modal" type="button">
+        <img src="https://img.icons8.com/dusk/30/000000/ok.png"/>
 
-                <span class="align-middle"> Save </span>
-            </button>
-        </div>
+        <span class="align-middle"> Save </span>
+    </button>
+</div>
 
-        <div class="modal fade" id="board_write_modal" tabindex="-1" role="dialog" aria-labelledby="board_write_modal" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Preview</h5>
+<div aria-hidden="true" aria-labelledby="write_board_modal" class="modal fade" id="write_board_modal" role="dialog"
+     tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Preview</h5>
 
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-group text-center">
+                    <input accept="image/**" hidden id="photo_form" onchange="_add_board_photo()" type="file"/>
+
+                    <div id="before_upload">
+                        <label for="photo_form">
+                            <small class="btn-link" style="cursor: pointer"> upload </small>
+                        </label>
                     </div>
 
-                    <div class="modal-body">
-                        <div class="form-group text-center">
-                            <input hidden type="file" id="photo" accept="image/**" onchange="_add_board_photo()" />
+                    <div id="after_upload" style="display: none">
+                        <label for="photo_form">
+                            <small class="btn-link" style="cursor: pointer"> reupload </small>
+                        </label>
 
-                            <div id="before-upload">
-                                <label for="photo">
-                                    <small class="btn-link" style="cursor: pointer"> upload </small>
-                                </label>
-                            </div>
+                        ·
 
-                            <div id="after-upload" style="display: none">
-                                <label for="photo">
-                                    <small class="btn-link" style="cursor: pointer"> reupload </small>
-                                </label>
-
-                                ·
-
-                                <small class="btn-link" style="cursor: pointer" onclick="_delete_board_photo()"> remove </small>
-                            </div>
-
-                            <img
-                                alt="preview"
-                                id="preview"
-                                src="https://jaeyeop-blog-project.s3.ap-northeast-2.amazonaws.com/images/default.jpg"
-                                style="width: 350px; height: 200px; object-fit: cover"
-                            />
-                        </div>
-
-                        <div class="form-group">
-                            <label class="bmd-label-static" for="title">Title</label>
-
-                            <input class="form-control" id="title" type="text" required />
-                        </div>
-
-                        <div class="form-group">
-                            <label for="introduce">Introduce (max 150)</label>
-
-                            <textarea style="resize: none" class="form-control" id="introduce" rows="3" maxlength="150"></textarea>
-                        </div>
+                        <small class="btn-link" onclick="_delete_board_photo()" style="cursor: pointer"> remove </small>
                     </div>
 
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-sm text-capitalize" data-dismiss="modal">
-                            <img src="https://img.icons8.com/dusk/30/000000/delete-sign.png" />
+                    <img
+                            alt="preview"
+                            id="preview"
+                            src="https://jaeyeop-blog-project.s3.ap-northeast-2.amazonaws.com/images/default.jpg"
+                            style="width: 350px; height: 200px; object-fit: cover"
+                    />
+                </div>
 
-                            <span class="align-middle"> Close </span>
-                        </button>
+                <div class="form-group">
+                    <label class="bmd-label-static" for="title_form">Title</label>
 
-                        <button class="btn btn-sm text-capitalize" type="button" onclick="_write_board()">
-                            <img src="https://img.icons8.com/dusk/30/000000/ok.png" />
+                    <input class="form-control" id="title_form" required type="text"/>
+                </div>
 
-                            <span class="align-middle"> Save </span>
-                        </button>
-                    </div>
+                <div class="form-group">
+                    <label for="introduce_form">Introduce (max length 150)</label>
+
+                    <textarea class="form-control" id="introduce_form" maxlength="150" rows="3"
+                              style="resize: none"></textarea>
                 </div>
             </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-sm text-capitalize" data-dismiss="modal" type="button">
+                    <img src="https://img.icons8.com/dusk/30/000000/delete-sign.png"/>
+
+                    <span class="align-middle"> Close </span>
+                </button>
+
+                <button class="btn btn-sm text-capitalize" onclick="_write_board()" type="button">
+                    <img src="https://img.icons8.com/dusk/30/000000/ok.png"/>
+
+                    <span class="align-middle"> Save </span>
+                </button>
+            </div>
         </div>
+    </div>
+</div>
 
-        <script
-            crossorigin="anonymous"
-            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-            src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        ></script>
-        <script
-            crossorigin="anonymous"
-            integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U"
-            src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js"
-        ></script>
-        <script
-            crossorigin="anonymous"
-            integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9"
-            src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js"
-        ></script>
-        <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-        <script>
-            $('body').bootstrapMaterialDesign();
+<script
+        crossorigin="anonymous"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+></script>
+<script
+        crossorigin="anonymous"
+        integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U"
+        src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js"
+></script>
+<script
+        crossorigin="anonymous"
+        integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9"
+        src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js"
+></script>
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    $('body').bootstrapMaterialDesign();
 
-            const content = new SimpleMDE({
-                element: document.getElementById('content'),
-                // placeholder: "Please enter a text.",
-                status: false,
-                toolbar: [
-                    'bold',
-                    'italic',
-                    'heading',
-                    '|',
-                    'code',
-                    'quote',
-                    'unordered-list',
-                    'ordered-list',
-                    '|',
-                    'link',
-                    'image',
-                    'table',
-                    '|',
-                    'guide',
-                    'side-by-side',
-                    'fullscreen',
-                ],
-                spellChecker: false,
-            });
+    const content_form = new SimpleMDE({
+        element: document.getElementById('content_form'),
+        // placeholder: "Please enter a text.",
+        status: false,
+        toolbar: [
+            'bold',
+            'italic',
+            'heading',
+            '|',
+            'code',
+            'quote',
+            'unordered-list',
+            'ordered-list',
+            '|',
+            'link',
+            'image',
+            'table',
+            '|',
+            'guide',
+            'side-by-side',
+            'fullscreen',
+        ],
+        spellChecker: false,
+    });
 
-            content.toggleSideBySide();
+    content_form.toggleSideBySide();
 
-            const photo = document.getElementById('photo');
-            const preview = document.getElementById('preview');
-            const defaultPhoto = 'https://jaeyeop-blog-project.s3.ap-northeast-2.amazonaws.com/images/default.jpg';
-            const before_upload = document.getElementById('before-upload');
-            const after_upload = document.getElementById('after-upload');
+    const photo_form = document.getElementById('photo_form');
+    const preview = document.getElementById('preview');
+    const defaultPhoto = 'https://jaeyeop-blog-project.s3.ap-northeast-2.amazonaws.com/images/default.jpg';
+    const before_upload = document.getElementById('before_upload');
+    const after_upload = document.getElementById('after_upload');
 
-            function _add_board_photo() {
-                if (photo.files[0] === undefined) {
-                    // before
-                    before_upload.style.display = 'block';
-                    after_upload.style.display = 'none';
+    function _add_board_photo() {
+        const newPhoto = photo_form.files[0];
 
-                    preview.src = defaultPhoto;
-                } else {
-                    // after
-                    before_upload.style.display = 'none';
-                    after_upload.style.display = 'block';
+        if (newPhoto === undefined) {
+            // before
+            before_upload.style.display = 'block';
+            after_upload.style.display = 'none';
 
-                    preview.src = window.URL.createObjectURL(photo.files[0]);
-                    preview.onload = () => {
-                        window.URL.revokeObjectURL(preview.src);
-                    };
-                }
-            }
+            preview.src = defaultPhoto;
+        } else {
+            // after
+            before_upload.style.display = 'none';
+            after_upload.style.display = 'block';
 
-            function _delete_board_photo() {
-                photo.value = '';
-                preview.src = defaultPhoto;
-                before_upload.style.display = 'block';
-                after_upload.style.display = 'none';
-            }
+            preview.src = window.URL.createObjectURL(newPhoto);
+            preview.onload = () => window.URL.revokeObjectURL(preview.src);
+        }
+    }
 
-            function _write_board() {
-                const title = document.getElementById('title');
+    function _delete_board_photo() {
+        photo_form.value = '';
+        preview.src = defaultPhoto;
+        before_upload.style.display = 'block';
+        after_upload.style.display = 'none';
+    }
 
-                if (title.checkValidity()) {
-                    const data = new FormData();
-                    data.append('title', title.value);
-                    data.append('content', content.value());
-                    data.append('introduce', document.getElementById('introduce').value);
-                    data.append('newPhoto', photo.files[0]);
+    function _write_board() {
+        const title_form = document.getElementById('title_form');
+        const title = title_form.value;
+        const content = content_form.value();
+        const introduce = document.getElementById('introduce_form').value;
+        const newPhoto = photo_form.files[0];
 
-                    axios
-                        .post(`/boards`, data)
-                        .then((response) => {
-                            console.log(response)
-                        })
-                        .catch((error) => {
-                            alert(error.response.data.message);
-                        });
-                }
-            }
-        </script>
-    </body>
+        if (title_form.checkValidity()) {
+            const data = new FormData();
+            data.append('title', title);
+            data.append('content', content);
+            data.append('introduce', introduce);
+            data.append('newPhoto', newPhoto);
+
+            axios
+                .post(`/boards`, data)
+                .then(() => window.location.href = '/')
+                .catch((error) => alert(error.response.data.message));
+        }
+    }
+</script>
+</body>
 </html>

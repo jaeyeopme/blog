@@ -16,24 +16,29 @@ function commentWrite() {
 }
 
 function commentModify(element, commentId) {
-    if (element.innerText === '수정') {
-        document.getElementById(`comment-${commentId}`).removeAttribute('readOnly');
-        document.getElementById(`comment-${commentId}`).setAttribute('outline', 'revert');
-        document.getElementById(`comment-${commentId}`).style.border = '0.5px solid lightgray';
-        element.innerText = '완료';
-    } else if (element.innerText === '완료') {
-        axios({
-            method: 'put',
-            url: `/comments/${commentId}`,
-            headers: {'content-type': 'application/json'},
-            data: JSON.stringify({
-                content: document.getElementById(`comment-${commentId}`).value
-            }),
-        }).then(window.location.reload())
-            .catch(error => {
-                alert(error);
-                window.location.href = '/'
-            });
+    let status = element.innerText;
+
+    switch (status) {
+        case '수정':
+            document.getElementById(`comment-${commentId}`).removeAttribute('readOnly');
+            document.getElementById(`comment-${commentId}`).setAttribute('outline', 'revert');
+            document.getElementById(`comment-${commentId}`).style.border = '0.5px solid lightgray';
+            status = '완료';
+            break;
+        case '완료':
+            axios({
+                method: 'put',
+                url: `/comments/${commentId}`,
+                headers: {'content-type': 'application/json'},
+                data: JSON.stringify({
+                    content: document.getElementById(`comment-${commentId}`).value
+                }),
+            }).then(window.location.reload())
+                .catch(error => {
+                    alert(error);
+                    window.location.href = '/'
+                });
+            break;
     }
 }
 

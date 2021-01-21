@@ -27,6 +27,9 @@ public class Comment {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+//    @UpdateTimestamp
+//    private LocalDateTime updatedAt;
+
     @ManyToOne
     @JoinColumn(name = "boardId")
     private Board board;

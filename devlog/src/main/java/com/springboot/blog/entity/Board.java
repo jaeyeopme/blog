@@ -34,6 +34,9 @@ public class Board {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+//    @UpdateTimestamp
+//    private LocalDateTime updatedAt;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;

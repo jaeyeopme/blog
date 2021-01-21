@@ -19,21 +19,24 @@ function validate(element) {
 }
 
 function changeModal(element) {
-    let text = element.innerText;
+    let status = element.innerText;
     let footer = document.getElementById('footer').innerHTML;
 
-    if (text === '회원가입') {
-        footer =
-            '계정이 이미 있으신가요? <a class="text-success" onclick="changeModal(this)" style="cursor: pointer">로그인</a>';
-        element.innerText = '로그인';
-    } else if (text === '로그인') {
-        footer =
-            '아직 회원이 아니신가요? <a class="text-success" onclick="changeModal(this)" style="cursor: pointer">회원가입</a>';
-        element.innerText = '회원가입';
+    switch (status) {
+        case '회원가입':
+            footer =
+                '계정이 이미 있으신가요? <a class="text-success" onclick="changeModal(this)" style="cursor: pointer">로그인</a>';
+            element.innerText = '로그인';
+            break;
+        case '로그인':
+            footer =
+                '아직 회원이 아니신가요? <a class="text-success" onclick="changeModal(this)" style="cursor: pointer">회원가입</a>';
+            element.innerText = '회원가입';
+            break;
     }
 
-    document.getElementById('modal-header').innerText = text;
-    document.getElementById('btn-sign').innerText = text;
+    document.getElementById('modal-header').innerText = status;
+    document.getElementById('btn-sign').innerText = status;
 }
 
 function submitData(action) {

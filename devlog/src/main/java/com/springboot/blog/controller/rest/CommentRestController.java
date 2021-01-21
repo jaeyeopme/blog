@@ -1,20 +1,14 @@
 package com.springboot.blog.controller.rest;
 
-import com.springboot.blog.controller.BoardController;
 import com.springboot.blog.entity.Comment;
 import com.springboot.blog.entity.User;
 import com.springboot.blog.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-
-@RequestMapping(produces = MediaTypes.HAL_JSON_VALUE)
 @RestController
 public class CommentRestController {
 

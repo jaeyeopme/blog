@@ -1,9 +1,9 @@
 package com.springboot.blog.service;
 
-import com.springboot.blog.util.AmazonService;
 import com.springboot.blog.entity.User;
 import com.springboot.blog.entity.UserRole;
 import com.springboot.blog.repository.UserRepository;
+import com.springboot.blog.util.AmazonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -52,8 +52,7 @@ public class UserService implements UserDetailsService {
      * @return
      */
     @Transactional(readOnly = true)
-    public User
-    findById(Long id) {
+    public User findById(Long id) {
         return userRepository.findById(id)
                 .map(findUser -> {
                     findUser.setPassword(null);
@@ -127,10 +126,6 @@ public class UserService implements UserDetailsService {
                 findUser -> {
                     throw new ResponseStatusException(HttpStatus.CONFLICT, String.format("Username <strong>%s</strong> is already taken.", findUser.getUsername()));
                 });
-//        userRepository.findByEmail(newUser.getEmail()).ifPresent(
-//                findUser -> {
-//                    throw new ResponseStatusException(HttpStatus.CONFLICT, String.format("Email <strong>%s</strong> is already taken.", findUser.getEmail()));
-//                });
 
         return newUser;
     }

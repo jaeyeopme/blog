@@ -1,149 +1,152 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-    <head>
-        <meta charset="UTF-8" />
-        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" rel="stylesheet" />
-        <link
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" rel="stylesheet"/>
+    <link
             crossorigin="anonymous"
             href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css"
             integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX"
             rel="stylesheet"
-        />
-        <link href="https://img.icons8.com/dusk/40/000000/box.png" rel="icon" />
-        <style>
-            .card {
-                cursor: pointer;
-                transition: 0.3s;
-            }
+    />
+    <link href="https://img.icons8.com/dusk/40/000000/box.png" rel="icon"/>
+    <style>
+        .card {
+            cursor: pointer;
+            transition: 0.3s;
+        }
 
-            .card:hover {
-                transform: scale(1.02);
-            }
+        .card:hover {
+            transform: scale(1.02);
+        }
 
-            .nav-item {
-                height: 40px;
-            }
-        </style>
-        <title>box</title>
-    </head>
-    <body>
-        <nav class="navbar sticky-top navbar-light" id="nav" style="background-color: #fafafa; box-shadow: none">
-            <div class="container">
-                <a class="navbar-brand" th:href="@{/}">
-                    <img src="https://img.icons8.com/dusk/40/000000/box.png" />
+        .nav-item {
+            height: 40px;
+        }
+    </style>
+    <title>box</title>
+</head>
+<body>
+<nav class="navbar sticky-top navbar-light" id="nav" style="background-color: #fafafa; box-shadow: none">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/}">
+            <img src="https://img.icons8.com/dusk/40/000000/box.png"/>
 
-                    <span class="align-middle">Box</span>
+            <span class="align-middle">Box</span>
+        </a>
+
+        <ul class="nav" sec:authorize="isAnonymous()">
+            <li class="nav-item mx-1">
+                <a class="btn btn-sm text-capitalize" href="#" role="button" th:href="@{/login}">
+                    <img src="https://img.icons8.com/dusk/30/000000/login-rounded-right.png"/>
+
+                    <span class="align-middle"> Sign in </span>
                 </a>
+            </li>
 
-                <ul class="nav" sec:authorize="isAnonymous()">
-                    <li class="nav-item mx-1">
-                        <a class="btn btn-sm text-capitalize" href="#" th:href="@{/login}" role="button">
-                            <img src="https://img.icons8.com/dusk/30/000000/login-rounded-right.png" />
+            <li class="nav-item mx-1">
+                <a class="btn btn-sm text-capitalize" href="#" role="button" th:href="@{/join}">
+                    <img src="https://img.icons8.com/dusk/30/000000/easy.png"/>
 
-                            <span class="align-middle"> Sign in </span>
-                        </a>
-                    </li>
+                    <span class="align-middle"> Sign up </span>
+                </a>
+            </li>
+        </ul>
 
-                    <li class="nav-item mx-1">
-                        <a class="btn btn-sm text-capitalize" href="#" th:href="@{/join}" role="button">
-                            <img src="https://img.icons8.com/dusk/30/000000/easy.png" />
+        <ul class="nav" sec:authorize="isAuthenticated()">
+            <li class="nav-item mx-1">
+                <a class="btn btn-sm text-capitalize" href="#" role="button" th:href="@{/write}">
+                    <img src="https://img.icons8.com/dusk/30/000000/pencil.png"/>
 
-                            <span class="align-middle"> Sign up </span>
-                        </a>
-                    </li>
-                </ul>
+                    <span class="align-middle"> Write </span>
+                </a>
+            </li>
 
-                <ul class="nav" sec:authorize="isAuthenticated()">
-                    <li class="nav-item mx-1">
-                        <a class="btn btn-sm text-capitalize" href="#" th:href="@{/write}" role="button">
-                            <img src="https://img.icons8.com/dusk/30/000000/pencil.png" />
+            <li class="nav-item dropdown mx-1">
+                <button
+                        aria-expanded="false"
+                        aria-haspopup="true"
+                        class="btn btn-sm dropdown-toggle"
+                        data-toggle="dropdown"
+                        type="button"
+                >
+                    <img
+                            alt="profile"
+                            src="/images/1111.gif"
+                            style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover"
+                    />
+                </button>
 
-                            <span class="align-middle"> Write </span>
-                        </a>
-                    </li>
+                <div class="dropdown-menu dropdown-menu-right" style="left: -127%">
+                    <a class="dropdown-item" href="#" th:href="@{/setting}">
+                        <img src="https://img.icons8.com/dusk/30/000000/gear.png"/>
 
-                    <li class="nav-item dropdown mx-1">
-                        <button
-                            class="btn btn-sm dropdown-toggle"
-                            type="button"
-                            data-toggle="dropdown"
-                            aria-haspopup="true"
-                            aria-expanded="false"
-                        >
-                            <img
-                                style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover"
-                                src="/images/1111.gif"
-                                alt="profile"
-                            />
-                        </button>
+                        <small> &nbsp; Setting </small>
+                    </a>
 
-                        <div style="left: -127%" class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" th:href="@{/settings}" href="#">
-                                <img src="https://img.icons8.com/dusk/30/000000/gear.png" />
+                    <a class="dropdown-item" href="#" th:href="@{/logout}">
+                        <img src="https://img.icons8.com/dusk/30/000000/logout-rounded-left.png"/>
 
-                                <small> &nbsp; Settings </small>
-                            </a>
-
-                            <a class="dropdown-item" th:href="@{/logout}" href="#">
-                                <img src="https://img.icons8.com/dusk/30/000000/logout-rounded-left.png" />
-
-                                <small> &nbsp; Sign out </small>
-                            </a>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-
-        <main class="container" style="max-width: 80%">
-            <div class="row">
-                <div class="col-xl-3 col-md-6 p-4" th:each="board: ${boards}">
-                    <a th:href="@{|/boards/${board.id}|}" style="all: unset">
-                        <div style="height: 416px" class="card m-0">
-                            <img
-                                alt="Photo"
-                                class="card-img-top"
-                                th:if="${board.photo != null}"
-                                th:src="${board.photo}"
-                                style="height: 145px; object-fit: cover"
-                            />
-
-                            <div class="card-body">
-                                <h5 class="card-title" th:text="${board.title}">Card title</h5>
-
-                                <p class="card-text" style="height: 145px" th:text="${board.content}">
-                                    This is a wider card with supporting text below as a natural lead-in to additional content. This content
-                                    is
-                                </p>
-                            </div>
-
-                            <div class="card-footer d-flex justify-content-between">
-                                <small class="text-muted" th:text="|by ${board.user.username}|">Jaeyeop</small>
-                                <small class="text-muted" th:text="${board.createdAt}">Last updated 3 mins ago</small>
-                            </div>
-                        </div>
+                        <small> &nbsp; Sign out </small>
                     </a>
                 </div>
-            </div>
-        </main>
-        <script
-            crossorigin="anonymous"
-            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-            src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        ></script>
-        <script
-            crossorigin="anonymous"
-            integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U"
-            src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js"
-        ></script>
-        <script
-            crossorigin="anonymous"
-            integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9"
-            src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js"
-        ></script>
-        <script>
-            $('body').bootstrapMaterialDesign();
-        </script>
-    </body>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<main class="container" style="max-width: 80%">
+    <div class="row">
+        <div class="col-xl-3 col-md-6 p-4" th:each="board: ${boards}">
+            <a style="all: unset" th:href="@{|/board/${board.id}|}">
+                <div class="card m-0" style="height: 416px">
+                    <img
+                            alt="Photo"
+                            class="card-img-top"
+                            style="height: 145px; object-fit: cover"
+                            th:if="${board.photo != null}"
+                            th:src="${board.photo}"
+                    />
+
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${board.title}">Card title</h5>
+
+                        <p class="card-text" style="height: 145px" th:text="${board.content}">
+                            This is a wider card with supporting text below as a natural lead-in to additional content.
+                            This content
+                            is
+                        </p>
+                    </div>
+
+                    <div class="card-footer d-flex justify-content-between">
+                        <small class="text-muted" th:text="|by ${board.user.username}|">Jaeyeop</small>
+                        <small class="text-muted" th:text="${#temporals.format(board.createdAt, 'yyyy-MM-dd HH:mm')}">Last
+                            updated 3 mins ago</small>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</main>
+
+<script
+        crossorigin="anonymous"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+></script>
+<script
+        crossorigin="anonymous"
+        integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U"
+        src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js"
+></script>
+<script
+        crossorigin="anonymous"
+        integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9"
+        src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js"
+></script>
+<script>
+    $('body').bootstrapMaterialDesign();
+</script>
+</body>
 </html>
