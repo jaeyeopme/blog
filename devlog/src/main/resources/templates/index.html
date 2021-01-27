@@ -17,7 +17,7 @@
                 <a style="all: unset" th:href="@{|/board/${board.id}|}">
                     <div class="card m-0" style="height: 416px">
                         <img alt="Photo" class="card-img-top" style="height: 145px; object-fit: cover"
-                            th:if="${board.photo != null}" th:src="${board.photo}" />
+                            th:if="${board.image != null}" th:src="${board.image}" />
 
                         <div class="card-body">
                             <h5 class="card-title" th:text="${board.title}">Card title</h5>
@@ -31,7 +31,7 @@
                         </div>
 
                         <div class="card-footer d-flex justify-content-between">
-                            <small class="text-muted" th:text="|by ${board.user.username}|">Jaeyeop</small>
+                            <small class="text-muted" th:text="|by ${board.user.name}|">Jaeyeop</small>
                             <small class="text-muted"
                                 th:text="${#temporals.format(board.createdAt, 'yyyy-MM-dd HH:mm')}">Last
                                 updated 3 mins ago</small>

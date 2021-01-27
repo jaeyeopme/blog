@@ -35,7 +35,7 @@ public class User implements OAuth2User {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private UserRole role;
+    private Role role;
 
     @Column(unique = true)
     private String email;
@@ -62,7 +62,7 @@ public class User implements OAuth2User {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Stream.of(getRole()).map(userRole -> new SimpleGrantedAuthority(String.valueOf(userRole))).collect(Collectors.toList());
+        return Stream.of(getRole()).map(role -> new SimpleGrantedAuthority(String.valueOf(role))).collect(Collectors.toList());
     }
 
 }

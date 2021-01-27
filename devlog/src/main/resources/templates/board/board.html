@@ -23,7 +23,7 @@
             </div>
 
             <div sec:authorize="isAuthenticated()"
-                th:if="${board.user.username} == ${#authentication.principal.username}">
+                th:if="${board.user.name} == ${#authentication.principal.}">
                 <a class="btn btn-sm text-capitalize" href="#" role="button" th:href="@{|/edit/${board.id}|}">
                     <img src="https://img.icons8.com/dusk/20/000000/edit.png" />
 

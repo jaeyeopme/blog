@@ -1,11 +1,12 @@
 package com.springboot.blog.service;
 
+import com.springboot.blog.entity.Role;
 import com.springboot.blog.entity.User;
-import com.springboot.blog.entity.UserRole;
 import com.springboot.blog.repository.UserRepository;
 import com.springboot.blog.util.AmazonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
@@ -13,10 +14,15 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.UUID;
 
 @Service
 public class UserService implements OAuth2UserService {
 
+    public static final String LOCAL = "Local";
     private final String USER_NOT_FOUND_MESSAGE = "Not found user.";
     private final UserRepository userRepository;
     private final AmazonService amazonService;
@@ -28,59 +34,6 @@ public class UserService implements OAuth2UserService {
         this.amazonService = amazonService;
         this.defaultPicture = defaultPicture;
     }
-
-//    /**
-//     * 회원 수정
-//     *
-//     * @param id
-//     * @param newUser
-//     * @param newPhoto
-//     * @return
-//     */
-//    @Transactional
-//    public User modify(Long id, User newUser, MultipartFile newPhoto) {
-//        return userRepository.findById(id)
-//                .map(findUser -> {
-//                    findUser.setName(newUser.getName());
-//                    findUser.setIntroduce(newUser.getIntroduce());
-//
-//                    if (newPhoto != null) {d
-//                        if (findUser.getPicture() != null) {
-//                            amazonService.deleteImage(findUser.getPicture());
-//                        }
-//                        findUser.setPicture(amazonService.putImage(newPhoto));
-//                    }
-//
-//                    return findUser;
-//                })
-//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND_MESSAGE));
-//    }
-//
-//    /**
-//     * 회원 삭제
-//     *
-//     * @param id
-//     * @return
-//     */
-//    @Transactional
-//    public void delete(Long id) {
-//        userRepository.findById(id)
-//                .map(findUser -> {
-//                    if (findUser.getPicture() != null) {
-//                        amazonService.deleteImage(findUser.getPicture());
-//                    }
-//
-//                    findUser.getBoards()
-//                            .stream()
-//                            .filter(board -> board.getImage() != null)
-//                            .forEach(board -> amazonService.deleteImage(board.getImage()));
-//
-//                    userRepository.deleteById(findUser.getId());
-//
-//                    return findUser;
-//                })
-//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND_MESSAGE));
-//    }
 
     /**
      * OAuth2
@@ -118,12 +71,85 @@ public class UserService implements OAuth2UserService {
             return userRepository.save(User.builder()
                     .authId(authId)
                     .registrationId(registrationId)
-                    .role(UserRole.ROLE_USER)
+                    .role(Role.ROLE_USER)
                     .email(email)
                     .name(name)
                     .picture(picture)
                     .build());
         });
+    }
+
+
+//    @Transactional
+//    public void sendEmail(String email) {
+//        return userRepository.findByEmail(email).orElseGet(() ->
+//                userRepository.save(User.builder()
+//                        .authId(String.valueOf(UUID.randomUUID()))
+//                        .registrationId(LOCAL)
+//                        .role(Role.ROLE_USER)
+//                        .email(email)
+//                        .name(email.split("@")[0])
+//                        .picture(defaultPicture)
+//                        .build()));
+//    }
+
+//    @Transactional
+//    public User userAuthentication(String authId) {
+//
+//    }
+
+
+    /**
+     * 회원 수정
+     *
+     * @param id
+     * @param newUser
+     * @param newPicture
+     * @return
+     */
+    @Transactional
+    public User modify(Long id, User newUser, MultipartFile newPicture) {
+        return userRepository.findById(id)
+                .map(findUser -> {
+                    findUser.setName(newUser.getName());
+                    findUser.setIntroduce(newUser.getIntroduce());
+
+                    if (newPicture != null) {
+                        if (findUser.getPicture() != null) {
+                            amazonService.deleteImage(findUser.getPicture());
+                        }
+                        findUser.setPicture(amazonService.putImage(newPicture));
+                    }
+
+                    return findUser;
+                })
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND_MESSAGE));
+    }
+
+    /**
+     * 회원 삭제
+     *
+     * @param id
+     * @return
+     */
+    @Transactional
+    public void delete(Long id) {
+        userRepository.findById(id)
+                .map(findUser -> {
+                    if (findUser.getPicture() != null) {
+                        amazonService.deleteImage(findUser.getPicture());
+                    }
+
+                    findUser.getBoards()
+                            .stream()
+                            .filter(board -> board.getImage() != null)
+                            .forEach(board -> amazonService.deleteImage(board.getImage()));
+
+                    userRepository.deleteById(findUser.getId());
+
+                    return findUser;
+                })
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND_MESSAGE));
     }
 
 }

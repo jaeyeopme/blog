@@ -17,12 +17,12 @@
                     <div class="card-title text-center">
 
                         <div class="media align-items-center my-5">
-                            <img art="profile photo" class="align-self-start" src="/images/1111.gif"
+                            <img art="profile picture" class="align-self-start" src="/images/1111.gif" th:src="${#authentication.principal.picture}"
                                 style="width: 128px; height: 128px; border-radius: 50%; object-fit: cover" />
 
                             <div class="mx-4 media-body">
                                 <h6>
-                                    <a href="#"> Username </a>
+                                    <a href="#" th:text="${#authentication.principal.name}"> Username </a>
                                 </h6>
 
                                 <div class="font-weight-light">Introduce</div>
@@ -35,12 +35,6 @@
                             <label class="bmd-label-static" for="username_form">Username</label>
 
                             <input class="form-control" id="username_form" name="username" required type="text" />
-                        </div>
-
-                        <div class="form-group">
-                            <label class="bmd-label-static" for="password_form">Password</label>
-
-                            <input class="form-control" id="password_form" name="password" required type="password" />
                         </div>
 
                         <div class="form-group">
