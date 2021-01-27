@@ -1,51 +1,46 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <th:block th:replace="/fragments/css :: common_css"></th:block>
-    <title>setting</title>
+    <title>settings</title>
 </head>
+
 <body>
-<th:block th:replace="/fragments/nav :: nav"></th:block>
-<main class="d-flex align-items-center flex-column">
-    <div style="width: 400px; margin-top: 100px">
-        <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${param.error != null}">
-            <small>Incorrect username or password.</small>
-
-            <button aria-label="Close" class="close" data-dismiss="alert" type="button">&times;</button>
-        </div>
-
-        <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${param.join != null}">
-            <small>Sign up is complete.</small>
-
-            <button aria-label="Close" class="close" data-dismiss="alert" type="button">&times;</button>
-        </div>
-
-        <form method="post" th:action="@{/login}">
+    <th:block th:replace="/fragments/nav :: nav"></th:block>
+    <main class="d-flex align-items-center flex-column">
+        <div style="width: 500px; margin-top: 100px">
             <div class="card">
                 <div class="card-body px-5">
                     <div class="card-title text-center">
-                        <h2 style="margin-bottom: 20px">
-                            <a th:href="@{/}">
-                                <img src="https://img.icons8.com/dusk/40/000000/box.png"/>
-                            </a>
-                        </h2>
 
-                        <h5>Sign in to Box</h5>
+                        <div class="media align-items-center my-5">
+                            <img art="profile photo" class="align-self-start" src="/images/1111.gif"
+                                style="width: 128px; height: 128px; border-radius: 50%; object-fit: cover" />
+
+                            <div class="mx-4 media-body">
+                                <h6>
+                                    <a href="#"> Username </a>
+                                </h6>
+
+                                <div class="font-weight-light">Introduce</div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="card-text">
                         <div class="form-group">
                             <label class="bmd-label-static" for="username_form">Username</label>
 
-                            <input class="form-control" id="username_form" name="username" required type="text"/>
+                            <input class="form-control" id="username_form" name="username" required type="text" />
                         </div>
 
                         <div class="form-group">
                             <label class="bmd-label-static" for="password_form">Password</label>
 
-                            <input class="form-control" id="password_form" name="password" required type="password"/>
+                            <input class="form-control" id="password_form" name="password" required type="password" />
                         </div>
 
                         <div class="form-group">
@@ -54,26 +49,54 @@
 
                         <div class="d-flex justify-content-around p-3">
                             <button class="btn bmd-btn-fab bmd-btn-fab-sm" type="button">
-                                <img src="https://img.icons8.com/dusk/40/000000/github.png"/>
+                                <img src="https://img.icons8.com/dusk/40/000000/github.png" />
                             </button>
 
                             <button class="btn bmd-btn-fab bmd-btn-fab-sm" type="button">
-                                <img src="https://img.icons8.com/dusk/40/000000/google-logo.png"/>
+                                <img src="https://img.icons8.com/dusk/40/000000/google-logo.png" />
                             </button>
 
                             <button class="btn bmd-btn-fab bmd-btn-fab-sm" type="button">
-                                <img src="https://img.icons8.com/dusk/40/000000/facebook-new.png"/>
+                                <img src="https://img.icons8.com/dusk/40/000000/facebook-new.png" />
                             </button>
                         </div>
                     </div>
                 </div>
-                <div class="card-text text-right p-3">
-                    <small> New to Box? <a th:href="@{/join}">Create an account.</a> </small>
+                <div class="card-text text-left p-3">
+                    <small><a class="text-danger" href="#" role="button" data-target="#delete_account_modal"
+                            data-toggle="modal">Delete your
+                            account</a></small>
                 </div>
             </div>
-        </form>
-    </div>
-</main>
-<th:block th:replace="/fragments/script :: common_script"></th:block>
+        </div>
+
+
+        <div aria-hidden="true" aria-labelledby="delete_account_modal" class="modal fade" id="delete_account_modal"
+            role="dialog" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Delete account</h5>
+
+                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="form-group text-center m-0">Are you sure you want to do this?</div>
+                    </div>
+
+                    <div class="modal-footer justify-content-center p-3">
+                        <button class="btn btn-raised btn-danger btn-block" id="delete_account_button"
+                            type="button">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </main>
+    <th:block th:replace="/fragments/script :: common_script"></th:block>
 </body>
+
 </html>

@@ -5,70 +5,112 @@
     <nav class="navbar sticky-top navbar-light" id="nav" style="background-color: #fafafa; box-shadow: none">
         <div class="container">
             <a class="navbar-brand" th:href="@{/}">
-                <img src="https://img.icons8.com/dusk/40/000000/box.png"/>
+                <img src="https://img.icons8.com/dusk/40/000000/box.png" />
 
-                <span class="align-middle">Box</span>
+                <span class="align-middle"> Box </span>
             </a>
 
             <ul class="nav" sec:authorize="isAnonymous()">
                 <li class="nav-item mx-1">
-                    <a class="btn btn-sm text-capitalize" href="#" role="button" th:href="@{/login}">
-                        <img src="https://img.icons8.com/dusk/30/000000/login-rounded-right.png"/>
+                    <button class="btn btn-sm text-capitalize" role="button" data-target="#auth_modal"
+                        data-toggle="modal">
+                        <img src="https://img.icons8.com/dusk/30/000000/login-rounded-right.png" />
 
                         <span class="align-middle"> Sign in </span>
-                    </a>
-                </li>
-
-                <li class="nav-item mx-1">
-                    <a class="btn btn-sm text-capitalize" href="#" role="button" th:href="@{/join}">
-                        <img src="https://img.icons8.com/dusk/30/000000/easy.png"/>
-
-                        <span class="align-middle"> Sign up </span>
-                    </a>
+                    </button>
                 </li>
             </ul>
 
             <ul class="nav" sec:authorize="isAuthenticated()">
                 <li class="nav-item mx-1">
                     <a class="btn btn-sm text-capitalize" href="#" role="button" th:href="@{/write}">
-                        <img src="https://img.icons8.com/dusk/30/000000/pencil.png"/>
+                        <img src="https://img.icons8.com/dusk/30/000000/pencil.png" />
 
                         <span class="align-middle"> Write </span>
                     </a>
                 </li>
 
                 <li class="nav-item dropdown mx-1">
-                    <button
-                            aria-expanded="false"
-                            aria-haspopup="true"
-                            class="btn btn-sm dropdown-toggle"
-                            data-toggle="dropdown"
-                            type="button"
-                    >
-                        <img
-                                alt="profile photo"
-                                src="/images/1111.gif"
-                                style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover"
-                        />
+                    <button aria-expanded="false" aria-haspopup="true" class="btn btn-sm dropdown-toggle"
+                        data-toggle="dropdown" type="button">
+                        <img alt="profile photo" th:src="${#authentication.principal.picture}"
+                            style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover" />
                     </button>
 
                     <div class="dropdown-menu dropdown-menu-right" style="left: -127%">
-                        <a class="dropdown-item" th:href="@{/setting}">
-                            <img src="https://img.icons8.com/dusk/30/000000/gear.png"/>
-
-                            <small> &nbsp; Setting </small>
+                        <a class="dropdown-item px-2" th:href="@{/setting}">
+                            <img src="https://img.icons8.com/dusk/30/000000/gear.png" />
+                            &nbsp;
+                            <small> Setting </small>
                         </a>
 
-                        <a class="dropdown-item" th:href="@{/logout}">
-                            <img src="https://img.icons8.com/dusk/30/000000/logout-rounded-left.png"/>
-
-                            <small> &nbsp; Sign out </small>
+                        <a class="dropdown-item px-2" th:href="@{/logout}">
+                            <img src="https://img.icons8.com/dusk/30/000000/logout-rounded-left.png" />
+                            &nbsp;
+                            <small> Sign out </small>
                         </a>
                     </div>
                 </li>
             </ul>
         </div>
     </nav>
+
+    <div sec:authorize="isAnonymous()" aria-hidden="true" aria-labelledby="auth_modal" class="modal fade"
+        id="auth_modal" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body p-5">
+                    <div class="text-center">
+                        <h2>
+                            <a th:href="@{/}">
+                                <img src="https://img.icons8.com/dusk/40/000000/box.png" />
+                            </a>
+                        </h2>
+
+                        <h5 id="auto_title">Sign in to Box</h5>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="bmd-label-static" for="email_form">Email</label>
+
+                        <input class="form-control" id="email_form" name="username" required type="email" />
+                    </div>
+
+                    <div class="form-group">
+                        <button id="auth_button" class="btn btn-raised btn-primary btn-block text-capitalize"
+                            type="button">SIGN IN</button>
+                    </div>
+
+                    <div class="d-flex justify-content-around p-3">
+                        <a class="btn bmd-btn-fab bmd-btn-fab-sm" role="button"
+                            th:href="@{/oauth2/authorization/github}">
+                            <img src="https://img.icons8.com/dusk/40/000000/github.png" />
+                        </a>
+
+                        <a class="btn bmd-btn-fab bmd-btn-fab-sm" role="button"
+                            th:href="@{/oauth2/authorization/google}">
+                            <img src="https://img.icons8.com/dusk/40/000000/google-logo.png" />
+                        </a>
+
+                        <a class="btn bmd-btn-fab bmd-btn-fab-sm" role="button"
+                            th:href="@{/oauth2/authorization/facebook}">
+                            <img src="https://img.icons8.com/dusk/40/000000/facebook-new.png" />
+                        </a>
+                    </div>
+                </div>
+
+                <div class="modal-footer p-3">
+                    <small id="auth_footer"> New to Box? <a href="#" role="button">Create an account.</a> </small>
+                </div>
+            </div>
+        </div>
+    </div>
 </th:block>
 
 </html>

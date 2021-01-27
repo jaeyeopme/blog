@@ -16,8 +16,8 @@ public class AmazonService {
 
     private final AmazonS3 amazonS3;
 
-    @Value("${cloud.aws.s3.bucket}")
-    private String bucket;
+    @Value("${cloud.aws.s3.blog}")
+    private String blog;
 
     @Value("${cloud.aws.s3.url}")
     private String url;
@@ -26,26 +26,26 @@ public class AmazonService {
         this.amazonS3 = amazonS3;
     }
 
-    public String putPhoto(MultipartFile newPhoto) {
+    public String putImage(MultipartFile newImage) {
         try {
             ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentType(newPhoto.getContentType());
-            metadata.setContentLength(newPhoto.getSize());
+            metadata.setContentType(newImage.getContentType());
+            metadata.setContentLength(newImage.getSize());
 
-            String newPhotoName = String.format("images/%s-%s", UUID.randomUUID(), newPhoto.getOriginalFilename());
-            amazonS3.putObject(new PutObjectRequest(bucket, newPhotoName, newPhoto.getInputStream(), metadata));
+            String newPhotoName = String.format("images/%s-%s", UUID.randomUUID(), newImage.getOriginalFilename());
+            amazonS3.putObject(new PutObjectRequest(blog, newPhotoName, newImage.getInputStream(), metadata));
 
             return String.format("%s%s", url, newPhotoName);
         } catch (Exception e) {
-            throw new AmazonS3Exception("Photo save error");
+            throw new AmazonS3Exception("Image save error");
         }
     }
 
-    public void deletePhoto(String photoName) {
+    public void deleteImage(String imageName) {
         try {
-            amazonS3.deleteObject(new DeleteObjectRequest(bucket, photoName));
+            amazonS3.deleteObject(new DeleteObjectRequest(blog, imageName));
         } catch (Exception e) {
-            throw new AmazonS3Exception("Photo remove error.");
+            throw new AmazonS3Exception("Image remove error.");
         }
     }
 

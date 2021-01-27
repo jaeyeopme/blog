@@ -13,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 public class UserRestController {
 
+    private final String NULL_MESSAGE = "%s cannot be <strong>null</strong>.";
     private final UserService userService;
 
     @Autowired
@@ -20,44 +21,44 @@ public class UserRestController {
         this.userService = userService;
     }
 
-    @PostMapping
-    public ResponseEntity<String> join(@RequestBody User newUser) {
-        userService.join(formValidation(newUser));
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
+//    @PostMapping
+//    public ResponseEntity<String> join(@RequestBody User newUser) {
+//        userService.join(formValidation(newUser));
+//        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+//    }
 
-    @PutMapping(value = "/{id}")
-    public ResponseEntity<String> modify(@PathVariable Long id, @RequestBody User newUser, @RequestPart MultipartFile newPhoto) {
-        userService.modify(id, formValidation(newUser), newPhoto);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
+//    @PutMapping(value = "/{id}")
+//    public ResponseEntity<String> modify(@PathVariable Long id, @RequestBody User newUser, @RequestPart MultipartFile newPhoto) {
+//        userService.modify(id, formValidation(newUser), newPhoto);
+//        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+//    }
 
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<String> delete(@PathVariable Long id) {
-        userService.delete(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
+//    @DeleteMapping(value = "/{id}")
+//    public ResponseEntity<String> delete(@PathVariable Long id) {
+//        userService.delete(id);
+//        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+//    }
 
-    /**
-     * 입력 값 유효성 검사
-     *
-     * @param newUser
-     * @return
-     */
-    private User formValidation(User newUser) {
-        if (newUser.getUsername().replaceAll(" ", "").isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username cannot be <strong>null</strong>.");
-        }
-
-        if (newUser.getPassword().replaceAll(" ", "").isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password cannot be <strong>null</strong>.");
-        }
-
-        if (newUser.getName().trim().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name cannot be <strong>null</strong>.");
-        }
-
-        return newUser;
-    }
+//    /**
+//     * 입력 값 유효성 검사
+//     *
+//     * @param newUser
+//     * @return
+//     */
+//    private User formValidation(User newUser) {
+//        if (newUser.getUsername().replaceAll(" ", "").isEmpty()) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(NULL_MESSAGE, "Username"));
+//        }
+//
+//        if (newUser.getPassword().replaceAll(" ", "").isEmpty()) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(NULL_MESSAGE, "Password"));
+//        }
+//
+//        if (newUser.getName().trim().isEmpty()) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(NULL_MESSAGE, "Name"));
+//        }
+//
+//        return newUser;
+//    }
 
 }

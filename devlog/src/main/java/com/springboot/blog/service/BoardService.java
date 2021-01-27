@@ -17,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class BoardService {
 
+    private final String NOT_FOUND_MESSAGE = "Not found %s.";
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
     private final AmazonService amazonService;
@@ -33,21 +34,21 @@ public class BoardService {
      *
      * @param user
      * @param newBoard
-     * @param newPhoto
+     * @param newImage
      * @return
      */
     @Transactional
-    public Board write(User user, Board newBoard, MultipartFile newPhoto) {
+    public Board write(User user, Board newBoard, MultipartFile newImage) {
         return userRepository.findById(user.getId())
                 .map(findUser -> {
                     newBoard.setUser(findUser);
 
-                    if (newPhoto != null) {
-                        newBoard.setPhoto(amazonService.putPhoto(newPhoto));
+                    if (newImage != null) {
+                        newBoard.setImage(amazonService.putImage(newImage));
                     }
 
                     return boardRepository.save(newBoard);
-                }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found user."));
+                }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(NOT_FOUND_MESSAGE, "user")));
     }
 
     @Transactional(readOnly = true)
@@ -58,7 +59,7 @@ public class BoardService {
     @Transactional(readOnly = true)
     public Board findById(Long id) {
         return boardRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found board."));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(NOT_FOUND_MESSAGE, "board")));
     }
 
     /**
@@ -66,27 +67,27 @@ public class BoardService {
      *
      * @param id
      * @param newBoard
-     * @param newPhoto
+     * @param newImage
      * @return
      */
     @Transactional
-    public Board edit(Long id, Board newBoard, MultipartFile newPhoto) {
+    public Board edit(Long id, Board newBoard, MultipartFile newImage) {
         return boardRepository.findById(id)
                 .map(findBoard -> {
                     findBoard.setTitle(newBoard.getTitle());
                     findBoard.setContent(newBoard.getContent());
                     findBoard.setIntroduce(newBoard.getIntroduce());
 
-                    if (newPhoto != null) {
-                        if (!findBoard.getPhoto().isEmpty()) {
-                            amazonService.deletePhoto(findBoard.getPhoto());
+                    if (newImage != null) {
+                        if (!findBoard.getImage().isEmpty()) {
+                            amazonService.deleteImage(findBoard.getImage());
                         }
-                        findBoard.setPhoto(amazonService.putPhoto(newPhoto));
+                        findBoard.setImage(amazonService.putImage(newImage));
                     }
 
                     return findBoard;
                 })
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found board."));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(NOT_FOUND_MESSAGE, "board")));
     }
 
     /**
@@ -99,15 +100,15 @@ public class BoardService {
     public void delete(Long id) {
         boardRepository.findById(id)
                 .map(findBoard -> {
-                    if (findBoard.getPhoto() != null) {
-                        amazonService.deletePhoto(findBoard.getPhoto());
+                    if (findBoard.getImage() != null) {
+                        amazonService.deleteImage(findBoard.getImage());
                     }
 
                     boardRepository.deleteById(findBoard.getId());
 
                     return findBoard;
                 })
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found board."));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(NOT_FOUND_MESSAGE, "board")));
     }
 
 }

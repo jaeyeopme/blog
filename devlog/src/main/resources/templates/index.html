@@ -1,47 +1,47 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta charset="UTF-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <th:block th:replace="/fragments/css :: common_css"></th:block>
     <th:block th:replace="/fragments/css :: index_card_css"></th:block>
     <title>box</title>
 </head>
+
 <body>
-<th:block th:replace="/fragments/nav :: nav"></th:block>
-<main class="container" style="max-width: 80%">
-    <div class="row">
-        <div class="col-xl-3 col-md-6 p-4" th:each="board: ${boards}">
-            <a style="all: unset" th:href="@{|/board/${board.id}|}">
-                <div class="card m-0" style="height: 416px">
-                    <img
-                            alt="Photo"
-                            class="card-img-top"
-                            style="height: 145px; object-fit: cover"
-                            th:if="${board.photo != null}"
-                            th:src="${board.photo}"
-                    />
+    <th:block th:replace="/fragments/nav :: nav"></th:block>
+    <main class="container" style="max-width: 80%">
+        <div class="row">
+            <div class="col-xl-3 col-md-6 p-4" th:each="board: ${boards}">
+                <a style="all: unset" th:href="@{|/board/${board.id}|}">
+                    <div class="card m-0" style="height: 416px">
+                        <img alt="Photo" class="card-img-top" style="height: 145px; object-fit: cover"
+                            th:if="${board.photo != null}" th:src="${board.photo}" />
 
-                    <div class="card-body">
-                        <h5 class="card-title" th:text="${board.title}">Card title</h5>
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${board.title}">Card title</h5>
 
-                        <p class="card-text" style="height: 145px" th:text="${board.content}">
-                            This is a wider card with supporting text below as a natural lead-in to additional content.
-                            This content
-                            is
-                        </p>
+                            <p class="card-text" style="height: 145px" th:text="${board.content}">
+                                This is a wider card with supporting text below as a natural lead-in to additional
+                                content.
+                                This content
+                                is
+                            </p>
+                        </div>
+
+                        <div class="card-footer d-flex justify-content-between">
+                            <small class="text-muted" th:text="|by ${board.user.username}|">Jaeyeop</small>
+                            <small class="text-muted"
+                                th:text="${#temporals.format(board.createdAt, 'yyyy-MM-dd HH:mm')}">Last
+                                updated 3 mins ago</small>
+                        </div>
                     </div>
-
-                    <div class="card-footer d-flex justify-content-between">
-                        <small class="text-muted" th:text="|by ${board.user.username}|">Jaeyeop</small>
-                        <small class="text-muted" th:text="${#temporals.format(board.createdAt, 'yyyy-MM-dd HH:mm')}">Last
-                            updated 3 mins ago</small>
-                    </div>
-                </div>
-            </a>
+                </a>
+            </div>
         </div>
-    </div>
-</main>
-<th:block th:replace="/fragments/script :: common_script"></th:block>
+    </main>
+    <th:block th:replace="/fragments/script :: common_script"></th:block>
 </body>
+
 </html>

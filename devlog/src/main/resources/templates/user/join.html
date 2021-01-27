@@ -1,88 +1,75 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta charset="UTF-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <th:block th:replace="/fragments/css :: common_css"></th:block>
     <title>join</title>
 </head>
+
 <body>
-<main class="d-flex align-items-center flex-column">
-    <div style="width: 400px; margin-top: 100px">
-        <div class="alert alert-danger alert-dismissible" id="invalid_alert" role="alert" style="display: none">
-            <small id="invalid_feedback">Value is not available.</small>
+    <main class="d-flex align-items-center flex-column">
+        <div style="width: 400px; margin-top: 100px">
+            <div class="alert alert-danger alert-dismissible" id="invalid_alert" role="alert" style="display: none">
+                <small id="invalid_feedback">Value is not available.</small>
 
-            <button
-                    aria-label="Close"
-                    class="close"
-                    onclick="document.getElementById('invalid_alert').style.display = 'none'"
-                    type="button"
-            >
-                &times;
-            </button>
-        </div>
-
-        <div class="card">
-            <div class="card-body px-5">
-                <div class="card-title text-center">
-                    <h2 style="margin-bottom: 20px">
-                        <a th:href="@{/}">
-                            <img src="https://img.icons8.com/dusk/40/000000/box.png"/>
-                        </a>
-                    </h2>
-
-                    <h5>Join Box</h5>
-                </div>
-
-                <div class="card-text">
-                    <div class="form-group">
-                        <label class="bmd-label-static" for="username_form">Username</label>
-
-                        <input class="form-control" id="username_form" required type="text"/>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="bmd-label-static" for="password_form">Password</label>
-
-                        <input class="form-control" id="password_form" required type="password"/>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="bmd-label-static" for="name_form">Name</label>
-
-                        <input class="form-control" id="name_form" required type="text"/>
-                    </div>
-
-                    <div class="form-group">
-                        <button class="btn btn-raised btn-primary btn-block" onclick="_join_user()" type="button">
-                            Create Account
-                        </button>
-                    </div>
-
-                    <div class="d-flex justify-content-around p-3">
-                        <button class="btn bmd-btn-fab bmd-btn-fab-sm" type="button">
-                            <img src="https://img.icons8.com/dusk/40/000000/github.png"/>
-                        </button>
-
-                        <button class="btn bmd-btn-fab bmd-btn-fab-sm" type="button">
-                            <img src="https://img.icons8.com/dusk/40/000000/google-logo.png"/>
-                        </button>
-
-                        <button class="btn bmd-btn-fab bmd-btn-fab-sm" type="button">
-                            <img src="https://img.icons8.com/dusk/40/000000/facebook-new.png"/>
-                        </button>
-                    </div>
-                </div>
+                <button aria-label="Close" class="close"
+                    onclick="document.getElementById('invalid_alert').style.display = 'none'" type="button">
+                    &times;
+                </button>
             </div>
 
-            <div class="card-text text-right p-3">
-                <small> Already on Box? <a th:href="@{/login}">Sign in</a> </small>
+            <div class="card">
+                <div class="card-body px-5">
+                    <div class="card-title text-center">
+                        <h2 style="margin-bottom: 20px">
+                            <a th:href="@{/}">
+                                <img src="https://img.icons8.com/dusk/40/000000/box.png" />
+                            </a>
+                        </h2>
+
+                        <h5>Join Box</h5>
+                    </div>
+
+                    <div class="card-text">
+                        <div class="form-group">
+                            <label class="bmd-label-static" for="username_form">Email</label>
+
+                            <input class="form-control" id="username_form" required type="email" />
+                        </div>
+
+                        <div class="form-group">
+                            <button class="btn btn-raised btn-primary btn-block" onclick="_join_user()" type="button">
+                                CREATE ACCOUNT
+                            </button>
+                        </div>
+
+                        <div class="d-flex justify-content-around p-3">
+                            <button class="btn bmd-btn-fab bmd-btn-fab-sm" type="button">
+                                <img src="https://img.icons8.com/dusk/40/000000/github.png" />
+                            </button>
+
+                            <button class="btn bmd-btn-fab bmd-btn-fab-sm" type="button">
+                                <img src="https://img.icons8.com/dusk/40/000000/google-logo.png" />
+                            </button>
+
+                            <button class="btn bmd-btn-fab bmd-btn-fab-sm" type="button">
+                                <img src="https://img.icons8.com/dusk/40/000000/facebook-new.png" />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-text text-right p-3">
+                    <small> Already on Box? <a th:href="@{/login}">Sign in</a> </small>
+                </div>
             </div>
         </div>
-    </div>
-</main>
-<th:block th:replace="/fragments/script :: common_script"></th:block>
-<th:block th:replace="/fragments/script :: axios_script"></th:block>
-<th:block th:replace="/fragments/script :: user_script"></th:block>
+    </main>
+    <th:block th:replace="/fragments/script :: common_script"></th:block>
+    <th:block th:replace="/fragments/script :: axios_script"></th:block>
+    <th:block th:replace="/fragments/script :: user_script"></th:block>
 </body>
+
 </html>

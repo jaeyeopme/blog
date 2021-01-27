@@ -1,3 +1,5 @@
+'use strict';
+
 function _join_user() {
     const username = document.getElementById('username_form').value;
     const password = document.getElementById('password_form').value;
@@ -9,9 +11,12 @@ function _join_user() {
             password,
             name,
         })
-        .then(() => window.location.href = '/login?join')
+        .then(() => (window.location.href = '/login?join'))
         .catch((error) => {
             document.getElementById('invalid_alert').style.display = 'block';
-            document.getElementById('invalid_feedback').innerHTML = error.response.data.message;
+            document.getElementById('invalid_feedback').innerHTML =
+                error.response.data.message;
         });
 }
+
+function _auth_user() {}

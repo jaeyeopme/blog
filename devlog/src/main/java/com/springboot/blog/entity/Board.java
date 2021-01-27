@@ -28,7 +28,7 @@ public class Board {
     @Lob
     private String content;
 
-    private String photo;
+    private String image;
 
     private String introduce;
 

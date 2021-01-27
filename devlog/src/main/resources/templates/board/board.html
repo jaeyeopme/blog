@@ -1,244 +1,218 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta charset="UTF-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <th:block th:replace="/fragments/css :: common_css"></th:block>
     <title th:text="${board.title}">board</title>
 </head>
+
 <body>
-<th:block th:replace="/fragments/nav :: nav"></th:block>
-<main class="container mt-5" style="max-width: 800px">
-    <h1 class="mb-5" th:text="${board.title}">Title</h1>
-    <div class="d-flex justify-content-between mb-5" style="height: 40px">
-        <div>
-            <h6 style="display: inline">
-                <a href="#" th:text="${board.user.username}"> Username </a>
-            </h6>
-            ·
-            <span class="font-weight-light" th:text="${#temporals.format(board.createdAt, 'yyyy-MM-dd HH:mm')}"> 2020/12/04 </span>
-        </div>
+    <th:block th:replace="/fragments/nav :: nav"></th:block>
+    <main class="container mt-5" style="max-width: 800px">
+        <h1 class="mb-5" th:text="${board.title}">Title</h1>
+        <div class="d-flex justify-content-between mb-5" style="height: 40px">
+            <div>
+                <h6 style="display: inline">
+                    <a href="#" th:text="${board.user.username}"> Username </a>
+                </h6>
+                ·
+                <span class="font-weight-light" th:text="${#temporals.format(board.createdAt, 'yyyy-MM-dd HH:mm')}">
+                    2020/12/04 </span>
+            </div>
 
-        <div sec:authorize="isAuthenticated()" th:if="${board.user.username} == ${#authentication.principal.username}">
-            <a class="btn btn-sm text-capitalize" href="#" role="button" th:href="@{|/edit/${board.id}|}">
-                <img src="https://img.icons8.com/dusk/20/000000/edit.png"/>
+            <div sec:authorize="isAuthenticated()"
+                th:if="${board.user.username} == ${#authentication.principal.username}">
+                <a class="btn btn-sm text-capitalize" href="#" role="button" th:href="@{|/edit/${board.id}|}">
+                    <img src="https://img.icons8.com/dusk/20/000000/edit.png" />
 
-                <span class="align-middle"> Edit </span>
-            </a>
+                    <span class="align-middle"> Edit </span>
+                </a>
 
-            <button class="btn btn-sm text-capitalize" data-target="#board_delete_modal" data-toggle="modal"
+                <button class="btn btn-sm text-capitalize" data-target="#board_delete_modal" data-toggle="modal"
                     type="button">
-                <img src="https://img.icons8.com/dusk/20/000000/delete-sign.png"/>
+                    <img src="https://img.icons8.com/dusk/20/000000/delete-sign.png" />
 
-                <span class="align-middle"> Delete </span>
-            </button>
+                    <span class="align-middle"> Delete </span>
+                </button>
 
-            <div
-                    aria-hidden="true"
-                    aria-labelledby="board_delete_modal"
-                    class="modal fade"
-                    id="board_delete_modal"
-                    role="dialog"
-                    tabindex="-1"
-            >
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Delete board</h5>
+                <div aria-hidden="true" aria-labelledby="board_delete_modal" class="modal fade" id="board_delete_modal"
+                    role="dialog" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Delete board</h5>
 
-                            <button aria-label="Close" class="close" data-dismiss="modal" type="button">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
+                                <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
 
-                        <div class="modal-body">
-                            <div class="form-group text-center">Are you sure you want to do this?</div>
-                        </div>
+                            <div class="modal-body">
+                                <div class="form-group text-center my-0">Are you sure you want to do this?</div>
+                            </div>
 
-                        <div class="modal-footer">
-                            <button class="btn btn-sm text-capitalize" data-dismiss="modal" type="button">
-                                <img src="https://img.icons8.com/dusk/20/000000/delete-sign.png"/>
+                            <div class="modal-footer">
+                                <button class="btn btn-sm text-capitalize" data-dismiss="modal" type="button">
+                                    <img src="https://img.icons8.com/dusk/20/000000/delete-sign.png" />
 
-                                <span class="align-middle"> Close </span>
-                            </button>
+                                    <span class="align-middle"> Close </span>
+                                </button>
 
-                            <button class="btn btn-sm text-capitalize" th:onclick="|_delete_board(${board.id})|"
+                                <button class="btn btn-sm text-capitalize" th:onclick="|_delete_board(${board.id})|"
                                     type="button">
-                                <img src="https://img.icons8.com/dusk/20/000000/delete-forever.png"/>
+                                    <img src="https://img.icons8.com/dusk/20/000000/delete-forever.png" />
 
-                                <span class="align-middle"> Delete </span>
-                            </button>
+                                    <span class="align-middle"> Delete </span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="mb-5" style="min-height: 200px" th:utext="${board.content}">Content</div>
+        <div class="mb-5" style="min-height: 200px" th:utext="${board.content}">Content</div>
 
-    <div class="media align-items-center mb-5">
-        <img
-                art="profile photo"
-                class="align-self-start"
-                src="/images/1111.gif"
-                style="width: 128px; height: 128px; border-radius: 50%; object-fit: cover"
-        />
+        <div class="media align-items-center mb-5">
+            <img art="profile photo" class="align-self-start" src="/images/1111.gif"
+                style="width: 128px; height: 128px; border-radius: 50%; object-fit: cover" />
 
-        <div class="mx-4 media-body">
+            <div class="mx-4 media-body">
+                <h6>
+                    <a href="#" th:text="${board.user.username}"> Username </a>
+                </h6>
+
+                <div class="font-weight-light" th:text="${board.user.introduce}">Introduce</div>
+            </div>
+        </div>
+
+        <hr class="mb-5" />
+
+        <div class="mb-5">
             <h6>
-                <a href="#" th:text="${board.user.username}"> Username </a>
+                <img src="https://img.icons8.com/dusk/30/000000/messaging-.png" />
+
+                <span class="mx-2 align-middle" th:text="|${board.comments.size()} Comments|"> ? Comments </span>
             </h6>
+            <textarea class="p-3" id="write_comment_content_form" rows="3"
+                style="width: 100%; border: 1px solid rgba(0, 0, 0, 0.1); outline: none; resize: none"></textarea>
+            <div class="text-right">
+                <a aria-pressed="true" class="btn btn-sm text-capitalize" role="button" sec:authorize="isAnonymous()"
+                    th:href="@{/login}">
+                    <img src="https://img.icons8.com/dusk/30/000000/paper-plane.png" />
 
-            <div class="font-weight-light" th:text="${board.user.introduce}">Introduce</div>
-        </div>
-    </div>
-
-    <hr class="mb-5"/>
-
-    <div class="mb-5">
-        <h6>
-            <img src="https://img.icons8.com/dusk/30/000000/messaging-.png"/>
-
-            <span class="mx-2 align-middle" th:text="|${board.comments.size()} Comments|"> ? Comments </span>
-        </h6>
-        <textarea
-                class="p-3"
-                id="write_comment_content_form"
-                rows="3"
-                style="width: 100%; border: 1px solid rgba(0, 0, 0, 0.1); outline: none; resize: none"
-        ></textarea>
-        <div class="text-right">
-            <a aria-pressed="true" class="btn btn-sm text-capitalize" role="button" sec:authorize="isAnonymous()"
-               th:href="@{/login}">
-                <img src="https://img.icons8.com/dusk/30/000000/paper-plane.png"/>
-
-                <span class="align-middle"> Comment </span>
-            </a>
-            <button aria-pressed="true" class="btn btn-sm text-capitalize" sec:authorize="isAuthenticated()"
+                    <span class="align-middle"> Comment </span>
+                </a>
+                <button aria-pressed="true" class="btn btn-sm text-capitalize" sec:authorize="isAuthenticated()"
                     th:onclick="|_write_comment(${board.id})|" type="button">
-                <img src="https://img.icons8.com/dusk/30/000000/paper-plane.png"/>
+                    <img src="https://img.icons8.com/dusk/30/000000/paper-plane.png" />
 
-                <span class="align-middle"> Comment </span>
-            </button>
+                    <span class="align-middle"> Comment </span>
+                </button>
+            </div>
         </div>
-    </div>
 
-    <div class="mb-5" th:each="comment: ${board.comments}">
-        <div class="d-flex align-items-center mb-3 justify-content-between">
-            <div class="d-flex">
-                <img
-                        art="profile photo"
-                        class="align-self-start"
-                        src="/images/1111.gif"
-                        style="width: 54px; height: 54px; border-radius: 50%; object-fit: cover"
-                />
+        <div class="mb-5" th:each="comment: ${board.comments}">
+            <div class="d-flex align-items-center mb-3 justify-content-between">
+                <div class="d-flex">
+                    <img art="profile photo" class="align-self-start" src="/images/1111.gif"
+                        style="width: 54px; height: 54px; border-radius: 50%; object-fit: cover" />
 
-                <div class="mx-3">
-                    <small>
-                        <a href="#" th:text="${comment.user.username}"> Username </a>
-                    </small>
-
-                    <div>
-                        <small class="font-weight-light"
-                               th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}">
-                            2020/12/04
+                    <div class="mx-3">
+                        <small>
+                            <a href="#" th:text="${comment.user.username}"> Username </a>
                         </small>
+
+                        <div>
+                            <small class="font-weight-light"
+                                th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}">
+                                2020/12/04
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <div sec:authorize="isAuthenticated()" th:if="${comment.user.id} == ${#authentication.principal.id}">
+                    <div th:id="|before_edit_comment_buttons_${comment.id}|">
+                        <button class="btn btn-sm text-capitalize"
+                            th:onclick="|_show_edit_comment_buttons(${comment.id})|" type="button">
+                            <img src="https://img.icons8.com/dusk/20/000000/edit.png" />
+
+                            <span class="align-middle"> Edit </span>
+                        </button>
+
+                        <button class="btn btn-sm text-capitalize" data-target="#delete_comment_modal"
+                            data-toggle="modal" th:onclick="|_show_delete_comment_buttons(${comment.id})|"
+                            type="button">
+                            <img src="https://img.icons8.com/dusk/20/000000/delete-forever.png" />
+
+                            <span class="align-middle"> Delete </span>
+                        </button>
+                    </div>
+
+                    <div hidden th:id="|after_edit_comment_buttons_${comment.id}|">
+                        <button class="btn btn-sm text-capitalize" th:onclick="|_edit_comment(${comment.id})|"
+                            type="button">
+                            <img src="https://img.icons8.com/dusk/20/000000/ok.png" />
+
+                            <span class="align-middle"> Save </span>
+                        </button>
+
+                        <button class="btn btn-sm text-capitalize" onclick="window.location.reload()" type="button">
+                            <img src="https://img.icons8.com/dusk/20/000000/delete-sign.png" />
+
+                            <span class="align-middle"> Cancel </span>
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <div sec:authorize="isAuthenticated()" th:if="${comment.user.id} == ${#authentication.principal.id}">
-                <div th:id="|before_edit_comment_buttons_${comment.id}|">
-                    <button class="btn btn-sm text-capitalize" th:onclick="|_show_edit_comment_buttons(${comment.id})|"
-                            type="button">
-                        <img src="https://img.icons8.com/dusk/20/000000/edit.png"/>
-
-                        <span class="align-middle"> Edit </span>
-                    </button>
-
-                    <button class="btn btn-sm text-capitalize" data-target="#delete_comment_modal" data-toggle="modal"
-                            th:onclick="|_show_delete_comment_buttons(${comment.id})|"
-                            type="button">
-                        <img src="https://img.icons8.com/dusk/20/000000/delete-forever.png"/>
-
-                        <span class="align-middle"> Delete </span>
-                    </button>
-                </div>
-
-                <div hidden th:id="|after_edit_comment_buttons_${comment.id}|">
-                    <button class="btn btn-sm text-capitalize" th:onclick="|_edit_comment(${comment.id})|"
-                            type="button">
-                        <img src="https://img.icons8.com/dusk/20/000000/ok.png"/>
-
-                        <span class="align-middle"> Save </span>
-                    </button>
-
-                    <button class="btn btn-sm text-capitalize" onclick="window.location.reload()" type="button">
-                        <img src="https://img.icons8.com/dusk/20/000000/delete-sign.png"/>
-
-                        <span class="align-middle"> Cancel </span>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <textarea
-                \
-                class="p-3"
-                readonly
-                rows="3"
+            <textarea \ class="p-3" readonly rows="3"
                 style="width: 100%; border: none; outline: none; resize: none; background-color: unset;"
-                th:id="|edit_comment_content_form_${comment.id}|"
-                th:text="${comment.content}"
-        >
-                    Comment</textarea
-        >
+                th:id="|edit_comment_content_form_${comment.id}|" th:text="${comment.content}">
+                    Comment</textarea>
 
-        <hr class="mb-5"/>
-    </div>
+            <hr class="mb-5" />
+        </div>
 
-    <div
-            aria-hidden="true"
-            aria-labelledby="delete_comment_modal"
-            class="modal fade"
-            id="delete_comment_modal"
-            role="dialog"
-            tabindex="-1"
-    >
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Delete comment</h5>
+        <div aria-hidden="true" aria-labelledby="delete_comment_modal" class="modal fade" id="delete_comment_modal"
+            role="dialog" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Delete comment</h5>
 
-                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
 
-                <div class="modal-body">
-                    <div class="form-group text-center">Are you sure you want to do this?</div>
-                </div>
+                    <div class="modal-body">
+                        <div class="form-group text-center my-0">Are you sure you want to do this?</div>
+                    </div>
 
-                <div class="modal-footer">
-                    <button class="btn btn-sm text-capitalize" data-dismiss="modal" type="button">
-                        <img src="https://img.icons8.com/dusk/20/000000/delete-sign.png"/>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm" data-dismiss="modal" type="button">
+                            <img src="https://img.icons8.com/dusk/20/000000/delete-sign.png" />
 
-                        Close
-                    </button>
+                            Close
+                        </button>
 
-                    <button class="btn btn-sm text-capitalize" id="delete_comment_button" type="button">
-                        <img src="https://img.icons8.com/dusk/20/000000/delete-forever.png"/>
+                        <button class="btn btn-sm" id="delete_comment_button" type="button">
+                            <img src="https://img.icons8.com/dusk/20/000000/delete-forever.png" />
 
-                        Delete
-                    </button>
+                            Delete
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</main>
-<th:block th:replace="/fragments/script :: common_script"></th:block>
-<th:block th:replace="/fragments/script :: axios_script"></th:block>
-<th:block th:replace="/fragments/script :: comment_script"></th:block>
+    </main>
+    <th:block th:replace="/fragments/script :: common_script"></th:block>
+    <th:block th:replace="/fragments/script :: axios_script"></th:block>
+    <th:block th:replace="/fragments/script :: comment_script"></th:block>
 </body>
+
 </html>

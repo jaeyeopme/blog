@@ -1,102 +1,103 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta charset="UTF-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <th:block th:replace="/fragments/css :: common_css"></th:block>
     <th:block th:replace="/fragments/css :: simple_mde_css"></th:block>
     <title>write</title>
 </head>
+
 <body>
-<textarea id="content_form"></textarea>
+    <textarea id="content_form"></textarea>
 
-<div style="position: absolute; bottom: 0; right: 2%">
-    <a class="btn btn-sm text-capitalize" href="#" onclick="window.history.back()" role="button">
-        <img src="https://img.icons8.com/dusk/30/000000/circled-left.png"/>
+    <div style="position: absolute; bottom: 0; right: 2%">
+        <a class="btn btn-sm text-capitalize" href="#" onclick="window.history.back()" role="button">
+            <img src="https://img.icons8.com/dusk/30/000000/circled-left.png" />
 
-        <span class="align-middle"> Back </span>
-    </a>
+            <span class="align-middle"> Back </span>
+        </a>
 
-    <button class="btn btn-sm text-capitalize" data-target="#write_board_modal" data-toggle="modal" type="button">
-        <img src="https://img.icons8.com/dusk/30/000000/ok.png"/>
+        <button class="btn btn-sm text-capitalize" data-target="#write_board_modal" data-toggle="modal" type="button">
+            <img src="https://img.icons8.com/dusk/30/000000/ok.png" />
 
-        <span class="align-middle"> Save </span>
-    </button>
-</div>
+            <span class="align-middle"> Save </span>
+        </button>
+    </div>
 
-<div aria-hidden="true" aria-labelledby="write_board_modal" class="modal fade" id="write_board_modal" role="dialog"
-     tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Preview</h5>
+    <div aria-hidden="true" aria-labelledby="write_board_modal" class="modal fade" id="write_board_modal" role="dialog"
+        tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Preview</h5>
 
-                <button aria-label="Close" class="close" data-dismiss="modal" type="button">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
 
-            <div class="modal-body">
-                <div class="form-group text-center">
-                    <input accept="image/**" hidden id="photo_form" onchange="_add_board_photo()" type="file"/>
+                <div class="modal-body">
+                    <div class="form-group text-center">
+                        <input accept="image/**" hidden id="photo_form" onchange="_add_board_photo()" type="file" />
 
-                    <div id="before_upload">
-                        <label for="photo_form">
-                            <small class="btn-link" style="cursor: pointer"> upload </small>
-                        </label>
+                        <div id="before_upload">
+                            <label for="photo_form">
+                                <small class="btn-link" style="cursor: pointer"> upload </small>
+                            </label>
+                        </div>
+
+                        <div id="after_upload" style="display: none">
+                            <label for="photo_form">
+                                <small class="btn-link" style="cursor: pointer"> reupload </small>
+                            </label>
+
+                            ·
+
+                            <small class="btn-link" onclick="_delete_board_photo()" style="cursor: pointer"> remove
+                            </small>
+                        </div>
+
+                        <img alt="preview" id="preview"
+                            src="https://jaeyeop-blog-project.s3.ap-northeast-2.amazonaws.com/images/default_image.jpg"
+                            style="width: 350px; height: 200px; object-fit: cover" />
                     </div>
 
-                    <div id="after_upload" style="display: none">
-                        <label for="photo_form">
-                            <small class="btn-link" style="cursor: pointer"> reupload </small>
-                        </label>
+                    <div class="form-group">
+                        <label class="bmd-label-static" for="title_form">Title</label>
 
-                        ·
-
-                        <small class="btn-link" onclick="_delete_board_photo()" style="cursor: pointer"> remove </small>
+                        <input class="form-control" id="title_form" required type="text" />
                     </div>
 
-                    <img
-                            alt="preview"
-                            id="preview"
-                            src="https://jaeyeop-blog-project.s3.ap-northeast-2.amazonaws.com/images/default.jpg"
-                            style="width: 350px; height: 200px; object-fit: cover"
-                    />
+                    <div class="form-group">
+                        <label for="introduce_form">Introduce (max length 150)</label>
+
+                        <textarea class="form-control" id="introduce_form" maxlength="150" rows="3"
+                            style="resize: none"></textarea>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="bmd-label-static" for="title_form">Title</label>
+                <div class="modal-footer">
+                    <button class="btn btn-sm text-capitalize" data-dismiss="modal" type="button">
+                        <img src="https://img.icons8.com/dusk/30/000000/delete-sign.png" />
 
-                    <input class="form-control" id="title_form" required type="text"/>
+                        <span class="align-middle"> Close </span>
+                    </button>
+
+                    <button class="btn btn-sm text-capitalize" onclick="_write_board()" type="button">
+                        <img src="https://img.icons8.com/dusk/30/000000/ok.png" />
+
+                        <span class="align-middle"> Save </span>
+                    </button>
                 </div>
-
-                <div class="form-group">
-                    <label for="introduce_form">Introduce (max length 150)</label>
-
-                    <textarea class="form-control" id="introduce_form" maxlength="150" rows="3"
-                              style="resize: none"></textarea>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <button class="btn btn-sm text-capitalize" data-dismiss="modal" type="button">
-                    <img src="https://img.icons8.com/dusk/30/000000/delete-sign.png"/>
-
-                    <span class="align-middle"> Close </span>
-                </button>
-
-                <button class="btn btn-sm text-capitalize" onclick="_write_board()" type="button">
-                    <img src="https://img.icons8.com/dusk/30/000000/ok.png"/>
-
-                    <span class="align-middle"> Save </span>
-                </button>
             </div>
         </div>
     </div>
-</div>
-<th:block th:replace="/fragments/script :: common_script"></th:block>
-<th:block th:replace="/fragments/script :: simple_mde_script"></th:block>
-<th:block th:replace="/fragments/script :: axios_script"></th:block>
-<th:block th:replace="/fragments/script :: board_script"></th:block>
+    <th:block th:replace="/fragments/script :: common_script"></th:block>
+    <th:block th:replace="/fragments/script :: simple_mde_script"></th:block>
+    <th:block th:replace="/fragments/script :: axios_script"></th:block>
+    <th:block th:replace="/fragments/script :: board_script"></th:block>
 </body>
+
 </html>

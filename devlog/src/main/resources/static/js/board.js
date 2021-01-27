@@ -1,3 +1,5 @@
+'use strict';
+
 const content_form = new SimpleMDE({
     element: document.getElementById('content_form'),
     status: false,
@@ -25,7 +27,8 @@ content_form.toggleSideBySide();
 
 const photo_form = document.getElementById('photo_form');
 const preview = document.getElementById('preview');
-const defaultPhoto = 'https://jaeyeop-blog-project.s3.ap-northeast-2.amazonaws.com/images/default.jpg';
+const defaultImage =
+    'https://jaeyeop-blog-project.s3.ap-northeast-2.amazonaws.com/images/default_image.jpg';
 const before_upload = document.getElementById('before_upload');
 const after_upload = document.getElementById('after_upload');
 
@@ -37,7 +40,7 @@ function _add_board_photo() {
         before_upload.style.display = 'block';
         after_upload.style.display = 'none';
 
-        preview.src = defaultPhoto;
+        preview.src = defaultImage;
     } else {
         // after
         before_upload.style.display = 'none';
@@ -50,7 +53,7 @@ function _add_board_photo() {
 
 function _delete_board_photo() {
     photo_form.value = '';
-    preview.src = defaultPhoto;
+    preview.src = defaultImage;
     before_upload.style.display = 'block';
     after_upload.style.display = 'none';
 }
@@ -71,7 +74,7 @@ function _write_board() {
 
         axios
             .post(`/boards`, data)
-            .then(() => window.location.href = '/')
+            .then(() => (window.location.href = '/'))
             .catch((error) => alert(error.response.data.message));
     }
 }
@@ -101,7 +104,6 @@ function _edit_board(board_id) {
 function _delete_board(board_id) {
     axios
         .delete(`/boards/${board_id}`)
-        .then(() => window.location.href = '/')
+        .then(() => (window.location.href = '/'))
         .catch((error) => alert(error.response.data.message));
 }
-

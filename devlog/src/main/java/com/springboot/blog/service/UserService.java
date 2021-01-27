@@ -5,136 +5,127 @@ import com.springboot.blog.entity.UserRole;
 import com.springboot.blog.repository.UserRepository;
 import com.springboot.blog.util.AmazonService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
-public class
-UserService implements UserDetailsService {
+public class UserService implements OAuth2UserService {
 
+    private final String USER_NOT_FOUND_MESSAGE = "Not found user.";
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
     private final AmazonService amazonService;
+    private final String defaultPicture;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AmazonService amazonService) {
+    public UserService(UserRepository userRepository, AmazonService amazonService, @Value("${cloud.aws.s3.default-picture}") String defaultPicture) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
         this.amazonService = amazonService;
+        this.defaultPicture = defaultPicture;
     }
 
+//    /**
+//     * 회원 수정
+//     *
+//     * @param id
+//     * @param newUser
+//     * @param newPhoto
+//     * @return
+//     */
+//    @Transactional
+//    public User modify(Long id, User newUser, MultipartFile newPhoto) {
+//        return userRepository.findById(id)
+//                .map(findUser -> {
+//                    findUser.setName(newUser.getName());
+//                    findUser.setIntroduce(newUser.getIntroduce());
+//
+//                    if (newPhoto != null) {d
+//                        if (findUser.getPicture() != null) {
+//                            amazonService.deleteImage(findUser.getPicture());
+//                        }
+//                        findUser.setPicture(amazonService.putImage(newPhoto));
+//                    }
+//
+//                    return findUser;
+//                })
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND_MESSAGE));
+//    }
+//
+//    /**
+//     * 회원 삭제
+//     *
+//     * @param id
+//     * @return
+//     */
+//    @Transactional
+//    public void delete(Long id) {
+//        userRepository.findById(id)
+//                .map(findUser -> {
+//                    if (findUser.getPicture() != null) {
+//                        amazonService.deleteImage(findUser.getPicture());
+//                    }
+//
+//                    findUser.getBoards()
+//                            .stream()
+//                            .filter(board -> board.getImage() != null)
+//                            .forEach(board -> amazonService.deleteImage(board.getImage()));
+//
+//                    userRepository.deleteById(findUser.getId());
+//
+//                    return findUser;
+//                })
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND_MESSAGE));
+//    }
+
     /**
-     * 회원 가입
+     * OAuth2
+     * 회원 가입 & 회원 로그인
      *
-     * @param newUser
+     * @param userRequest
      * @return
+     * @throws OAuth2AuthenticationException
      */
     @Transactional
-    public User join(User newUser) {
-        User validUser = userValidation(newUser);
-
-        validUser.setRole(UserRole.ROLE_USER);
-        validUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
-
-        return userRepository.save(validUser);
-    }
-
-    /**
-     * 회원 조회
-     *
-     * @param id
-     * @return
-     */
-    @Transactional(readOnly = true)
-    public User findById(Long id) {
-        return userRepository.findById(id)
-                .map(findUser -> {
-                    findUser.setPassword(null);
-                    return findUser;
-                })
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found user."));
-    }
-
-    /**
-     * 회원 수정
-     *
-     * @param id
-     * @param newUser
-     * @param newPhoto
-     * @return
-     */
-    @Transactional
-    public User modify(Long id, User newUser, MultipartFile newPhoto) {
-        return userRepository.findById(id)
-                .map(findUser -> {
-                    findUser.setName(newUser.getName());
-                    findUser.setIntroduce(newUser.getIntroduce());
-
-                    if (newPhoto != null) {
-                        if (findUser.getPhoto() != null) {
-                            amazonService.deletePhoto(findUser.getPhoto());
-                        }
-                        findUser.setPhoto(amazonService.putPhoto(newPhoto));
-                    }
-
-                    return findUser;
-                })
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found user."));
-    }
-
-    /**
-     * 회원 삭제
-     *
-     * @param id
-     * @return
-     */
-    @Transactional
-    public void delete(Long id) {
-        userRepository.findById(id)
-                .map(findUser -> {
-                    if (findUser.getPhoto() != null) {
-                        amazonService.deletePhoto(findUser.getPhoto());
-                    }
-
-                    findUser.getBoards()
-                            .stream()
-                            .filter(board -> board.getPhoto() != null)
-                            .forEach(board -> amazonService.deletePhoto(board.getPhoto()));
-
-                    userRepository.deleteById(findUser.getId());
-
-                    return findUser;
-                })
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found user."));
-    }
-
-    /**
-     * 회원 유효성 검사
-     *
-     * @param newUser
-     * @return
-     */
-    @Transactional
-    public User userValidation(User newUser) {
-        userRepository.findByUsername(newUser.getUsername()).ifPresent(
-                findUser -> {
-                    throw new ResponseStatusException(HttpStatus.CONFLICT, String.format("Username <strong>%s</strong> is already taken.", findUser.getUsername()));
-                });
-
-        return newUser;
-    }
-
     @Override
-    public UserDetails loadUserByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Not found user."));
+    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+        OAuth2User oAuth2User = new DefaultOAuth2UserService().loadUser(userRequest);
+
+        String authId = oAuth2User.getName();
+        String registrationId = userRequest.getClientRegistration().getRegistrationId();
+
+        return userRepository.findByAuthIdAndRegistrationId(authId, registrationId).orElseGet(() -> {
+            String email = oAuth2User.getAttribute("email");
+            String name = oAuth2User.getAttribute("name");
+            String picture = null;
+
+            switch (registrationId) {
+                case "google":
+                    picture = oAuth2User.getAttribute("picture");
+                    break;
+                case "github":
+                    picture = oAuth2User.getAttribute("avatar_url");
+                    break;
+                case "facebook":
+                    picture = String.format("https://graph.facebook.com/%s/picture?type=normal", authId);
+                    break;
+            }
+
+            return userRepository.save(User.builder()
+                    .authId(authId)
+                    .registrationId(registrationId)
+                    .role(UserRole.ROLE_USER)
+                    .email(email)
+                    .name(name)
+                    .picture(picture)
+                    .build());
+        });
     }
 
 }
+
+

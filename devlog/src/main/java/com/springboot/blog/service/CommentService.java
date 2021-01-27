@@ -13,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class CommentService {
 
+    private final String NOT_FOUND_MESSAGE = "Not found %s.";
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
 
@@ -38,7 +39,7 @@ public class CommentService {
                     newComment.setBoard(findBoard);
 
                     return commentRepository.save(newComment);
-                }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found board."));
+                }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(NOT_FOUND_MESSAGE, "board")));
     }
 
     /**
@@ -56,7 +57,7 @@ public class CommentService {
 
                     return findComment;
                 })
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found comment."));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(NOT_FOUND_MESSAGE, "comment")));
     }
 
     /**
@@ -71,7 +72,7 @@ public class CommentService {
                     commentRepository.delete(findComment);
 
                     return findComment;
-                }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found comment."));
+                }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(NOT_FOUND_MESSAGE, "comment")));
     }
 
 }
