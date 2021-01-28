@@ -1,17 +1,14 @@
 'use strict';
 
-function _join_user() {
-    const username = document.getElementById('username_form').value;
-    const password = document.getElementById('password_form').value;
-    const name = document.getElementById('name_form').value;
+const email_form = document.getElementById('email_form')
+const auth = document.getElementsByClassName('auth');
 
+function _join_user() {
     axios
         .post('/users', {
-            username,
-            password,
-            name,
+            email: email_form.value
         })
-        .then(() => (window.location.href = '/login?join'))
+        .then(() => (window.location.href = '/'))
         .catch((error) => {
             document.getElementById('invalid_alert').style.display = 'block';
             document.getElementById('invalid_feedback').innerHTML =
@@ -19,4 +16,19 @@ function _join_user() {
         });
 }
 
-function _auth_user() {}
+function _login_user() {
+    axios
+        .post('/login', {
+            email: email_form.value
+        })
+        .then(() => (window.location.href = '/'))
+        .catch((error) => {
+            document.getElementById('invalid_alert').style.display = 'block';
+            document.getElementById('invalid_feedback').innerHTML =
+                error.response.data.message;
+        });
+}
+
+function _auth_toggle() {
+    Array.from(auth).forEach(element => element.toggleAttribute('hidden'))
+}

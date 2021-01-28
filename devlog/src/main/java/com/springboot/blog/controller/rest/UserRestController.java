@@ -21,11 +21,11 @@ public class UserRestController {
         this.userService = userService;
     }
 
-//    @PostMapping
-//    public ResponseEntity<String> join(@RequestBody User newUser) {
-//        userService.join(formValidation(newUser));
-//        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-//    }
+    @PostMapping
+    public ResponseEntity<String> userAuthentication(@RequestBody String email) {
+        userService.userAuthentication(email);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 
 //    @PutMapping(value = "/{id}")
 //    public ResponseEntity<String> modify(@PathVariable Long id, @RequestBody User newUser, @RequestPart MultipartFile newPhoto) {

@@ -18,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.UUID;
+
 @Service
 public class UserService implements OAuth2UserService {
 
@@ -48,8 +50,6 @@ public class UserService implements OAuth2UserService {
     @Transactional
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        mailService.sendMail("kj9772@naver.com", "text", "sub");
-
         OAuth2User oAuth2User = new DefaultOAuth2UserService().loadUser(userRequest);
 
         String authId = oAuth2User.getName();
@@ -83,6 +83,20 @@ public class UserService implements OAuth2UserService {
         });
     }
 
+    @Transactional
+    public User userAuthentication(String email) {
+
+        User findUser = userRepository.findByEmail(email).orElseGet(() -> {
+            String authId = String.valueOf(UUID.randomUUID());
+            mailService.sendMail(email, authId, "회원가입");
+            return userRepository.save(User.builder()
+                    .email(email)
+                    .authId(authId)
+                    .build());
+        });
+
+        return new User();
+    }
 
 //    @Transactional
 //    public void sendEmail(String email) {
@@ -97,10 +111,6 @@ public class UserService implements OAuth2UserService {
 //                        .build()));
 //    }
 
-//    @Transactional
-//    public User userAuthentication(String authId) {
-//
-//    }
 
 
     /**
