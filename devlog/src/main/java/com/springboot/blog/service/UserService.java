@@ -4,6 +4,7 @@ import com.springboot.blog.entity.Role;
 import com.springboot.blog.entity.User;
 import com.springboot.blog.repository.UserRepository;
 import com.springboot.blog.util.AmazonService;
+import com.springboot.blog.util.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -17,8 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.UUID;
-
 @Service
 public class UserService implements OAuth2UserService {
 
@@ -28,11 +27,14 @@ public class UserService implements OAuth2UserService {
     private final AmazonService amazonService;
     private final String defaultPicture;
 
+    private final MailService mailService;
+
     @Autowired
-    public UserService(UserRepository userRepository, AmazonService amazonService, @Value("${cloud.aws.s3.default-picture}") String defaultPicture) {
+    public UserService(UserRepository userRepository, AmazonService amazonService, @Value("${cloud.aws.s3.default-picture}") String defaultPicture, MailService mailService) {
         this.userRepository = userRepository;
         this.amazonService = amazonService;
         this.defaultPicture = defaultPicture;
+        this.mailService = mailService;
     }
 
     /**
@@ -46,6 +48,8 @@ public class UserService implements OAuth2UserService {
     @Transactional
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+        mailService.sendMail("kj9772@naver.com", "text", "sub");
+
         OAuth2User oAuth2User = new DefaultOAuth2UserService().loadUser(userRequest);
 
         String authId = oAuth2User.getName();
