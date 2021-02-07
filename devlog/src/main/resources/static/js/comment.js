@@ -4,7 +4,7 @@ function _write_comment(board_id) {
     const content = document.getElementById('write_comment_content_form').value;
 
     axios
-        .post(`/boards/${board_id}/comments`, {
+        .post(`/api/boards/${board_id}/comments`, {
             content,
         })
         .then(() => window.location.reload())
@@ -17,7 +17,7 @@ function _edit_comment(comment_id) {
     ).value;
 
     axios
-        .put(`/comments/${comment_id}`, {
+        .put(`/api/comments/${comment_id}`, {
             content,
         })
         .then(() => window.location.reload())
@@ -26,7 +26,7 @@ function _edit_comment(comment_id) {
 
 function _delete_comment(comment_id) {
     axios
-        .delete(`/comments/${comment_id}`)
+        .delete(`/api/comments/${comment_id}`)
         .then(() => window.location.reload())
         .catch((error) => alert(error.response.data.message));
 }

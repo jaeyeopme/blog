@@ -5,16 +5,16 @@
     <nav class="navbar sticky-top navbar-light" id="nav" style="background-color: #fafafa; box-shadow: none">
         <div class="container">
             <a class="navbar-brand" th:href="@{/}">
-                <img src="https://img.icons8.com/dusk/40/000000/box.png" />
+                <img src="https://img.icons8.com/dusk/40/000000/box.png"/>
 
                 <span class="align-middle"> Box </span>
             </a>
 
             <ul class="nav" sec:authorize="isAnonymous()">
                 <li class="nav-item mx-1">
-                    <button class="btn btn-sm text-capitalize" role="button" data-target="#auth_modal"
-                        data-toggle="modal">
-                        <img src="https://img.icons8.com/dusk/30/000000/login-rounded-right.png" />
+                    <button class="btn btn-sm text-capitalize" data-target="#auth_modal" data-toggle="modal"
+                            role="button">
+                        <img src="https://img.icons8.com/dusk/30/000000/login-rounded-right.png"/>
 
                         <span class="align-middle"> Sign in </span>
                     </button>
@@ -24,7 +24,7 @@
             <ul class="nav" sec:authorize="isAuthenticated()">
                 <li class="nav-item mx-1">
                     <a class="btn btn-sm text-capitalize" href="#" role="button" th:href="@{/write}">
-                        <img src="https://img.icons8.com/dusk/30/000000/pencil.png" />
+                        <img src="https://img.icons8.com/dusk/30/000000/pencil.png"/>
 
                         <span class="align-middle"> Write </span>
                     </a>
@@ -32,20 +32,21 @@
 
                 <li class="nav-item dropdown mx-1">
                     <button aria-expanded="false" aria-haspopup="true" class="btn btn-sm dropdown-toggle"
-                        data-toggle="dropdown" type="button">
-                        <img alt="profile photo" th:src="${#authentication.principal.picture}"
-                            style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover" />
+                            data-toggle="dropdown" type="button">
+                        <img alt="profile photo"
+                             style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover"
+                             th:src="${#authentication.principal.picture}"/>
                     </button>
 
                     <div class="dropdown-menu dropdown-menu-right" style="left: -127%">
                         <a class="dropdown-item px-2" th:href="@{/setting}">
-                            <img src="https://img.icons8.com/dusk/30/000000/gear.png" />
+                            <img src="https://img.icons8.com/dusk/30/000000/gear.png"/>
                             &nbsp;
                             <small> Setting </small>
                         </a>
 
                         <a class="dropdown-item px-2" th:href="@{/logout}">
-                            <img src="https://img.icons8.com/dusk/30/000000/logout-rounded-left.png" />
+                            <img src="https://img.icons8.com/dusk/30/000000/logout-rounded-left.png"/>
                             &nbsp;
                             <small> Sign out </small>
                         </a>

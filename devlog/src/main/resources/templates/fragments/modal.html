@@ -15,7 +15,7 @@
                     <div class="text-center">
                         <h2>
                             <a th:href="@{/}">
-                                <img src="https://img.icons8.com/dusk/40/000000/box.png" />
+                                <img src="https://img.icons8.com/dusk/40/000000/box.png"/>
                             </a>
                         </h2>
 
@@ -26,39 +26,42 @@
                     <div class="form-group">
                         <label class="bmd-label-static" for="email_form">Email</label>
 
-                        <input class="form-control" id="email_form" name="username" required type="email" />
+                        <input class="form-control" id="email_form" type="email" spellcheck="false" required/>
                     </div>
 
                     <div class="form-group">
                         <button class="btn btn-raised btn-primary btn-block text-capitalize auth" type="button">SIGN
-                            IN</button>
+                            IN
+                        </button>
 
-                        <button class="btn btn-raised btn-primary btn-block text-capitalize auth" type="button"
-                            hidden>CREATE ACCOUNT</button>
+                        <button class="btn btn-raised btn-primary btn-block text-capitalize auth" hidden
+                                onclick="_join_user()" type="button">CREATE ACCOUNT
+                        </button>
                     </div>
 
                     <div class="d-flex justify-content-around p-3">
                         <a class="btn bmd-btn-fab bmd-btn-fab-sm" role="button"
-                            th:href="@{/oauth2/authorization/github}">
-                            <img src="https://img.icons8.com/dusk/40/000000/github.png" />
+                           th:href="@{/oauth2/authorization/github}">
+                            <img src="https://img.icons8.com/dusk/40/000000/github.png"/>
                         </a>
 
                         <a class="btn bmd-btn-fab bmd-btn-fab-sm" role="button"
-                            th:href="@{/oauth2/authorization/google}">
-                            <img src="https://img.icons8.com/dusk/40/000000/google-logo.png" />
+                           th:href="@{/oauth2/authorization/google}">
+                            <img src="https://img.icons8.com/dusk/40/000000/google-logo.png"/>
                         </a>
 
                         <a class="btn bmd-btn-fab bmd-btn-fab-sm" role="button"
-                            th:href="@{/oauth2/authorization/facebook}">
-                            <img src="https://img.icons8.com/dusk/40/000000/facebook-new.png" />
+                           th:href="@{/oauth2/authorization/facebook}">
+                            <img src="https://img.icons8.com/dusk/40/000000/facebook-new.png"/>
                         </a>
                     </div>
                 </div>
 
                 <div class="modal-footer p-3">
-                    <small class="auth"> New to Box? <a href="#" role="button" onclick="_auth_toggle()">Create an
-                            account</a> </small>
-                    <small class="auth" hidden> Already on Box? <a href="#" role="button" onclick="_auth_toggle()">Sign in</a>
+                    <small class="auth"> New to Box? <a href="#" onclick="_auth_toggle()" role="button">Create an
+                        user</a> </small>
+                    <small class="auth" hidden> Already on Box? <a href="#" onclick="_auth_toggle()" role="button">Sign
+                        in</a>
                     </small>
                 </div>
             </div>
@@ -68,7 +71,7 @@
 
 <th:block th:fragment="write_board_modal">
     <div aria-hidden="true" aria-labelledby="write_board_modal" class="modal fade" id="write_board_modal" role="dialog"
-        tabindex="-1">
+         tabindex="-1">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -81,7 +84,7 @@
 
                 <div class="modal-body">
                     <div class="form-group text-center">
-                        <input accept="image/**" hidden id="photo_form" onchange="_add_board_photo()" type="file" />
+                        <input accept="image/**" hidden id="photo_form" onchange="_add_board_photo()" type="file"/>
 
                         <div id="before_upload">
                             <label for="photo_form">
@@ -101,33 +104,33 @@
                         </div>
 
                         <img alt="preview" id="preview"
-                            src="https://jaeyeop-blog-project.s3.ap-northeast-2.amazonaws.com/images/default_image.jpg"
-                            style="width: 350px; height: 200px; object-fit: cover" />
+                             src="https://jaeyeop-blog-project.s3.ap-northeast-2.amazonaws.com/images/default_image.jpg"
+                             style="width: 350px; height: 200px; object-fit: cover"/>
                     </div>
 
                     <div class="form-group">
                         <label class="bmd-label-static" for="title_form">Title</label>
 
-                        <input class="form-control" id="title_form" required type="text" />
+                        <input class="form-control" id="title_form" required type="text"/>
                     </div>
 
                     <div class="form-group">
                         <label for="introduce_form">Introduce (max length 150)</label>
 
                         <textarea class="form-control" id="introduce_form" maxlength="150" rows="3"
-                            style="resize: none"></textarea>
+                                  style="resize: none"></textarea>
                     </div>
                 </div>
 
                 <div class="modal-footer">
                     <button class="btn btn-sm text-capitalize" data-dismiss="modal" type="button">
-                        <img src="https://img.icons8.com/dusk/30/000000/delete-sign.png" />
+                        <img src="https://img.icons8.com/dusk/30/000000/delete-sign.png"/>
 
                         <span class="align-middle"> Close </span>
                     </button>
 
                     <button class="btn btn-sm text-capitalize" onclick="_write_board()" type="button">
-                        <img src="https://img.icons8.com/dusk/30/000000/ok.png" />
+                        <img src="https://img.icons8.com/dusk/30/000000/ok.png"/>
 
                         <span class="align-middle"> Save </span>
                     </button>
@@ -139,7 +142,7 @@
 
 <th:block th:fragment="edit_board_modal">
     <div aria-hidden="true" aria-labelledby="edit_board_modal" class="modal fade" id="edit_board_modal" role="dialog"
-        tabindex="-1">
+         tabindex="-1">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -152,7 +155,7 @@
 
                 <div class="modal-body">
                     <div class="form-group text-center">
-                        <input accept="image/**" hidden id="photo_form" onchange="_add_board_photo()" type="file" />
+                        <input accept="image/**" hidden id="photo_form" onchange="_add_board_photo()" type="file"/>
 
                         <div id="before_upload">
                             <label for="photo_form">
@@ -172,33 +175,33 @@
                         </div>
 
                         <img alt="preview" id="preview"
-                            src="https://jaeyeop-blog-project.s3.ap-northeast-2.amazonaws.com/images/default.jpg"
-                            style="width: 350px; height: 200px; object-fit: cover" th:src="${board.photo}" />
+                             src="https://jaeyeop-blog-project.s3.ap-northeast-2.amazonaws.com/images/default.jpg"
+                             style="width: 350px; height: 200px; object-fit: cover" th:src="${board.photo}"/>
                     </div>
 
                     <div class="form-group">
                         <label class="bmd-label-static" for="title_form">Title</label>
 
-                        <input class="form-control" id="title_form" required th:value="${board.title}" type="text" />
+                        <input class="form-control" id="title_form" required th:value="${board.title}" type="text"/>
                     </div>
 
                     <div class="form-group">
                         <label for="introduce_form">Introduce (max length 150)</label>
 
                         <textarea class="form-control" id="introduce_form" maxlength="150" rows="3" style="resize: none"
-                            th:text="${board.introduce}"></textarea>
+                                  th:text="${board.introduce}"></textarea>
                     </div>
                 </div>
 
                 <div class="modal-footer">
                     <button class="btn btn-sm text-capitalize" data-dismiss="modal" type="button">
-                        <img src="https://img.icons8.com/dusk/30/000000/delete-sign.png" />
+                        <img src="https://img.icons8.com/dusk/30/000000/delete-sign.png"/>
 
                         <span class="align-middle"> Close </span>
                     </button>
 
                     <button class="btn btn-sm text-capitalize" th:onclick="|_edit_board(${board.id})|" type="button">
-                        <img src="https://img.icons8.com/dusk/30/000000/ok.png" />
+                        <img src="https://img.icons8.com/dusk/30/000000/ok.png"/>
 
                         <span class="align-middle"> Save </span>
                     </button>
@@ -210,7 +213,7 @@
 
 <th:block th:fragment="delete_board_modal">
     <div aria-hidden="true" aria-labelledby="delete_board_modal" class="modal fade" id="delete_board_modal"
-        role="dialog" tabindex="-1">
+         role="dialog" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -227,13 +230,13 @@
 
                 <div class="modal-footer">
                     <button class="btn btn-sm text-capitalize" data-dismiss="modal" type="button">
-                        <img src="https://img.icons8.com/dusk/20/000000/delete-sign.png" />
+                        <img src="https://img.icons8.com/dusk/20/000000/delete-sign.png"/>
 
                         <span class="align-middle"> Close </span>
                     </button>
 
                     <button class="btn btn-sm text-capitalize" th:onclick="|_delete_board(${board.id})|" type="button">
-                        <img src="https://img.icons8.com/dusk/20/000000/delete-forever.png" />
+                        <img src="https://img.icons8.com/dusk/20/000000/delete-forever.png"/>
 
                         <span class="align-middle"> Delete </span>
                     </button>
@@ -245,7 +248,7 @@
 
 <th:block th:fragment="delete_comment_modal">
     <div aria-hidden="true" aria-labelledby="delete_comment_modal" class="modal fade" id="delete_comment_modal"
-        role="dialog" tabindex="-1">
+         role="dialog" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -262,13 +265,13 @@
 
                 <div class="modal-footer">
                     <button class="btn btn-sm" data-dismiss="modal" type="button">
-                        <img src="https://img.icons8.com/dusk/20/000000/delete-sign.png" />
+                        <img src="https://img.icons8.com/dusk/20/000000/delete-sign.png"/>
 
                         Close
                     </button>
 
                     <button class="btn btn-sm" id="delete_comment_button" type="button">
-                        <img src="https://img.icons8.com/dusk/20/000000/delete-forever.png" />
+                        <img src="https://img.icons8.com/dusk/20/000000/delete-forever.png"/>
 
                         Delete
                     </button>

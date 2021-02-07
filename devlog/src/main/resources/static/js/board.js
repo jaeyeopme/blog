@@ -73,7 +73,7 @@ function _write_board() {
         data.append('newPhoto', newPhoto);
 
         axios
-            .post(`/boards`, data)
+            .post(`/api/boards`, data)
             .then(() => (window.location.href = '/'))
             .catch((error) => alert(error.response.data.message));
     }
@@ -95,7 +95,7 @@ function _edit_board(board_id) {
         data.append('newPhoto', newPhoto);
 
         axios
-            .put(`/boards/${board_id}`, data)
+            .put(`/api/boards/${board_id}`, data)
             .then(() => (window.location.href = `/board/${board_id}`))
             .catch((error) => alert(error.response.data.message));
     }

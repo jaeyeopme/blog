@@ -3,95 +3,96 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <th:block th:replace="/fragments/css :: common_css"></th:block>
     <title>settings</title>
 </head>
 
 <body>
-    <th:block th:replace="/fragments/nav :: nav"></th:block>
-    <main class="d-flex align-items-center flex-column">
-        <div style="width: 500px; margin-top: 100px">
-            <div class="card">
-                <div class="card-body px-5">
-                    <div class="card-title text-center">
+<th:block th:replace="/fragments/nav :: nav"></th:block>
+<main class="d-flex align-items-center flex-column">
+    <div style="width: 500px; margin-top: 100px">
+        <div class="card">
+            <div class="card-body px-5">
+                <div class="card-title text-center">
 
-                        <div class="media align-items-center my-5">
-                            <img art="profile picture" class="align-self-start" src="/images/1111.gif"
-                                th:src="${#authentication.principal.picture}"
-                                style="width: 128px; height: 128px; border-radius: 50%; object-fit: cover" />
+                    <div class="media align-items-center my-5">
+                        <img art="profile picture" class="align-self-start" src="/images/1111.gif"
+                             style="width: 128px; height: 128px; border-radius: 50%; object-fit: cover"
+                             th:src="${#authentication.principal.picture}"/>
 
-                            <div class="mx-4 media-body">
-                                <h6>
-                                    <a href="#" th:text="${#authentication.principal.name}"> Username </a>
-                                </h6>
+                        <div class="mx-4 media-body">
+                            <h6>
+                                <a href="#" th:text="${#authentication.principal.name}"> Username </a>
+                            </h6>
 
-                                <div class="font-weight-light">Introduce</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card-text">
-                        <div class="form-group">
-                            <label class="bmd-label-static" for="username_form">Username</label>
-
-                            <input class="form-control" id="username_form" name="username" required type="text" />
-                        </div>
-
-                        <div class="form-group">
-                            <button class="btn btn-raised btn-primary btn-block" type="submit">sign in</button>
-                        </div>
-
-                        <div class="d-flex justify-content-around p-3">
-                            <button class="btn bmd-btn-fab bmd-btn-fab-sm" type="button">
-                                <img src="https://img.icons8.com/dusk/40/000000/github.png" />
-                            </button>
-
-                            <button class="btn bmd-btn-fab bmd-btn-fab-sm" type="button">
-                                <img src="https://img.icons8.com/dusk/40/000000/google-logo.png" />
-                            </button>
-
-                            <button class="btn bmd-btn-fab bmd-btn-fab-sm" type="button">
-                                <img src="https://img.icons8.com/dusk/40/000000/facebook-new.png" />
-                            </button>
+                            <div class="font-weight-light">Introduce</div>
                         </div>
                     </div>
                 </div>
-                <div class="card-text text-left p-3">
-                    <small><a class="text-danger" href="#" role="button" data-target="#delete_account_modal"
-                            data-toggle="modal">Delete your
-                            account</a></small>
-                </div>
-            </div>
-        </div>
 
+                <div class="card-text">
+                    <div class="form-group">
+                        <label class="bmd-label-static" for="username_form">Username</label>
 
-        <div aria-hidden="true" aria-labelledby="delete_account_modal" class="modal fade" id="delete_account_modal"
-            role="dialog" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Delete account</h5>
+                        <input class="form-control" id="username_form" name="username" required type="text"/>
+                    </div>
 
-                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
-                            <span aria-hidden="true">&times;</span>
+                    <div class="form-group">
+                        <button class="btn btn-raised btn-primary btn-block" type="submit">sign in</button>
+                    </div>
+
+                    <div class="d-flex justify-content-around p-3">
+                        <button class="btn bmd-btn-fab bmd-btn-fab-sm" type="button">
+                            <img src="https://img.icons8.com/dusk/40/000000/github.png"/>
+                        </button>
+
+                        <button class="btn bmd-btn-fab bmd-btn-fab-sm" type="button">
+                            <img src="https://img.icons8.com/dusk/40/000000/google-logo.png"/>
+                        </button>
+
+                        <button class="btn bmd-btn-fab bmd-btn-fab-sm" type="button">
+                            <img src="https://img.icons8.com/dusk/40/000000/facebook-new.png"/>
                         </button>
                     </div>
+                </div>
+            </div>
+            <div class="card-text text-left p-3">
+                <small><a class="text-danger" data-target="#delete_account_modal" data-toggle="modal" href="#"
+                          role="button">Delete your
+                    user</a></small>
+            </div>
+        </div>
+    </div>
 
-                    <div class="modal-body">
-                        <div class="form-group text-center m-0">Are you sure you want to do this?</div>
-                    </div>
 
-                    <div class="modal-footer justify-content-center p-3">
-                        <button class="btn btn-raised btn-danger btn-block" id="delete_account_button"
-                            type="button">Delete</button>
-                    </div>
+    <div aria-hidden="true" aria-labelledby="delete_account_modal" class="modal fade" id="delete_account_modal"
+         role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete user</h5>
+
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group text-center m-0">Are you sure you want to do this?</div>
+                </div>
+
+                <div class="modal-footer justify-content-center p-3">
+                    <button class="btn btn-raised btn-danger btn-block" id="delete_account_button"
+                            type="button">Delete
+                    </button>
                 </div>
             </div>
         </div>
-        </div>
-    </main>
-    <th:block th:replace="/fragments/script :: common_script"></th:block>
+    </div>
+    </div>
+</main>
+<th:block th:replace="/fragments/script :: common_script"></th:block>
 </body>
 
 </html>

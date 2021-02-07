@@ -1,6 +1,7 @@
 package com.springboot.blog.controller;
 
-import com.springboot.blog.service.BoardService;
+import com.springboot.blog.service.BoardServiceImpl;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -12,21 +13,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Controller
 public class BoardController {
 
-    private final BoardService boardService;
+    private final BoardServiceImpl boardServiceImpl;
 
-    public BoardController(BoardService boardService) {
-        this.boardService = boardService;
+    public BoardController(BoardServiceImpl boardServiceImpl) {
+        this.boardServiceImpl = boardServiceImpl;
     }
 
     @GetMapping("/")
     public String index(Model model, @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        model.addAttribute("boards", boardService.findAll(pageable));
+        model.addAttribute("boards", boardServiceImpl.findAll(pageable));
         return "index";
     }
 
+    @Cacheable(value = "boards", key = "#id")
     @GetMapping("/board/{id}")
     public String boardForm(@PathVariable Long id, Model model) {
-        model.addAttribute("board", boardService.findById(id));
+        model.addAttribute("board", boardServiceImpl.findById(id));
         return "board/board";
     }
 
@@ -37,7 +39,7 @@ public class BoardController {
 
     @GetMapping("/edit/{id}")
     public String editForm(@PathVariable Long id, Model model) {
-        model.addAttribute("board", boardService.findById(id));
+        model.addAttribute("board", boardServiceImpl.findById(id));
         return "board/edit";
     }
 

@@ -2,34 +2,34 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <th:block th:replace="/fragments/css :: common_css"></th:block>
     <th:block th:replace="/fragments/css :: simple_mde_css"></th:block>
     <title>write</title>
 </head>
 
 <body>
-    <textarea id="content_form"></textarea>
+<textarea id="content_form"></textarea>
 
-    <div style="position: absolute; bottom: 0; right: 2%">
-        <a class="btn btn-sm text-capitalize" href="#" onclick="window.history.back()" role="button">
-            <img src="https://img.icons8.com/dusk/30/000000/circled-left.png" />
+<div style="position: absolute; bottom: 0; right: 2%">
+    <a class="btn btn-sm text-capitalize" href="#" onclick="window.history.back()" role="button">
+        <img src="https://img.icons8.com/dusk/30/000000/circled-left.png"/>
 
-            <span class="align-middle"> Back </span>
-        </a>
+        <span class="align-middle"> Back </span>
+    </a>
 
-        <button class="btn btn-sm text-capitalize" data-target="#write_board_modal" data-toggle="modal" type="button">
-            <img src="https://img.icons8.com/dusk/30/000000/ok.png" />
+    <button class="btn btn-sm text-capitalize" data-target="#write_board_modal" data-toggle="modal" type="button">
+        <img src="https://img.icons8.com/dusk/30/000000/ok.png"/>
 
-            <span class="align-middle"> Save </span>
-        </button>
-    </div>
-    <th:block th:replace="/fragments/modal :: write_board_modal"></th:block>
-    <th:block th:replace="/fragments/script :: common_script"></th:block>
-    <th:block th:replace="/fragments/script :: simple_mde_script"></th:block>
-    <th:block th:replace="/fragments/script :: axios_script"></th:block>
-    <th:block th:replace="/fragments/script :: board_script"></th:block>
+        <span class="align-middle"> Save </span>
+    </button>
+</div>
+<th:block th:replace="/fragments/modal :: write_board_modal"></th:block>
+<th:block th:replace="/fragments/script :: common_script"></th:block>
+<th:block th:replace="/fragments/script :: simple_mde_script"></th:block>
+<th:block th:replace="/fragments/script :: axios_script"></th:block>
+<th:block th:replace="/fragments/script :: board_script"></th:block>
 </body>
 
 </html>

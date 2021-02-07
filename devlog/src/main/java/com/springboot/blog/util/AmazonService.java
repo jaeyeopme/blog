@@ -26,18 +26,17 @@ public class AmazonService {
         this.amazonS3 = amazonS3;
     }
 
-    public String putImage(MultipartFile newImage) {
+    public String putImage(MultipartFile image, String imageName) {
         try {
             ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentType(newImage.getContentType());
-            metadata.setContentLength(newImage.getSize());
+            metadata.setContentType(image.getContentType());
+            metadata.setContentLength(image.getSize());
 
-            String newPhotoName = String.format("images/%s-%s", UUID.randomUUID(), newImage.getOriginalFilename());
-            amazonS3.putObject(new PutObjectRequest(blog, newPhotoName, newImage.getInputStream(), metadata));
+            amazonS3.putObject(new PutObjectRequest(blog, imageName, image.getInputStream(), metadata));
 
-            return String.format("%s%s", url, newPhotoName);
+            return String.format("%s%s", url, imageName);
         } catch (Exception e) {
-            throw new AmazonS3Exception("Image save error");
+            throw new AmazonS3Exception("Image save error.");
         }
     }
 
@@ -45,7 +44,7 @@ public class AmazonService {
         try {
             amazonS3.deleteObject(new DeleteObjectRequest(blog, imageName));
         } catch (Exception e) {
-            throw new AmazonS3Exception("Image remove error.");
+            throw new AmazonS3Exception("Image delete error.");
         }
     }
 

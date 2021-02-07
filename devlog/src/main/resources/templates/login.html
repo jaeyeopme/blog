@@ -2,82 +2,82 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <th:block th:replace="/fragments/css :: common_css"></th:block>
     <title>login</title>
 </head>
 
 <body>
-    <main class="d-flex align-items-center flex-column">
-        <div style="width: 400px; margin-top: 100px">
-            <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${param.error != null}">
-                <small>Incorrect username or password.</small>
+<main class="d-flex align-items-center flex-column">
+    <div style="width: 400px; margin-top: 100px">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${param.error != null}">
+            <small>Incorrect username or password.</small>
 
-                <button aria-label="Close" class="close" data-dismiss="alert" type="button">&times;</button>
-            </div>
+            <button aria-label="Close" class="close" data-dismiss="alert" type="button">&times;</button>
+        </div>
 
-            <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${param.join != null}">
-                <small>Sign up is complete.</small>
+        <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${param.join != null}">
+            <small>Sign up is complete.</small>
 
-                <button aria-label="Close" class="close" data-dismiss="alert" type="button">&times;</button>
-            </div>
+            <button aria-label="Close" class="close" data-dismiss="alert" type="button">&times;</button>
+        </div>
 
-            <form method="post" th:action="@{/login}">
-                <div class="card">
-                    <div class="card-body px-5">
-                        <div class="card-title text-center">
-                            <h2 style="margin-bottom: 20px">
-                                <a th:href="@{/}">
-                                    <img src="https://img.icons8.com/dusk/40/000000/box.png" />
-                                </a>
-                            </h2>
+        <form method="post" th:action="@{/login}">
+            <div class="card">
+                <div class="card-body px-5">
+                    <div class="card-title text-center">
+                        <h2 style="margin-bottom: 20px">
+                            <a th:href="@{/}">
+                                <img src="https://img.icons8.com/dusk/40/000000/box.png"/>
+                            </a>
+                        </h2>
 
-                            <h5>Sign in to Box</h5>
-                        </div>
-
-                        <div class="card-text">
-                            <div class="form-group">
-                                <label class="bmd-label-static" for="username_form">Username</label>
-
-                                <input class="form-control" id="username_form" name="username" required type="text" />
-                            </div>
-
-                            <div class="form-group">
-                                <label class="bmd-label-static" for="password_form">Password</label>
-
-                                <input class="form-control" id="password_form" name="password" required
-                                    type="password" />
-                            </div>
-
-                            <div class="form-group">
-                                <button class="btn btn-raised btn-primary btn-block" type="submit">SIGN IN</button>
-                            </div>
-
-                            <div class="d-flex justify-content-around p-3">
-                                <button class="btn bmd-btn-fab bmd-btn-fab-sm" type="button">
-                                    <img src="https://img.icons8.com/dusk/40/000000/github.png" />
-                                </button>
-
-                                <button class="btn bmd-btn-fab bmd-btn-fab-sm" type="button">
-                                    <img src="https://img.icons8.com/dusk/40/000000/google-logo.png" />
-                                </button>
-
-                                <button class="btn bmd-btn-fab bmd-btn-fab-sm" type="button">
-                                    <img src="https://img.icons8.com/dusk/40/000000/facebook-new.png" />
-                                </button>
-                            </div>
-                        </div>
+                        <h5>Sign in to Box</h5>
                     </div>
 
-                    <div class="card-text text-right p-3">
-                        <small> New to Box? <a th:href="@{/join}">Create an account.</a> </small>
+                    <div class="card-text">
+                        <div class="form-group">
+                            <label class="bmd-label-static" for="username_form">Username</label>
+
+                            <input class="form-control" id="username_form" name="username" required type="text"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="bmd-label-static" for="password_form">Password</label>
+
+                            <input class="form-control" id="password_form" name="password" required
+                                   type="password"/>
+                        </div>
+
+                        <div class="form-group">
+                            <button class="btn btn-raised btn-primary btn-block" type="submit">SIGN IN</button>
+                        </div>
+
+                        <div class="d-flex justify-content-around p-3">
+                            <button class="btn bmd-btn-fab bmd-btn-fab-sm" type="button">
+                                <img src="https://img.icons8.com/dusk/40/000000/github.png"/>
+                            </button>
+
+                            <button class="btn bmd-btn-fab bmd-btn-fab-sm" type="button">
+                                <img src="https://img.icons8.com/dusk/40/000000/google-logo.png"/>
+                            </button>
+
+                            <button class="btn bmd-btn-fab bmd-btn-fab-sm" type="button">
+                                <img src="https://img.icons8.com/dusk/40/000000/facebook-new.png"/>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </form>
-        </div>
-    </main>
-    <th:block th:replace="/fragments/script :: common_script"></th:block>
+
+                <div class="card-text text-right p-3">
+                    <small> New to Box? <a th:href="@{/join}">Create an user.</a> </small>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+<th:block th:replace="/fragments/script :: common_script"></th:block>
 </body>
 
 </html>

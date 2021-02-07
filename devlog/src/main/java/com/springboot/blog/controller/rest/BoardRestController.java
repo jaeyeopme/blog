@@ -1,8 +1,8 @@
 package com.springboot.blog.controller.rest;
 
-import com.springboot.blog.entity.Board;
 import com.springboot.blog.entity.User;
-import com.springboot.blog.service.BoardService;
+import com.springboot.blog.entity.Board;
+import com.springboot.blog.service.BoardServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,32 +11,32 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-@RequestMapping(value = "/boards")
+@RequestMapping(value = "/api/boards")
 @RestController
 public class BoardRestController {
 
-    private final BoardService boardService;
+    private final BoardServiceImpl boardServiceImpl;
 
     @Autowired
-    public BoardRestController(BoardService boardService) {
-        this.boardService = boardService;
+    public BoardRestController(BoardServiceImpl boardServiceImpl) {
+        this.boardServiceImpl = boardServiceImpl;
     }
 
     @PostMapping
     public ResponseEntity<String> write(@AuthenticationPrincipal User user, @ModelAttribute Board newBoard, @RequestPart(required = false) MultipartFile newPhoto) {
-        boardService.write(user, formValidation(newBoard), newPhoto);
+        boardServiceImpl.write(user, formValidation(newBoard), newPhoto);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<String> edit(@PathVariable Long id, @ModelAttribute Board newBoard, @RequestPart(required = false) MultipartFile newPhoto) {
-        boardService.edit(id, newBoard, newPhoto);
+        boardServiceImpl.edit(id, newBoard, newPhoto);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
-        boardService.delete(id);
+        boardServiceImpl.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
