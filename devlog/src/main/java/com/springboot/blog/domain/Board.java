@@ -1,4 +1,4 @@
-package com.springboot.blog.entity;
+package com.springboot.blog.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

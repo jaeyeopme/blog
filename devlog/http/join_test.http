@@ -1,6 +1,6 @@
 ### Send POST request with Token
 
-POST http://localhost:8080/api/users/register
+POST http://localhost:8080/join
 Content-Type: application/json
 Accept: application/json
 
@@ -10,4 +10,4 @@ Accept: application/json
 
 ### Send GET request with Token
 
-GET http://localhost:8080/api/users/register/confirm?token=@
+GET http://localhost:8080/join/confirm?token=7b99e317-f512-43d8-bf78-156cb62673d6

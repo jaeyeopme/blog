@@ -23,7 +23,7 @@
                     2020/12/04 </span>
         </div>
 
-        <div sec:authorize="isAuthenticated()" th:if="${board.user.name} == ${#authentication.principal.name}">
+        <div sec:authorize="isAuthenticated()" th:if="${board.user.name} == ${#authentication.customUserDetails.name}">
             <a class="btn btn-sm text-capitalize" href="#" role="button" th:href="@{|/edit/${board.id}|}">
                 <img src="https://img.icons8.com/dusk/20/000000/edit.png"/>
 
@@ -104,7 +104,7 @@
                 </div>
             </div>
 
-            <div sec:authorize="isAuthenticated()" th:if="${comment.user.id} == ${#authentication.principal.id}">
+            <div sec:authorize="isAuthenticated()" th:if="${comment.user.id} == ${#authentication.customUserDetails.id}">
                 <div th:class="|edit_comment_${comment.id}|">
                     <button class="btn btn-sm text-capitalize"
                             th:onclick="|_show_edit_comment_buttons(${comment.id})|" type="button">

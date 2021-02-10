@@ -1,7 +1,7 @@
 package com.springboot.blog.service;
 
-import com.springboot.blog.entity.User;
-import com.springboot.blog.entity.Comment;
+import com.springboot.blog.domain.Comment;
+import com.springboot.blog.domain.User;
 
 public interface CommentService {
 

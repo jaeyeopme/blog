@@ -1,9 +1,8 @@
-package com.springboot.blog.controller.rest;
+package com.springboot.blog.rest;
 
-import com.springboot.blog.entity.Comment;
-import com.springboot.blog.entity.User;
+import com.springboot.blog.domain.Comment;
+import com.springboot.blog.domain.User;
 import com.springboot.blog.service.CommentServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,7 +13,6 @@ public class CommentRestController {
 
     private final CommentServiceImpl commentServiceImpl;
 
-    @Autowired
     public CommentRestController(CommentServiceImpl commentServiceImpl) {
         this.commentServiceImpl = commentServiceImpl;
     }

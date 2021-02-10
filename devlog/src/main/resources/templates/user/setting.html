@@ -19,11 +19,11 @@
                     <div class="media align-items-center my-5">
                         <img art="profile picture" class="align-self-start" src="/images/1111.gif"
                              style="width: 128px; height: 128px; border-radius: 50%; object-fit: cover"
-                             th:src="${#authentication.principal.picture}"/>
+                             th:src="${#authentication.customUserDetails.picture}"/>
 
                         <div class="mx-4 media-body">
                             <h6>
-                                <a href="#" th:text="${#authentication.principal.name}"> Username </a>
+                                <a href="#" th:text="${#authentication.customUserDetails.name}"> Username </a>
                             </h6>
 
                             <div class="font-weight-light">Introduce</div>

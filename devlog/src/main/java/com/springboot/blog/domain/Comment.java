@@ -1,38 +1,29 @@
-package com.springboot.blog.entity;
+package com.springboot.blog.domain;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
-@Builder
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class User {
+public class Comment {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
 
-    @Enumerated(EnumType.STRING)
+    @Lob
     @Column(nullable = false)
-    private Role role;
-
-    @Column(unique = true, nullable = false)
-    private String email;
-
-    @Column(nullable = false)
-    private String picture;
-
-    private String introduce;
+    private String content;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -40,7 +31,12 @@ public class User {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<Board> boards;
+    @ManyToOne
+    @JoinColumn(name = "boardId")
+    private Board board;
+
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    private User user;
 
 }

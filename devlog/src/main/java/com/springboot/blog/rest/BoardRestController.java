@@ -1,9 +1,8 @@
-package com.springboot.blog.controller.rest;
+package com.springboot.blog.rest;
 
-import com.springboot.blog.entity.User;
-import com.springboot.blog.entity.Board;
+import com.springboot.blog.domain.Board;
+import com.springboot.blog.domain.User;
 import com.springboot.blog.service.BoardServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,14 +16,13 @@ public class BoardRestController {
 
     private final BoardServiceImpl boardServiceImpl;
 
-    @Autowired
     public BoardRestController(BoardServiceImpl boardServiceImpl) {
         this.boardServiceImpl = boardServiceImpl;
     }
 
-    @PostMapping
-    public ResponseEntity<String> write(@AuthenticationPrincipal User user, @ModelAttribute Board newBoard, @RequestPart(required = false) MultipartFile newPhoto) {
-        boardServiceImpl.write(user, formValidation(newBoard), newPhoto);
+    @PostMapping(value = "{userId}")
+    public ResponseEntity<String> write(@PathVariable Long userId, @ModelAttribute Board newBoard, @RequestPart(required = false) MultipartFile newPhoto) {
+        boardServiceImpl.write(userId, formValidation(newBoard), newPhoto);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

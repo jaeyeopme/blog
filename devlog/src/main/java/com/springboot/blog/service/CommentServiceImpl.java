@@ -1,7 +1,7 @@
 package com.springboot.blog.service;
 
-import com.springboot.blog.entity.User;
-import com.springboot.blog.entity.Comment;
+import com.springboot.blog.domain.Comment;
+import com.springboot.blog.domain.User;
 import com.springboot.blog.repository.BoardRepository;
 import com.springboot.blog.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;

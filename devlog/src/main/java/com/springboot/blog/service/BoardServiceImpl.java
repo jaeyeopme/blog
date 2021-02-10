@@ -1,7 +1,7 @@
 package com.springboot.blog.service;
 
-import com.springboot.blog.entity.Board;
-import com.springboot.blog.entity.User;
+import com.springboot.blog.domain.Board;
+import com.springboot.blog.domain.User;
 import com.springboot.blog.repository.BoardRepository;
 import com.springboot.blog.repository.UserRepository;
 import com.springboot.blog.util.AmazonService;
@@ -31,17 +31,10 @@ public class BoardServiceImpl implements BoardService {
         this.amazonService = amazonService;
     }
 
-    /**
-     * 게시글 작성
-     *
-     * @param user
-     * @param newBoard
-     * @param newImage
-     */
     @Transactional
     @Override
-    public void write(User user, Board newBoard, MultipartFile newImage) {
-        userRepository.findById(user.getId())
+    public void write(Long userId, Board newBoard, MultipartFile newImage) {
+        userRepository.findById(userId)
                 .map(findUser -> {
                     newBoard.setUser(findUser);
 
