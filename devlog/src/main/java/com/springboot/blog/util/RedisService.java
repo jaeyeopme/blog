@@ -1,10 +1,12 @@
 package com.springboot.blog.util;
 
+import io.lettuce.core.RedisException;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.time.Duration;
-import java.util.Optional;
+import static com.springboot.blog.config.SecurityConfig.INVALID_TOKEN_MESSAGE;
 
 @Service
 public class RedisService {
@@ -15,16 +17,23 @@ public class RedisService {
         this.stringRedisTemplate = stringRedisTemplate;
     }
 
-    public Optional<String> getData(String key) {
-        return Optional.ofNullable(stringRedisTemplate.opsForValue().get(key));
+    public String getEmailFromToken(String token) {
+        try {
+            String email = stringRedisTemplate.opsForValue().get(token);
+            deleteToken(token);
+
+            return email;
+        } catch (RedisException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, INVALID_TOKEN_MESSAGE);
+        }
     }
 
-    public void setData(String key, String value, Long duration) {
-        stringRedisTemplate.opsForValue().set(key, value, Duration.ofMinutes(duration));
+    public void setToken(String token, String email, Long expirationTimeMinutes) {
+        stringRedisTemplate.opsForValue().set(token, email, expirationTimeMinutes);
     }
 
-    public void deleteData(String key) {
-        stringRedisTemplate.delete(key);
+    public void deleteToken(String token) {
+        stringRedisTemplate.delete(token);
     }
 
 }

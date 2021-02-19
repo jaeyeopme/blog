@@ -1,15 +1,13 @@
 package com.springboot.blog.security;
 
-import com.springboot.blog.domain.User;
-
 public interface AuthenticationService {
 
-    void join(String email);
+    String sendSignupToken(String validEmail);
 
-    void login(String email);
+    String sendLoginToken(String validEmail);
 
-    User joinConfirmation(String email);
+    void signup(String token);
 
-    User loginConfirmation(String email);
+    String login(String token);
 
 }

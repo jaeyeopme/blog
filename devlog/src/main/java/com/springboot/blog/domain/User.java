@@ -8,7 +8,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -22,7 +21,7 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class User implements UserDetails {
+public class User {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -36,7 +35,10 @@ public class User implements UserDetails {
     private String email;
 
     @Column(nullable = false)
-    private String picture;
+    private String name;
+
+    @Column(nullable = false)
+    private String pictureUrl;
 
     private String introduce;
 
@@ -49,38 +51,8 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Board> boards;
 
-    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Stream.of(this.getRole()).map(role -> new SimpleGrantedAuthority(String.valueOf(role))).collect(Collectors.toList());
+        return Stream.of(this.role).map(role -> new SimpleGrantedAuthority(String.valueOf(role))).collect(Collectors.toList());
     }
 
-    @Override
-    public String getPassword() {
-        return null;
-    }
-
-    @Override
-    public String getUsername() {
-        return this.email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 }

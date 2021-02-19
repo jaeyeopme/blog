@@ -1,7 +1,6 @@
 package com.springboot.blog.controller;
 
 import com.springboot.blog.service.BoardServiceImpl;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -25,7 +24,6 @@ public class BoardController {
         return "index";
     }
 
-    @Cacheable(value = "boards", key = "#id")
     @GetMapping("/board/{id}")
     public String boardForm(@PathVariable Long id, Model model) {
         model.addAttribute("board", boardServiceImpl.findById(id));

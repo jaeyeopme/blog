@@ -9,41 +9,48 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.UUID;
+
 @Service
 public class AmazonService {
 
     private final AmazonS3 amazonS3;
 
-    @Value("${cloud.aws.s3.blog}")
-    private String blog;
+    private final String blog;
 
-    @Value("${cloud.aws.s3.url}")
-    private String url;
-
-    public AmazonService(AmazonS3 amazonS3) {
+    public AmazonService(AmazonS3 amazonS3,
+                         @Value("${cloud.aws.s3.blog}") String blog) {
         this.amazonS3 = amazonS3;
+        this.blog = blog;
     }
 
-    public String putImage(MultipartFile image, String imageName) {
+    public String saveImage(MultipartFile newImage) {
+        String newImageName = String.format("images/%s-%s", UUID.randomUUID(), newImage.getOriginalFilename());
+
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentType(newImage.getContentType());
+        metadata.setContentLength(newImage.getSize());
+
         try {
-            ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentType(image.getContentType());
-            metadata.setContentLength(image.getSize());
-
-            amazonS3.putObject(new PutObjectRequest(blog, imageName, image.getInputStream(), metadata));
-
-            return String.format("%s%s", url, imageName);
+            amazonS3.putObject(new PutObjectRequest(blog, newImageName, newImage.getInputStream(), metadata));
         } catch (Exception e) {
             throw new AmazonS3Exception("Image save error.");
         }
+
+        return amazonS3.getUrl(blog, newImageName).toString();
     }
 
-    public void deleteImage(String imageName) {
+    public void deleteImage(String oldImageUrl) {
         try {
-            amazonS3.deleteObject(new DeleteObjectRequest(blog, imageName));
+            amazonS3.deleteObject(new DeleteObjectRequest(blog, oldImageUrl));
         } catch (Exception e) {
             throw new AmazonS3Exception("Image delete error.");
         }
+    }
+
+    public String changeImage(MultipartFile newImage, String oldImageUrl) {
+        deleteImage(oldImageUrl);
+        return saveImage(newImage);
     }
 
 }

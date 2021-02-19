@@ -1,54 +1,51 @@
 package com.springboot.blog.rest;
 
 import com.springboot.blog.domain.Board;
-import com.springboot.blog.domain.User;
-import com.springboot.blog.service.BoardServiceImpl;
+import com.springboot.blog.service.BoardService;
+import com.springboot.blog.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+
+import static com.springboot.blog.config.SecurityConfig.NULL_MESSAGE_FORMAT;
 
 @RequestMapping(value = "/api/boards")
 @RestController
 public class BoardRestController {
 
-    private final BoardServiceImpl boardServiceImpl;
+    private final UserService userService;
+    private final BoardService boardService;
 
-    public BoardRestController(BoardServiceImpl boardServiceImpl) {
-        this.boardServiceImpl = boardServiceImpl;
+    public BoardRestController(UserService userService, BoardService boardService) {
+        this.userService = userService;
+        this.boardService = boardService;
     }
 
     @PostMapping(value = "{userId}")
-    public ResponseEntity<String> write(@PathVariable Long userId, @ModelAttribute Board newBoard, @RequestPart(required = false) MultipartFile newPhoto) {
-        boardServiceImpl.write(userId, formValidation(newBoard), newPhoto);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    public ResponseEntity<String> write(@PathVariable Long userId, @ModelAttribute Board board, @RequestPart(required = false) MultipartFile image) {
+        boardService.write(userService.findById(userId), getValidBoard(board), image);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping(value = "/{id}")
-    public ResponseEntity<String> edit(@PathVariable Long id, @ModelAttribute Board newBoard, @RequestPart(required = false) MultipartFile newPhoto) {
-        boardServiceImpl.edit(id, newBoard, newPhoto);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    @PutMapping(value = "{id}")
+    public ResponseEntity<String> edit(@PathVariable Long id, @ModelAttribute Board board, @RequestPart(required = false) MultipartFile image) {
+        boardService.edit(id, getValidBoard(board), image);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(value = "{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
-        boardServiceImpl.delete(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        boardService.delete(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    /**
-     * 입력 값 유효성 검사
-     *
-     * @param newBoard
-     * @return
-     */
-    private Board formValidation(Board newBoard) {
-        if (newBoard.getTitle().trim().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Title cannot be null.");
-        }
-        return newBoard;
+    private Board getValidBoard(Board board) {
+        if (board.getTitle().trim().isEmpty())
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(NULL_MESSAGE_FORMAT, "Title"));
+
+        return board;
     }
 
 }
