@@ -1,13 +1,14 @@
 package com.springboot.blog.config;
 
-import com.springboot.blog.security.JwtAuthenticationFilter;
+import com.springboot.blog.jwt.JwtAuthenticationFilter;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -16,7 +17,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public static final String NOT_FOUND_MESSAGE_FORMAT = "Not found %s.";
     public static final String NULL_MESSAGE_FORMAT = "%s cannot be <strong>null</strong>.";
 
-    public static final String EXISTS_EMAIL_MESSAGE = "Email <strong>%s</strong> is already taken.";
+    public static final String EXISTS_EMAIL_MESSAGE_FORMAT = "Email <strong>%s</strong> is already taken.";
     public static final String EMAIL_REQUEST = "email";
 
     public static final String JWT_TOKEN_PREFIX = "Bearer ";
@@ -24,7 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String INVALID_TOKEN_MESSAGE = "Invalid token.";
 
-    public static final long EXPIRATION_TIME_10_MINUTES = 60000 * 10;
+    public static final long EXPIRATION_TIME_60_MINUTES = 60000 * 60;
     public static final long EXPIRATION_TIME_1_DAYS = 60000 * 1440;
 
     public static final String LOGIN_SUBJECT = "login subject";
@@ -48,12 +49,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .cors().disable()
                 .csrf().disable()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilterBefore(jwtAuthenticationFilter, BasicAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+                .permitAll()
                 .antMatchers("/signup/**", "/login/**")
                 .permitAll()
                 .antMatchers(HttpMethod.GET, "/", "/board/*")

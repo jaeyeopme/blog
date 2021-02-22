@@ -1,4 +1,4 @@
-package com.springboot.blog.security;
+package com.springboot.blog.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -39,7 +39,7 @@ public class JwtService {
                 .withSubject(ACCESS_TOKEN_SUBJECT)
                 .withClaim(AUTHORITIES_CLAIM, authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .withIssuedAt(new Date(System.currentTimeMillis()))
-                .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME_10_MINUTES))
+                .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME_60_MINUTES))
                 .sign(Algorithm.HMAC256(secret));
     }
 

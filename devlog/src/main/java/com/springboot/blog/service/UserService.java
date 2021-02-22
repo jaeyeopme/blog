@@ -5,7 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
 
-    void save(User user);
+    User save(User user);
 
     void modify(Long id, User user, MultipartFile picture);
 

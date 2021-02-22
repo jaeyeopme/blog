@@ -1,17 +1,18 @@
 'use strict';
 
-const JOIN_URL = "/api/users/register";
-const LOGIN_URL = "/api/login";
+const JOIN_URL = "/signup";
+const LOGIN_URL = "/login";
 
 const email_form = document.getElementById('email_form')
 const auth = document.getElementsByClassName('auth');
 
-function _join_user() {
+console.log(window.Response.toString())
+function _signup_user() {
     axios
         .post(JOIN_URL, {
             email: email_form.value,
         })
-        .then(() => (window.location.href = '/'))
+        .then((response) => (alert(response.data)))
         .catch((error) => {
             alert(error.response.data.message)
         });
@@ -22,7 +23,7 @@ function _login_user() {
         .post(LOGIN_URL, {
             email: email_form.value
         })
-        .then(() => (window.location.href = '/'))
+        .then((response) => (alert(response.data)))
         .catch((error) => {
             alert(error.response.data.message)
         });

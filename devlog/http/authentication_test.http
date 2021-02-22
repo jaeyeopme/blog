@@ -1,0 +1,25 @@
+### Send POST request  - Generate Signup Token
+POST http://localhost:8080/signup
+Content-Type: application/json
+
+{
+  "email": "your email"
+}
+
+### Send GET request - Signup Token Confirm
+GET http://localhost:8080/signup/confirm?token=?
+
+### Send POST request - Generate Login Token
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "email": "your email"
+}
+
+### Send GET request - Login Token Confirm & Genarate JWT Access Token
+GET http://localhost:8080/login/confirm?token=woduq1204
+
+### Authorize TEST
+GET http://localhost:8080/authentication
+Authorization: jwt token

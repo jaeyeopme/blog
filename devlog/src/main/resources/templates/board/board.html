@@ -104,7 +104,8 @@
                 </div>
             </div>
 
-            <div sec:authorize="isAuthenticated()" th:if="${comment.user.id} == ${#authentication.customUserDetails.id}">
+            <div sec:authorize="isAuthenticated()"
+                 th:if="${comment.user.id} == ${#authentication.customUserDetails.id}">
                 <div th:class="|edit_comment_${comment.id}|">
                     <button class="btn btn-sm text-capitalize"
                             th:onclick="|_show_edit_comment_buttons(${comment.id})|" type="button">

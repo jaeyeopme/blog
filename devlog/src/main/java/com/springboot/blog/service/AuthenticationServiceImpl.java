@@ -1,12 +1,14 @@
-package com.springboot.blog.security;
+package com.springboot.blog.service;
 
 import com.springboot.blog.domain.Role;
 import com.springboot.blog.domain.User;
-import com.springboot.blog.service.UserService;
+import com.springboot.blog.jwt.JwtService;
 import com.springboot.blog.util.MailService;
 import com.springboot.blog.util.RedisService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -38,25 +40,30 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Transactional(readOnly = true)
     @Override
-    public String sendSignupToken(String validEmail) {
-        if (userService.existsByEmail(validEmail))
-            throw new ResponseStatusException(HttpStatus.CONFLICT, EXISTS_EMAIL_MESSAGE);
+    public String sendSignupToken(String email) {
+        if (userService.existsByEmail(email))
+            throw new ResponseStatusException(HttpStatus.CONFLICT, String.format(EXISTS_EMAIL_MESSAGE_FORMAT, email));
 
         String authenticationToken = UUID.randomUUID().toString();
-        redisService.setToken(authenticationToken, validEmail, EXPIRATION_TIME_10_MINUTES);
+        redisService.setToken(authenticationToken, email, EXPIRATION_TIME_60_MINUTES);
 
-        return mailService.send(validEmail, SIGNUP_SUBJECT, String.format(SIGNUP_LINK, authenticationToken));
+        return mailService.send(email, SIGNUP_SUBJECT, String.format(SIGNUP_LINK, authenticationToken));
     }
 
     @Transactional
     @Override
     public void signup(String token) {
-        userService.save(
-                User.builder()
-                        .role(Role.ROLE_USER)
-                        .email(redisService.getEmailFromToken(token))
-                        .pictureUrl(defaultPicture)
-                        .build());
+        String email = redisService.getEmailFromToken(token);
+
+        User user = userService.save(User.builder()
+                .role(Role.ROLE_USER)
+                .email(email)
+                .name(email.split("@")[0])
+                .pictureUrl(defaultPicture)
+                .build());
+
+        SecurityContextHolder.getContext()
+                .setAuthentication(new UsernamePasswordAuthenticationToken(user.getEmail(), null, user.getAuthorities()));
     }
 
     @Transactional(readOnly = true)
@@ -66,7 +73,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, String.format(NOT_FOUND_MESSAGE_FORMAT, "email"));
 
         String authenticationToken = UUID.randomUUID().toString();
-        redisService.setToken(authenticationToken, validEmail, EXPIRATION_TIME_10_MINUTES);
+        redisService.setToken(authenticationToken, validEmail, EXPIRATION_TIME_60_MINUTES);
 
         return mailService.send(validEmail, LOGIN_SUBJECT, String.format(LOGIN_LINK, authenticationToken));
     }
@@ -75,6 +82,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public String login(String token) {
         User user = userService.findByEmail(redisService.getEmailFromToken(token));
+
+        SecurityContextHolder.getContext()
+                .setAuthentication(new UsernamePasswordAuthenticationToken(user.getEmail(), null, user.getAuthorities()));
 
         return jwtService.generateAccessToken(user.getEmail(), user.getAuthorities());
     }

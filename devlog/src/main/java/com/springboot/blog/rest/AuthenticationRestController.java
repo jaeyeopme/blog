@@ -1,6 +1,6 @@
 package com.springboot.blog.rest;
 
-import com.springboot.blog.security.AuthenticationService;
+import com.springboot.blog.service.AuthenticationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,11 +26,11 @@ public class AuthenticationRestController {
         return ResponseEntity.status(HttpStatus.OK).body(sendSuccessMessage);
     }
 
-    @GetMapping("/signup/confirm")
-    public ResponseEntity<String> signup(@RequestParam String token) {
-        authenticationService.signup(token);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
+//    @GetMapping("/signup/confirm")
+//    public ResponseEntity<String> signup(@RequestParam String token) {
+//        authenticationService.signup(token);
+//        return ResponseEntity.status(HttpStatus.CREATED).build();
+//    }
 
     @PostMapping("/login")
     public ResponseEntity<String> sendLoginToken(@RequestBody Map<String, String> request) {
@@ -39,11 +39,11 @@ public class AuthenticationRestController {
         return ResponseEntity.status(HttpStatus.OK).body(sendSuccessMessage);
     }
 
-    @GetMapping("/login/confirm")
-    public ResponseEntity<String> login(@RequestParam String token) {
-        String accessToken = authenticationService.login(token);
-        return ResponseEntity.status(HttpStatus.OK).header(AUTHORIZATION_HEADER, accessToken).build();
-    }
+//    @GetMapping("/login/confirm")
+//    public ResponseEntity<String> login(@RequestParam String token) {
+//        String accessToken = authenticationService.login(token);
+//        return ResponseEntity.status(HttpStatus.OK).header(AUTHORIZATION_HEADER, accessToken).build();
+//    }
 
     private String getValidEmail(String email) {
         if (email.trim().isEmpty())

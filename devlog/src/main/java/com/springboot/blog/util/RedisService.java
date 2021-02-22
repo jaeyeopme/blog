@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Duration;
+
 import static com.springboot.blog.config.SecurityConfig.INVALID_TOKEN_MESSAGE;
 
 @Service
@@ -28,8 +30,8 @@ public class RedisService {
         }
     }
 
-    public void setToken(String token, String email, Long expirationTimeMinutes) {
-        stringRedisTemplate.opsForValue().set(token, email, expirationTimeMinutes);
+    public void setToken(String token, String email, Long expirationTime) {
+        stringRedisTemplate.opsForValue().set(token, email, Duration.ofMillis(expirationTime));
     }
 
     public void deleteToken(String token) {

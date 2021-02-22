@@ -4,11 +4,10 @@ import com.springboot.blog.domain.User;
 import com.springboot.blog.repository.UserRepository;
 import com.springboot.blog.util.AmazonService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -30,9 +29,10 @@ public class UserServiceImpl implements UserService {
         this.defaultPicture = defaultPicture;
     }
 
+    @Transactional
     @Override
-    public void save(User user) {
-        userRepository.save(user);
+    public User save(User user) {
+        return userRepository.save(user);
     }
 
     @Transactional
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
                         }
                 )
                 .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(NOT_FOUND_MESSAGE_FORMAT, "user")));
+                        new UsernameNotFoundException(String.format(NOT_FOUND_MESSAGE_FORMAT, "user")));
     }
 
     @Transactional
@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
                     return findUser;
                 })
                 .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(NOT_FOUND_MESSAGE_FORMAT, "user")));
+                        new UsernameNotFoundException(String.format(NOT_FOUND_MESSAGE_FORMAT, "user")));
     }
 
     @Transactional(readOnly = true)
@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
     public User findById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(NOT_FOUND_MESSAGE_FORMAT, "user")));
+                        new UsernameNotFoundException(String.format(NOT_FOUND_MESSAGE_FORMAT, "user")));
     }
 
     @Transactional(readOnly = true)
@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService {
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(NOT_FOUND_MESSAGE_FORMAT, "user")));
+                        new UsernameNotFoundException(String.format(NOT_FOUND_MESSAGE_FORMAT, "user")));
     }
 
     @Transactional(readOnly = true)
