@@ -1,0 +1,61 @@
+spring:
+  profiles:
+    active: dev
+    group:
+      dev: common, dev
+---
+server:
+  error:
+    include-stacktrace: never
+    whitelabel:
+      enabled: false
+  shutdown: graceful
+
+spring:
+  config:
+    activate:
+      on-profile: common
+
+  jackson:
+    visibility:
+      creator: none
+      field: any
+      getter: none
+      is-getter: none
+      setter: none
+
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        globally_quoted_identifiers: true
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDB10Dialect
+        format_sql: true
+        show_sql: true
+        use_sql_comments: true
+
+  datasource:
+    url: jdbc:mariadb://localhost:3306/blog
+    hikari:
+      driver-class-name: org.mariadb.jdbc.Driver
+      username: test
+      password: test
+      connection-init-sql: SELECT 1
+
+logging:
+  level:
+    org:
+      hibernate:
+        type: trace
+        sql: debug
