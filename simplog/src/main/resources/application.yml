@@ -1,5 +1,6 @@
 spring:
   profiles:
+    include: jwt, oauth
     active: dev
     group:
       dev: common, dev
