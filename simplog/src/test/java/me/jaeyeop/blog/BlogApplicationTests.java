@@ -1,16 +1,15 @@
 package me.jaeyeop.blog;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+@Disabled
 @SpringBootTest
-class BlogApplicationTests extends AbstractContainerBaseTest {
+class BlogApplicationTests {
 
   @Test
   void contextLoads() {
-    assertThat(MARIA_DB_CONTAINER.isRunning()).isTrue();
   }
 
 }

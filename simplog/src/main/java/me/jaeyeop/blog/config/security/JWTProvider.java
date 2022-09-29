@@ -1,4 +1,4 @@
-package me.jaeyeop.blog.security.jwt;
+package me.jaeyeop.blog.config.security;
 
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.Optional;
 import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -40,13 +39,11 @@ public class JWTProvider {
     return Keys.hmacShaKeyFor(Base64.getEncoder().encode(secret.getBytes()));
   }
 
-  public String issueAccessToken(final Authentication authentication) {
-    final var email = (String) authentication.getPrincipal();
+  public String issueAccessToken(final String email) {
     return issue(email, expirationAccess);
   }
 
-  public String issueRefreshToken(final Authentication authentication) {
-    final var email = (String) authentication.getPrincipal();
+  public String issueRefreshToken(final String email) {
     return issue(email, expirationRefresh);
   }
 

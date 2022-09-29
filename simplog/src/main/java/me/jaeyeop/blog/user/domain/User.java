@@ -12,6 +12,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import me.jaeyeop.blog.config.security.OAuth2Attributes;
+import me.jaeyeop.blog.config.security.OAuth2Provider;
 
 @Getter
 @Builder(access = AccessLevel.PACKAGE)
@@ -36,5 +38,19 @@ public class User {
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   private Role role;
+
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private OAuth2Provider provider;
+
+  public static User of(final OAuth2Attributes attributes) {
+    return User.builder()
+        .email(attributes.getEmail())
+        .name(attributes.getName())
+        .picture(attributes.getPicture())
+        .role(Role.USER)
+        .provider(attributes.getProvider())
+        .build();
+  }
 
 }

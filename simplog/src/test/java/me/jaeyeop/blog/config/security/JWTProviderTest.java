@@ -1,13 +1,11 @@
-package me.jaeyeop.blog.security.jwt;
+package me.jaeyeop.blog.config.security;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
-import me.jaeyeop.blog.security.authentication.UserAuthenticationToken;
 import me.jaeyeop.blog.user.domain.UserFactory;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class JWTProviderTest {
@@ -30,50 +28,40 @@ class JWTProviderTest {
         DEFAULT_EXPIRATION_REFRESH);
   }
 
-  @DisplayName("엑세스 토큰을 발급한다.")
   @Test
-  void Issue_access_token() {
+  void 엑세스_토큰_발급() {
     final var user = UserFactory.create();
-    final var authentication = UserAuthenticationToken
-        .authenticated(user.getEmail(), user.getRole());
-
-    final var accessToken = jwtProvider.issueAccessToken(authentication);
+    final var accessToken = jwtProvider.issueAccessToken(user.getEmail());
 
     final var actualEmail = jwtProvider.getEmail(accessToken).orElse(null);
     assertThat(actualEmail).isEqualTo(user.getEmail());
   }
 
-  @DisplayName("리프레시 토큰을 발급한다.")
   @Test
-  void Issue_refresh_token() {
+  void 리프레시_토큰_발급() {
     final var user = UserFactory.create();
-    final var authentication = UserAuthenticationToken
-        .authenticated(user.getEmail(), user.getRole());
-
-    final var refreshToken = jwtProvider.issueRefreshToken(authentication);
+    final var refreshToken = jwtProvider.issueRefreshToken(user.getEmail());
 
     final var actualEmail = jwtProvider.getEmail(refreshToken).orElse(null);
     assertThat(actualEmail).isEqualTo(user.getEmail());
   }
 
-  @DisplayName("잘못된 키를 가진 토큰에서 이메일 가져오지 못한다.")
   @Test
-  void Get_email_from_token_with_wrong_key() {
-    final var authentication = UserFactory.createAuthenticatedToken();
+  void 잘못된_키를_가진_토큰에서_정보_가져오기_실패() {
+    final var user = UserFactory.create();
     final var wrongKeyProvider = createWrongKeyProvider();
-    final var wrongKeyToken = wrongKeyProvider.issueAccessToken(authentication);
+    final var wrongKeyToken = wrongKeyProvider.issueAccessToken(user.getEmail());
 
     final var empty = jwtProvider.getEmail(wrongKeyToken);
 
     assertThat(empty).isEmpty();
   }
 
-  @DisplayName("만료된 토큰에서 이메일을 가져오지 못한다.")
   @Test
-  void Get_email_from_expired_token() {
-    final var authentication = UserFactory.createAuthenticatedToken();
+  void 만료된_토큰에서_정보_가져오기_실패() {
+    final var user = UserFactory.create();
     final var expiredProvider = createExpiredProvider();
-    final var expiredToken = expiredProvider.issueAccessToken(authentication);
+    final var expiredToken = expiredProvider.issueAccessToken(user.getEmail());
 
     final var empty = expiredProvider.getEmail(expiredToken);
 

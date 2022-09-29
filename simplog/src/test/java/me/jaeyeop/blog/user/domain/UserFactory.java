@@ -1,7 +1,5 @@
 package me.jaeyeop.blog.user.domain;
 
-import me.jaeyeop.blog.security.authentication.UserAuthenticationToken;
-
 public class UserFactory {
 
   private static final String DEFAULT_EMAIL = "email@email.com";
@@ -22,10 +20,6 @@ public class UserFactory {
         .picture(DEFAULT_PICTURE)
         .role(DEFAULT_ROLE)
         .build();
-  }
-
-  public static UserAuthenticationToken createAuthenticatedToken() {
-    return UserAuthenticationToken.authenticated(DEFAULT_EMAIL, DEFAULT_ROLE);
   }
 
 }
