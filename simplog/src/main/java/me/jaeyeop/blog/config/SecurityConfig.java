@@ -6,7 +6,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import me.jaeyeop.blog.config.security.OAuth2AuthenticationFilter;
 import me.jaeyeop.blog.config.security.OAuth2SuccessHandler;
-import me.jaeyeop.blog.config.security.OAuth2UserServiceDelegator;
+import me.jaeyeop.blog.user.application.service.OAuth2UserServiceDelegator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
