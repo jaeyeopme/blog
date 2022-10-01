@@ -44,7 +44,7 @@ public class ErrorResponse {
         .body(new ErrorResponse(ErrorCode.INVALID_ARGUMENT.getMessage(), errors));
   }
 
-  public static ResponseEntity<ErrorResponse> of(final BindingResult errors) {
+  public static ResponseEntity<Object> of(final BindingResult errors) {
     return ResponseEntity
         .status(ErrorCode.INVALID_ARGUMENT.getStatus())
         .body(new ErrorResponse(ErrorCode.INVALID_ARGUMENT.getMessage(), errors));
