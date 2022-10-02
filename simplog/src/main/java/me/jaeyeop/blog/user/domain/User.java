@@ -17,7 +17,7 @@ import me.jaeyeop.blog.config.security.OAuth2Provider;
 
 @Getter
 @Builder(access = AccessLevel.PACKAGE)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class User {

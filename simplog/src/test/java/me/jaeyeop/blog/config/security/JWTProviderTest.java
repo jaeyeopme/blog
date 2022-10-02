@@ -1,85 +1,74 @@
 package me.jaeyeop.blog.config.security;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import java.time.Clock;
+import static org.assertj.core.api.BDDAssertions.then;
 import java.time.Instant;
-import java.time.ZoneId;
-import me.jaeyeop.blog.user.domain.UserFactory;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class JWTProviderTest {
-
-  private static final String DEFAULT_KEY = "key-key-key-key-key-key";
-
-  private static final int DEFAULT_EXPIRATION_ACCESS = 200000;
-
-  private static final int DEFAULT_EXPIRATION_REFRESH = 600000;
-
-  private static final Clock DEFAULT_CLOCK = Clock.fixed(Instant.now(), ZoneId.systemDefault());
-
-  private JWTProvider jwtProvider;
-
-  @BeforeEach
-  void setUp() {
-    jwtProvider = new JWTProvider(DEFAULT_CLOCK,
-        DEFAULT_KEY,
-        DEFAULT_EXPIRATION_ACCESS,
-        DEFAULT_EXPIRATION_REFRESH);
-  }
+public class JWTProviderTest {
 
   @Test
   void 엑세스_토큰_발급() {
-    final var user = UserFactory.create();
-    final var accessToken = jwtProvider.issueAccessToken(user.getEmail());
+    final var email = "email@email.com";
+    final var jwtProvider = JWTProviderFactory.create();
+    final var accessToken = jwtProvider.issueAccessToken(email);
 
-    final var actualEmail = jwtProvider.getEmail(accessToken).orElse(null);
-    assertThat(actualEmail).isEqualTo(user.getEmail());
+    final var actual = jwtProvider.getEmail(accessToken).orElse(null);
+
+    then(actual).isEqualTo(email);
   }
 
   @Test
   void 리프레시_토큰_발급() {
-    final var user = UserFactory.create();
-    final var refreshToken = jwtProvider.issueRefreshToken(user.getEmail());
+    final var email = "email@email.com";
+    final var jwtProvider = JWTProviderFactory.create();
+    final var refreshToken = jwtProvider.issueRefreshToken(email);
 
-    final var actualEmail = jwtProvider.getEmail(refreshToken).orElse(null);
-    assertThat(actualEmail).isEqualTo(user.getEmail());
+    final var actual = jwtProvider.getEmail(refreshToken).orElse(null);
+
+    then(actual).isEqualTo(email);
   }
 
   @Test
   void 잘못된_키를_가진_토큰에서_정보_가져오기_실패() {
-    final var user = UserFactory.create();
-    final var wrongKeyProvider = createWrongKeyProvider();
-    final var wrongKeyToken = wrongKeyProvider.issueAccessToken(user.getEmail());
+    final var jwtProvider = JWTProviderFactory.create();
+    final var wrongKeyProvider = JWTProviderFactory.createWrongKey();
+    final var wrongKeyToken = wrongKeyProvider.issueAccessToken("email@email.com");
 
-    final var empty = jwtProvider.getEmail(wrongKeyToken);
+    final var actual = jwtProvider.getEmail(wrongKeyToken);
 
-    assertThat(empty).isEmpty();
+    then(actual).isEmpty();
   }
 
   @Test
   void 만료된_토큰에서_정보_가져오기_실패() {
-    final var user = UserFactory.create();
-    final var expiredProvider = createExpiredProvider();
-    final var expiredToken = expiredProvider.issueAccessToken(user.getEmail());
+    final var jwtProvider = JWTProviderFactory.create();
+    final var expiredProvider = JWTProviderFactory.createExpiredProvider();
+    final var expiredToken = expiredProvider.issueAccessToken("email@email.com");
 
-    final var empty = expiredProvider.getEmail(expiredToken);
+    final var actual = jwtProvider.getEmail(expiredToken);
 
-    assertThat(empty).isEmpty();
+    then(actual).isEmpty();
   }
 
-  private JWTProvider createWrongKeyProvider() {
-    return new JWTProvider(DEFAULT_CLOCK,
-        "wrongKey-wrongKey-wrongKey",
-        DEFAULT_EXPIRATION_ACCESS,
-        DEFAULT_EXPIRATION_REFRESH);
+  @Test
+  void 만료되지_않은_토큰_남은_만료시간_조회() {
+    final var jwtProvider = JWTProviderFactory.create();
+    final var accessToken = jwtProvider.issueAccessToken("email@email.com");
+    final var instant = Instant.now();
+
+    final var actual = jwtProvider.getRemaining(accessToken, instant);
+
+    then(actual).isPositive();
   }
 
-  private JWTProvider createExpiredProvider() {
-    return new JWTProvider(DEFAULT_CLOCK,
-        DEFAULT_KEY,
-        -1000,
-        DEFAULT_EXPIRATION_REFRESH);
+
+  @Test
+  void 만료된_토큰_남은_만료시간_조회() {
+    final var jwtProvider = JWTProviderFactory.createExpiredProvider();
+    final var accessToken = jwtProvider.issueAccessToken("email@email.com");
+    final var instant = Instant.now();
+
+    then(jwtProvider.getRemaining(accessToken, instant)).isZero();
   }
 
 }

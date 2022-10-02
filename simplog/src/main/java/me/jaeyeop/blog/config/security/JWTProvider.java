@@ -1,5 +1,8 @@
 package me.jaeyeop.blog.config.security;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -50,7 +53,7 @@ public class JWTProvider {
   private String issue(
       final String email,
       final long expiration) {
-    final var now = Instant.now(clock);
+    final var now = clock.instant();
 
     return Jwts.builder()
         .setIssuedAt(Date.from(now))
@@ -62,14 +65,32 @@ public class JWTProvider {
 
   public Optional<String> getEmail(final String token) {
     try {
-      return Optional.of(Jwts.parserBuilder()
-          .setSigningKey(key)
-          .build()
-          .parseClaimsJws(token)
+      return Optional.of(getClaimsJws(token, clock.instant())
           .getBody()
           .getAudience());
     } catch (final JwtException | IllegalArgumentException e) {
       return Optional.empty();
+    }
+  }
+
+  private Jws<Claims> getClaimsJws(
+      final String token,
+      final Instant instant) {
+    return Jwts.parserBuilder()
+        .setSigningKey(key)
+        .setClock(() -> Date.from(instant))
+        .build()
+        .parseClaimsJws(token);
+  }
+
+  public long getRemaining(
+      final String token,
+      final Instant instant) {
+    try {
+      final var expiration = getClaimsJws(token, instant).getBody().getExpiration();
+      return expiration.getTime() - instant.toEpochMilli();
+    } catch (final ExpiredJwtException e) {
+      return 0L;
     }
   }
 

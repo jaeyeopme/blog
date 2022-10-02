@@ -1,5 +1,6 @@
 package me.jaeyeop.blog.config.security;
 
+import static org.springframework.security.oauth2.core.OAuth2AccessToken.TokenType.BEARER;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -26,8 +27,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 @RequiredArgsConstructor
 public class OAuth2AuthenticationFilter extends OncePerRequestFilter {
-
-  private static final String BEARER = "Bearer ";
 
   private final UserQueryPort userQueryPort;
 
@@ -68,11 +67,11 @@ public class OAuth2AuthenticationFilter extends OncePerRequestFilter {
   }
 
   private boolean isBearerToken(final String value) {
-    return StringUtils.hasText(value) && value.startsWith(OAuth2AuthenticationFilter.BEARER);
+    return StringUtils.hasText(value) && value.startsWith(BEARER.getValue());
   }
 
   private String removeType(final String value) {
-    return value.substring(OAuth2AuthenticationFilter.BEARER.length());
+    return value.substring(BEARER.getValue().length());
   }
 
   private OAuth2UserPrincipal retrieveUser(final String accessToken) {

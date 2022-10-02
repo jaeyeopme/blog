@@ -20,13 +20,12 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
   private final JWTProvider jwtProvider;
 
-  @SuppressWarnings("deprecation")
   @Override
   public void onAuthenticationSuccess(final HttpServletRequest request,
       final HttpServletResponse response,
       final Authentication authentication) throws IOException {
     response.setStatus(HttpStatus.OK.value());
-    response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     final var principal = (OAuth2User) authentication.getPrincipal();
 
     final var accessToken = jwtProvider.issueAccessToken(principal.getName());

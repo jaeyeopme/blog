@@ -9,7 +9,6 @@ import me.jaeyeop.blog.config.security.OAuth2SuccessHandler;
 import me.jaeyeop.blog.user.application.service.OAuth2UserServiceDelegator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
@@ -81,8 +80,6 @@ public class SecurityConfig {
 
   private Customizer<ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry> getAuthorizeRequests() {
     return urlRegistry -> urlRegistry
-        .mvcMatchers(HttpMethod.GET, OAUTH2_API_URI)
-        .anonymous()
         .anyRequest()
         .authenticated();
   }
