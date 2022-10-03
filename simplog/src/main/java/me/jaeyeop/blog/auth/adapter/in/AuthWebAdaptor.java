@@ -4,6 +4,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import lombok.RequiredArgsConstructor;
 import me.jaeyeop.blog.auth.application.port.in.AuthCommandUseCase;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -21,7 +22,7 @@ public class AuthWebAdaptor {
   private final AuthCommandUseCase authCommandUseCase;
 
   @ResponseStatus(HttpStatus.OK)
-  @RequestMapping("/logout")
+  @GetMapping("/logout")
   public void expireToken(@RequestHeader(AUTHORIZATION) final String accessToken,
       @RequestHeader(REFRESH_AUTHORIZATION) final String refreshToken) {
     authCommandUseCase.expireToken(accessToken, refreshToken);

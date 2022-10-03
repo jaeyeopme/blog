@@ -1,12 +1,9 @@
-package me.jaeyeop.blog.config;
+package me.jaeyeop.blog.config.security;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import me.jaeyeop.blog.config.security.OAuth2AuthenticationFilter;
-import me.jaeyeop.blog.config.security.OAuth2SuccessHandler;
-import me.jaeyeop.blog.user.application.service.OAuth2UserServiceDelegator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;

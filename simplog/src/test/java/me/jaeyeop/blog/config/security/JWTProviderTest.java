@@ -4,7 +4,7 @@ import static org.assertj.core.api.BDDAssertions.then;
 import java.time.Instant;
 import org.junit.jupiter.api.Test;
 
-public class JWTProviderTest {
+class JWTProviderTest {
 
   @Test
   void 엑세스_토큰_발급() {
@@ -29,7 +29,7 @@ public class JWTProviderTest {
   }
 
   @Test
-  void 잘못된_키를_가진_토큰에서_정보_가져오기_실패() {
+  void 잘못된_키를_가진_엑세스_토큰에서_정보_가져오기_실패() {
     final var jwtProvider = JWTProviderFactory.create();
     final var wrongKeyProvider = JWTProviderFactory.createWrongKey();
     final var wrongKeyToken = wrongKeyProvider.issueAccessToken("email@email.com");

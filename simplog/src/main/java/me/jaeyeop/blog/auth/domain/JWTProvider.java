@@ -1,4 +1,4 @@
-package me.jaeyeop.blog.config.security;
+package me.jaeyeop.blog.auth.domain;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

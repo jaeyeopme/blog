@@ -5,20 +5,12 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import me.jaeyeop.blog.common.error.exception.BlogException;
-import org.springframework.beans.TypeMismatchException;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.NonNull;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @Slf4j
@@ -79,39 +71,8 @@ public class BlogExceptionHandler extends ResponseEntityExceptionHandler {
     return ErrorResponse.of(e.getConstraintViolations());
   }
 
-  /**
-   * 데이터 바인딩 에러 예외 처리 재정의
-   *
-   * @param ex {@link ModelAttribute} 와 {@link Valid} 주석이 달린 인수에서 바인딩 예외
-   * @return ResponseEntity 인스턴스
-   */
-  @Override
-  protected @NonNull ResponseEntity<Object> handleBindException(
-      @NonNull final BindException ex,
-      @NonNull final HttpHeaders headers,
-      @NonNull final HttpStatus status,
-      @NonNull final WebRequest request) {
-    logInfo(ex);
-    return ErrorResponse.of(ex.getBindingResult());
-  }
-
-  /**
-   * 데이터 바인딩 에러 예외 처리 재정의
-   *
-   * @param ex {@link RequestParam} 주석이 달린 인수에서 enum 바인딩 예외
-   * @return HTTP 400 BAD_REQUEST
-   */
-  @Override
-  protected @NonNull ResponseEntity<Object> handleTypeMismatch(
-      @NonNull final TypeMismatchException ex,
-      @NonNull final HttpHeaders headers,
-      @NonNull final HttpStatus status,
-      @NonNull final WebRequest request) {
-    return ResponseEntity.badRequest().build();
-  }
-
   private void logInfo(final Exception e) {
-    log.info(LOG_FORMAT, e.getClass().getSimpleName(), e.getMessage());
+    log.debug(LOG_FORMAT, e.getClass().getSimpleName(), e.getMessage());
   }
 
 }

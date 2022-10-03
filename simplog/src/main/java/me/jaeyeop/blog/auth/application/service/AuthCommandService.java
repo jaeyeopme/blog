@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import me.jaeyeop.blog.auth.application.port.in.AuthCommandUseCase;
 import me.jaeyeop.blog.auth.application.port.out.AuthCommandPort;
 import me.jaeyeop.blog.auth.domain.ExpiredToken;
-import me.jaeyeop.blog.config.security.JWTProvider;
+import me.jaeyeop.blog.auth.domain.JWTProvider;
 import org.springframework.stereotype.Service;
 
 @Transactional

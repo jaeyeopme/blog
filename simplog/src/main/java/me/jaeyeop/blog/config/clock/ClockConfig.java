@@ -1,4 +1,4 @@
-package me.jaeyeop.blog.config;
+package me.jaeyeop.blog.config.clock;
 
 import java.time.Clock;
 import org.springframework.context.annotation.Bean;

@@ -2,12 +2,13 @@ package me.jaeyeop.blog.auth.application.service;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 import me.jaeyeop.blog.auth.application.port.out.AuthCommandPort;
-import me.jaeyeop.blog.config.security.JWTProvider;
+import me.jaeyeop.blog.auth.domain.JWTProvider;
 import me.jaeyeop.blog.config.security.JWTProviderFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,14 +33,24 @@ class AuthCommandServiceTest {
   private AuthCommandService authCommandService;
 
   @Test
-  void 만료_저장소에_토큰_저장() {
-    final var access_token = jwtProvider.issueAccessToken("email@email.com");
-    final var refresh_token = jwtProvider.issueRefreshToken("email@email.com");
+  void 만료_저장소에_만료되지_않은_토큰_저장() {
+    final var accessToken = jwtProvider.issueAccessToken("email@email.com");
+    final var refreshToken = jwtProvider.issueRefreshToken("email@email.com");
 
-    authCommandService.expireToken(access_token, refresh_token);
+    authCommandService.expireToken(accessToken, refreshToken);
 
     then(authCommandPort).should(times(2)).save(any());
   }
 
+  @Test
+  void 만료_저장소에_만료된_토큰_저장() {
+    final var expiredProvider = JWTProviderFactory.createExpiredProvider();
+    final var accessToken = expiredProvider.issueAccessToken("email@email.com");
+    final var refreshToken = expiredProvider.issueRefreshToken("email@email.com");
+
+    authCommandService.expireToken(accessToken, refreshToken);
+
+    then(authCommandPort).should(never()).save(any());
+  }
 
 }

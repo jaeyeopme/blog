@@ -3,6 +3,7 @@ package me.jaeyeop.blog.config.security;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
+import me.jaeyeop.blog.auth.domain.JWTProvider;
 
 public class JWTProviderFactory {
 
@@ -22,7 +23,7 @@ public class JWTProviderFactory {
     return new JWTProvider(DEFAULT_CLOCK,
         DEFAULT_KEY,
         -1000,
-        DEFAULT_EXPIRATION_REFRESH);
+        -1000);
   }
 
   public static JWTProvider create() {

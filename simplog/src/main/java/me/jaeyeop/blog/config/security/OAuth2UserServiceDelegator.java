@@ -1,10 +1,7 @@
-package me.jaeyeop.blog.user.application.service;
+package me.jaeyeop.blog.config.security;
 
 import javax.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import me.jaeyeop.blog.config.security.OAuth2Attributes;
-import me.jaeyeop.blog.config.security.OAuth2Provider;
-import me.jaeyeop.blog.config.security.OAuth2UserPrincipal;
 import me.jaeyeop.blog.user.application.port.out.UserCommandPort;
 import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
 import me.jaeyeop.blog.user.domain.User;
