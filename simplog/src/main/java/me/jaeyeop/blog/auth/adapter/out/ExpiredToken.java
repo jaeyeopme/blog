@@ -1,19 +1,18 @@
-package me.jaeyeop.blog.auth.domain;
+package me.jaeyeop.blog.auth.adapter.out;
 
 import java.util.concurrent.TimeUnit;
-import javax.persistence.Entity;
-import javax.persistence.Id;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import me.jaeyeop.blog.auth.domain.Token;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
 
 @Getter
 @RedisHash("expiredToken")
-@Entity
-@AllArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ExpiredToken {
 
@@ -21,6 +20,10 @@ public class ExpiredToken {
   private String value;
 
   @TimeToLive(unit = TimeUnit.MILLISECONDS)
-  private long expiration;
+  private long remaining;
+
+  public static ExpiredToken from(final Token token) {
+    return new ExpiredToken(token.getValue(), token.getRemaining());
+  }
 
 }

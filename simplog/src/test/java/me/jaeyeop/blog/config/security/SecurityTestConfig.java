@@ -1,7 +1,7 @@
 package me.jaeyeop.blog.config.security;
 
 
-import me.jaeyeop.blog.auth.domain.JWTProvider;
+import me.jaeyeop.blog.auth.application.port.in.TokenProvideUseCase;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -11,8 +11,8 @@ import org.springframework.context.annotation.ComponentScan;
 public class SecurityTestConfig {
 
   @Bean
-  public JWTProvider jwtProvider() {
-    return JWTProviderFactory.create();
+  public TokenProvideUseCase tokenProvideUseCase() {
+    return JWTProvideServiceFactory.create();
   }
 
 }

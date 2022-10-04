@@ -1,10 +1,10 @@
-package me.jaeyeop.blog.common.error;
+package me.jaeyeop.blog.config.error;
 
 import java.nio.file.AccessDeniedException;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import me.jaeyeop.blog.common.error.exception.BlogException;
+import me.jaeyeop.blog.config.error.exception.AbstractException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,19 +15,19 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @Slf4j
 @RestControllerAdvice
-public class BlogExceptionHandler extends ResponseEntityExceptionHandler {
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
   private static final String LOG_FORMAT = "Class Name: {}, Message: {}";
 
   /**
    * 개발자 정의 예외 처리
    *
-   * @param e BlogException 을 상속받은 예외
+   * @param e 개발자 정의 예외
    * @return {@link ErrorCode}
    */
-  @ExceptionHandler(BlogException.class)
+  @ExceptionHandler(AbstractException.class)
   public ResponseEntity<ErrorResponse> blogExceptionHandler(
-      final BlogException e) {
+      final AbstractException e) {
     logInfo(e);
     return ErrorResponse.of(e.getCode());
   }

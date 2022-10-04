@@ -1,5 +1,6 @@
 package me.jaeyeop.blog.config.security;
 
+import static me.jaeyeop.blog.auth.adapter.in.AuthWebAdaptor.AUTH_API_URI;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
@@ -19,8 +20,6 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 @Configuration
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class SecurityConfig {
-
-  public static final String OAUTH2_API_URI = "/api/v1/oauth2";
 
   private final OAuth2AuthenticationFilter oAuth2AuthenticationFilter;
 
@@ -48,7 +47,7 @@ public class SecurityConfig {
         .userService(oAuth2UserServiceDelegator)
         .and()
         .authorizationEndpoint()
-        .baseUri(OAUTH2_API_URI);
+        .baseUri(AUTH_API_URI + "/login");
 
     httpSecurity
         .exceptionHandling()

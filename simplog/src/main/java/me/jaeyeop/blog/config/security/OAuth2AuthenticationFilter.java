@@ -1,6 +1,5 @@
 package me.jaeyeop.blog.config.security;
 
-import static org.springframework.security.oauth2.core.OAuth2AccessToken.TokenType.BEARER;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -8,7 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.jaeyeop.blog.auth.domain.JWTProvider;
+import me.jaeyeop.blog.auth.application.port.in.TokenProvideUseCase;
+import me.jaeyeop.blog.auth.application.port.out.TokenQueryPort;
+import me.jaeyeop.blog.auth.domain.Token;
 import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpHeaders;
@@ -21,7 +22,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Slf4j
@@ -31,7 +31,9 @@ public class OAuth2AuthenticationFilter extends OncePerRequestFilter {
 
   private final UserQueryPort userQueryPort;
 
-  private final JWTProvider jwtProvider;
+  private final TokenQueryPort tokenQueryPort;
+
+  private final TokenProvideUseCase tokenProvideUseCase;
 
   @Override
   protected void doFilterInternal(
@@ -49,61 +51,43 @@ public class OAuth2AuthenticationFilter extends OncePerRequestFilter {
     chain.doFilter(request, response);
   }
 
+  private UsernamePasswordAuthenticationToken getResult(
+      final OAuth2UserPrincipal principal) {
+    return new UsernamePasswordAuthenticationToken(principal, Strings.EMPTY,
+        principal.getAuthorities());
+  }
+
   private Authentication attemptAuthentication(final HttpServletRequest request) {
-    final var accessToken = obtainAccessToken(request);
-    final var principal = retrieveUser(accessToken);
+    final var token = obtainAccessToken(request);
+    final var principal = retrieveUser(token.getEmail());
 
     return createSuccessAuthentication(request, principal);
   }
 
-  private String obtainAccessToken(final HttpServletRequest httpServletRequest) {
+  private Token obtainAccessToken(final HttpServletRequest httpServletRequest) {
     final var value = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
+    final var token = tokenProvideUseCase.authenticate(value);
 
-    if (isBearerToken(value)) {
-      return removeType(value);
+    if (tokenQueryPort.isExpired(token.getValue())) {
+      throw new BadCredentialsException("Bad credentials");
     }
 
-    log.debug("Failed to authenticate since no credentials provided");
-    throw new BadCredentialsException("Bad credentials");
+    return token;
   }
 
-  private boolean isBearerToken(final String value) {
-    return StringUtils.hasText(value) && value.startsWith(BEARER.getValue());
-  }
-
-  private String removeType(final String value) {
-    return value.substring(BEARER.getValue().length());
-  }
-
-  private OAuth2UserPrincipal retrieveUser(final String accessToken) {
-    final var email = getEmail(accessToken);
-
-    if (userQueryPort.existsByEmail(email)) {
-      return OAuth2UserPrincipal.from(userQueryPort.findByEmail(email));
+  private OAuth2UserPrincipal retrieveUser(final String email) {
+    if (!userQueryPort.existsByEmail(email)) {
+      throw new UsernameNotFoundException("User not found");
     }
 
-    log.debug("Failed to find user '{}'", email);
-    throw new UsernameNotFoundException("User not found");
-  }
-
-  private String getEmail(final String accessToken) {
-    return jwtProvider.getEmail(accessToken)
-        .orElseThrow(() -> {
-          log.debug("Failed to authenticate since no credentials provided");
-          throw new BadCredentialsException("Bad credentials");
-        });
+    return OAuth2UserPrincipal.from(userQueryPort.findByEmail(email));
   }
 
   private Authentication createSuccessAuthentication(
       final HttpServletRequest request,
       final OAuth2UserPrincipal principal) {
-    final var result = new UsernamePasswordAuthenticationToken(
-        principal,
-        Strings.EMPTY,
-        principal.getAuthorities());
+    final var result = getResult(principal);
     result.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-    log.debug("Authenticated user");
     return result;
   }
 

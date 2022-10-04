@@ -1,4 +1,4 @@
-package me.jaeyeop.blog.common.error;
+package me.jaeyeop.blog.config.error;
 
 import java.util.List;
 import java.util.Set;

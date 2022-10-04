@@ -6,7 +6,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.jaeyeop.blog.common.error.exception.NotSupportedRegistrationIdException;
+import me.jaeyeop.blog.config.error.exception.NotSupportedRegistrationIdException;
 
 @Getter
 @RequiredArgsConstructor

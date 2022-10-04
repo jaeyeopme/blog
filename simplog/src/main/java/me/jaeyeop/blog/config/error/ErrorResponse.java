@@ -1,4 +1,4 @@
-package me.jaeyeop.blog.common.error;
+package me.jaeyeop.blog.config.error;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
