@@ -3,7 +3,7 @@ package me.jaeyeop.blog.auth.adapter.in;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import lombok.RequiredArgsConstructor;
 import me.jaeyeop.blog.auth.application.port.in.TokenCommandUseCase;
-import me.jaeyeop.blog.auth.application.port.in.TokenProvideUseCase;
+import me.jaeyeop.blog.auth.application.port.in.TokenQueryUseCase;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -22,17 +22,23 @@ public class AuthWebAdaptor {
 
   private final TokenCommandUseCase tokenCommandUseCase;
 
-  private final TokenProvideUseCase tokenProvideUseCase;
+  private final TokenQueryUseCase tokenQueryUseCase;
 
   @ResponseStatus(HttpStatus.OK)
   @GetMapping("/logout")
   public void logout(
-      @RequestHeader(AUTHORIZATION) final String accessValue,
-      @RequestHeader(REFRESH_AUTHORIZATION) final String refreshValue) {
-    final var access = tokenProvideUseCase.authenticate(accessValue);
-    final var refresh = tokenProvideUseCase.authenticate(refreshValue);
+      @RequestHeader(AUTHORIZATION) final String access,
+      @RequestHeader(REFRESH_AUTHORIZATION) final String refresh) {
+    final var command = new LogoutCommand(access, refresh);
+    tokenCommandUseCase.logout(command);
+  }
 
-    tokenCommandUseCase.logout(access, refresh);
+  @ResponseStatus(HttpStatus.CREATED)
+  @GetMapping("/refresh")
+  public String refresh(
+      @RequestHeader(REFRESH_AUTHORIZATION) final String refresh) {
+    final var command = new RefreshCommand(refresh);
+    return tokenQueryUseCase.refresh(command);
   }
 
 }

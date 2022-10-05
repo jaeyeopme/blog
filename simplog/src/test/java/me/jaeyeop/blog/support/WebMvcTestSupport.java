@@ -3,9 +3,10 @@ package me.jaeyeop.blog.support;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import me.jaeyeop.blog.auth.adapter.out.ExpiredTokenPersistenceAdapter;
 import me.jaeyeop.blog.auth.adapter.out.ExpiredTokenRepository;
+import me.jaeyeop.blog.auth.adapter.out.RefreshTokenPersistenceAdapter;
 import me.jaeyeop.blog.auth.adapter.out.RefreshTokenRepository;
-import me.jaeyeop.blog.auth.adapter.out.TokenPersistenceAdapter;
 import me.jaeyeop.blog.config.security.ClockTestConfig;
 import me.jaeyeop.blog.config.security.SecurityTestConfig;
 import me.jaeyeop.blog.user.adapter.out.UserPersistenceAdapter;
@@ -25,7 +26,8 @@ import org.springframework.web.context.WebApplicationContext;
     SecurityTestConfig.class,
     ClockTestConfig.class,
     UserPersistenceAdapter.class,
-    TokenPersistenceAdapter.class,
+    ExpiredTokenPersistenceAdapter.class,
+    RefreshTokenPersistenceAdapter.class
 })
 @WebMvcTest
 public abstract class WebMvcTestSupport {

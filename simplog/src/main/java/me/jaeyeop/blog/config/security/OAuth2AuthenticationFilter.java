@@ -7,9 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.jaeyeop.blog.auth.application.port.in.TokenProvideUseCase;
-import me.jaeyeop.blog.auth.application.port.out.TokenQueryPort;
+import me.jaeyeop.blog.auth.application.port.out.ExpiredTokenQueryPort;
 import me.jaeyeop.blog.auth.domain.Token;
+import me.jaeyeop.blog.config.token.TokenProvider;
 import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpHeaders;
@@ -31,9 +31,9 @@ public class OAuth2AuthenticationFilter extends OncePerRequestFilter {
 
   private final UserQueryPort userQueryPort;
 
-  private final TokenQueryPort tokenQueryPort;
+  private final ExpiredTokenQueryPort expiredTokenQueryPort;
 
-  private final TokenProvideUseCase tokenProvideUseCase;
+  private final TokenProvider tokenProvider;
 
   @Override
   protected void doFilterInternal(
@@ -58,21 +58,21 @@ public class OAuth2AuthenticationFilter extends OncePerRequestFilter {
   }
 
   private Authentication attemptAuthentication(final HttpServletRequest request) {
-    final var token = obtainAccessToken(request);
-    final var principal = retrieveUser(token.getEmail());
+    final var acessToken = obtainToken(request);
+    final var principal = retrieveUser(acessToken.getEmail());
 
     return createSuccessAuthentication(request, principal);
   }
 
-  private Token obtainAccessToken(final HttpServletRequest httpServletRequest) {
-    final var value = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
-    final var token = tokenProvideUseCase.authenticate(value);
+  private Token obtainToken(final HttpServletRequest httpServletRequest) {
+    final var accessToken = tokenProvider.authenticate(
+        httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION));
 
-    if (tokenQueryPort.isExpired(token.getValue())) {
+    if (expiredTokenQueryPort.isExpired(accessToken.getValue())) {
       throw new BadCredentialsException("Bad credentials");
     }
 
-    return token;
+    return accessToken;
   }
 
   private OAuth2UserPrincipal retrieveUser(final String email) {

@@ -2,13 +2,15 @@ package me.jaeyeop.blog.auth.application.service;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
+import me.jaeyeop.blog.auth.adapter.in.LogoutCommand;
+import me.jaeyeop.blog.auth.adapter.out.ExpiredTokenPersistenceAdapter;
 import me.jaeyeop.blog.auth.adapter.out.ExpiredTokenRepository;
+import me.jaeyeop.blog.auth.adapter.out.RefreshTokenPersistenceAdapter;
 import me.jaeyeop.blog.auth.adapter.out.RefreshTokenRepository;
-import me.jaeyeop.blog.auth.adapter.out.TokenPersistenceAdapter;
-import me.jaeyeop.blog.auth.application.port.in.TokenProvideUseCase;
-import me.jaeyeop.blog.auth.application.port.out.TokenCommandPort;
-import me.jaeyeop.blog.config.security.JWTProvideServiceFactory;
+import me.jaeyeop.blog.auth.application.port.out.ExpiredTokenCommandPort;
+import me.jaeyeop.blog.auth.application.port.out.RefreshTokenCommandPort;
+import me.jaeyeop.blog.config.security.JWTProviderFactory;
+import me.jaeyeop.blog.config.token.TokenProvider;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,11 +22,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class TokenCommandServiceTest {
 
   @Spy
-  private TokenCommandPort tokenCommandPort = new TokenPersistenceAdapter(
-      Mockito.mock(ExpiredTokenRepository.class), mock(RefreshTokenRepository.class));
+  private ExpiredTokenCommandPort expiredTokenCommandPort = new ExpiredTokenPersistenceAdapter(
+      Mockito.mock(ExpiredTokenRepository.class));
 
   @Spy
-  private TokenProvideUseCase jwtProvider = JWTProvideServiceFactory.create();
+  private RefreshTokenCommandPort refreshTokenCommandPort = new RefreshTokenPersistenceAdapter(
+      Mockito.mock(RefreshTokenRepository.class));
+
+  @Spy
+  private TokenProvider jwtProvider = JWTProviderFactory.create();
 
   @InjectMocks
   private TokenCommandService authCommandService;
@@ -33,10 +39,24 @@ class TokenCommandServiceTest {
   void 만료_저장소에_만료되지_않은_토큰_저장() {
     final var accessToken = jwtProvider.createAccess("email@email.com");
     final var refreshToken = jwtProvider.createRefresh("email@email.com");
+    final var command = new LogoutCommand(accessToken.getValue(), refreshToken.getValue());
 
-    authCommandService.logout(accessToken, refreshToken);
+    authCommandService.logout(command);
 
-    then(tokenCommandPort).should().expire(any(), any());
+    then(expiredTokenCommandPort).should().expire(any());
+    then(refreshTokenCommandPort).should().expire(any());
+  }
+
+  @Test
+  void 만료_저장소에_만료된_토큰_저장() {
+    final var accessToken = jwtProvider.createAccess("email@email.com");
+    final var refreshToken = jwtProvider.createRefresh("email@email.com");
+    final var command = new LogoutCommand(accessToken.getValue(), refreshToken.getValue());
+
+    authCommandService.logout(command);
+
+    then(expiredTokenCommandPort).should().expire(any());
+    then(refreshTokenCommandPort).should().expire(any());
   }
 
 }

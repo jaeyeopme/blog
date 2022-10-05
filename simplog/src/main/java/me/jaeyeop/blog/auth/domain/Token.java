@@ -1,10 +1,12 @@
 package me.jaeyeop.blog.auth.domain;
 
 import java.time.Instant;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
+@EqualsAndHashCode
 @RequiredArgsConstructor
 public class Token {
 

@@ -1,9 +1,9 @@
 package me.jaeyeop.blog.auth.application.port.in;
 
-import me.jaeyeop.blog.auth.domain.Token;
+import me.jaeyeop.blog.auth.adapter.in.LogoutCommand;
 
 public interface TokenCommandUseCase {
 
-  void logout(Token access, Token refresh);
+  void logout(LogoutCommand command);
 
 }

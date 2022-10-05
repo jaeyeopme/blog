@@ -5,9 +5,10 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import me.jaeyeop.blog.auth.application.port.in.TokenProvideUseCase;
-import me.jaeyeop.blog.auth.application.port.out.TokenCommandPort;
+import me.jaeyeop.blog.auth.adapter.out.RefreshToken;
+import me.jaeyeop.blog.auth.application.port.out.RefreshTokenCommandPort;
 import me.jaeyeop.blog.auth.domain.Token;
+import me.jaeyeop.blog.config.token.TokenProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -19,9 +20,9 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
-  private final TokenCommandPort tokenCommandPort;
+  private final RefreshTokenCommandPort refreshTokenCommandPort;
 
-  private final TokenProvideUseCase tokenProvideUseCase;
+  private final TokenProvider tokenProvider;
 
   private final ObjectMapper objectMapper;
 
@@ -34,17 +35,18 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     final var principal = (OAuth2User) authentication.getPrincipal();
 
-    final var access = tokenProvideUseCase.createAccess(principal.getName());
-    final var refresh = createRefresh(principal);
+    final var accessToken = tokenProvider.createAccess(principal.getName());
+    final var refreshToken = createRefresh(principal);
 
     objectMapper.writeValue(response.getWriter(),
-        new OAuth2SuccessResponse(access.getValue(), refresh.getValue()));
+        new OAuth2SuccessResponse(accessToken.getValue(), refreshToken.getValue()));
   }
 
   private Token createRefresh(final OAuth2User principal) {
-    final var refresh = tokenProvideUseCase.createRefresh(principal.getName());
-    tokenCommandPort.activate(refresh);
-    return refresh;
+    final var token = tokenProvider.createRefresh(principal.getName());
+    refreshTokenCommandPort.activateRefresh(
+        new RefreshToken(token.getValue(), token.getExpiration()));
+    return token;
   }
 
 }
