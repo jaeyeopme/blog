@@ -43,7 +43,7 @@ public class User {
   @Column(nullable = false)
   private OAuth2Provider provider;
 
-  public static User of(final OAuth2Attributes attributes) {
+  public static User from(final OAuth2Attributes attributes) {
     return User.builder()
         .email(attributes.getEmail())
         .name(attributes.getName())

@@ -1,4 +1,4 @@
-package me.jaeyeop.blog.config.security;
+package me.jaeyeop.blog.config.token;
 
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.assertj.core.api.BDDAssertions.thenThrownBy;
@@ -10,7 +10,7 @@ class TokenProviderTest {
   @Test
   void 엑세스_토큰_발급() {
     final var email = "email@email.com";
-    final var provider = JWTProviderFactory.create();
+    final var provider = JWTProviderFactory.createDefault();
 
     final var token = provider.createAccess(email);
 
@@ -20,7 +20,7 @@ class TokenProviderTest {
   @Test
   void 리프레시_토큰_발급() {
     final var email = "email@email.com";
-    final var provider = JWTProviderFactory.create();
+    final var provider = JWTProviderFactory.createDefault();
 
     final var token = provider.createRefresh(email);
 
@@ -29,7 +29,7 @@ class TokenProviderTest {
 
   @Test
   void 잘못된_키를_가진_엑세스_토큰_검증_실패() {
-    final var provider = JWTProviderFactory.create();
+    final var provider = JWTProviderFactory.createDefault();
     final var wrongKeyProvider = JWTProviderFactory.createWrongKey();
     final var wrongKeyToken = wrongKeyProvider.createAccess("email@email.com");
 
@@ -39,7 +39,7 @@ class TokenProviderTest {
 
   @Test
   void 만료된_토큰_검증_실패() {
-    final var provider = JWTProviderFactory.create();
+    final var provider = JWTProviderFactory.createDefault();
     final var expiredProvider = JWTProviderFactory.createExpired();
     final var expiredToken = expiredProvider.createAccess("email@email.com");
 

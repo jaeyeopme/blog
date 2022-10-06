@@ -51,12 +51,6 @@ public class OAuth2AuthenticationFilter extends OncePerRequestFilter {
     chain.doFilter(request, response);
   }
 
-  private UsernamePasswordAuthenticationToken getResult(
-      final OAuth2UserPrincipal principal) {
-    return new UsernamePasswordAuthenticationToken(principal, Strings.EMPTY,
-        principal.getAuthorities());
-  }
-
   private Authentication attemptAuthentication(final HttpServletRequest request) {
     final var acessToken = obtainToken(request);
     final var principal = retrieveUser(acessToken.getEmail());
@@ -76,11 +70,10 @@ public class OAuth2AuthenticationFilter extends OncePerRequestFilter {
   }
 
   private OAuth2UserPrincipal retrieveUser(final String email) {
-    if (!userQueryPort.existsByEmail(email)) {
-      throw new UsernameNotFoundException("User not found");
-    }
+    final var user = userQueryPort.findByEmail(email)
+        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-    return OAuth2UserPrincipal.from(userQueryPort.findByEmail(email));
+    return OAuth2UserPrincipal.from(user);
   }
 
   private Authentication createSuccessAuthentication(
@@ -89,6 +82,12 @@ public class OAuth2AuthenticationFilter extends OncePerRequestFilter {
     final var result = getResult(principal);
     result.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
     return result;
+  }
+
+  private UsernamePasswordAuthenticationToken getResult(
+      final OAuth2UserPrincipal principal) {
+    return new UsernamePasswordAuthenticationToken(principal, Strings.EMPTY,
+        principal.getAuthorities());
   }
 
   private void successfulAuthentication(final Authentication authResult) {

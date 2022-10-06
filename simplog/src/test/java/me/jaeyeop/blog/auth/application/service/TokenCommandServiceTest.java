@@ -9,7 +9,7 @@ import me.jaeyeop.blog.auth.adapter.out.RefreshTokenPersistenceAdapter;
 import me.jaeyeop.blog.auth.adapter.out.RefreshTokenRepository;
 import me.jaeyeop.blog.auth.application.port.out.ExpiredTokenCommandPort;
 import me.jaeyeop.blog.auth.application.port.out.RefreshTokenCommandPort;
-import me.jaeyeop.blog.config.security.JWTProviderFactory;
+import me.jaeyeop.blog.config.token.JWTProviderFactory;
 import me.jaeyeop.blog.config.token.TokenProvider;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,7 +30,7 @@ class TokenCommandServiceTest {
       Mockito.mock(RefreshTokenRepository.class));
 
   @Spy
-  private TokenProvider jwtProvider = JWTProviderFactory.create();
+  private TokenProvider jwtProvider = JWTProviderFactory.createDefault();
 
   @InjectMocks
   private TokenCommandService authCommandService;

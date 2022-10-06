@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class OAuth2SuccessResponse {
+public class OAuth2Success {
 
   private final String accessToken;
 

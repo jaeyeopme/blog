@@ -1,4 +1,4 @@
-package me.jaeyeop.blog.config.security;
+package me.jaeyeop.blog.config.clock;
 
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.ComponentScan;

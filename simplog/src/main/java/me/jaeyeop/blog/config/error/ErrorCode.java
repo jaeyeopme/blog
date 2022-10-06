@@ -14,7 +14,7 @@ public enum ErrorCode {
 
   FORBIDDEN("접근 권한이 없습니다.", HttpStatus.FORBIDDEN),
 
-  USER_NOT_FOUND("존재하지 않는 회원입니다.", HttpStatus.NOT_FOUND);
+  EMAIL_NOT_FOUND("존재하지 않는 회원입니다.", HttpStatus.NOT_FOUND);
 
   private final String message;
 
