@@ -1,26 +1,28 @@
-package me.jaeyeop.blog.user.application.port.in;
+package me.jaeyeop.blog.user.adapter.in;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import me.jaeyeop.blog.config.security.OAuth2Provider;
 import me.jaeyeop.blog.user.domain.User;
 
 @Getter
 @EqualsAndHashCode
 @Builder(access = AccessLevel.PRIVATE)
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserProfile {
 
-  private final String email;
+  private String email;
 
-  private final String name;
+  private String name;
 
-  private final String picture;
+  private String picture;
 
-  private final OAuth2Provider provider;
+  private OAuth2Provider provider;
 
   public static UserProfile from(final User user) {
     return UserProfile.builder()

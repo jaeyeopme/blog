@@ -1,5 +1,6 @@
 package me.jaeyeop.blog.user.adapter.in;
 
+import javax.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -10,8 +11,11 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class GetProfileCommand {
+public class UpdateProfileCommand {
 
-  private String email;
+  @NotBlank
+  private String name;
+
+  private String picture;
 
 }

@@ -53,4 +53,9 @@ public class User {
         .build();
   }
 
+  public void updateProfile(
+      final String name, final String picture) {
+    this.name = name;
+    this.picture = picture;
+  }
 }
