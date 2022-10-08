@@ -4,7 +4,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 
-public class JWTProviderFactory {
+public class TokenProviderFactory {
 
   private static final Clock DEFAULT_JWT_CLOCK = Clock.fixed(Instant.now(), ZoneId.systemDefault());
 
@@ -14,9 +14,9 @@ public class JWTProviderFactory {
 
   private static final int DEFAULT_JWT_REFRESH_EXP = 600000;
 
-  public static TokenProvider createWrongKey() {
+  public static TokenProvider createDifferentKey() {
     return new JWTProvider(
-        "wrongKey-wrongKey-wrongKey",
+        "differentKey-differentKey-differentKey",
         DEFAULT_JWT_ACCESS_EXP,
         DEFAULT_JWT_REFRESH_EXP,
         DEFAULT_JWT_CLOCK);
