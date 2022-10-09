@@ -6,4 +6,6 @@ public interface UserCommandPort {
 
   User save(User user);
 
+  void deleteByEmail(String email);
+
 }

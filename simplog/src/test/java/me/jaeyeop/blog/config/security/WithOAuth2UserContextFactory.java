@@ -7,10 +7,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
 
 public class WithOAuth2UserContextFactory
-    implements WithSecurityContextFactory<WithOAuth2User> {
+    implements WithSecurityContextFactory<WithDefaultUser> {
 
   @Override
-  public SecurityContext createSecurityContext(final WithOAuth2User annotation) {
+  public SecurityContext createSecurityContext(final WithDefaultUser annotation) {
     final var context = SecurityContextHolder.createEmptyContext();
     final var principal = OAuth2UserPrincipal.from(UserFactory.createDefault());
 

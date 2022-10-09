@@ -2,18 +2,21 @@ package me.jaeyeop.blog.user.adapter.in;
 
 import static me.jaeyeop.blog.config.error.ErrorCode.EMAIL_NOT_FOUND;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.only;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import java.util.Optional;
 import me.jaeyeop.blog.config.error.ErrorResponse;
-import me.jaeyeop.blog.config.security.WithOAuth2User;
+import me.jaeyeop.blog.config.security.WithDefaultUser;
 import me.jaeyeop.blog.config.support.WebMvcTestSupport;
 import me.jaeyeop.blog.user.adapter.out.UserRepository;
-import me.jaeyeop.blog.user.application.port.service.UserCommandService;
-import me.jaeyeop.blog.user.application.port.service.UserQueryService;
+import me.jaeyeop.blog.user.application.service.UserCommandService;
+import me.jaeyeop.blog.user.application.service.UserQueryService;
 import me.jaeyeop.blog.user.domain.UserFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -31,7 +34,7 @@ class UserWebAdapterTest extends WebMvcTestSupport {
   @Autowired
   private UserRepository userRepository;
 
-  @WithOAuth2User
+  @WithDefaultUser
   @Test
   void 자신의_프로필_조회() throws Exception {
     final var user = UserFactory.createDefault();
@@ -47,7 +50,7 @@ class UserWebAdapterTest extends WebMvcTestSupport {
         content().json(toJson(profile)));
   }
 
-  @WithOAuth2User
+  @WithDefaultUser
   @Test
   void 이메일로_프로필_조회() throws Exception {
     final var user = UserFactory.createDefault();
@@ -62,7 +65,7 @@ class UserWebAdapterTest extends WebMvcTestSupport {
         content().string(toJson(UserProfile.from(user))));
   }
 
-  @WithOAuth2User
+  @WithDefaultUser
   @Test
   void 존재하지_않은_이메일로_프로필_조회() throws Exception {
     given(userRepository.findByEmail("non@email.com")).willReturn(Optional.empty());
@@ -77,7 +80,7 @@ class UserWebAdapterTest extends WebMvcTestSupport {
         content().string(toJson(error)));
   }
 
-  @WithOAuth2User
+  @WithDefaultUser
   @Test
   void 프로필_업데이트() throws Exception {
     final var user = UserFactory.createDefault();
@@ -97,7 +100,7 @@ class UserWebAdapterTest extends WebMvcTestSupport {
         content().string(toJson(UserProfile.from(user))));
   }
 
-  @WithOAuth2User
+  @WithDefaultUser
   @NullAndEmptySource
   @ParameterizedTest
   void 비어있는_이름으로_프로필_업데이트(final String name) throws Exception {
@@ -110,6 +113,18 @@ class UserWebAdapterTest extends WebMvcTestSupport {
 
     when.andExpectAll(
         status().isBadRequest());
+  }
+
+  @WithDefaultUser
+  @Test
+  void 프로필_삭제() throws Exception {
+    final var email = UserFactory.createDefault().getEmail();
+    final var given = delete(UserWebAdapter.USER_API_URI);
+
+    final var when = mockMvc.perform(given);
+
+    when.andExpectAll(status().isOk());
+    then(userRepository).should(only()).deleteByEmail(email);
   }
 
 }

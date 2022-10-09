@@ -9,7 +9,7 @@ import java.time.Clock;
 import java.util.Base64;
 import java.util.Date;
 import javax.crypto.SecretKey;
-import me.jaeyeop.blog.auth.domain.Token;
+import me.jaeyeop.blog.token.domain.Token;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;

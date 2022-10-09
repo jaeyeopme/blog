@@ -12,7 +12,7 @@ import me.jaeyeop.blog.user.domain.User;
 @Getter
 @EqualsAndHashCode
 @Builder(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserProfile {
 

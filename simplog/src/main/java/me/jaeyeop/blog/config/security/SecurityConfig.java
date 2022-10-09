@@ -1,6 +1,6 @@
 package me.jaeyeop.blog.config.security;
 
-import static me.jaeyeop.blog.auth.adapter.in.AuthWebAdaptor.AUTH_API_URI;
+import static me.jaeyeop.blog.token.adapter.in.TokenWebAdaptor.AUTH_API_URI;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;

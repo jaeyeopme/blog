@@ -7,6 +7,7 @@ import me.jaeyeop.blog.user.application.port.in.UserCommandUseCase;
 import me.jaeyeop.blog.user.application.port.in.UserQueryUseCase;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -47,6 +48,14 @@ public class UserWebAdapter {
       @AuthenticationPrincipal OAuth2UserPrincipal principal,
       @RequestBody @Valid UpdateProfileCommand command) {
     return userCommandUseCase.updateProfile(principal.getName(), command);
+  }
+
+  @ResponseStatus(HttpStatus.OK)
+  @DeleteMapping
+  public void deleteProfile(
+      @AuthenticationPrincipal OAuth2UserPrincipal principal) {
+    final var command = new DeleteProfileCommand(principal.getName());
+    userCommandUseCase.deleteProfile(command);
   }
 
 }

@@ -4,12 +4,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.charset.StandardCharsets;
-import me.jaeyeop.blog.auth.adapter.out.ExpiredTokenPersistenceAdapter;
-import me.jaeyeop.blog.auth.adapter.out.ExpiredTokenRepository;
-import me.jaeyeop.blog.auth.adapter.out.RefreshTokenPersistenceAdapter;
-import me.jaeyeop.blog.auth.adapter.out.RefreshTokenRepository;
 import me.jaeyeop.blog.config.clock.ClockTestConfig;
 import me.jaeyeop.blog.config.security.SecurityTestConfig;
+import me.jaeyeop.blog.token.adapter.out.ExpiredTokenPersistenceAdapter;
+import me.jaeyeop.blog.token.adapter.out.ExpiredTokenRepository;
+import me.jaeyeop.blog.token.adapter.out.RefreshTokenPersistenceAdapter;
+import me.jaeyeop.blog.token.adapter.out.RefreshTokenRepository;
 import me.jaeyeop.blog.user.adapter.out.UserPersistenceAdapter;
 import me.jaeyeop.blog.user.adapter.out.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
