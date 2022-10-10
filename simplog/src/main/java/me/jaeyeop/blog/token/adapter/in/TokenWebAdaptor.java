@@ -26,18 +26,16 @@ public class TokenWebAdaptor {
 
   @ResponseStatus(HttpStatus.OK)
   @GetMapping("/logout")
-  public void logout(
-      @RequestHeader(AUTHORIZATION) final String access,
-      @RequestHeader(REFRESH_AUTHORIZATION) final String refresh) {
-    final var command = new LogoutCommand(access, refresh);
+  public void logout(@RequestHeader(AUTHORIZATION) final String accessToken,
+      @RequestHeader(REFRESH_AUTHORIZATION) final String refreshToken) {
+    final var command = new LogoutCommand(accessToken, refreshToken);
     tokenCommandUseCase.logout(command);
   }
 
   @ResponseStatus(HttpStatus.CREATED)
   @GetMapping("/refresh")
-  public String refresh(
-      @RequestHeader(REFRESH_AUTHORIZATION) final String refresh) {
-    final var command = new RefreshCommand(refresh);
+  public String refresh(@RequestHeader(REFRESH_AUTHORIZATION) final String refreshToken) {
+    final var command = new RefreshCommand(refreshToken);
     return tokenQueryUseCase.refresh(command);
   }
 

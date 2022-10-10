@@ -18,7 +18,6 @@ import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.test.util.ReflectionTestUtils;
 
 class UserCommandServiceTest {
 
@@ -38,13 +37,10 @@ class UserCommandServiceTest {
   @Test
   void 프로필_업데이트() {
     final var user = UserFactory.createDefault();
-    final var newName = "newName";
-    final var newPicture = "newPicture";
-    final var command = new UpdateProfileCommand(newName, newPicture);
-    final var expected = UserProfile.from(user);
-    ReflectionTestUtils.setField(expected, "name", newName);
-    ReflectionTestUtils.setField(expected, "picture", newPicture);
     given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
+    final var command = new UpdateProfileCommand("newName", "newPicture");
+    final var expected = UserProfile.from(
+        UserFactory.createUpdate(command.getName(), command.getPicture()));
 
     final var actual = userCommandUseCase.updateProfile(user.getEmail(), command);
 
@@ -54,8 +50,8 @@ class UserCommandServiceTest {
   @Test
   void 존재하지_않는_프로필_업데이트() {
     final var user = UserFactory.createDefault();
-    final var command = new UpdateProfileCommand("newName", "newPicture");
     given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.empty());
+    final var command = new UpdateProfileCommand("newName", "newPicture");
 
     final ThrowingCallable when = () -> userCommandUseCase.updateProfile(user.getEmail(), command);
 

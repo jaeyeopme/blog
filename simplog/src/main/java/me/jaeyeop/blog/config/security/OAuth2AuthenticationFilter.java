@@ -11,6 +11,7 @@ import me.jaeyeop.blog.config.token.TokenProvider;
 import me.jaeyeop.blog.token.application.port.out.ExpiredTokenQueryPort;
 import me.jaeyeop.blog.token.domain.Token;
 import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
+import me.jaeyeop.blog.user.domain.User;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
@@ -18,6 +19,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -42,7 +44,7 @@ public class OAuth2AuthenticationFilter extends OncePerRequestFilter {
       @NonNull final FilterChain chain)
       throws ServletException, IOException {
     try {
-      final var authResult = attemptAuthentication(request);
+      final Authentication authResult = attemptAuthentication(request);
       successfulAuthentication(authResult);
     } catch (final AuthenticationException e) {
       unsuccessfulAuthentication(e);
@@ -52,14 +54,14 @@ public class OAuth2AuthenticationFilter extends OncePerRequestFilter {
   }
 
   private Authentication attemptAuthentication(final HttpServletRequest request) {
-    final var acessToken = obtainToken(request);
-    final var principal = retrieveUser(acessToken.getEmail());
+    final Token acessToken = obtainToken(request);
+    final OAuth2UserPrincipal principal = retrieveUser(acessToken.getEmail());
 
     return createSuccessAuthentication(request, principal);
   }
 
   private Token obtainToken(final HttpServletRequest httpServletRequest) {
-    final var accessToken = tokenProvider.authenticate(
+    final Token accessToken = tokenProvider.authenticate(
         httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION));
 
     if (expiredTokenQueryPort.isExpired(accessToken.getValue())) {
@@ -70,7 +72,7 @@ public class OAuth2AuthenticationFilter extends OncePerRequestFilter {
   }
 
   private OAuth2UserPrincipal retrieveUser(final String email) {
-    final var user = userQueryPort.findByEmail(email)
+    final User user = userQueryPort.findByEmail(email)
         .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
     return OAuth2UserPrincipal.from(user);
@@ -79,7 +81,7 @@ public class OAuth2AuthenticationFilter extends OncePerRequestFilter {
   private Authentication createSuccessAuthentication(
       final HttpServletRequest request,
       final OAuth2UserPrincipal principal) {
-    final var result = getResult(principal);
+    final UsernamePasswordAuthenticationToken result = getResult(principal);
     result.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
     return result;
   }
@@ -91,7 +93,7 @@ public class OAuth2AuthenticationFilter extends OncePerRequestFilter {
   }
 
   private void successfulAuthentication(final Authentication authResult) {
-    final var context = SecurityContextHolder.createEmptyContext();
+    final SecurityContext context = SecurityContextHolder.createEmptyContext();
     context.setAuthentication(authResult);
     SecurityContextHolder.setContext(context);
     log.debug("Set SecurityContextHolder to {}", authResult);

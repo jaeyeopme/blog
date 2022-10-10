@@ -19,13 +19,16 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class OAuth2UserPrincipal implements OAuth2User {
 
-  private final User user;
+  private final Long id;
+
+  private final String email;
 
   private final Collection<? extends GrantedAuthority> authorities;
 
   public static OAuth2UserPrincipal from(final User user) {
     return OAuth2UserPrincipal.builder()
-        .user(user)
+        .id(user.getId())
+        .email(user.getEmail())
         .authorities(Collections.singleton(new SimpleGrantedAuthority(user.getRole().name())))
         .build();
   }
@@ -37,7 +40,7 @@ public class OAuth2UserPrincipal implements OAuth2User {
 
   @Override
   public String getName() {
-    return user.getEmail();
+    return this.email;
   }
 
 }

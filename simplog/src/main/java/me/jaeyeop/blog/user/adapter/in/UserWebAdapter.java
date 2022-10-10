@@ -29,32 +29,29 @@ public class UserWebAdapter {
 
   @ResponseStatus(HttpStatus.OK)
   @GetMapping
-  public UserProfile getProfile(
-      @AuthenticationPrincipal OAuth2UserPrincipal principal) {
-    final var command = new GetProfileCommand(principal.getName());
+  public UserProfile getProfile(@AuthenticationPrincipal OAuth2UserPrincipal principal) {
+    final GetProfileCommand command = new GetProfileCommand(principal.getName());
     return userQueryUseCase.getProfile(command);
   }
 
   @ResponseStatus(HttpStatus.OK)
   @GetMapping("/{email}")
   public UserProfile getProfile(@PathVariable String email) {
-    final var command = new GetProfileCommand(email);
+    final GetProfileCommand command = new GetProfileCommand(email);
     return userQueryUseCase.getProfile(command);
   }
 
   @ResponseStatus(HttpStatus.OK)
   @PutMapping
-  public UserProfile updateProfile(
-      @AuthenticationPrincipal OAuth2UserPrincipal principal,
+  public UserProfile updateProfile(@AuthenticationPrincipal OAuth2UserPrincipal principal,
       @RequestBody @Valid UpdateProfileCommand command) {
     return userCommandUseCase.updateProfile(principal.getName(), command);
   }
 
   @ResponseStatus(HttpStatus.OK)
   @DeleteMapping
-  public void deleteProfile(
-      @AuthenticationPrincipal OAuth2UserPrincipal principal) {
-    final var command = new DeleteProfileCommand(principal.getName());
+  public void deleteProfile(@AuthenticationPrincipal OAuth2UserPrincipal principal) {
+    final DeleteProfileCommand command = new DeleteProfileCommand(principal.getName());
     userCommandUseCase.deleteProfile(command);
   }
 

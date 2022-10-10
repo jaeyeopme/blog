@@ -9,6 +9,8 @@ import me.jaeyeop.blog.config.token.TokenProvider;
 import me.jaeyeop.blog.token.adapter.out.RefreshToken;
 import me.jaeyeop.blog.token.application.port.out.RefreshTokenCommandPort;
 import me.jaeyeop.blog.token.domain.Token;
+import me.jaeyeop.blog.user.adapter.in.UserWebAdapter;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -32,17 +34,21 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
       final Authentication authentication) throws IOException {
     response.setStatus(HttpStatus.OK.value());
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-    final var principal = (OAuth2UserPrincipal) authentication.getPrincipal();
+    final OAuth2UserPrincipal principal = (OAuth2UserPrincipal) authentication.getPrincipal();
 
-    final var accessToken = tokenProvider.createAccess(principal.getName());
-    final var refreshToken = createRefresh(principal);
+    final Token accessToken = tokenProvider.createAccess(principal.getName());
+    final Token refreshToken = createRefresh(principal);
+
+    final String createdURI = String.format("%s/%s", UserWebAdapter.USER_API_URI,
+        principal.getEmail());
+    response.addHeader(HttpHeaders.LOCATION, createdURI);
 
     objectMapper.writeValue(response.getWriter(),
         new OAuth2Success(accessToken.getValue(), refreshToken.getValue()));
   }
 
   private Token createRefresh(final OAuth2UserPrincipal principal) {
-    final var token = tokenProvider.createRefresh(principal.getName());
+    final Token token = tokenProvider.createRefresh(principal.getName());
     refreshTokenCommandPort.activateRefresh(
         new RefreshToken(token.getValue(), token.getExpiration()));
     return token;

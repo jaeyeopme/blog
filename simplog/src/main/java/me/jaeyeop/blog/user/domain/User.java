@@ -12,15 +12,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import me.jaeyeop.blog.config.jpa.AbstractTimeAuditing;
 import me.jaeyeop.blog.config.security.OAuth2Attributes;
 import me.jaeyeop.blog.config.security.OAuth2Provider;
 
+@Entity
 @Getter
 @Builder(access = AccessLevel.PACKAGE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity
-public class User {
+public class User extends AbstractTimeAuditing {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,9 +54,16 @@ public class User {
         .build();
   }
 
+  public static User proxy(final Long id) {
+    return User.builder()
+        .id(id)
+        .build();
+  }
+
   public void updateProfile(
       final String name, final String picture) {
     this.name = name;
     this.picture = picture;
   }
+
 }

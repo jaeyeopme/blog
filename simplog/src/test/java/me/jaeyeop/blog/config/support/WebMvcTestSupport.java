@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.charset.StandardCharsets;
 import me.jaeyeop.blog.config.clock.ClockTestConfig;
 import me.jaeyeop.blog.config.security.SecurityTestConfig;
+import me.jaeyeop.blog.post.adapter.out.PostPersistenceAdapter;
+import me.jaeyeop.blog.post.adapter.out.PostRepository;
 import me.jaeyeop.blog.token.adapter.out.ExpiredTokenPersistenceAdapter;
 import me.jaeyeop.blog.token.adapter.out.ExpiredTokenRepository;
 import me.jaeyeop.blog.token.adapter.out.RefreshTokenPersistenceAdapter;
@@ -26,16 +28,14 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @Import({
     SecurityTestConfig.class,
     ClockTestConfig.class,
-    UserPersistenceAdapter.class,
     ExpiredTokenPersistenceAdapter.class,
-    RefreshTokenPersistenceAdapter.class
+    RefreshTokenPersistenceAdapter.class,
+    UserPersistenceAdapter.class,
+    PostPersistenceAdapter.class
 })
 public abstract class WebMvcTestSupport {
 
   protected MockMvc mockMvc;
-
-  @MockBean
-  protected UserRepository userRepository;
 
   @MockBean
   protected ExpiredTokenRepository expiredTokenRepository;
@@ -43,6 +43,12 @@ public abstract class WebMvcTestSupport {
   @MockBean
   protected RefreshTokenRepository refreshTokenRepository;
 
+  @MockBean
+  protected UserRepository userRepository;
+
+  @MockBean
+  protected PostRepository postRepository;
+  
   @Autowired
   private WebApplicationContext context;
 

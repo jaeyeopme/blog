@@ -5,7 +5,6 @@ import me.jaeyeop.blog.user.adapter.in.UserProfile;
 
 public interface UserQueryUseCase {
 
-
   UserProfile getProfile(GetProfileCommand command);
 
 }

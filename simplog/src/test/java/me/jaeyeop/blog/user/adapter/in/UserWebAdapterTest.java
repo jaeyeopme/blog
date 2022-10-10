@@ -1,8 +1,10 @@
 package me.jaeyeop.blog.user.adapter.in;
 
 import static me.jaeyeop.blog.config.error.ErrorCode.EMAIL_NOT_FOUND;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.only;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -24,7 +26,6 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.util.ReflectionTestUtils;
 
 @SuppressWarnings("deprecation")
 @Import({UserQueryService.class, UserCommandService.class})
@@ -39,15 +40,15 @@ class UserWebAdapterTest extends WebMvcTestSupport {
   void 자신의_프로필_조회() throws Exception {
     final var user = UserFactory.createDefault();
     given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
-    final var profile = UserProfile.from(user);
     final var given = get(UserWebAdapter.USER_API_URI);
+    final var response = UserProfile.from(user);
 
     final var when = mockMvc.perform(given);
 
     when.andExpectAll(
         status().isOk(),
         content().contentType(APPLICATION_JSON_UTF8),
-        content().json(toJson(profile)));
+        content().json(toJson(response)));
   }
 
   @WithDefaultUser
@@ -56,28 +57,30 @@ class UserWebAdapterTest extends WebMvcTestSupport {
     final var user = UserFactory.createDefault();
     given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
     final var given = get(UserWebAdapter.USER_API_URI + "/{email}", user.getEmail());
+    final var response = UserProfile.from(user);
 
     final var when = mockMvc.perform(given);
 
     when.andExpectAll(
         status().isOk(),
         content().contentType(APPLICATION_JSON_UTF8),
-        content().string(toJson(UserProfile.from(user))));
+        content().json(toJson(response)));
   }
 
   @WithDefaultUser
   @Test
   void 존재하지_않은_이메일로_프로필_조회() throws Exception {
-    given(userRepository.findByEmail("non@email.com")).willReturn(Optional.empty());
-    final var given = get(UserWebAdapter.USER_API_URI + "/{email}", "non@email.com");
+    final var email = "non@email.com";
+    given(userRepository.findByEmail(email)).willReturn(Optional.empty());
+    final var given = get(UserWebAdapter.USER_API_URI + "/{email}", email);
+    final var response = ErrorResponse.of(EMAIL_NOT_FOUND).getBody();
 
     final var when = mockMvc.perform(given);
 
-    final var error = ErrorResponse.of(EMAIL_NOT_FOUND).getBody();
     when.andExpectAll(
         status().isNotFound(),
         content().contentType(APPLICATION_JSON_UTF8),
-        content().string(toJson(error)));
+        content().json(toJson(response)));
   }
 
   @WithDefaultUser
@@ -89,15 +92,15 @@ class UserWebAdapterTest extends WebMvcTestSupport {
     final var given = put(UserWebAdapter.USER_API_URI)
         .contentType(APPLICATION_JSON_UTF8)
         .content(toJson(command));
-    ReflectionTestUtils.setField(user, "name", command.getName());
-    ReflectionTestUtils.setField(user, "picture", command.getPicture());
+    final var response = UserProfile.from(
+        UserFactory.createUpdate(command.getName(), command.getPicture()));
 
     final var when = mockMvc.perform(given);
 
     when.andExpectAll(
         status().isOk(),
         content().contentType(APPLICATION_JSON_UTF8),
-        content().string(toJson(UserProfile.from(user))));
+        content().json(toJson(response)));
   }
 
   @WithDefaultUser
@@ -111,20 +114,20 @@ class UserWebAdapterTest extends WebMvcTestSupport {
 
     final var when = mockMvc.perform(given);
 
-    when.andExpectAll(
-        status().isBadRequest());
+    when.andExpectAll(status().isBadRequest());
+    then(userRepository).should(never()).findByEmail(any());
   }
 
   @WithDefaultUser
   @Test
   void 프로필_삭제() throws Exception {
-    final var email = UserFactory.createDefault().getEmail();
+    final var user = UserFactory.createDefault();
     final var given = delete(UserWebAdapter.USER_API_URI);
 
     final var when = mockMvc.perform(given);
 
     when.andExpectAll(status().isOk());
-    then(userRepository).should(only()).deleteByEmail(email);
+    then(userRepository).should(only()).deleteByEmail(user.getEmail());
   }
 
 }
