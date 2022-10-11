@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import me.jaeyeop.blog.config.token.TokenProvider;
 import me.jaeyeop.blog.token.adapter.out.RefreshToken;
 import me.jaeyeop.blog.token.application.port.out.RefreshTokenCommandPort;
@@ -18,7 +17,6 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
   private final RefreshTokenCommandPort refreshTokenCommandPort;
@@ -26,6 +24,13 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
   private final TokenProvider tokenProvider;
 
   private final ObjectMapper objectMapper;
+
+  public OAuth2SuccessHandler(final RefreshTokenCommandPort refreshTokenCommandPort,
+      final TokenProvider tokenProvider, final ObjectMapper objectMapper) {
+    this.refreshTokenCommandPort = refreshTokenCommandPort;
+    this.tokenProvider = tokenProvider;
+    this.objectMapper = objectMapper;
+  }
 
   @Override
   public void onAuthenticationSuccess(

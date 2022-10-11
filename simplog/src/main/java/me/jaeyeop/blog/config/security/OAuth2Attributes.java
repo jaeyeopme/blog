@@ -5,12 +5,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
 @EqualsAndHashCode
-@Builder(access = AccessLevel.PRIVATE)
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class OAuth2Attributes {
 
   private final OAuth2Provider provider;
@@ -20,6 +17,18 @@ public class OAuth2Attributes {
   private final String name;
 
   private final String picture;
+
+  @Builder(access = AccessLevel.PRIVATE)
+  private OAuth2Attributes(final OAuth2Provider provider,
+      final String email,
+      final String name,
+      final String picture) {
+    this.provider = provider;
+    this.email = email;
+    this.name = name;
+    this.picture = picture;
+  }
+
 
   public static OAuth2Attributes of(final OAuth2Provider provider,
       final Map<String, Object> attributes) {

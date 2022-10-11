@@ -4,7 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
 import me.jaeyeop.blog.config.token.TokenProvider;
 import me.jaeyeop.blog.config.token.TokenProviderFactory;
-import me.jaeyeop.blog.token.adapter.in.LogoutCommand;
+import me.jaeyeop.blog.token.adapter.in.command.LogoutCommand;
 import me.jaeyeop.blog.token.adapter.out.ExpiredTokenPersistenceAdapter;
 import me.jaeyeop.blog.token.adapter.out.ExpiredTokenRepository;
 import me.jaeyeop.blog.token.adapter.out.RefreshTokenPersistenceAdapter;

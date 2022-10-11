@@ -1,16 +1,18 @@
 package me.jaeyeop.blog.token.adapter.out;
 
-import lombok.RequiredArgsConstructor;
 import me.jaeyeop.blog.token.application.port.out.ExpiredTokenCommandPort;
 import me.jaeyeop.blog.token.application.port.out.ExpiredTokenQueryPort;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
 public class ExpiredTokenPersistenceAdapter
     implements ExpiredTokenCommandPort, ExpiredTokenQueryPort {
 
   private final ExpiredTokenRepository expiredTokenRepository;
+
+  public ExpiredTokenPersistenceAdapter(final ExpiredTokenRepository expiredTokenRepository) {
+    this.expiredTokenRepository = expiredTokenRepository;
+  }
 
   @Override
   public void expire(final ExpiredToken token) {

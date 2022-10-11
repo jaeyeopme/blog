@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import me.jaeyeop.blog.config.security.WithDefaultUser;
 import me.jaeyeop.blog.config.support.WebMvcTestSupport;
+import me.jaeyeop.blog.post.adapter.in.command.CreatePostCommand;
 import me.jaeyeop.blog.post.adapter.out.PostRepository;
 import me.jaeyeop.blog.post.application.service.PostCommandService;
 import me.jaeyeop.blog.post.domain.PostFactory;

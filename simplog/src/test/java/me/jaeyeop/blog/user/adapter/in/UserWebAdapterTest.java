@@ -16,6 +16,7 @@ import java.util.Optional;
 import me.jaeyeop.blog.config.error.ErrorResponse;
 import me.jaeyeop.blog.config.security.WithDefaultUser;
 import me.jaeyeop.blog.config.support.WebMvcTestSupport;
+import me.jaeyeop.blog.user.adapter.in.command.UpdateUserProfileCommand;
 import me.jaeyeop.blog.user.adapter.out.UserRepository;
 import me.jaeyeop.blog.user.application.service.UserCommandService;
 import me.jaeyeop.blog.user.application.service.UserQueryService;
@@ -51,7 +52,6 @@ class UserWebAdapterTest extends WebMvcTestSupport {
         content().json(toJson(response)));
   }
 
-  @WithDefaultUser
   @Test
   void 이메일로_프로필_조회() throws Exception {
     final var user = UserFactory.createDefault();
@@ -67,7 +67,6 @@ class UserWebAdapterTest extends WebMvcTestSupport {
         content().json(toJson(response)));
   }
 
-  @WithDefaultUser
   @Test
   void 존재하지_않은_이메일로_프로필_조회() throws Exception {
     final var email = "non@email.com";
@@ -88,7 +87,7 @@ class UserWebAdapterTest extends WebMvcTestSupport {
   void 프로필_업데이트() throws Exception {
     final var user = UserFactory.createDefault();
     given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
-    final var command = new UpdateProfileCommand("newName", "newPicture");
+    final var command = new UpdateUserProfileCommand("newName", "newPicture");
     final var given = put(UserWebAdapter.USER_API_URI)
         .contentType(APPLICATION_JSON_UTF8)
         .content(toJson(command));
@@ -107,7 +106,7 @@ class UserWebAdapterTest extends WebMvcTestSupport {
   @NullAndEmptySource
   @ParameterizedTest
   void 비어있는_이름으로_프로필_업데이트(final String name) throws Exception {
-    final var command = new UpdateProfileCommand(name, "newPicture");
+    final var command = new UpdateUserProfileCommand(name, "newPicture");
     final var given = put(UserWebAdapter.USER_API_URI)
         .contentType(APPLICATION_JSON_UTF8)
         .content(toJson(command));

@@ -1,9 +1,8 @@
 package me.jaeyeop.blog.token.application.service;
 
 import javax.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import me.jaeyeop.blog.config.token.TokenProvider;
-import me.jaeyeop.blog.token.adapter.in.LogoutCommand;
+import me.jaeyeop.blog.token.adapter.in.command.LogoutCommand;
 import me.jaeyeop.blog.token.adapter.out.ExpiredToken;
 import me.jaeyeop.blog.token.adapter.out.RefreshToken;
 import me.jaeyeop.blog.token.application.port.in.TokenCommandUseCase;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 @Transactional
 @Service
-@RequiredArgsConstructor
 public class TokenCommandService implements TokenCommandUseCase {
 
   private final ExpiredTokenCommandPort expiredTokenCommandPort;
@@ -23,10 +21,18 @@ public class TokenCommandService implements TokenCommandUseCase {
 
   private final TokenProvider tokenProvider;
 
+  public TokenCommandService(final ExpiredTokenCommandPort expiredTokenCommandPort,
+      final RefreshTokenCommandPort refreshTokenCommandPort,
+      final TokenProvider tokenProvider) {
+    this.expiredTokenCommandPort = expiredTokenCommandPort;
+    this.refreshTokenCommandPort = refreshTokenCommandPort;
+    this.tokenProvider = tokenProvider;
+  }
+
   @Override
   public void logout(final LogoutCommand command) {
-    final var accessToken = tokenProvider.authenticate(command.getAccessToken());
-    final var refreshToken = tokenProvider.authenticate(command.getRefreshToken());
+    final Token accessToken = tokenProvider.authenticate(command.getAccessToken());
+    final Token refreshToken = tokenProvider.authenticate(command.getRefreshToken());
 
     expiredTokenCommandPort.expire(getExpiredToken(accessToken));
     refreshTokenCommandPort.expire(getRefreshToken(refreshToken));

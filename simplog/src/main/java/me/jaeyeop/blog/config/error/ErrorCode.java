@@ -1,11 +1,9 @@
 package me.jaeyeop.blog.config.error;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 @Getter
-@RequiredArgsConstructor
 public enum ErrorCode {
 
   INVALID_ARGUMENT("잘못된 입력값입니다", HttpStatus.BAD_REQUEST),
@@ -19,5 +17,11 @@ public enum ErrorCode {
   private final String message;
 
   private final HttpStatus status;
+
+  ErrorCode(final String message,
+      final HttpStatus status) {
+    this.message = message;
+    this.status = status;
+  }
 
 }

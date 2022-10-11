@@ -3,7 +3,7 @@ package me.jaeyeop.blog.post.application.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import me.jaeyeop.blog.post.adapter.in.CreatePostCommand;
+import me.jaeyeop.blog.post.adapter.in.command.CreatePostCommand;
 import me.jaeyeop.blog.post.adapter.out.PostPersistenceAdapter;
 import me.jaeyeop.blog.post.adapter.out.PostRepository;
 import me.jaeyeop.blog.post.application.port.in.PostCommandUseCase;

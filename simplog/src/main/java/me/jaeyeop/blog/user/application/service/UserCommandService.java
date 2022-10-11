@@ -1,11 +1,10 @@
 package me.jaeyeop.blog.user.application.service;
 
 import javax.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import me.jaeyeop.blog.config.error.exception.EmailNotFoundException;
-import me.jaeyeop.blog.user.adapter.in.DeleteProfileCommand;
-import me.jaeyeop.blog.user.adapter.in.UpdateProfileCommand;
 import me.jaeyeop.blog.user.adapter.in.UserProfile;
+import me.jaeyeop.blog.user.adapter.in.command.DeleteUserProfileCommand;
+import me.jaeyeop.blog.user.adapter.in.command.UpdateUserProfileCommand;
 import me.jaeyeop.blog.user.application.port.in.UserCommandUseCase;
 import me.jaeyeop.blog.user.application.port.out.UserCommandPort;
 import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
@@ -14,16 +13,21 @@ import org.springframework.stereotype.Service;
 
 @Transactional
 @Service
-@RequiredArgsConstructor
 public class UserCommandService implements UserCommandUseCase {
 
   private final UserQueryPort userQueryPort;
 
   private final UserCommandPort userCommandPort;
 
+  public UserCommandService(final UserQueryPort userQueryPort,
+      final UserCommandPort userCommandPort) {
+    this.userQueryPort = userQueryPort;
+    this.userCommandPort = userCommandPort;
+  }
+
   @Override
   public UserProfile updateProfile(
-      final String email, final UpdateProfileCommand command) {
+      final String email, final UpdateUserProfileCommand command) {
     final User user = userQueryPort.findByEmail(email)
         .orElseThrow(EmailNotFoundException::new);
 
@@ -33,7 +37,7 @@ public class UserCommandService implements UserCommandUseCase {
   }
 
   @Override
-  public void deleteProfile(final DeleteProfileCommand command) {
+  public void deleteProfile(final DeleteUserProfileCommand command) {
     userCommandPort.deleteByEmail(command.getEmail());
   }
 

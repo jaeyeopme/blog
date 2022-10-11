@@ -8,34 +8,47 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import me.jaeyeop.blog.config.jpa.AbstractTimeAuditing;
 import me.jaeyeop.blog.user.domain.User;
 
 @Entity
 @Getter
-@Builder(access = AccessLevel.PACKAGE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends AbstractTimeAuditing {
 
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Id
   private Long id;
 
+  @NotBlank
   @Column(nullable = false)
   private String title;
 
   @Column
   private String content;
 
+  @NotNull
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(nullable = false)
   private User author;
+
+  protected Post() {
+  }
+
+  @Builder(access = AccessLevel.PACKAGE)
+  private Post(final Long id,
+      final String title,
+      final String content,
+      final User author) {
+    this.id = id;
+    this.title = title;
+    this.content = content;
+    this.author = author;
+  }
 
   public static Post of(
       final Long authorId,

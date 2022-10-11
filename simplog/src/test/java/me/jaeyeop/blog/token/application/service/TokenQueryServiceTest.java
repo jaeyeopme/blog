@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import me.jaeyeop.blog.config.token.TokenProvider;
 import me.jaeyeop.blog.config.token.TokenProviderFactory;
-import me.jaeyeop.blog.token.adapter.in.RefreshCommand;
+import me.jaeyeop.blog.token.adapter.in.command.RefreshCommand;
 import me.jaeyeop.blog.token.adapter.out.RefreshTokenPersistenceAdapter;
 import me.jaeyeop.blog.token.adapter.out.RefreshTokenRepository;
 import me.jaeyeop.blog.token.application.port.in.TokenQueryUseCase;

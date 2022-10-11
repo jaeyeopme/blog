@@ -1,16 +1,18 @@
 package me.jaeyeop.blog.token.adapter.out;
 
-import lombok.RequiredArgsConstructor;
 import me.jaeyeop.blog.token.application.port.out.RefreshTokenCommandPort;
 import me.jaeyeop.blog.token.application.port.out.RefreshTokenQueryPort;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
 public class RefreshTokenPersistenceAdapter
     implements RefreshTokenQueryPort, RefreshTokenCommandPort {
 
   private final RefreshTokenRepository refreshTokenRepository;
+
+  public RefreshTokenPersistenceAdapter(final RefreshTokenRepository refreshTokenRepository) {
+    this.refreshTokenRepository = refreshTokenRepository;
+  }
 
   @Override
   public boolean isExpired(final String token) {

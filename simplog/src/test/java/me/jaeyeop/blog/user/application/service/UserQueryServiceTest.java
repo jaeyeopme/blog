@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import java.util.Optional;
 import me.jaeyeop.blog.config.error.exception.EmailNotFoundException;
-import me.jaeyeop.blog.user.adapter.in.GetProfileCommand;
 import me.jaeyeop.blog.user.adapter.in.UserProfile;
+import me.jaeyeop.blog.user.adapter.in.command.GetUserProfileCommand;
 import me.jaeyeop.blog.user.adapter.out.UserPersistenceAdapter;
 import me.jaeyeop.blog.user.adapter.out.UserRepository;
 import me.jaeyeop.blog.user.application.port.in.UserQueryUseCase;
@@ -32,7 +32,7 @@ class UserQueryServiceTest {
   @Test
   void 프로필_조회() {
     final var user = UserFactory.createDefault();
-    final var command = new GetProfileCommand(user.getEmail());
+    final var command = new GetUserProfileCommand(user.getEmail());
     final var expected = UserProfile.from(user);
     given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
 
@@ -44,7 +44,7 @@ class UserQueryServiceTest {
   @Test
   void 존재하지_않는_프로필_조회() {
     final var user = UserFactory.createDefault();
-    final var command = new GetProfileCommand(user.getEmail());
+    final var command = new GetUserProfileCommand(user.getEmail());
     given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.empty());
 
     final ThrowingCallable when = () -> userQueryUseCase.getProfile(command);

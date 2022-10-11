@@ -5,11 +5,9 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import me.jaeyeop.blog.config.error.exception.NotSupportedRegistrationIdException;
 
 @Getter
-@RequiredArgsConstructor
 public enum OAuth2Provider {
 
   GOOGLE("google", "email", "picture", "name");
@@ -25,6 +23,16 @@ public enum OAuth2Provider {
   private final String pictureAttributeKey;
 
   private final String nameAttributeKey;
+
+  OAuth2Provider(final String registrationId,
+      final String emailAttributeKey,
+      final String pictureAttributeKey,
+      final String nameAttributeKey) {
+    this.registrationId = registrationId;
+    this.emailAttributeKey = emailAttributeKey;
+    this.pictureAttributeKey = pictureAttributeKey;
+    this.nameAttributeKey = nameAttributeKey;
+  }
 
   public static OAuth2Provider get(final String registrationId) {
     if (!PROVIDER_MAP.containsKey(registrationId)) {

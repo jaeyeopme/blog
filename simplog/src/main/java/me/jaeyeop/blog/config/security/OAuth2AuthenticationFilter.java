@@ -5,7 +5,6 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jaeyeop.blog.config.token.TokenProvider;
 import me.jaeyeop.blog.token.application.port.out.ExpiredTokenQueryPort;
@@ -28,7 +27,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class OAuth2AuthenticationFilter extends OncePerRequestFilter {
 
   private final UserQueryPort userQueryPort;
@@ -36,6 +34,13 @@ public class OAuth2AuthenticationFilter extends OncePerRequestFilter {
   private final ExpiredTokenQueryPort expiredTokenQueryPort;
 
   private final TokenProvider tokenProvider;
+
+  public OAuth2AuthenticationFilter(final UserQueryPort userQueryPort,
+      final ExpiredTokenQueryPort expiredTokenQueryPort, final TokenProvider tokenProvider) {
+    this.userQueryPort = userQueryPort;
+    this.expiredTokenQueryPort = expiredTokenQueryPort;
+    this.tokenProvider = tokenProvider;
+  }
 
   @Override
   protected void doFilterInternal(

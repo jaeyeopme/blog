@@ -1,7 +1,6 @@
 package me.jaeyeop.blog.config.security;
 
 import javax.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jaeyeop.blog.user.application.port.out.UserCommandPort;
 import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
@@ -13,15 +12,20 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 @Slf4j
+@Transactional
 @Service
-@RequiredArgsConstructor
 public class OAuth2UserServiceDelegator extends DefaultOAuth2UserService {
 
   private final UserQueryPort userQueryPort;
 
   private final UserCommandPort userCommandPort;
 
-  @Transactional
+  public OAuth2UserServiceDelegator(final UserQueryPort userQueryPort,
+      final UserCommandPort userCommandPort) {
+    this.userQueryPort = userQueryPort;
+    this.userCommandPort = userCommandPort;
+  }
+
   @Override
   public OAuth2User loadUser(final OAuth2UserRequest userRequest)
       throws OAuth2AuthenticationException {
