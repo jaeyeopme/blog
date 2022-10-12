@@ -5,6 +5,7 @@ import me.jaeyeop.blog.config.security.OAuth2UserPrincipal;
 import me.jaeyeop.blog.user.adapter.in.command.DeleteUserProfileCommand;
 import me.jaeyeop.blog.user.adapter.in.command.GetUserProfileCommand;
 import me.jaeyeop.blog.user.adapter.in.command.UpdateUserProfileCommand;
+import me.jaeyeop.blog.user.adapter.in.response.UserProfile;
 import me.jaeyeop.blog.user.application.port.in.UserCommandUseCase;
 import me.jaeyeop.blog.user.application.port.in.UserQueryUseCase;
 import org.springframework.http.HttpStatus;

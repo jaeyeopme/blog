@@ -2,9 +2,9 @@ package me.jaeyeop.blog.user.application.service;
 
 import javax.transaction.Transactional;
 import me.jaeyeop.blog.config.error.exception.EmailNotFoundException;
-import me.jaeyeop.blog.user.adapter.in.UserProfile;
 import me.jaeyeop.blog.user.adapter.in.command.DeleteUserProfileCommand;
 import me.jaeyeop.blog.user.adapter.in.command.UpdateUserProfileCommand;
+import me.jaeyeop.blog.user.adapter.in.response.UserProfile;
 import me.jaeyeop.blog.user.application.port.in.UserCommandUseCase;
 import me.jaeyeop.blog.user.application.port.out.UserCommandPort;
 import me.jaeyeop.blog.user.application.port.out.UserQueryPort;

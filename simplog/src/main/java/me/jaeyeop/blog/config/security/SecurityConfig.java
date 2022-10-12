@@ -3,6 +3,7 @@ package me.jaeyeop.blog.config.security;
 import static me.jaeyeop.blog.token.adapter.in.TokenWebAdaptor.AUTH_API_URI;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import me.jaeyeop.blog.post.adapter.in.PostWebAdapter;
 import me.jaeyeop.blog.user.adapter.in.UserWebAdapter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -72,6 +73,8 @@ public class SecurityConfig {
   private Customizer<ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry> getAuthorizeRequests() {
     return urlRegistry -> urlRegistry
         .mvcMatchers(HttpMethod.GET, UserWebAdapter.USER_API_URI + "/*")
+        .permitAll()
+        .mvcMatchers(HttpMethod.GET, PostWebAdapter.POST_API_URI + "/*")
         .permitAll()
         .anyRequest()
         .authenticated();

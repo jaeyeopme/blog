@@ -2,7 +2,7 @@ package me.jaeyeop.blog.user.domain;
 
 public abstract class UserFactory {
 
-  private static final String DEFAULT_USER_EMAIL = "email@email.com";
+  public static final String DEFAULT_USER_EMAIL = "email@email.com";
 
   private static final String DEFAULT_USER_NAME = "name";
 

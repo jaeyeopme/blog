@@ -7,9 +7,9 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.only;
 import java.util.Optional;
 import me.jaeyeop.blog.config.error.exception.EmailNotFoundException;
-import me.jaeyeop.blog.user.adapter.in.UserProfile;
 import me.jaeyeop.blog.user.adapter.in.command.DeleteUserProfileCommand;
 import me.jaeyeop.blog.user.adapter.in.command.UpdateUserProfileCommand;
+import me.jaeyeop.blog.user.adapter.in.response.UserProfile;
 import me.jaeyeop.blog.user.adapter.out.UserPersistenceAdapter;
 import me.jaeyeop.blog.user.adapter.out.UserRepository;
 import me.jaeyeop.blog.user.application.port.in.UserCommandUseCase;
@@ -37,10 +37,10 @@ class UserCommandServiceTest {
   @Test
   void 프로필_업데이트() {
     final var user = UserFactory.createDefault();
-    given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
     final var command = new UpdateUserProfileCommand("newName", "newPicture");
     final var expected = UserProfile.from(
         UserFactory.createUpdate(command.getName(), command.getPicture()));
+    given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
 
     final var actual = userCommandUseCase.updateProfile(user.getEmail(), command);
 
@@ -50,8 +50,8 @@ class UserCommandServiceTest {
   @Test
   void 존재하지_않는_프로필_업데이트() {
     final var user = UserFactory.createDefault();
-    given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.empty());
     final var command = new UpdateUserProfileCommand("newName", "newPicture");
+    given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.empty());
 
     final ThrowingCallable when = () -> userCommandUseCase.updateProfile(user.getEmail(), command);
 

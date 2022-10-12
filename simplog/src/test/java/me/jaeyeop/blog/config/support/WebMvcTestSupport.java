@@ -6,8 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.charset.StandardCharsets;
 import me.jaeyeop.blog.config.clock.ClockTestConfig;
 import me.jaeyeop.blog.config.security.SecurityTestConfig;
+import me.jaeyeop.blog.post.adapter.out.PostCommandRepository;
 import me.jaeyeop.blog.post.adapter.out.PostPersistenceAdapter;
-import me.jaeyeop.blog.post.adapter.out.PostRepository;
+import me.jaeyeop.blog.post.adapter.out.PostQueryRepository;
 import me.jaeyeop.blog.token.adapter.out.ExpiredTokenPersistenceAdapter;
 import me.jaeyeop.blog.token.adapter.out.ExpiredTokenRepository;
 import me.jaeyeop.blog.token.adapter.out.RefreshTokenPersistenceAdapter;
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -33,22 +35,16 @@ import org.springframework.web.filter.CharacterEncodingFilter;
     UserPersistenceAdapter.class,
     PostPersistenceAdapter.class
 })
+@MockBeans({
+    @MockBean(ExpiredTokenRepository.class),
+    @MockBean(RefreshTokenRepository.class),
+    @MockBean(UserRepository.class),
+    @MockBean(PostCommandRepository.class),
+    @MockBean(PostQueryRepository.class)})
 public abstract class WebMvcTestSupport {
 
   protected MockMvc mockMvc;
 
-  @MockBean
-  protected ExpiredTokenRepository expiredTokenRepository;
-
-  @MockBean
-  protected RefreshTokenRepository refreshTokenRepository;
-
-  @MockBean
-  protected UserRepository userRepository;
-
-  @MockBean
-  protected PostRepository postRepository;
-  
   @Autowired
   private WebApplicationContext context;
 

@@ -1,10 +1,17 @@
 package me.jaeyeop.blog.config.clock;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Bean;
 
 @TestConfiguration
-@ComponentScan(basePackages = "me.jaeyeop.blog.config.clock")
 public class ClockTestConfig {
+
+  @Bean
+  public Clock clock() {
+    return Clock.fixed(Instant.now(), ZoneId.systemDefault());
+  }
 
 }
