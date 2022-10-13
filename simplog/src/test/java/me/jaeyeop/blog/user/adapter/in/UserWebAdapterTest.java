@@ -1,4 +1,4 @@
-package me.jaeyeop.blog;
+package me.jaeyeop.blog.user.adapter.in;
 
 import static me.jaeyeop.blog.config.error.ErrorCode.EMAIL_NOT_FOUND;
 import static org.mockito.ArgumentMatchers.any;
@@ -16,7 +16,6 @@ import java.util.Optional;
 import me.jaeyeop.blog.config.error.ErrorResponse;
 import me.jaeyeop.blog.config.security.WithDefaultUser;
 import me.jaeyeop.blog.config.support.WebMvcTestSupport;
-import me.jaeyeop.blog.user.adapter.in.UserWebAdapter;
 import me.jaeyeop.blog.user.adapter.in.command.UpdateUserProfileCommand;
 import me.jaeyeop.blog.user.adapter.in.response.UserProfile;
 import me.jaeyeop.blog.user.adapter.out.UserPersistenceAdapter;
