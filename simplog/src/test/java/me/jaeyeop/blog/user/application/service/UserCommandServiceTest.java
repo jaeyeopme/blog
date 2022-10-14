@@ -9,7 +9,6 @@ import java.util.Optional;
 import me.jaeyeop.blog.config.error.exception.EmailNotFoundException;
 import me.jaeyeop.blog.user.adapter.in.command.DeleteUserProfileCommand;
 import me.jaeyeop.blog.user.adapter.in.command.UpdateUserProfileCommand;
-import me.jaeyeop.blog.user.adapter.in.response.UserProfile;
 import me.jaeyeop.blog.user.adapter.out.UserPersistenceAdapter;
 import me.jaeyeop.blog.user.adapter.out.UserRepository;
 import me.jaeyeop.blog.user.application.port.in.UserCommandUseCase;
@@ -36,36 +35,36 @@ class UserCommandServiceTest {
 
   @Test
   void 프로필_업데이트() {
-    final var user = UserFactory.createDefault();
+    final var email = "email@email.com";
     final var command = new UpdateUserProfileCommand("newName", "newPicture");
-    final var expected = UserProfile.from(
-        UserFactory.createUpdate(command.getName(), command.getPicture()));
-    given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
+    final var user1 = UserFactory.createUser1();
+    given(userRepository.findByEmail(email)).willReturn(Optional.of(user1));
 
-    final var actual = userCommandUseCase.updateProfile(user.getEmail(), command);
+    userCommandUseCase.update(email, command);
 
-    assertThat(actual).isEqualTo(expected);
+    assertThat(user1.getName()).isEqualTo(command.getName());
+    assertThat(user1.getPicture()).isEqualTo(command.getPicture());
   }
 
   @Test
   void 존재하지_않는_프로필_업데이트() {
-    final var user = UserFactory.createDefault();
+    final var email = "anonymous@email.com";
     final var command = new UpdateUserProfileCommand("newName", "newPicture");
-    given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.empty());
+    given(userRepository.findByEmail(email)).willReturn(Optional.empty());
 
-    final ThrowingCallable when = () -> userCommandUseCase.updateProfile(user.getEmail(), command);
+    final ThrowingCallable when = () -> userCommandUseCase.update(email, command);
 
     assertThatThrownBy(when).isInstanceOf(EmailNotFoundException.class);
   }
 
   @Test
   void 프로필_삭제() {
-    final var user = UserFactory.createDefault();
-    final var command = new DeleteUserProfileCommand(user.getEmail());
+    final var email = "email@email.com";
+    final var command = new DeleteUserProfileCommand(email);
 
-    userCommandUseCase.deleteProfile(command);
+    userCommandUseCase.delete(command);
 
-    then(userRepository).should(only()).deleteByEmail(user.getEmail());
+    then(userRepository).should(only()).deleteByEmail(email);
   }
 
 }

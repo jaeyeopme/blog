@@ -10,24 +10,29 @@ import org.springframework.stereotype.Component;
 @Component
 public class PostPersistenceAdapter implements PostCommandPort, PostQueryPort {
 
-  private final PostCommandRepository postCommandRepository;
+  private final PostCrudRepository postCrudRepository;
 
   private final PostQueryRepository postQueryRepository;
 
-  public PostPersistenceAdapter(final PostCommandRepository postCommandRepository,
+  public PostPersistenceAdapter(final PostCrudRepository postCrudRepository,
       final PostQueryRepository postQueryRepository) {
-    this.postCommandRepository = postCommandRepository;
+    this.postCrudRepository = postCrudRepository;
     this.postQueryRepository = postQueryRepository;
   }
 
   @Override
   public Post create(final Post post) {
-    return postCommandRepository.save(post);
+    return postCrudRepository.save(post);
   }
 
   @Override
-  public Optional<PostInformation> getInformationById(final Long id) {
-    return postQueryRepository.getInformationById(id);
+  public Optional<PostInformation> getPostInformationById(final Long id) {
+    return postQueryRepository.getPostInformationById(id);
+  }
+
+  @Override
+  public Optional<Post> findById(final Long id) {
+    return postCrudRepository.findById(id);
   }
 
 }

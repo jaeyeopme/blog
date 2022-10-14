@@ -1,4 +1,4 @@
-package me.jaeyeop.blog.config.clock;
+package me.jaeyeop.blog.config;
 
 import java.time.Clock;
 import java.time.Instant;

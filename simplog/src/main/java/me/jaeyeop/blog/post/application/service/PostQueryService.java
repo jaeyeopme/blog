@@ -20,7 +20,7 @@ public class PostQueryService implements PostQueryUseCase {
 
   @Override
   public PostInformation getInformation(final GetPostInformationCommand command) {
-    return postQueryPort.getInformationById(command.getId())
+    return postQueryPort.getPostInformationById(command.getId())
         .orElseThrow(PostNotFoundException::new);
   }
 

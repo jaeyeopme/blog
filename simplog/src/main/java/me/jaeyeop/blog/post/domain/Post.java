@@ -61,4 +61,14 @@ public class Post extends AbstractTimeAuditing {
         .build();
   }
 
+  public boolean isInaccessible(final Long authorId) {
+    return !authorId.equals(this.author.getId());
+  }
+
+  public void updateInformation(final String title,
+      final String content) {
+    this.title = title;
+    this.content = content;
+  }
+
 }

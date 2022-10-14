@@ -12,8 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -50,17 +50,17 @@ public class UserWebAdapter {
   }
 
   @ResponseStatus(HttpStatus.OK)
-  @PutMapping
-  public UserProfile updateProfile(@AuthenticationPrincipal OAuth2UserPrincipal principal,
+  @PatchMapping
+  public void updateProfile(@AuthenticationPrincipal OAuth2UserPrincipal principal,
       @RequestBody @Valid UpdateUserProfileCommand command) {
-    return userCommandUseCase.updateProfile(principal.getName(), command);
+    userCommandUseCase.update(principal.getName(), command);
   }
 
   @ResponseStatus(HttpStatus.OK)
   @DeleteMapping
   public void deleteProfile(@AuthenticationPrincipal OAuth2UserPrincipal principal) {
     final DeleteUserProfileCommand command = new DeleteUserProfileCommand(principal.getName());
-    userCommandUseCase.deleteProfile(command);
+    userCommandUseCase.delete(command);
   }
 
 }

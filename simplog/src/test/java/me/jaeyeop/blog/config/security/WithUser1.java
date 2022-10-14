@@ -9,6 +9,6 @@ import org.springframework.security.test.context.support.WithSecurityContext;
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @WithSecurityContext(factory = WithOAuth2UserContextFactory.class)
-public @interface WithDefaultUser {
+public @interface WithUser1 {
 
 }

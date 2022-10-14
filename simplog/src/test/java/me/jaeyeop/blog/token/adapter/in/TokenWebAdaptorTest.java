@@ -4,8 +4,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import me.jaeyeop.blog.config.support.WebMvcTestSupport;
 import me.jaeyeop.blog.config.token.TokenProvider;
+import me.jaeyeop.blog.support.WebMvcTestSupport;
 import me.jaeyeop.blog.token.adapter.out.RefreshTokenRepository;
 import me.jaeyeop.blog.token.application.service.TokenCommandService;
 import me.jaeyeop.blog.token.application.service.TokenQueryService;
@@ -28,13 +28,13 @@ class TokenWebAdaptorTest extends WebMvcTestSupport {
   @Test
   void 로그아웃() throws Exception {
     final var email = "email@email.com";
-    final var given = get(TokenWebAdaptor.AUTH_API_URI + "/logout")
-        .header(HttpHeaders.AUTHORIZATION,
-            tokenProvider.createAccess(email).getValue())
-        .header(TokenWebAdaptor.REFRESH_AUTHORIZATION,
-            tokenProvider.createRefresh(email).getValue());
+    final var accessToken = tokenProvider.createAccess(email).getValue();
+    final var refreshToken = tokenProvider.createRefresh(email).getValue();
 
-    final var when = mockMvc.perform(given);
+    final var when = mockMvc.perform(
+        get(TokenWebAdaptor.AUTH_API_URI + "/logout")
+            .header(HttpHeaders.AUTHORIZATION, accessToken)
+            .header(TokenWebAdaptor.REFRESH_AUTHORIZATION, refreshToken));
 
     when.andExpectAll(status().isOk());
   }
@@ -42,15 +42,14 @@ class TokenWebAdaptorTest extends WebMvcTestSupport {
   @Test
   void 리프레시_토큰으로_엑세스_토큰_발급() throws Exception {
     final var email = "email@email.com";
-    final var refreshToken = tokenProvider.createRefresh(email);
+    final var accessToken = tokenProvider.createAccess(email).getValue();
+    final var refreshToken = tokenProvider.createRefresh(email).getValue();
     given(refreshTokenRepository.existsById(any())).willReturn(Boolean.TRUE);
-    final var given = get(TokenWebAdaptor.AUTH_API_URI + "/refresh")
-        .header(HttpHeaders.AUTHORIZATION,
-            tokenProvider.createAccess(email).getValue())
-        .header(TokenWebAdaptor.REFRESH_AUTHORIZATION,
-            refreshToken.getValue());
 
-    final var when = mockMvc.perform(given);
+    final var when = mockMvc.perform(
+        get(TokenWebAdaptor.AUTH_API_URI + "/refresh")
+            .header(HttpHeaders.AUTHORIZATION, accessToken)
+            .header(TokenWebAdaptor.REFRESH_AUTHORIZATION, refreshToken));
 
     when.andExpectAll(status().isCreated());
   }
@@ -58,15 +57,14 @@ class TokenWebAdaptorTest extends WebMvcTestSupport {
   @Test
   void 리프레시_토큰_저장소에_없는_리프레시_토큰으로_엑세스_토큰_발급() throws Exception {
     final var email = "email@email.com";
-    final var refreshToken = tokenProvider.createRefresh(email);
+    final var accessToken = tokenProvider.createAccess(email).getValue();
+    final var refreshToken = tokenProvider.createRefresh(email).getValue();
     given(refreshTokenRepository.existsById(any())).willReturn(Boolean.FALSE);
-    final var given = get(TokenWebAdaptor.AUTH_API_URI + "/refresh")
-        .header(HttpHeaders.AUTHORIZATION,
-            tokenProvider.createAccess(email).getValue())
-        .header(TokenWebAdaptor.REFRESH_AUTHORIZATION,
-            refreshToken.getValue());
 
-    final var when = mockMvc.perform(given);
+    final var when = mockMvc.perform(
+        get(TokenWebAdaptor.AUTH_API_URI + "/refresh")
+            .header(HttpHeaders.AUTHORIZATION, accessToken)
+            .header(TokenWebAdaptor.REFRESH_AUTHORIZATION, refreshToken));
 
     when.andExpectAll(status().isUnauthorized());
   }

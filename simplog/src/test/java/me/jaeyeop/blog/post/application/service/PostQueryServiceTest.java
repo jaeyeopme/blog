@@ -6,7 +6,7 @@ import static org.mockito.BDDMockito.given;
 import java.util.Optional;
 import me.jaeyeop.blog.config.error.exception.PostNotFoundException;
 import me.jaeyeop.blog.post.adapter.in.command.GetPostInformationCommand;
-import me.jaeyeop.blog.post.adapter.out.PostCommandRepository;
+import me.jaeyeop.blog.post.adapter.out.PostCrudRepository;
 import me.jaeyeop.blog.post.adapter.out.PostPersistenceAdapter;
 import me.jaeyeop.blog.post.adapter.out.PostQueryRepository;
 import me.jaeyeop.blog.post.application.port.in.PostQueryUseCase;
@@ -26,28 +26,29 @@ class PostQueryServiceTest {
   void setUp() {
     postQueryRepository = Mockito.mock(PostQueryRepository.class);
     final var postQueryPort = new PostPersistenceAdapter(
-        Mockito.mock(PostCommandRepository.class),
+        Mockito.mock(PostCrudRepository.class),
         postQueryRepository);
     postQueryUseCase = new PostQueryService(postQueryPort);
   }
 
   @Test
   void 게시글_조회() {
-    final var command = new GetPostInformationCommand(1L);
-    final var expected = PostFactory.createInformation();
-    given(postQueryRepository.getInformationById(command.getId()))
-        .willReturn(Optional.of(expected));
+    final var id = 1L;
+    final var command = new GetPostInformationCommand(id);
+    final var expectedPostInformation = PostFactory.createInformation();
+    given(postQueryRepository.getPostInformationById(id)).willReturn(
+        Optional.of(expectedPostInformation));
 
-    final var actual = postQueryUseCase.getInformation(command);
+    final var actualPostInformation = postQueryUseCase.getInformation(command);
 
-    assertThat(actual).isEqualTo(expected);
+    assertThat(actualPostInformation).isEqualTo(expectedPostInformation);
   }
 
   @Test
   void 존재하지_않는_게시글_조회() {
-    final var command = new GetPostInformationCommand(1L);
-    given(postQueryRepository.getInformationById(command.getId()))
-        .willReturn(Optional.empty());
+    final var id = 1L;
+    final var command = new GetPostInformationCommand(id);
+    given(postQueryRepository.getPostInformationById(id)).willReturn(Optional.empty());
 
     final ThrowingCallable when = () -> postQueryUseCase.getInformation(command);
 

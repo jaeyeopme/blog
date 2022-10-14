@@ -1,31 +1,30 @@
 package me.jaeyeop.blog.post.domain;
 
-import static me.jaeyeop.blog.user.domain.UserFactory.DEFAULT_USER_EMAIL;
 import me.jaeyeop.blog.post.adapter.in.response.PostInformation;
 import me.jaeyeop.blog.user.domain.User;
 
 public abstract class PostFactory {
 
-  private static final Long DEFAULT_POST_ID = 1L;
-
   private static final String DEFAULT_POST_TITLE = "title";
 
   private static final String DEFAULT_POST_CONTENT = "content";
 
-  public static Post createDefault() {
+  private static final String DEFAULT_POST_AUTHOR_NAME = "email@email.com";
+
+  public static Post createPost1() {
     return Post.builder()
-        .id(DEFAULT_POST_ID)
+        .id(1L)
         .title(DEFAULT_POST_TITLE)
         .content(DEFAULT_POST_CONTENT)
         .build();
   }
 
-  public static Post createDefault(final User defaultAuthor) {
+  public static Post createPost1(final User author) {
     return Post.builder()
-        .id(DEFAULT_POST_ID)
+        .id(1L)
         .title(DEFAULT_POST_TITLE)
         .content(DEFAULT_POST_CONTENT)
-        .author(defaultAuthor)
+        .author(author)
         .build();
   }
 
@@ -35,7 +34,7 @@ public abstract class PostFactory {
         DEFAULT_POST_CONTENT,
         null,
         null,
-        DEFAULT_USER_EMAIL);
+        DEFAULT_POST_AUTHOR_NAME);
   }
 
 }

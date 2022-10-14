@@ -4,7 +4,6 @@ import javax.transaction.Transactional;
 import me.jaeyeop.blog.config.error.exception.EmailNotFoundException;
 import me.jaeyeop.blog.user.adapter.in.command.DeleteUserProfileCommand;
 import me.jaeyeop.blog.user.adapter.in.command.UpdateUserProfileCommand;
-import me.jaeyeop.blog.user.adapter.in.response.UserProfile;
 import me.jaeyeop.blog.user.application.port.in.UserCommandUseCase;
 import me.jaeyeop.blog.user.application.port.out.UserCommandPort;
 import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
@@ -26,18 +25,16 @@ public class UserCommandService implements UserCommandUseCase {
   }
 
   @Override
-  public UserProfile updateProfile(
+  public void update(
       final String email, final UpdateUserProfileCommand command) {
     final User user = userQueryPort.findByEmail(email)
         .orElseThrow(EmailNotFoundException::new);
 
     user.updateProfile(command.getName(), command.getPicture());
-
-    return UserProfile.from(user);
   }
 
   @Override
-  public void deleteProfile(final DeleteUserProfileCommand command) {
+  public void delete(final DeleteUserProfileCommand command) {
     userCommandPort.deleteByEmail(command.getEmail());
   }
 

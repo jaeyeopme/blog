@@ -1,4 +1,4 @@
-package me.jaeyeop.blog.config.security;
+package me.jaeyeop.blog.config;
 
 
 import me.jaeyeop.blog.config.token.TokenProvider;

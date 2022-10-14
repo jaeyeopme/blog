@@ -17,13 +17,13 @@ public class PostQueryRepository {
     this.jpaQueryFactory = jpaQueryFactory;
   }
 
-  public Optional<PostInformation> getInformationById(final Long id) {
+  public Optional<PostInformation> getPostInformationById(final Long id) {
     final QPostInformation select = new QPostInformation(
         post.title,
         post.content,
         post.createdAt,
         post.modifiedAt,
-        user.email);
+        user.name);
 
     return Optional.ofNullable(jpaQueryFactory.select(select)
         .from(post)

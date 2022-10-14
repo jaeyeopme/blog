@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import me.jaeyeop.blog.config.security.OAuth2UserPrincipal;
 import me.jaeyeop.blog.post.adapter.in.command.CreatePostCommand;
 import me.jaeyeop.blog.post.adapter.in.command.GetPostInformationCommand;
+import me.jaeyeop.blog.post.adapter.in.command.UpdatePostCommand;
 import me.jaeyeop.blog.post.adapter.in.response.PostInformation;
 import me.jaeyeop.blog.post.application.port.in.PostCommandUseCase;
 import me.jaeyeop.blog.post.application.port.in.PostQueryUseCase;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,6 +50,15 @@ public class PostWebAdapter {
   public PostInformation getInformation(@PathVariable Long id) {
     final GetPostInformationCommand command = new GetPostInformationCommand(id);
     return postQueryUseCase.getInformation(command);
+  }
+
+  @ResponseStatus(HttpStatus.OK)
+  @PatchMapping("/{id}")
+  public void updatePostInformation(
+      @AuthenticationPrincipal OAuth2UserPrincipal principal,
+      @PathVariable Long id,
+      @RequestBody @Valid UpdatePostCommand command) {
+    postCommandUseCase.update(principal.getId(), id, command);
   }
 
 }

@@ -31,10 +31,11 @@ class UserQueryServiceTest {
 
   @Test
   void 프로필_조회() {
-    final var user = UserFactory.createDefault();
-    final var command = new GetUserProfileCommand(user.getEmail());
-    final var expected = UserProfile.from(user);
-    given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
+    final var email = "email@email.com";
+    final var command = new GetUserProfileCommand(email);
+    final var user1 = UserFactory.createUser1();
+    final var expected = UserProfile.from(user1);
+    given(userRepository.findByEmail(email)).willReturn(Optional.of(user1));
 
     final var actual = userQueryUseCase.getProfile(command);
 
@@ -43,9 +44,9 @@ class UserQueryServiceTest {
 
   @Test
   void 존재하지_않는_프로필_조회() {
-    final var user = UserFactory.createDefault();
-    final var command = new GetUserProfileCommand(user.getEmail());
-    given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.empty());
+    final var email = "anonymous@email.com";
+    final var command = new GetUserProfileCommand(email);
+    given(userRepository.findByEmail(email)).willReturn(Optional.empty());
 
     final ThrowingCallable when = () -> userQueryUseCase.getProfile(command);
 
