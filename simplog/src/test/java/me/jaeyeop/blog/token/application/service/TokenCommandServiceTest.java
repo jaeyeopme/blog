@@ -1,5 +1,6 @@
 package me.jaeyeop.blog.token.application.service;
 
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
@@ -47,8 +48,9 @@ class TokenCommandServiceTest {
     final var refreshToken = tokenProvider.createRefresh(email).getValue();
     final var command = new LogoutCommand(accessToken, refreshToken);
 
-    tokenCommandUseCase.logout(command);
+    final ThrowingCallable when = () -> tokenCommandUseCase.logout(command);
 
+    assertThatNoException().isThrownBy(when);
     then(expiredTokenRepository).should().save(any());
     then(refreshTokenRepository).should().delete(any());
   }

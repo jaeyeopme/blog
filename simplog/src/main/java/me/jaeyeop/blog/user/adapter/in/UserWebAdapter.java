@@ -38,7 +38,7 @@ public class UserWebAdapter {
   @ResponseStatus(HttpStatus.OK)
   @GetMapping
   public UserProfile getProfile(@AuthenticationPrincipal OAuth2UserPrincipal principal) {
-    final GetUserProfileCommand command = new GetUserProfileCommand(principal.getName());
+    final GetUserProfileCommand command = new GetUserProfileCommand(principal.getEmail());
     return userQueryUseCase.getProfile(command);
   }
 
@@ -53,13 +53,13 @@ public class UserWebAdapter {
   @PatchMapping
   public void updateProfile(@AuthenticationPrincipal OAuth2UserPrincipal principal,
       @RequestBody @Valid UpdateUserProfileCommand command) {
-    userCommandUseCase.update(principal.getName(), command);
+    userCommandUseCase.update(principal.getEmail(), command);
   }
 
   @ResponseStatus(HttpStatus.OK)
   @DeleteMapping
   public void deleteProfile(@AuthenticationPrincipal OAuth2UserPrincipal principal) {
-    final DeleteUserProfileCommand command = new DeleteUserProfileCommand(principal.getName());
+    final DeleteUserProfileCommand command = new DeleteUserProfileCommand(principal.getEmail());
     userCommandUseCase.delete(command);
   }
 

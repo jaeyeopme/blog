@@ -3,6 +3,7 @@ package me.jaeyeop.blog.post.adapter.in;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -155,7 +156,8 @@ class PostWebAdapterTest extends WebMvcTestSupport {
   void 다른_사람의_게시글_업데이트() throws Exception {
     final var id = 1L;
     final var command = new UpdatePostCommand("newTitle", "newContent");
-    final var post1 = PostFactory.createPost1(UserFactory.createUser2());
+    final var user2 = UserFactory.createUser2();
+    final var post1 = PostFactory.createPost1(user2);
     final var error = ErrorResponse.of(ErrorCode.FORBIDDEN).getBody();
     given(postCrudRepository.findById(id)).willReturn(Optional.of(post1));
 
@@ -163,6 +165,51 @@ class PostWebAdapterTest extends WebMvcTestSupport {
         patch(PostWebAdapter.POST_API_URI + "/{id}", id)
             .contentType(APPLICATION_JSON_UTF8)
             .content(toJson(command)));
+
+    when.andExpectAll(
+        status().isForbidden(),
+        content().json(toJson(error)));
+  }
+
+  @WithUser1
+  @Test
+  void 게시글_삭제() throws Exception {
+    final var id = 1L;
+    final var post1 = PostFactory.createPost1(UserFactory.createUser1());
+    given(postCrudRepository.findById(id)).willReturn(Optional.of(post1));
+
+    final var when = mockMvc.perform(
+        delete(PostWebAdapter.POST_API_URI + "/{id}", id));
+
+    when.andExpectAll(status().isOk());
+  }
+
+  @WithUser1
+  @Test
+  void 존재하지_않는_게시글_삭제() throws Exception {
+    final var id = 1L;
+    final var error = ErrorResponse.of(ErrorCode.POST_NOT_FOUND).getBody();
+    given(postCrudRepository.findById(id)).willReturn(Optional.empty());
+
+    final var when = mockMvc.perform(
+        delete(PostWebAdapter.POST_API_URI + "/{id}", id));
+
+    when.andExpectAll(
+        status().isNotFound(),
+        content().json(toJson(error)));
+  }
+
+  @WithUser1
+  @Test
+  void 다른_사람의_게시글_삭제() throws Exception {
+    final var id = 1L;
+    final var user2 = UserFactory.createUser2();
+    final var post1 = PostFactory.createPost1(user2);
+    final var error = ErrorResponse.of(ErrorCode.FORBIDDEN).getBody();
+    given(postCrudRepository.findById(id)).willReturn(Optional.of(post1));
+
+    final var when = mockMvc.perform(
+        delete(PostWebAdapter.POST_API_URI + "/{id}", id));
 
     when.andExpectAll(
         status().isForbidden(),

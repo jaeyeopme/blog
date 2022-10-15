@@ -6,4 +6,6 @@ public interface PostCommandPort {
 
   Post create(Post post);
 
+  void delete(Post post);
+
 }

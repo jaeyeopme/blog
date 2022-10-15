@@ -1,6 +1,7 @@
 package me.jaeyeop.blog.user.application.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -40,8 +41,9 @@ class UserCommandServiceTest {
     final var user1 = UserFactory.createUser1();
     given(userRepository.findByEmail(email)).willReturn(Optional.of(user1));
 
-    userCommandUseCase.update(email, command);
+    final ThrowingCallable when = () -> userCommandUseCase.update(email, command);
 
+    assertThatNoException().isThrownBy(when);
     assertThat(user1.getName()).isEqualTo(command.getName());
     assertThat(user1.getPicture()).isEqualTo(command.getPicture());
   }
@@ -62,8 +64,9 @@ class UserCommandServiceTest {
     final var email = "email@email.com";
     final var command = new DeleteUserProfileCommand(email);
 
-    userCommandUseCase.delete(command);
+    final ThrowingCallable when = () -> userCommandUseCase.delete(command);
 
+    assertThatNoException().isThrownBy(when);
     then(userRepository).should(only()).deleteByEmail(email);
   }
 

@@ -25,8 +25,8 @@ public class UserCommandService implements UserCommandUseCase {
   }
 
   @Override
-  public void update(
-      final String email, final UpdateUserProfileCommand command) {
+  public void update(final String email,
+      final UpdateUserProfileCommand command) {
     final User user = userQueryPort.findByEmail(email)
         .orElseThrow(EmailNotFoundException::new);
 

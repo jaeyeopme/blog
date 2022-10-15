@@ -4,6 +4,7 @@ import java.net.URI;
 import javax.validation.Valid;
 import me.jaeyeop.blog.config.security.OAuth2UserPrincipal;
 import me.jaeyeop.blog.post.adapter.in.command.CreatePostCommand;
+import me.jaeyeop.blog.post.adapter.in.command.DeletePostInformationCommand;
 import me.jaeyeop.blog.post.adapter.in.command.GetPostInformationCommand;
 import me.jaeyeop.blog.post.adapter.in.command.UpdatePostCommand;
 import me.jaeyeop.blog.post.adapter.in.response.PostInformation;
@@ -12,6 +13,7 @@ import me.jaeyeop.blog.post.application.port.in.PostQueryUseCase;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,6 +61,15 @@ public class PostWebAdapter {
       @PathVariable Long id,
       @RequestBody @Valid UpdatePostCommand command) {
     postCommandUseCase.update(principal.getId(), id, command);
+  }
+
+  @ResponseStatus(HttpStatus.OK)
+  @DeleteMapping("/{id}")
+  public void deletePostInformation(
+      @AuthenticationPrincipal OAuth2UserPrincipal principal,
+      @PathVariable Long id) {
+    final DeletePostInformationCommand command = new DeletePostInformationCommand(id);
+    postCommandUseCase.delete(principal.getId(), command);
   }
 
 }

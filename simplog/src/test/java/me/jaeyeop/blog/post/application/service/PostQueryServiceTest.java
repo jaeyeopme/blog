@@ -35,13 +35,13 @@ class PostQueryServiceTest {
   void 게시글_조회() {
     final var id = 1L;
     final var command = new GetPostInformationCommand(id);
-    final var expectedPostInformation = PostFactory.createInformation();
+    final var expected = PostFactory.createInformation();
     given(postQueryRepository.getPostInformationById(id)).willReturn(
-        Optional.of(expectedPostInformation));
+        Optional.of(expected));
 
-    final var actualPostInformation = postQueryUseCase.getInformation(command);
+    final var actual = postQueryUseCase.getInformation(command);
 
-    assertThat(actualPostInformation).isEqualTo(expectedPostInformation);
+    assertThat(actual).isEqualTo(expected);
   }
 
   @Test

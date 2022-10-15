@@ -26,6 +26,11 @@ public class PostPersistenceAdapter implements PostCommandPort, PostQueryPort {
   }
 
   @Override
+  public void delete(final Post post) {
+    postCrudRepository.delete(post);
+  }
+
+  @Override
   public Optional<PostInformation> getPostInformationById(final Long id) {
     return postQueryRepository.getPostInformationById(id);
   }
