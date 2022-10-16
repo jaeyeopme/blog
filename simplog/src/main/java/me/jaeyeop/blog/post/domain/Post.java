@@ -1,5 +1,8 @@
 package me.jaeyeop.blog.post.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,11 +11,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import me.jaeyeop.blog.comment.domain.Comment;
 import me.jaeyeop.blog.config.jpa.AbstractTimeAuditing;
 import me.jaeyeop.blog.user.domain.User;
 
@@ -33,8 +38,11 @@ public class Post extends AbstractTimeAuditing {
 
   @NotNull
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(nullable = false)
+  @JoinColumn(nullable = false, updatable = false)
   private User author;
+
+  @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "post", orphanRemoval = true)
+  private List<Comment> comments = new ArrayList<>();
 
   protected Post() {
   }
