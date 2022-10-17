@@ -63,6 +63,12 @@ public class User extends AbstractTimeAuditing {
     this.provider = provider;
   }
 
+  public static User proxy(final Long id) {
+    return User.builder()
+        .id(id)
+        .build();
+  }
+
   public static User from(final OAuth2Attributes attributes) {
     return User.builder()
         .email(attributes.getEmail())
@@ -70,12 +76,6 @@ public class User extends AbstractTimeAuditing {
         .picture(attributes.getPicture())
         .role(Role.USER)
         .provider(attributes.getProvider())
-        .build();
-  }
-
-  public static User proxy(final Long id) {
-    return User.builder()
-        .id(id)
         .build();
   }
 

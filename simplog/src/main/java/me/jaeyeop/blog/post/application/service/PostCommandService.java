@@ -2,7 +2,6 @@ package me.jaeyeop.blog.post.application.service;
 
 import javax.transaction.Transactional;
 import me.jaeyeop.blog.config.error.exception.PostNotFoundException;
-import me.jaeyeop.blog.config.error.exception.PrincipalAccessDeniedException;
 import me.jaeyeop.blog.post.adapter.in.command.CreatePostCommand;
 import me.jaeyeop.blog.post.adapter.in.command.DeletePostInformationCommand;
 import me.jaeyeop.blog.post.adapter.in.command.UpdatePostCommand;
@@ -54,10 +53,8 @@ public class PostCommandService implements PostCommandUseCase {
     final Post post = postQueryPort.findById(postId)
         .orElseThrow(PostNotFoundException::new);
 
-    if (post.isInaccessible(authorId)) {
-      throw new PrincipalAccessDeniedException();
-    }
-    
+    post.confirmAccess(authorId);
+
     return post;
   }
 

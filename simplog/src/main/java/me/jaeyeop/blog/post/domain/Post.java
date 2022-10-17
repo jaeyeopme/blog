@@ -18,6 +18,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import me.jaeyeop.blog.comment.domain.Comment;
+import me.jaeyeop.blog.config.error.exception.PrincipalAccessDeniedException;
 import me.jaeyeop.blog.config.jpa.AbstractTimeAuditing;
 import me.jaeyeop.blog.user.domain.User;
 
@@ -58,6 +59,12 @@ public class Post extends AbstractTimeAuditing {
     this.author = author;
   }
 
+  public static Post proxy(final Long postId) {
+    return Post.builder()
+        .id(postId)
+        .build();
+  }
+
   public static Post of(
       final Long authorId,
       final String title,
@@ -69,14 +76,16 @@ public class Post extends AbstractTimeAuditing {
         .build();
   }
 
-  public boolean isInaccessible(final Long authorId) {
-    return !authorId.equals(this.author.getId());
-  }
-
   public void updateInformation(final String title,
       final String content) {
     this.title = title;
     this.content = content;
+  }
+
+  public void confirmAccess(final Long authorId) {
+    if (!authorId.equals(this.author.getId())) {
+      throw new PrincipalAccessDeniedException();
+    }
   }
 
 }
