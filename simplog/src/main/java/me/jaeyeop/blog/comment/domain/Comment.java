@@ -17,8 +17,8 @@ import me.jaeyeop.blog.config.jpa.AbstractTimeAuditing;
 import me.jaeyeop.blog.post.domain.Post;
 import me.jaeyeop.blog.user.domain.User;
 
-@Getter
 @Entity
+@Getter
 public class Comment extends AbstractTimeAuditing {
 
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,6 +50,18 @@ public class Comment extends AbstractTimeAuditing {
     this.id = id;
     this.content = content;
     this.author = author;
+    this.post = post;
+  }
+
+  public static Comment of(final Long authorId,
+      final String content) {
+    return Comment.builder()
+        .author(User.proxy(authorId))
+        .content(content)
+        .build();
+  }
+
+  public void setPost(final Post post) {
     this.post = post;
   }
 

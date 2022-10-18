@@ -6,7 +6,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.only;
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -29,7 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 
-@SuppressWarnings("deprecation")
 @Import({UserCommandService.class, UserQueryService.class})
 @WebMvcTest(UserWebAdapter.class)
 class UserWebAdapterTest extends WebMvcTestSupport {
@@ -42,14 +41,13 @@ class UserWebAdapterTest extends WebMvcTestSupport {
   void 자신의_프로필_조회() throws Exception {
     final var user = UserFactory.createUser1();
     final var profile = UserProfile.from(user);
-    given(userRepository.findByEmail(any())).willReturn(Optional.of(user));
+    given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
 
     final var when = mockMvc.perform(
         get(UserWebAdapter.USER_API_URI));
 
     when.andExpectAll(
         status().isOk(),
-        content().contentType(APPLICATION_JSON_UTF8),
         content().json(toJson(profile)));
   }
 
@@ -65,7 +63,6 @@ class UserWebAdapterTest extends WebMvcTestSupport {
 
     when.andExpectAll(
         status().isOk(),
-        content().contentType(APPLICATION_JSON_UTF8),
         content().json(toJson(profile)));
   }
 
@@ -80,7 +77,6 @@ class UserWebAdapterTest extends WebMvcTestSupport {
 
     when.andExpectAll(
         status().isNotFound(),
-        content().contentType(APPLICATION_JSON_UTF8),
         content().json(toJson(error)));
   }
 
@@ -93,7 +89,7 @@ class UserWebAdapterTest extends WebMvcTestSupport {
 
     final var when = mockMvc.perform(
         patch(UserWebAdapter.USER_API_URI)
-            .contentType(APPLICATION_JSON_UTF8)
+            .contentType(APPLICATION_JSON)
             .content(toJson(command)));
 
     when.andExpectAll(status().isOk());
@@ -107,7 +103,7 @@ class UserWebAdapterTest extends WebMvcTestSupport {
 
     final var when = mockMvc.perform(
         patch(UserWebAdapter.USER_API_URI)
-            .contentType(APPLICATION_JSON_UTF8)
+            .contentType(APPLICATION_JSON)
             .content(toJson(command)));
 
     when.andExpectAll(status().isBadRequest());
@@ -117,13 +113,11 @@ class UserWebAdapterTest extends WebMvcTestSupport {
   @WithUser1
   @Test
   void 프로필_삭제() throws Exception {
-    final var user1 = UserFactory.createUser1();
-
     final var when = mockMvc.perform(
         delete(UserWebAdapter.USER_API_URI));
 
     when.andExpectAll(status().isOk());
-    then(userRepository).should(only()).deleteByEmail(user1.getEmail());
+    then(userRepository).should(only()).deleteByEmail(any());
   }
 
 }

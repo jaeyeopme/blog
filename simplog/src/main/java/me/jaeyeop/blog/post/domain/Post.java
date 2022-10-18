@@ -42,7 +42,7 @@ public class Post extends AbstractTimeAuditing {
   @JoinColumn(nullable = false, updatable = false)
   private User author;
 
-  @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "post", orphanRemoval = true)
+  @OneToMany(cascade = CascadeType.ALL, mappedBy = "post", orphanRemoval = true)
   private List<Comment> comments = new ArrayList<>();
 
   protected Post() {
@@ -57,12 +57,6 @@ public class Post extends AbstractTimeAuditing {
     this.title = title;
     this.content = content;
     this.author = author;
-  }
-
-  public static Post proxy(final Long postId) {
-    return Post.builder()
-        .id(postId)
-        .build();
   }
 
   public static Post of(
@@ -86,6 +80,11 @@ public class Post extends AbstractTimeAuditing {
     if (!authorId.equals(this.author.getId())) {
       throw new PrincipalAccessDeniedException();
     }
+  }
+
+  public void addComments(final Comment comment) {
+    this.comments.add(comment);
+    comment.setPost(this);
   }
 
 }

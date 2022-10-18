@@ -2,7 +2,9 @@ package me.jaeyeop.blog.post.adapter.in;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.never;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -31,7 +33,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 
-@SuppressWarnings("deprecation")
 @Import({PostCommandService.class, PostQueryService.class})
 @WebMvcTest(PostWebAdapter.class)
 class PostWebAdapterTest extends WebMvcTestSupport {
@@ -51,7 +52,7 @@ class PostWebAdapterTest extends WebMvcTestSupport {
 
     final var when = mockMvc.perform(
         post(PostWebAdapter.POST_API_URI)
-            .contentType(APPLICATION_JSON_UTF8)
+            .contentType(APPLICATION_JSON)
             .content(toJson(command)));
 
     final var createdURI = String.format("%s/%d", PostWebAdapter.POST_API_URI, post1.getId());
@@ -68,10 +69,11 @@ class PostWebAdapterTest extends WebMvcTestSupport {
 
     final var when = mockMvc.perform(
         post(PostWebAdapter.POST_API_URI)
-            .contentType(APPLICATION_JSON_UTF8)
+            .contentType(APPLICATION_JSON)
             .content(toJson(command)));
 
     when.andExpectAll(status().isBadRequest());
+    then(postCrudRepository).should(never()).save(any());
   }
 
   @Test
@@ -112,7 +114,7 @@ class PostWebAdapterTest extends WebMvcTestSupport {
 
     final var when = mockMvc.perform(
         patch(PostWebAdapter.POST_API_URI + "/{id}", id)
-            .contentType(APPLICATION_JSON_UTF8)
+            .contentType(APPLICATION_JSON)
             .content(toJson(command)));
 
     when.andExpectAll(status().isOk());
@@ -127,10 +129,11 @@ class PostWebAdapterTest extends WebMvcTestSupport {
 
     final var when = mockMvc.perform(
         patch(PostWebAdapter.POST_API_URI + "/{id}", id)
-            .contentType(APPLICATION_JSON_UTF8)
+            .contentType(APPLICATION_JSON)
             .content(toJson(command)));
 
     when.andExpectAll(status().isBadRequest());
+    then(postCrudRepository).should(never()).findById(any());
   }
 
   @WithUser1
@@ -143,7 +146,7 @@ class PostWebAdapterTest extends WebMvcTestSupport {
 
     final var when = mockMvc.perform(
         patch(PostWebAdapter.POST_API_URI + "/{id}", id)
-            .contentType(APPLICATION_JSON_UTF8)
+            .contentType(APPLICATION_JSON)
             .content(toJson(command)));
 
     when.andExpectAll(
@@ -163,7 +166,7 @@ class PostWebAdapterTest extends WebMvcTestSupport {
 
     final var when = mockMvc.perform(
         patch(PostWebAdapter.POST_API_URI + "/{id}", id)
-            .contentType(APPLICATION_JSON_UTF8)
+            .contentType(APPLICATION_JSON)
             .content(toJson(command)));
 
     when.andExpectAll(
@@ -182,6 +185,7 @@ class PostWebAdapterTest extends WebMvcTestSupport {
         delete(PostWebAdapter.POST_API_URI + "/{id}", id));
 
     when.andExpectAll(status().isOk());
+    then(postCrudRepository).should().delete(any());
   }
 
   @WithUser1
@@ -197,6 +201,7 @@ class PostWebAdapterTest extends WebMvcTestSupport {
     when.andExpectAll(
         status().isNotFound(),
         content().json(toJson(error)));
+    then(postCrudRepository).should(never()).delete(any());
   }
 
   @WithUser1
@@ -214,6 +219,7 @@ class PostWebAdapterTest extends WebMvcTestSupport {
     when.andExpectAll(
         status().isForbidden(),
         content().json(toJson(error)));
+    then(postCrudRepository).should(never()).delete(any());
   }
 
 }

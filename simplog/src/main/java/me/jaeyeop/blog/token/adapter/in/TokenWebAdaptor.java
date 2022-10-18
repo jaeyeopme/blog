@@ -18,7 +18,7 @@ public class TokenWebAdaptor {
 
   public static final String AUTH_API_URI = "/api/v1/auth";
 
-  public static final String REFRESH_AUTHORIZATION = "RefreshAuthorization";
+  public static final String REFRESH_AUTHORIZATION = "Refresh-Authorization";
 
   private final TokenCommandUseCase tokenCommandUseCase;
 
