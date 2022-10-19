@@ -1,4 +1,4 @@
-package me.jaeyeop.blog.comment.adapter.in;
+package me.jaeyeop.blog.comment.adapter.in.command;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;

@@ -11,7 +11,7 @@ import java.util.Optional;
 import me.jaeyeop.blog.config.error.exception.PostNotFoundException;
 import me.jaeyeop.blog.config.error.exception.PrincipalAccessDeniedException;
 import me.jaeyeop.blog.post.adapter.in.command.CreatePostCommand;
-import me.jaeyeop.blog.post.adapter.in.command.DeletePostInformationCommand;
+import me.jaeyeop.blog.post.adapter.in.command.DeletePostCommand;
 import me.jaeyeop.blog.post.adapter.in.command.UpdatePostCommand;
 import me.jaeyeop.blog.post.adapter.out.PostCrudRepository;
 import me.jaeyeop.blog.post.adapter.out.PostPersistenceAdapter;
@@ -95,7 +95,7 @@ class PostCommandServiceTest {
   @Test
   void 게시글_삭제() {
     final var id = 1L;
-    final var command = new DeletePostInformationCommand(id);
+    final var command = new DeletePostCommand(id);
     final var author1 = UserFactory.createUser1();
     final var post1 = PostFactory.createPost1(author1);
     given(postCrudRepository.findById(id)).willReturn(Optional.of(post1));
@@ -109,7 +109,7 @@ class PostCommandServiceTest {
   @Test
   void 존재하지_않는_게시글_삭제() {
     final var id = 1L;
-    final var command = new DeletePostInformationCommand(id);
+    final var command = new DeletePostCommand(id);
     final var author1 = UserFactory.createUser1();
     given(postCrudRepository.findById(id)).willReturn(Optional.empty());
 
@@ -122,7 +122,7 @@ class PostCommandServiceTest {
   @Test
   void 다른_사람의_게시글_삭제() {
     final var id = 1L;
-    final var command = new DeletePostInformationCommand(id);
+    final var command = new DeletePostCommand(id);
     final var author1 = UserFactory.createUser1();
     final var post1 = PostFactory.createPost1(author1);
     final var author2 = UserFactory.createUser2();

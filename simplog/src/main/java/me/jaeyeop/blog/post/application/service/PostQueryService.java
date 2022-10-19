@@ -1,8 +1,8 @@
 package me.jaeyeop.blog.post.application.service;
 
 import me.jaeyeop.blog.config.error.exception.PostNotFoundException;
-import me.jaeyeop.blog.post.adapter.in.command.GetPostInformationCommand;
-import me.jaeyeop.blog.post.adapter.in.response.PostInformation;
+import me.jaeyeop.blog.post.adapter.in.command.GetPostCommand;
+import me.jaeyeop.blog.post.adapter.out.response.PostInfo;
 import me.jaeyeop.blog.post.application.port.in.PostQueryUseCase;
 import me.jaeyeop.blog.post.application.port.out.PostQueryPort;
 import org.springframework.stereotype.Service;
@@ -19,8 +19,8 @@ public class PostQueryService implements PostQueryUseCase {
   }
 
   @Override
-  public PostInformation getInformation(final GetPostInformationCommand command) {
-    return postQueryPort.getPostInformationById(command.getId())
+  public PostInfo getOne(final GetPostCommand command) {
+    return postQueryPort.findInfoById(command.getPostId())
         .orElseThrow(PostNotFoundException::new);
   }
 

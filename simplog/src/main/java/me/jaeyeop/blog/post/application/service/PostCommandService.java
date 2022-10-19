@@ -3,7 +3,7 @@ package me.jaeyeop.blog.post.application.service;
 import javax.transaction.Transactional;
 import me.jaeyeop.blog.config.error.exception.PostNotFoundException;
 import me.jaeyeop.blog.post.adapter.in.command.CreatePostCommand;
-import me.jaeyeop.blog.post.adapter.in.command.DeletePostInformationCommand;
+import me.jaeyeop.blog.post.adapter.in.command.DeletePostCommand;
 import me.jaeyeop.blog.post.adapter.in.command.UpdatePostCommand;
 import me.jaeyeop.blog.post.application.port.in.PostCommandUseCase;
 import me.jaeyeop.blog.post.application.port.out.PostCommandPort;
@@ -43,7 +43,7 @@ public class PostCommandService implements PostCommandUseCase {
 
   @Override
   public void delete(final Long authorId,
-      final DeletePostInformationCommand command) {
+      final DeletePostCommand command) {
     final Post post = findById(authorId, command.getId());
 
     postCommandPort.delete(post);

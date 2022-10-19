@@ -5,11 +5,11 @@ import lombok.Getter;
 
 @Getter
 @EqualsAndHashCode
-public class GetUserProfileCommand {
+public class GetUserCommand {
 
   private final String email;
 
-  public GetUserProfileCommand(final String email) {
+  public GetUserCommand(final String email) {
     this.email = email;
   }
 

@@ -4,10 +4,10 @@ import java.net.URI;
 import javax.validation.Valid;
 import me.jaeyeop.blog.config.security.OAuth2UserPrincipal;
 import me.jaeyeop.blog.post.adapter.in.command.CreatePostCommand;
-import me.jaeyeop.blog.post.adapter.in.command.DeletePostInformationCommand;
-import me.jaeyeop.blog.post.adapter.in.command.GetPostInformationCommand;
+import me.jaeyeop.blog.post.adapter.in.command.DeletePostCommand;
+import me.jaeyeop.blog.post.adapter.in.command.GetPostCommand;
 import me.jaeyeop.blog.post.adapter.in.command.UpdatePostCommand;
-import me.jaeyeop.blog.post.adapter.in.response.PostInformation;
+import me.jaeyeop.blog.post.adapter.out.response.PostInfo;
 import me.jaeyeop.blog.post.application.port.in.PostCommandUseCase;
 import me.jaeyeop.blog.post.application.port.in.PostQueryUseCase;
 import org.springframework.http.HttpStatus;
@@ -49,14 +49,14 @@ public class PostWebAdapter {
 
   @ResponseStatus(HttpStatus.OK)
   @GetMapping("/{id}")
-  public PostInformation getInformation(@PathVariable Long id) {
-    final GetPostInformationCommand command = new GetPostInformationCommand(id);
-    return postQueryUseCase.getInformation(command);
+  public PostInfo getOne(@PathVariable Long id) {
+    final GetPostCommand command = new GetPostCommand(id);
+    return postQueryUseCase.getOne(command);
   }
 
   @ResponseStatus(HttpStatus.OK)
   @PatchMapping("/{id}")
-  public void updatePostInformation(
+  public void update(
       @AuthenticationPrincipal OAuth2UserPrincipal principal,
       @PathVariable Long id,
       @RequestBody @Valid UpdatePostCommand command) {
@@ -65,10 +65,10 @@ public class PostWebAdapter {
 
   @ResponseStatus(HttpStatus.OK)
   @DeleteMapping("/{id}")
-  public void deletePostInformation(
+  public void delete(
       @AuthenticationPrincipal OAuth2UserPrincipal principal,
       @PathVariable Long id) {
-    final DeletePostInformationCommand command = new DeletePostInformationCommand(id);
+    final DeletePostCommand command = new DeletePostCommand(id);
     postCommandUseCase.delete(principal.getId(), command);
   }
 

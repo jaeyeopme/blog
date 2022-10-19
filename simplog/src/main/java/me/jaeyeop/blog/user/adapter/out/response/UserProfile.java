@@ -1,4 +1,4 @@
-package me.jaeyeop.blog.user.adapter.in.response;
+package me.jaeyeop.blog.user.adapter.out.response;
 
 import lombok.AccessLevel;
 import lombok.Builder;

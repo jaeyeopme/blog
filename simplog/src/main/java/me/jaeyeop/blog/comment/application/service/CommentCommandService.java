@@ -1,7 +1,7 @@
 package me.jaeyeop.blog.comment.application.service;
 
 import javax.transaction.Transactional;
-import me.jaeyeop.blog.comment.adapter.in.CreateCommentCommand;
+import me.jaeyeop.blog.comment.adapter.in.command.CreateCommentCommand;
 import me.jaeyeop.blog.comment.application.port.in.CommentCommandUseCase;
 import me.jaeyeop.blog.comment.domain.Comment;
 import me.jaeyeop.blog.config.error.exception.PostNotFoundException;

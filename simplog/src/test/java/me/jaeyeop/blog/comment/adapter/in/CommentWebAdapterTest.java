@@ -8,7 +8,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import java.util.Optional;
+import me.jaeyeop.blog.comment.adapter.in.command.CreateCommentCommand;
 import me.jaeyeop.blog.comment.application.service.CommentCommandService;
+import me.jaeyeop.blog.comment.application.service.CommentQueryService;
 import me.jaeyeop.blog.config.error.ErrorCode;
 import me.jaeyeop.blog.config.error.ErrorResponse;
 import me.jaeyeop.blog.config.security.WithUser1;
@@ -23,7 +25,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 
-@Import({CommentCommandService.class})
+@Import({CommentCommandService.class, CommentQueryService.class})
 @WebMvcTest(CommentWebAdapter.class)
 class CommentWebAdapterTest extends WebMvcTestSupport {
 
@@ -37,9 +39,9 @@ class CommentWebAdapterTest extends WebMvcTestSupport {
     final var command = new CreateCommentCommand(post1.getId(), "content");
     given(postCrudRepository.findById(post1.getId())).willReturn(Optional.of(post1));
 
-    final var when = mockMvc.perform(post(CommentWebAdapter.COMMENT_API_URI)
-        .contentType(MediaType.APPLICATION_JSON)
-        .content(toJson(command)));
+    final var when = mockMvc.perform(
+        post(CommentWebAdapter.COMMENT_API_URI).contentType(MediaType.APPLICATION_JSON)
+            .content(toJson(command)));
 
     when.andExpectAll(status().isCreated());
   }
@@ -51,9 +53,9 @@ class CommentWebAdapterTest extends WebMvcTestSupport {
     final var post1Id = 1L;
     final var command = new CreateCommentCommand(post1Id, content);
 
-    final var when = mockMvc.perform(post(CommentWebAdapter.COMMENT_API_URI)
-        .contentType(MediaType.APPLICATION_JSON)
-        .content(toJson(command)));
+    final var when = mockMvc.perform(
+        post(CommentWebAdapter.COMMENT_API_URI).contentType(MediaType.APPLICATION_JSON)
+            .content(toJson(command)));
 
     when.andExpectAll(status().isBadRequest());
     then(postCrudRepository).should(never()).findById(any());
@@ -67,12 +69,11 @@ class CommentWebAdapterTest extends WebMvcTestSupport {
     final var error = ErrorResponse.of(ErrorCode.POST_NOT_FOUND).getBody();
     given(postCrudRepository.findById(postId)).willReturn(Optional.empty());
 
-    final var when = mockMvc.perform(post(CommentWebAdapter.COMMENT_API_URI)
-        .contentType(MediaType.APPLICATION_JSON)
-        .content(toJson(command)));
+    final var when = mockMvc.perform(
+        post(CommentWebAdapter.COMMENT_API_URI).contentType(MediaType.APPLICATION_JSON)
+            .content(toJson(command)));
 
-    when.andExpectAll(status().isNotFound(),
-        content().json(toJson(error)));
+    when.andExpectAll(status().isNotFound(), content().json(toJson(error)));
   }
 
 }

@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import java.util.Optional;
 import me.jaeyeop.blog.config.error.exception.PostNotFoundException;
-import me.jaeyeop.blog.post.adapter.in.command.GetPostInformationCommand;
+import me.jaeyeop.blog.post.adapter.in.command.GetPostCommand;
 import me.jaeyeop.blog.post.adapter.out.PostCrudRepository;
 import me.jaeyeop.blog.post.adapter.out.PostPersistenceAdapter;
 import me.jaeyeop.blog.post.adapter.out.PostQueryRepository;
@@ -33,24 +33,24 @@ class PostQueryServiceTest {
 
   @Test
   void 게시글_조회() {
-    final var id = 1L;
-    final var command = new GetPostInformationCommand(id);
-    final var expected = PostFactory.createInformation();
-    given(postQueryRepository.getPostInformationById(id)).willReturn(
+    final var postId = 1L;
+    final var command = new GetPostCommand(postId);
+    final var expected = PostFactory.createInfo(postId);
+    given(postQueryRepository.findInfoById(postId)).willReturn(
         Optional.of(expected));
 
-    final var actual = postQueryUseCase.getInformation(command);
+    final var actual = postQueryUseCase.getOne(command);
 
     assertThat(actual).isEqualTo(expected);
   }
 
   @Test
   void 존재하지_않는_게시글_조회() {
-    final var id = 1L;
-    final var command = new GetPostInformationCommand(id);
-    given(postQueryRepository.getPostInformationById(id)).willReturn(Optional.empty());
+    final var postId = 1L;
+    final var command = new GetPostCommand(postId);
+    given(postQueryRepository.findInfoById(postId)).willReturn(Optional.empty());
 
-    final ThrowingCallable when = () -> postQueryUseCase.getInformation(command);
+    final ThrowingCallable when = () -> postQueryUseCase.getOne(command);
 
     assertThatThrownBy(when).isInstanceOf(PostNotFoundException.class);
   }

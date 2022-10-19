@@ -16,9 +16,9 @@ import java.util.Optional;
 import me.jaeyeop.blog.config.error.ErrorResponse;
 import me.jaeyeop.blog.config.security.WithUser1;
 import me.jaeyeop.blog.support.WebMvcTestSupport;
-import me.jaeyeop.blog.user.adapter.in.command.UpdateUserProfileCommand;
-import me.jaeyeop.blog.user.adapter.in.response.UserProfile;
+import me.jaeyeop.blog.user.adapter.in.command.UpdateUserCommand;
 import me.jaeyeop.blog.user.adapter.out.UserRepository;
+import me.jaeyeop.blog.user.adapter.out.response.UserProfile;
 import me.jaeyeop.blog.user.application.service.UserCommandService;
 import me.jaeyeop.blog.user.application.service.UserQueryService;
 import me.jaeyeop.blog.user.domain.UserFactory;
@@ -84,7 +84,7 @@ class UserWebAdapterTest extends WebMvcTestSupport {
   @Test
   void 프로필_업데이트() throws Exception {
     final var user1 = UserFactory.createUser1();
-    final var command = new UpdateUserProfileCommand("newName", "newPicture");
+    final var command = new UpdateUserCommand("newName", "newPicture");
     given(userRepository.findByEmail(user1.getEmail())).willReturn(Optional.of(user1));
 
     final var when = mockMvc.perform(
@@ -99,7 +99,7 @@ class UserWebAdapterTest extends WebMvcTestSupport {
   @NullAndEmptySource
   @ParameterizedTest
   void 비어있는_이름으로_프로필_업데이트(final String name) throws Exception {
-    final var command = new UpdateUserProfileCommand(name, "newPicture");
+    final var command = new UpdateUserCommand(name, "newPicture");
 
     final var when = mockMvc.perform(
         patch(UserWebAdapter.USER_API_URI)

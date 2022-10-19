@@ -1,6 +1,6 @@
 package me.jaeyeop.blog.token.application.port.out;
 
-import me.jaeyeop.blog.token.adapter.out.RefreshToken;
+import me.jaeyeop.blog.token.domain.RefreshToken;
 
 public interface RefreshTokenCommandPort {
 

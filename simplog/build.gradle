@@ -42,7 +42,9 @@ dependencies {
     testImplementation 'org.testcontainers:testcontainers:1.17.4'
     testImplementation 'org.testcontainers:junit-jupiter:1.17.4'
     testImplementation 'org.testcontainers:mariadb:1.17.4'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit - vintage - engine'
+    }
     testImplementation 'org.springframework.security:spring-security-test'
 }
 
@@ -50,7 +52,7 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-def querydslDir = 'src/main/generated'
+def querydslDir = "$buildDir/generated/querydsl"
 
 querydsl {
     jpa = true
@@ -61,11 +63,10 @@ sourceSets {
     main.java.srcDir querydslDir
 }
 
-compileQuerydsl {
-    options.annotationProcessorPath = configurations.querydsl
+configurations {
+    querydsl.extendsFrom compileClasspath
 }
 
-configurations {
-    compileOnly.extendsFrom annotationProcessor
-    querydsl.extendsFrom compileClasspath
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
 }

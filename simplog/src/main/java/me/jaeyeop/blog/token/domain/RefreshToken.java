@@ -1,4 +1,4 @@
-package me.jaeyeop.blog.token.adapter.out;
+package me.jaeyeop.blog.token.domain;
 
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotBlank;
@@ -8,23 +8,24 @@ import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
 
 @Getter
-@RedisHash("expiredToken")
-public class ExpiredToken {
+@RedisHash("refreshToken")
+public class RefreshToken {
 
   @NotBlank
   @Id
   private String value;
 
   @TimeToLive(unit = TimeUnit.MILLISECONDS)
-  private long remaining;
+  private long expiration;
 
-  protected ExpiredToken() {
+  protected RefreshToken() {
   }
 
-  public ExpiredToken(final String value,
-      final long remaining) {
+  public RefreshToken(final String value,
+      final long expiration) {
     this.value = value;
-    this.remaining = remaining;
+    this.expiration = expiration;
   }
 
 }
+

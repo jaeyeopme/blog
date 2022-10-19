@@ -5,12 +5,12 @@ import lombok.Getter;
 
 @Getter
 @EqualsAndHashCode
-public class GetPostInformationCommand {
+public class GetPostCommand {
 
-  private final Long id;
+  private final Long postId;
 
-  public GetPostInformationCommand(final Long id) {
-    this.id = id;
+  public GetPostCommand(final Long postId) {
+    this.postId = postId;
   }
 
 }

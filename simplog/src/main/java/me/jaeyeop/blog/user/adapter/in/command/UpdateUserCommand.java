@@ -6,17 +6,17 @@ import lombok.Getter;
 
 @Getter
 @EqualsAndHashCode
-public class UpdateUserProfileCommand {
+public class UpdateUserCommand {
 
   @NotBlank
   private String name;
 
   private String picture;
 
-  UpdateUserProfileCommand() {
+  UpdateUserCommand() {
   }
 
-  public UpdateUserProfileCommand(final String name,
+  public UpdateUserCommand(final String name,
       final String picture) {
     this.name = name;
     this.picture = picture;

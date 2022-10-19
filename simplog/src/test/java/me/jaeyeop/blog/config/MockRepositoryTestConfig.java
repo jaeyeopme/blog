@@ -1,5 +1,7 @@
 package me.jaeyeop.blog.config;
 
+import me.jaeyeop.blog.comment.adapter.out.CommentPersistenceAdapter;
+import me.jaeyeop.blog.comment.adapter.out.CommentQueryRepository;
 import me.jaeyeop.blog.post.adapter.out.PostCrudRepository;
 import me.jaeyeop.blog.post.adapter.out.PostPersistenceAdapter;
 import me.jaeyeop.blog.post.adapter.out.PostQueryRepository;
@@ -18,13 +20,15 @@ import org.springframework.context.annotation.Import;
     ExpiredTokenPersistenceAdapter.class,
     RefreshTokenPersistenceAdapter.class,
     UserPersistenceAdapter.class,
-    PostPersistenceAdapter.class})
+    PostPersistenceAdapter.class,
+    CommentPersistenceAdapter.class})
 @MockBeans({
     @MockBean(ExpiredTokenRepository.class),
     @MockBean(RefreshTokenRepository.class),
     @MockBean(UserRepository.class),
     @MockBean(PostCrudRepository.class),
-    @MockBean(PostQueryRepository.class)})
+    @MockBean(PostQueryRepository.class),
+    @MockBean(CommentQueryRepository.class)})
 @TestConfiguration
 public class MockRepositoryTestConfig {
 

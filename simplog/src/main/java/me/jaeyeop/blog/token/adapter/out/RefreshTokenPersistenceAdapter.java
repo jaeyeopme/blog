@@ -2,6 +2,7 @@ package me.jaeyeop.blog.token.adapter.out;
 
 import me.jaeyeop.blog.token.application.port.out.RefreshTokenCommandPort;
 import me.jaeyeop.blog.token.application.port.out.RefreshTokenQueryPort;
+import me.jaeyeop.blog.token.domain.RefreshToken;
 import org.springframework.stereotype.Component;
 
 @Component

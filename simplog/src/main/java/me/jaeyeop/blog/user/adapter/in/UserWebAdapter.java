@@ -2,10 +2,10 @@ package me.jaeyeop.blog.user.adapter.in;
 
 import javax.validation.Valid;
 import me.jaeyeop.blog.config.security.OAuth2UserPrincipal;
-import me.jaeyeop.blog.user.adapter.in.command.DeleteUserProfileCommand;
-import me.jaeyeop.blog.user.adapter.in.command.GetUserProfileCommand;
-import me.jaeyeop.blog.user.adapter.in.command.UpdateUserProfileCommand;
-import me.jaeyeop.blog.user.adapter.in.response.UserProfile;
+import me.jaeyeop.blog.user.adapter.in.command.DeleteUserCommand;
+import me.jaeyeop.blog.user.adapter.in.command.GetUserCommand;
+import me.jaeyeop.blog.user.adapter.in.command.UpdateUserCommand;
+import me.jaeyeop.blog.user.adapter.out.response.UserProfile;
 import me.jaeyeop.blog.user.application.port.in.UserCommandUseCase;
 import me.jaeyeop.blog.user.application.port.in.UserQueryUseCase;
 import org.springframework.http.HttpStatus;
@@ -37,29 +37,29 @@ public class UserWebAdapter {
 
   @ResponseStatus(HttpStatus.OK)
   @GetMapping
-  public UserProfile getProfile(@AuthenticationPrincipal OAuth2UserPrincipal principal) {
-    final GetUserProfileCommand command = new GetUserProfileCommand(principal.getEmail());
-    return userQueryUseCase.getProfile(command);
+  public UserProfile getOneByPrincipal(@AuthenticationPrincipal OAuth2UserPrincipal principal) {
+    final GetUserCommand command = new GetUserCommand(principal.getEmail());
+    return userQueryUseCase.getOneByEmail(command);
   }
 
   @ResponseStatus(HttpStatus.OK)
   @GetMapping("/{email}")
-  public UserProfile getProfile(@PathVariable String email) {
-    final GetUserProfileCommand command = new GetUserProfileCommand(email);
-    return userQueryUseCase.getProfile(command);
+  public UserProfile getOneByEmail(@PathVariable String email) {
+    final GetUserCommand command = new GetUserCommand(email);
+    return userQueryUseCase.getOneByEmail(command);
   }
 
   @ResponseStatus(HttpStatus.OK)
   @PatchMapping
-  public void updateProfile(@AuthenticationPrincipal OAuth2UserPrincipal principal,
-      @RequestBody @Valid UpdateUserProfileCommand command) {
+  public void update(@AuthenticationPrincipal OAuth2UserPrincipal principal,
+      @RequestBody @Valid UpdateUserCommand command) {
     userCommandUseCase.update(principal.getEmail(), command);
   }
 
   @ResponseStatus(HttpStatus.OK)
   @DeleteMapping
-  public void deleteProfile(@AuthenticationPrincipal OAuth2UserPrincipal principal) {
-    final DeleteUserProfileCommand command = new DeleteUserProfileCommand(principal.getEmail());
+  public void delete(@AuthenticationPrincipal OAuth2UserPrincipal principal) {
+    final DeleteUserCommand command = new DeleteUserCommand(principal.getEmail());
     userCommandUseCase.delete(command);
   }
 

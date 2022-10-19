@@ -2,6 +2,7 @@ package me.jaeyeop.blog.token.adapter.out;
 
 import me.jaeyeop.blog.token.application.port.out.ExpiredTokenCommandPort;
 import me.jaeyeop.blog.token.application.port.out.ExpiredTokenQueryPort;
+import me.jaeyeop.blog.token.domain.ExpiredToken;
 import org.springframework.stereotype.Component;
 
 @Component

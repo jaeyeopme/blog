@@ -1,8 +1,8 @@
 package me.jaeyeop.blog.user.application.service;
 
 import me.jaeyeop.blog.config.error.exception.EmailNotFoundException;
-import me.jaeyeop.blog.user.adapter.in.command.GetUserProfileCommand;
-import me.jaeyeop.blog.user.adapter.in.response.UserProfile;
+import me.jaeyeop.blog.user.adapter.in.command.GetUserCommand;
+import me.jaeyeop.blog.user.adapter.out.response.UserProfile;
 import me.jaeyeop.blog.user.application.port.in.UserQueryUseCase;
 import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
 import me.jaeyeop.blog.user.domain.User;
@@ -20,7 +20,7 @@ public class UserQueryService implements UserQueryUseCase {
   }
 
   @Override
-  public UserProfile getProfile(final GetUserProfileCommand command) {
+  public UserProfile getOneByEmail(final GetUserCommand command) {
     final User user = userQueryPort.findByEmail(command.getEmail())
         .orElseThrow(EmailNotFoundException::new);
 

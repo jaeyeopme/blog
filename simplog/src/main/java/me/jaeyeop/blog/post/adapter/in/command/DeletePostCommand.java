@@ -5,11 +5,11 @@ import lombok.Getter;
 
 @Getter
 @EqualsAndHashCode
-public class DeletePostInformationCommand {
+public class DeletePostCommand {
 
   private final Long id;
 
-  public DeletePostInformationCommand(final Long id) {
+  public DeletePostCommand(final Long id) {
     this.id = id;
   }
 

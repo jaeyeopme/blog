@@ -78,12 +78,12 @@ class PostWebAdapterTest extends WebMvcTestSupport {
 
   @Test
   void 게시글_조회() throws Exception {
-    final var id = 1L;
-    final var information = PostFactory.createInformation();
-    given(postQueryRepository.getPostInformationById(id)).willReturn(Optional.of(information));
+    final var postId = 1L;
+    final var information = PostFactory.createInfo(postId);
+    given(postQueryRepository.findInfoById(postId)).willReturn(Optional.of(information));
 
     final var when = mockMvc.perform(
-        get(PostWebAdapter.POST_API_URI + "/{id}", id));
+        get(PostWebAdapter.POST_API_URI + "/{id}", postId));
 
     when.andExpectAll(
         status().isOk(),
@@ -94,7 +94,7 @@ class PostWebAdapterTest extends WebMvcTestSupport {
   void 존재하지_않는_게시글_조회() throws Exception {
     final var id = 1L;
     final var error = ErrorResponse.of(ErrorCode.POST_NOT_FOUND).getBody();
-    given(postQueryRepository.getPostInformationById(id)).willReturn(Optional.empty());
+    given(postQueryRepository.findInfoById(id)).willReturn(Optional.empty());
 
     final var when = mockMvc.perform(
         get(PostWebAdapter.POST_API_URI + "/{id}", id));
