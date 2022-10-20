@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,7 +38,8 @@ public class CommentWebAdapter {
 
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping
-  public void create(@AuthenticationPrincipal OAuth2UserPrincipal principal,
+  public void create(
+      @AuthenticationPrincipal OAuth2UserPrincipal principal,
       @RequestBody @Valid CreateCommentCommand command) {
     commentCommandUseCase.create(principal.getId(), command);
   }
@@ -48,6 +50,15 @@ public class CommentWebAdapter {
       Pageable commentsPageable) {
     final GetCommentsCommand command = new GetCommentsCommand(postId, commentsPageable);
     return commentQueryUseCase.getPage(command);
+  }
+
+  @ResponseStatus(HttpStatus.OK)
+  @PatchMapping("/{id}")
+  public void update(
+      @AuthenticationPrincipal OAuth2UserPrincipal principal,
+      @PathVariable Long id,
+      @RequestBody @Valid UpdateCommentCommand command) {
+    commentCommandUseCase.update(principal.getId(), id, command);
   }
 
 }

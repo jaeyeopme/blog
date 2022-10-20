@@ -10,38 +10,36 @@ import java.util.Optional;
 import me.jaeyeop.blog.config.error.exception.EmailNotFoundException;
 import me.jaeyeop.blog.user.adapter.in.command.DeleteUserCommand;
 import me.jaeyeop.blog.user.adapter.in.command.UpdateUserCommand;
-import me.jaeyeop.blog.user.adapter.out.UserPersistenceAdapter;
-import me.jaeyeop.blog.user.adapter.out.UserRepository;
-import me.jaeyeop.blog.user.application.port.in.UserCommandUseCase;
+import me.jaeyeop.blog.user.application.port.out.UserCommandPort;
+import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
 import me.jaeyeop.blog.user.domain.UserFactory;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 class UserCommandServiceTest {
 
-  private UserRepository userRepository;
+  @Mock
+  private UserCommandPort userCommandPort;
 
-  private UserCommandUseCase userCommandUseCase;
+  @Mock(stubOnly = true)
+  private UserQueryPort userQueryPort;
 
-  @BeforeEach
-  void setUp() {
-    userRepository = Mockito.mock(UserRepository.class);
-    final var userPersistencePort = new UserPersistenceAdapter(userRepository);
-    userCommandUseCase = new UserCommandService(
-        userPersistencePort,
-        userPersistencePort);
-  }
+  @InjectMocks
+  private UserCommandService userCommandService;
 
   @Test
   void 프로필_업데이트() {
     final var email = "email@email.com";
     final var command = new UpdateUserCommand("newName", "newPicture");
     final var user1 = UserFactory.createUser1();
-    given(userRepository.findByEmail(email)).willReturn(Optional.of(user1));
+    given(userQueryPort.findByEmail(email)).willReturn(Optional.of(user1));
 
-    final ThrowingCallable when = () -> userCommandUseCase.update(email, command);
+    final ThrowingCallable when = () -> userCommandService.update(email, command);
 
     assertThatNoException().isThrownBy(when);
     assertThat(user1.getName()).isEqualTo(command.getName());
@@ -52,9 +50,9 @@ class UserCommandServiceTest {
   void 존재하지_않는_프로필_업데이트() {
     final var email = "anonymous@email.com";
     final var command = new UpdateUserCommand("newName", "newPicture");
-    given(userRepository.findByEmail(email)).willReturn(Optional.empty());
+    given(userQueryPort.findByEmail(email)).willReturn(Optional.empty());
 
-    final ThrowingCallable when = () -> userCommandUseCase.update(email, command);
+    final ThrowingCallable when = () -> userCommandService.update(email, command);
 
     assertThatThrownBy(when).isInstanceOf(EmailNotFoundException.class);
   }
@@ -64,10 +62,10 @@ class UserCommandServiceTest {
     final var email = "email@email.com";
     final var command = new DeleteUserCommand(email);
 
-    final ThrowingCallable when = () -> userCommandUseCase.delete(command);
+    final ThrowingCallable when = () -> userCommandService.delete(command);
 
     assertThatNoException().isThrownBy(when);
-    then(userRepository).should(only()).deleteByEmail(email);
+    then(userCommandPort).should(only()).deleteByEmail(email);
   }
 
 }

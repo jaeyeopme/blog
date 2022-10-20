@@ -14,7 +14,9 @@ public enum ErrorCode {
 
   EMAIL_NOT_FOUND("존재하지 않는 회원입니다.", HttpStatus.NOT_FOUND),
 
-  POST_NOT_FOUND("존재하지 않는 게시글입니다.", HttpStatus.NOT_FOUND);
+  POST_NOT_FOUND("존재하지 않는 게시글입니다.", HttpStatus.NOT_FOUND),
+
+  COMMENT_NOT_FOUND("존재하지 않는 댓글입니다.", HttpStatus.NOT_FOUND);
 
   private final String message;
 

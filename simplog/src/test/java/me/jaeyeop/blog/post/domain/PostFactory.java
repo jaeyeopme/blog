@@ -11,15 +11,15 @@ public abstract class PostFactory {
 
   private static final String DEFAULT_AUTHOR_NAME = "author";
 
-  public static Post createPost1() {
+  public static Post createPost(final Long postId) {
     return Post.builder()
-        .id(1L)
+        .id(postId)
         .title(DEFAULT_TITLE)
         .content(DEFAULT_CONTENT)
         .build();
   }
 
-  public static Post createPost1(final User author) {
+  public static Post createPost1WithAuthor(final User author) {
     return Post.builder()
         .id(1L)
         .title(DEFAULT_TITLE)

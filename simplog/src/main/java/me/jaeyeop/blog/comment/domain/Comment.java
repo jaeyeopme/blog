@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import me.jaeyeop.blog.config.error.exception.PrincipalAccessDeniedException;
 import me.jaeyeop.blog.config.jpa.AbstractTimeAuditing;
 import me.jaeyeop.blog.post.domain.Post;
 import me.jaeyeop.blog.user.domain.User;
@@ -63,6 +64,16 @@ public class Comment extends AbstractTimeAuditing {
 
   public void setPost(final Post post) {
     this.post = post;
+  }
+
+  public void confirmAccess(final Long authorId) {
+    if (!this.author.getId().equals(authorId)) {
+      throw new PrincipalAccessDeniedException();
+    }
+  }
+
+  public void updateInformation(final String content) {
+    this.content = content;
   }
 
 }

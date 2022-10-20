@@ -35,9 +35,10 @@ class CommentWebAdapterTest extends WebMvcTestSupport {
   @WithUser1
   @Test
   void 댓글_작성() throws Exception {
-    final var post1 = PostFactory.createPost1();
-    final var command = new CreateCommentCommand(post1.getId(), "content");
-    given(postCrudRepository.findById(post1.getId())).willReturn(Optional.of(post1));
+    final var postId = 1L;
+    final var post = PostFactory.createPost(postId);
+    final var command = new CreateCommentCommand(postId, "content");
+    given(postCrudRepository.findById(postId)).willReturn(Optional.of(post));
 
     final var when = mockMvc.perform(
         post(CommentWebAdapter.COMMENT_API_URI).contentType(MediaType.APPLICATION_JSON)

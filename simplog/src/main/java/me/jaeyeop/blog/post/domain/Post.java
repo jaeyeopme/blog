@@ -77,7 +77,7 @@ public class Post extends AbstractTimeAuditing {
   }
 
   public void confirmAccess(final Long authorId) {
-    if (!authorId.equals(this.author.getId())) {
+    if (!this.author.getId().equals(authorId)) {
       throw new PrincipalAccessDeniedException();
     }
   }

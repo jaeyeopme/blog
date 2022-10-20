@@ -46,16 +46,17 @@ class PostWebAdapterTest extends WebMvcTestSupport {
   @WithUser1
   @Test
   void 게시글_작성() throws Exception {
+    final var postId = 1L;
     final var command = new CreatePostCommand("title", "content");
-    final var post1 = PostFactory.createPost1();
-    given(postCrudRepository.save(any())).willReturn(post1);
+    final var post = PostFactory.createPost(postId);
+    given(postCrudRepository.save(any())).willReturn(post);
 
     final var when = mockMvc.perform(
         post(PostWebAdapter.POST_API_URI)
             .contentType(APPLICATION_JSON)
             .content(toJson(command)));
 
-    final var createdURI = String.format("%s/%d", PostWebAdapter.POST_API_URI, post1.getId());
+    final var createdURI = String.format("%s/%d", PostWebAdapter.POST_API_URI, postId);
     when.andExpectAll(
         status().isCreated(),
         header().string(HttpHeaders.LOCATION, createdURI));
@@ -109,8 +110,8 @@ class PostWebAdapterTest extends WebMvcTestSupport {
   void 게시글_업데이트() throws Exception {
     final var id = 1L;
     final var command = new UpdatePostCommand("newTitle", "newContent");
-    final var post = PostFactory.createPost1(UserFactory.createUser1());
-    given(postCrudRepository.findById(id)).willReturn(Optional.of(post));
+    final var post1 = PostFactory.createPost1WithAuthor(UserFactory.createUser1());
+    given(postCrudRepository.findById(id)).willReturn(Optional.of(post1));
 
     final var when = mockMvc.perform(
         patch(PostWebAdapter.POST_API_URI + "/{id}", id)
@@ -160,7 +161,7 @@ class PostWebAdapterTest extends WebMvcTestSupport {
     final var id = 1L;
     final var command = new UpdatePostCommand("newTitle", "newContent");
     final var user2 = UserFactory.createUser2();
-    final var post1 = PostFactory.createPost1(user2);
+    final var post1 = PostFactory.createPost1WithAuthor(user2);
     final var error = ErrorResponse.of(ErrorCode.FORBIDDEN).getBody();
     given(postCrudRepository.findById(id)).willReturn(Optional.of(post1));
 
@@ -178,7 +179,7 @@ class PostWebAdapterTest extends WebMvcTestSupport {
   @Test
   void 게시글_삭제() throws Exception {
     final var id = 1L;
-    final var post1 = PostFactory.createPost1(UserFactory.createUser1());
+    final var post1 = PostFactory.createPost1WithAuthor(UserFactory.createUser1());
     given(postCrudRepository.findById(id)).willReturn(Optional.of(post1));
 
     final var when = mockMvc.perform(
@@ -209,7 +210,7 @@ class PostWebAdapterTest extends WebMvcTestSupport {
   void 다른_사람의_게시글_삭제() throws Exception {
     final var id = 1L;
     final var user2 = UserFactory.createUser2();
-    final var post1 = PostFactory.createPost1(user2);
+    final var post1 = PostFactory.createPost1WithAuthor(user2);
     final var error = ErrorResponse.of(ErrorCode.FORBIDDEN).getBody();
     given(postCrudRepository.findById(id)).willReturn(Optional.of(post1));
 

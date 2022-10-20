@@ -13,7 +13,7 @@ public class UpdatePostCommand {
 
   private String content;
 
-  public UpdatePostCommand() {
+  UpdatePostCommand() {
   }
 
   public UpdatePostCommand(final String title,
