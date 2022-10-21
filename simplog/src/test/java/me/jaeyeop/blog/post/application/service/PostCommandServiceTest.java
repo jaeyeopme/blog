@@ -40,9 +40,9 @@ class PostCommandServiceTest {
   void 게시글_저장() {
     final var author1 = UserFactory.createUser1();
     final var post1 = PostFactory.createPost1WithAuthor(author1);
+    given(postCommandPort.create(any())).willReturn(post1);
     final var command = new CreatePostCommand(post1.getTitle(), post1.getContent());
     final var expected = post1.getId();
-    given(postCommandPort.create(any())).willReturn(post1);
 
     final var actual = postCommandService.create(author1.getId(), command);
 
@@ -52,10 +52,10 @@ class PostCommandServiceTest {
   @Test
   void 게시글_업데이트() {
     final var id = 1L;
-    final var command = new UpdatePostCommand("newTitle", "newContent");
     final var author1 = UserFactory.createUser1();
     final var post1 = PostFactory.createPost1WithAuthor(author1);
     given(postQueryPort.findById(id)).willReturn(Optional.of(post1));
+    final var command = new UpdatePostCommand("newTitle", "newContent");
 
     final ThrowingCallable when = () -> postCommandService.update(author1.getId(), id, command);
 
@@ -67,10 +67,11 @@ class PostCommandServiceTest {
   @Test
   void 존재하지_않는_게시글_업데이트() {
     final var id = 1L;
-    final var command = new UpdatePostCommand("newTitle", "newContent");
     given(postQueryPort.findById(id)).willReturn(Optional.empty());
+    final var authorId = 2L;
+    final var command = new UpdatePostCommand("newTitle", "newContent");
 
-    final ThrowingCallable when = () -> postCommandService.update(1L, id, command);
+    final ThrowingCallable when = () -> postCommandService.update(authorId, id, command);
 
     assertThatThrownBy(when).isInstanceOf(PostNotFoundException.class);
   }
@@ -78,14 +79,15 @@ class PostCommandServiceTest {
   @Test
   void 다른_사람의_게시글_업데이트() {
     final var id = 1L;
-    final var command = new UpdatePostCommand("newTitle", "newContent");
     final var author1 = UserFactory.createUser1();
     final var post1 = PostFactory.createPost1WithAuthor(author1);
     final var author2Id = 99L;
     given(postQueryPort.findById(id)).willReturn(Optional.of(post1));
+    final var command = new UpdatePostCommand("newTitle", "newContent");
 
     final ThrowingCallable when = () -> postCommandService.update(author2Id, id, command);
 
+    assertThat(author1.getId()).isNotEqualTo(author2Id);
     assertThatThrownBy(when).isInstanceOf(PrincipalAccessDeniedException.class);
     assertThat(post1.getTitle()).isNotEqualTo(command.getTitle());
     assertThat(post1.getContent()).isNotEqualTo(command.getContent());
@@ -94,10 +96,10 @@ class PostCommandServiceTest {
   @Test
   void 게시글_삭제() {
     final var id = 1L;
-    final var command = new DeletePostCommand(id);
     final var author1 = UserFactory.createUser1();
     final var post1 = PostFactory.createPost1WithAuthor(author1);
     given(postQueryPort.findById(id)).willReturn(Optional.of(post1));
+    final var command = new DeletePostCommand(id);
 
     final ThrowingCallable when = () -> postCommandService.delete(author1.getId(), command);
 
@@ -108,11 +110,11 @@ class PostCommandServiceTest {
   @Test
   void 존재하지_않는_게시글_삭제() {
     final var id = 1L;
-    final var command = new DeletePostCommand(id);
-    final var author1 = UserFactory.createUser1();
     given(postQueryPort.findById(id)).willReturn(Optional.empty());
+    final var authorId = 2L;
+    final var command = new DeletePostCommand(id);
 
-    final ThrowingCallable when = () -> postCommandService.delete(author1.getId(), command);
+    final ThrowingCallable when = () -> postCommandService.delete(authorId, command);
 
     assertThatThrownBy(when).isInstanceOf(PostNotFoundException.class);
     then(postCommandPort).should(never()).delete(any());
@@ -121,14 +123,15 @@ class PostCommandServiceTest {
   @Test
   void 다른_사람의_게시글_삭제() {
     final var id = 1L;
-    final var command = new DeletePostCommand(id);
     final var author1 = UserFactory.createUser1();
     final var post1 = PostFactory.createPost1WithAuthor(author1);
-    final var author2 = UserFactory.createUser2();
     given(postQueryPort.findById(id)).willReturn(Optional.of(post1));
+    final var author2Id = 99L;
+    final var command = new DeletePostCommand(id);
 
-    final ThrowingCallable when = () -> postCommandService.delete(author2.getId(), command);
+    final ThrowingCallable when = () -> postCommandService.delete(author2Id, command);
 
+    assertThat(author1.getId()).isNotEqualTo(author2Id);
     assertThatThrownBy(when).isInstanceOf(PrincipalAccessDeniedException.class);
     then(postCommandPort).should(never()).delete(any());
   }

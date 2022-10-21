@@ -1,5 +1,6 @@
 package me.jaeyeop.blog.config;
 
+import me.jaeyeop.blog.comment.adapter.out.CommentCrudRepository;
 import me.jaeyeop.blog.comment.adapter.out.CommentPersistenceAdapter;
 import me.jaeyeop.blog.comment.adapter.out.CommentQueryRepository;
 import me.jaeyeop.blog.post.adapter.out.PostCrudRepository;
@@ -28,6 +29,7 @@ import org.springframework.context.annotation.Import;
     @MockBean(UserRepository.class),
     @MockBean(PostCrudRepository.class),
     @MockBean(PostQueryRepository.class),
+    @MockBean(CommentCrudRepository.class),
     @MockBean(CommentQueryRepository.class)})
 @TestConfiguration
 public class MockRepositoryTestConfig {

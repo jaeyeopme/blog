@@ -2,6 +2,7 @@ package me.jaeyeop.blog.comment.adapter.out;
 
 import java.util.Optional;
 import me.jaeyeop.blog.comment.adapter.out.response.CommentInfo;
+import me.jaeyeop.blog.comment.application.port.out.CommentCommandPort;
 import me.jaeyeop.blog.comment.application.port.out.CommentQueryPort;
 import me.jaeyeop.blog.comment.domain.Comment;
 import org.springframework.data.domain.Page;
@@ -9,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CommentPersistenceAdapter implements CommentQueryPort {
+public class CommentPersistenceAdapter implements CommentCommandPort, CommentQueryPort {
 
   private final CommentCrudRepository commentCrudRepository;
 
@@ -30,6 +31,11 @@ public class CommentPersistenceAdapter implements CommentQueryPort {
   @Override
   public Optional<Comment> findById(final Long id) {
     return commentCrudRepository.findById(id);
+  }
+
+  @Override
+  public void delete(final Comment comment) {
+    commentCrudRepository.delete(comment);
   }
 
 }
