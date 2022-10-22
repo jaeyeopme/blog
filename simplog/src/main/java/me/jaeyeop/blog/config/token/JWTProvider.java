@@ -6,11 +6,10 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
 import java.time.Clock;
-import java.time.Instant;
 import java.util.Base64;
 import java.util.Date;
 import javax.crypto.SecretKey;
-import me.jaeyeop.blog.token.domain.Token;
+import me.jaeyeop.blog.auth.domain.Token;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
@@ -54,12 +53,10 @@ public class JWTProvider implements TokenProvider {
     return createToken(email, refreshExp);
   }
 
-  private Token createToken(
-      final String aud,
-      final long tokenExp) {
-    final Instant now = clock.instant();
-    final Instant exp = now.plusMillis(tokenExp);
-    final String token = TYPE + Jwts.builder()
+  private Token createToken(final String aud, final long tokenExp) {
+    final var now = clock.instant();
+    final var exp = now.plusMillis(tokenExp);
+    final var token = Jwts.builder()
         .setIssuedAt(Date.from(now))
         .setExpiration(Date.from(exp))
         .setAudience(aud)
@@ -72,8 +69,9 @@ public class JWTProvider implements TokenProvider {
   @Override
   public Token authenticate(final String token) {
     try {
-      final Claims claims = getClaims(removeType(token));
-      return new Token(token, claims.getAudience(), claims.getExpiration().getTime());
+      final var value = removeType(token);
+      final var claims = getClaims(value);
+      return new Token(value, claims.getAudience(), claims.getExpiration().getTime());
     } catch (final JwtException | IllegalArgumentException e) {
       throw new BadCredentialsException("Bad credentials");
     }

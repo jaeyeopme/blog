@@ -1,6 +1,6 @@
 package me.jaeyeop.blog.config.token;
 
-import me.jaeyeop.blog.token.domain.Token;
+import me.jaeyeop.blog.auth.domain.Token;
 
 public interface TokenProvider {
 

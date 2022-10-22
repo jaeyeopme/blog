@@ -1,10 +1,10 @@
 package me.jaeyeop.blog.post.application.service;
 
+import static me.jaeyeop.blog.post.adapter.in.PostRequest.Create;
+import static me.jaeyeop.blog.post.adapter.in.PostRequest.Delete;
+import static me.jaeyeop.blog.post.adapter.in.PostRequest.Update;
 import javax.transaction.Transactional;
 import me.jaeyeop.blog.config.error.exception.PostNotFoundException;
-import me.jaeyeop.blog.post.adapter.in.command.CreatePostCommand;
-import me.jaeyeop.blog.post.adapter.in.command.DeletePostCommand;
-import me.jaeyeop.blog.post.adapter.in.command.UpdatePostCommand;
 import me.jaeyeop.blog.post.application.port.in.PostCommandUseCase;
 import me.jaeyeop.blog.post.application.port.out.PostCommandPort;
 import me.jaeyeop.blog.post.application.port.out.PostQueryPort;
@@ -26,31 +26,30 @@ public class PostCommandService implements PostCommandUseCase {
   }
 
   @Override
-  public Long create(final Long authorId,
-      final CreatePostCommand command) {
-    final Post post = Post.of(authorId, command.getTitle(), command.getContent());
-    return postCommandPort.create(post).getId();
+  public Long create(final Long authorId, final Create request) {
+    final var post = Post.of(authorId, request.title(), request.content());
+    return postCommandPort.create(post).id();
   }
 
   @Override
-  public void update(final Long authorId,
+  public void update(
+      final Long authorId,
       final Long postId,
-      final UpdatePostCommand command) {
-    final Post post = findById(authorId, postId);
+      final Update request) {
+    final var post = findById(authorId, postId);
 
-    post.updateInformation(command.getTitle(), command.getContent());
+    post.updateInformation(request.title(), request.content());
   }
 
   @Override
-  public void delete(final Long authorId,
-      final DeletePostCommand command) {
-    final Post post = findById(authorId, command.getId());
+  public void delete(final Long authorId, final Delete request) {
+    final var post = findById(authorId, request.postId());
 
     postCommandPort.delete(post);
   }
 
   private Post findById(final Long authorId, final Long postId) {
-    final Post post = postQueryPort.findById(postId)
+    final var post = postQueryPort.findById(postId)
         .orElseThrow(PostNotFoundException::new);
 
     post.confirmAccess(authorId);

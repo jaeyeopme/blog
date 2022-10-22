@@ -1,7 +1,7 @@
 package me.jaeyeop.blog.post.adapter.out;
 
 import java.util.Optional;
-import me.jaeyeop.blog.post.adapter.out.response.PostInfo;
+import me.jaeyeop.blog.post.adapter.out.PostResponse.Info;
 import me.jaeyeop.blog.post.application.port.out.PostCommandPort;
 import me.jaeyeop.blog.post.application.port.out.PostQueryPort;
 import me.jaeyeop.blog.post.domain.Post;
@@ -31,7 +31,7 @@ public class PostPersistenceAdapter implements PostCommandPort, PostQueryPort {
   }
 
   @Override
-  public Optional<PostInfo> findInfoById(final Long id) {
+  public Optional<Info> findInfoById(final Long id) {
     return postQueryRepository.findInfoById(id);
   }
 

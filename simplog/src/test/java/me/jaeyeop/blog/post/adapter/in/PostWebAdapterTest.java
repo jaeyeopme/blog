@@ -16,8 +16,8 @@ import java.util.Optional;
 import me.jaeyeop.blog.config.error.ErrorCode;
 import me.jaeyeop.blog.config.error.ErrorResponse;
 import me.jaeyeop.blog.config.security.WithUser1;
-import me.jaeyeop.blog.post.adapter.in.command.CreatePostCommand;
-import me.jaeyeop.blog.post.adapter.in.command.UpdatePostCommand;
+import me.jaeyeop.blog.post.adapter.in.PostRequest.Create;
+import me.jaeyeop.blog.post.adapter.in.PostRequest.Update;
 import me.jaeyeop.blog.post.adapter.out.PostCrudRepository;
 import me.jaeyeop.blog.post.adapter.out.PostQueryRepository;
 import me.jaeyeop.blog.post.application.service.PostCommandService;
@@ -47,7 +47,7 @@ class PostWebAdapterTest extends WebMvcTestSupport {
   @Test
   void 게시글_작성() throws Exception {
     final var postId = 1L;
-    final var command = new CreatePostCommand("title", "content");
+    final var command = new Create("title", "content");
     final var post = PostFactory.createPost(postId);
     given(postCrudRepository.save(any())).willReturn(post);
 
@@ -66,7 +66,7 @@ class PostWebAdapterTest extends WebMvcTestSupport {
   @NullAndEmptySource
   @ParameterizedTest
   void 제목이_비어있는_게시글_작성(final String title) throws Exception {
-    final var command = new CreatePostCommand(title, "content");
+    final var command = new Create(title, "content");
 
     final var when = mockMvc.perform(
         post(PostWebAdapter.POST_API_URI)
@@ -94,7 +94,7 @@ class PostWebAdapterTest extends WebMvcTestSupport {
   @Test
   void 존재하지_않는_게시글_조회() throws Exception {
     final var id = 1L;
-    final var error = ErrorResponse.of(ErrorCode.POST_NOT_FOUND).getBody();
+    final var error = new ErrorResponse(ErrorCode.POST_NOT_FOUND.message());
     given(postQueryRepository.findInfoById(id)).willReturn(Optional.empty());
 
     final var when = mockMvc.perform(
@@ -109,8 +109,8 @@ class PostWebAdapterTest extends WebMvcTestSupport {
   @Test
   void 게시글_업데이트() throws Exception {
     final var id = 1L;
-    final var command = new UpdatePostCommand("newTitle", "newContent");
-    final var post1 = PostFactory.createPost1WithAuthor(UserFactory.createUser1());
+    final var command = new Update("newTitle", "newContent");
+    final var post1 = PostFactory.createPost1(UserFactory.createUser1());
     given(postCrudRepository.findById(id)).willReturn(Optional.of(post1));
 
     final var when = mockMvc.perform(
@@ -118,7 +118,7 @@ class PostWebAdapterTest extends WebMvcTestSupport {
             .contentType(APPLICATION_JSON)
             .content(toJson(command)));
 
-    when.andExpectAll(status().isOk());
+    when.andExpectAll(status().isNoContent());
   }
 
   @WithUser1
@@ -126,7 +126,7 @@ class PostWebAdapterTest extends WebMvcTestSupport {
   @ParameterizedTest
   void 비어있는_제목으로_게시글_업데이트(final String title) throws Exception {
     final var id = 1L;
-    final var command = new UpdatePostCommand(title, "newContent");
+    final var command = new Update(title, "newContent");
 
     final var when = mockMvc.perform(
         patch(PostWebAdapter.POST_API_URI + "/{id}", id)
@@ -141,8 +141,8 @@ class PostWebAdapterTest extends WebMvcTestSupport {
   @Test
   void 존재하지_않는_게시글_업데이트() throws Exception {
     final var id = 1L;
-    final var command = new UpdatePostCommand("newTitle", "newContent");
-    final var error = ErrorResponse.of(ErrorCode.POST_NOT_FOUND).getBody();
+    final var command = new Update("newTitle", "newContent");
+    final var error = new ErrorResponse(ErrorCode.POST_NOT_FOUND.message());
     given(postCrudRepository.findById(id)).willReturn(Optional.empty());
 
     final var when = mockMvc.perform(
@@ -159,10 +159,10 @@ class PostWebAdapterTest extends WebMvcTestSupport {
   @Test
   void 다른_사람의_게시글_업데이트() throws Exception {
     final var id = 1L;
-    final var command = new UpdatePostCommand("newTitle", "newContent");
+    final var command = new Update("newTitle", "newContent");
     final var user2 = UserFactory.createUser2();
-    final var post1 = PostFactory.createPost1WithAuthor(user2);
-    final var error = ErrorResponse.of(ErrorCode.FORBIDDEN).getBody();
+    final var post1 = PostFactory.createPost1(user2);
+    final var error = new ErrorResponse(ErrorCode.FORBIDDEN.message());
     given(postCrudRepository.findById(id)).willReturn(Optional.of(post1));
 
     final var when = mockMvc.perform(
@@ -179,13 +179,13 @@ class PostWebAdapterTest extends WebMvcTestSupport {
   @Test
   void 게시글_삭제() throws Exception {
     final var id = 1L;
-    final var post1 = PostFactory.createPost1WithAuthor(UserFactory.createUser1());
+    final var post1 = PostFactory.createPost1(UserFactory.createUser1());
     given(postCrudRepository.findById(id)).willReturn(Optional.of(post1));
 
     final var when = mockMvc.perform(
         delete(PostWebAdapter.POST_API_URI + "/{id}", id));
 
-    when.andExpectAll(status().isOk());
+    when.andExpectAll(status().isNoContent());
     then(postCrudRepository).should().delete(any());
   }
 
@@ -193,7 +193,7 @@ class PostWebAdapterTest extends WebMvcTestSupport {
   @Test
   void 존재하지_않는_게시글_삭제() throws Exception {
     final var id = 1L;
-    final var error = ErrorResponse.of(ErrorCode.POST_NOT_FOUND).getBody();
+    final var error = new ErrorResponse(ErrorCode.POST_NOT_FOUND.message());
     given(postCrudRepository.findById(id)).willReturn(Optional.empty());
 
     final var when = mockMvc.perform(
@@ -210,8 +210,8 @@ class PostWebAdapterTest extends WebMvcTestSupport {
   void 다른_사람의_게시글_삭제() throws Exception {
     final var id = 1L;
     final var user2 = UserFactory.createUser2();
-    final var post1 = PostFactory.createPost1WithAuthor(user2);
-    final var error = ErrorResponse.of(ErrorCode.FORBIDDEN).getBody();
+    final var post1 = PostFactory.createPost1(user2);
+    final var error = new ErrorResponse(ErrorCode.FORBIDDEN.message());
     given(postCrudRepository.findById(id)).willReturn(Optional.of(post1));
 
     final var when = mockMvc.perform(

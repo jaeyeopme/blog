@@ -1,16 +1,19 @@
 package me.jaeyeop.blog.comment.adapter.in;
 
+import static me.jaeyeop.blog.comment.adapter.in.CommentRequest.Create;
+import static me.jaeyeop.blog.comment.adapter.in.CommentRequest.Update;
+import static me.jaeyeop.blog.comment.adapter.out.CommentResponse.Info;
 import javax.validation.Valid;
-import me.jaeyeop.blog.comment.adapter.in.command.CreateCommentCommand;
-import me.jaeyeop.blog.comment.adapter.out.response.CommentInfo;
+import me.jaeyeop.blog.comment.adapter.in.CommentRequest.Delete;
+import me.jaeyeop.blog.comment.adapter.in.CommentRequest.Find;
 import me.jaeyeop.blog.comment.application.port.in.CommentCommandUseCase;
 import me.jaeyeop.blog.comment.application.port.in.CommentQueryUseCase;
-import me.jaeyeop.blog.config.security.OAuth2UserPrincipal;
-import me.jaeyeop.blog.post.adapter.in.command.GetCommentsCommand;
+import me.jaeyeop.blog.config.openapi.spec.CommentOpenApiSpec;
+import me.jaeyeop.blog.config.security.authentication.Principal;
+import me.jaeyeop.blog.config.security.authentication.UserPrincipal;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -23,9 +26,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping(CommentWebAdapter.COMMENT_API_URI)
 @RestController
-public class CommentWebAdapter {
+public class CommentWebAdapter implements CommentOpenApiSpec {
 
-  public static final String COMMENT_API_URI = "/api/v1/comments";
+  public static final String COMMENT_API_URI = "/v1/comments";
 
   private final CommentCommandUseCase commentCommandUseCase;
 
@@ -40,35 +43,36 @@ public class CommentWebAdapter {
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping
   public void create(
-      @AuthenticationPrincipal OAuth2UserPrincipal principal,
-      @RequestBody @Valid CreateCommentCommand command) {
-    commentCommandUseCase.create(principal.getId(), command);
+      @Principal UserPrincipal principal,
+      @RequestBody @Valid Create request) {
+    commentCommandUseCase.create(principal.id(), request);
   }
 
   @ResponseStatus(HttpStatus.OK)
   @GetMapping("/{postId}")
-  public Page<CommentInfo> getPage(@PathVariable Long postId,
-      Pageable commentsPageable) {
-    final GetCommentsCommand command = new GetCommentsCommand(postId, commentsPageable);
-    return commentQueryUseCase.getPage(command);
+  public Page<Info> findPage(
+      @PathVariable Long postId,
+      Pageable commentPageable) {
+    final var request = new Find(postId, commentPageable);
+    return commentQueryUseCase.findCommentPage(request);
   }
 
-  @ResponseStatus(HttpStatus.OK)
+  @ResponseStatus(HttpStatus.NO_CONTENT)
   @PatchMapping("/{id}")
   public void update(
-      @AuthenticationPrincipal OAuth2UserPrincipal principal,
+      @Principal UserPrincipal principal,
       @PathVariable Long id,
-      @RequestBody @Valid UpdateCommentCommand command) {
-    commentCommandUseCase.update(principal.getId(), id, command);
+      @RequestBody @Valid Update request) {
+    commentCommandUseCase.update(principal.id(), id, request);
   }
 
-  @ResponseStatus(HttpStatus.OK)
+  @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping("/{id}")
   public void delete(
-      @AuthenticationPrincipal OAuth2UserPrincipal principal,
+      @Principal UserPrincipal principal,
       @PathVariable Long id) {
-    final DeleteCommentCommand command = new DeleteCommentCommand(id);
-    commentCommandUseCase.delete(principal.getId(), command);
+    final var request = new Delete(id);
+    commentCommandUseCase.delete(principal.id(), request);
   }
 
 }

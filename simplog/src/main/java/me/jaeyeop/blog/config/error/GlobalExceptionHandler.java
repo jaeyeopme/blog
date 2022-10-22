@@ -33,8 +33,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
   @ExceptionHandler(AbstractException.class)
   public ResponseEntity<ErrorResponse> blogExceptionHandler(
       final AbstractException e) {
-    logInfo(e);
-    return ErrorResponse.of(e.getCode());
+    logDebug(e);
+    return ResponseEntity.status(e.code().status())
+        .body(new ErrorResponse(e.code().message()));
   }
 
   /**
@@ -46,8 +47,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
   @ExceptionHandler(AuthenticationException.class)
   public ResponseEntity<ErrorResponse> authenticationExceptionHandler(
       final AuthenticationException e) {
-    logInfo(e);
-    return ErrorResponse.of(ErrorCode.UNAUTHORIZED);
+    logError(e);
+    return ResponseEntity.status(ErrorCode.UNAUTHORIZED.status())
+        .body(new ErrorResponse(ErrorCode.UNAUTHORIZED.message()));
   }
 
   /**
@@ -59,8 +61,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
   @ExceptionHandler(AccessDeniedException.class)
   public ResponseEntity<ErrorResponse> accessDeniedExceptionHandler(
       final AccessDeniedException e) {
-    logInfo(e);
-    return ErrorResponse.of(ErrorCode.FORBIDDEN);
+    logError(e);
+    return ResponseEntity.status(ErrorCode.FORBIDDEN.status())
+        .body(new ErrorResponse(ErrorCode.FORBIDDEN.message()));
   }
 
   /**
@@ -70,10 +73,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
    * @return 바인딩 에러 필드를 포함한 HTTP 400 BAD_REQUEST
    */
   @ExceptionHandler(ConstraintViolationException.class)
-  public ResponseEntity<ErrorResponse> constraintViolationExceptionHandler(
+  public ResponseEntity<FieldErrorResponse> constraintViolationExceptionHandler(
       final ConstraintViolationException e) {
-    logInfo(e);
-    return ErrorResponse.of(e.getConstraintViolations());
+    logDebug(e);
+    return ResponseEntity.badRequest()
+        .body(FieldErrorResponse.from(e.getConstraintViolations()));
   }
 
   /**
@@ -88,13 +92,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
       @NonNull final HttpHeaders headers,
       @NonNull final HttpStatus status,
       @NonNull final WebRequest request) {
-    logInfo(e);
-
-    return ErrorResponse.of(e.getBindingResult());
+    logDebug(e);
+    return ResponseEntity.badRequest()
+        .body(FieldErrorResponse.from(e.getBindingResult()));
   }
 
-  private void logInfo(final Exception e) {
+  private void logDebug(final Exception e) {
     log.debug(LOG_FORMAT, e.getClass().getSimpleName(), e.getMessage());
+  }
+
+  private void logError(final Exception e) {
+    log.error(LOG_FORMAT, e.getClass().getSimpleName(), e.getMessage());
   }
 
 }

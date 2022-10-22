@@ -10,9 +10,9 @@ import static org.mockito.Mockito.never;
 import java.util.Optional;
 import me.jaeyeop.blog.config.error.exception.PostNotFoundException;
 import me.jaeyeop.blog.config.error.exception.PrincipalAccessDeniedException;
-import me.jaeyeop.blog.post.adapter.in.command.CreatePostCommand;
-import me.jaeyeop.blog.post.adapter.in.command.DeletePostCommand;
-import me.jaeyeop.blog.post.adapter.in.command.UpdatePostCommand;
+import me.jaeyeop.blog.post.adapter.in.PostRequest.Create;
+import me.jaeyeop.blog.post.adapter.in.PostRequest.Delete;
+import me.jaeyeop.blog.post.adapter.in.PostRequest.Update;
 import me.jaeyeop.blog.post.application.port.out.PostCommandPort;
 import me.jaeyeop.blog.post.application.port.out.PostQueryPort;
 import me.jaeyeop.blog.post.domain.PostFactory;
@@ -39,29 +39,31 @@ class PostCommandServiceTest {
   @Test
   void 게시글_저장() {
     final var author1 = UserFactory.createUser1();
-    final var post1 = PostFactory.createPost1WithAuthor(author1);
+    final var post1 = PostFactory.createPost1(author1);
     given(postCommandPort.create(any())).willReturn(post1);
-    final var command = new CreatePostCommand(post1.getTitle(), post1.getContent());
-    final var expected = post1.getId();
+    final var postId = post1.id();
 
-    final var actual = postCommandService.create(author1.getId(), command);
+    final var actual = postCommandService.create(author1.id(),
+        new Create(post1.title(), post1.content()));
 
-    assertThat(actual).isEqualTo(expected);
+    assertThat(actual).isEqualTo(postId);
   }
 
   @Test
   void 게시글_업데이트() {
     final var id = 1L;
     final var author1 = UserFactory.createUser1();
-    final var post1 = PostFactory.createPost1WithAuthor(author1);
+    final var post1 = PostFactory.createPost1(author1);
     given(postQueryPort.findById(id)).willReturn(Optional.of(post1));
-    final var command = new UpdatePostCommand("newTitle", "newContent");
+    final var newTitle = "newTitle";
+    final var newContent = "newContent";
 
-    final ThrowingCallable when = () -> postCommandService.update(author1.getId(), id, command);
+    final ThrowingCallable when = () -> postCommandService.update(author1.id(), id,
+        new Update(newTitle, newContent));
 
     assertThatNoException().isThrownBy(when);
-    assertThat(post1.getTitle()).isEqualTo(command.getTitle());
-    assertThat(post1.getContent()).isEqualTo(command.getContent());
+    assertThat(post1.title()).isEqualTo(newTitle);
+    assertThat(post1.content()).isEqualTo(newContent);
   }
 
   @Test
@@ -69,9 +71,9 @@ class PostCommandServiceTest {
     final var id = 1L;
     given(postQueryPort.findById(id)).willReturn(Optional.empty());
     final var authorId = 2L;
-    final var command = new UpdatePostCommand("newTitle", "newContent");
 
-    final ThrowingCallable when = () -> postCommandService.update(authorId, id, command);
+    final ThrowingCallable when = () -> postCommandService.update(authorId, id,
+        new Update("newTitle", "newContent"));
 
     assertThatThrownBy(when).isInstanceOf(PostNotFoundException.class);
   }
@@ -80,28 +82,29 @@ class PostCommandServiceTest {
   void 다른_사람의_게시글_업데이트() {
     final var id = 1L;
     final var author1 = UserFactory.createUser1();
-    final var post1 = PostFactory.createPost1WithAuthor(author1);
+    final var post1 = PostFactory.createPost1(author1);
     final var author2Id = 99L;
     given(postQueryPort.findById(id)).willReturn(Optional.of(post1));
-    final var command = new UpdatePostCommand("newTitle", "newContent");
+    final var newTitle = "newTitle";
+    final var newContent = "newContent";
 
-    final ThrowingCallable when = () -> postCommandService.update(author2Id, id, command);
+    final ThrowingCallable when = () -> postCommandService.update(author2Id, id,
+        new Update(newTitle, newContent));
 
-    assertThat(author1.getId()).isNotEqualTo(author2Id);
+    assertThat(author1.id()).isNotEqualTo(author2Id);
     assertThatThrownBy(when).isInstanceOf(PrincipalAccessDeniedException.class);
-    assertThat(post1.getTitle()).isNotEqualTo(command.getTitle());
-    assertThat(post1.getContent()).isNotEqualTo(command.getContent());
+    assertThat(post1.title()).isNotEqualTo(newTitle);
+    assertThat(post1.content()).isNotEqualTo(newContent);
   }
 
   @Test
   void 게시글_삭제() {
     final var id = 1L;
     final var author1 = UserFactory.createUser1();
-    final var post1 = PostFactory.createPost1WithAuthor(author1);
+    final var post1 = PostFactory.createPost1(author1);
     given(postQueryPort.findById(id)).willReturn(Optional.of(post1));
-    final var command = new DeletePostCommand(id);
 
-    final ThrowingCallable when = () -> postCommandService.delete(author1.getId(), command);
+    final ThrowingCallable when = () -> postCommandService.delete(author1.id(), new Delete(id));
 
     assertThatNoException().isThrownBy(when);
     then(postCommandPort).should().delete(post1);
@@ -112,9 +115,8 @@ class PostCommandServiceTest {
     final var id = 1L;
     given(postQueryPort.findById(id)).willReturn(Optional.empty());
     final var authorId = 2L;
-    final var command = new DeletePostCommand(id);
 
-    final ThrowingCallable when = () -> postCommandService.delete(authorId, command);
+    final ThrowingCallable when = () -> postCommandService.delete(authorId, new Delete(id));
 
     assertThatThrownBy(when).isInstanceOf(PostNotFoundException.class);
     then(postCommandPort).should(never()).delete(any());
@@ -124,14 +126,13 @@ class PostCommandServiceTest {
   void 다른_사람의_게시글_삭제() {
     final var id = 1L;
     final var author1 = UserFactory.createUser1();
-    final var post1 = PostFactory.createPost1WithAuthor(author1);
+    final var post1 = PostFactory.createPost1(author1);
     given(postQueryPort.findById(id)).willReturn(Optional.of(post1));
     final var author2Id = 99L;
-    final var command = new DeletePostCommand(id);
 
-    final ThrowingCallable when = () -> postCommandService.delete(author2Id, command);
+    final ThrowingCallable when = () -> postCommandService.delete(author2Id, new Delete(id));
 
-    assertThat(author1.getId()).isNotEqualTo(author2Id);
+    assertThat(author1.id()).isNotEqualTo(author2Id);
     assertThatThrownBy(when).isInstanceOf(PrincipalAccessDeniedException.class);
     then(postCommandPort).should(never()).delete(any());
   }

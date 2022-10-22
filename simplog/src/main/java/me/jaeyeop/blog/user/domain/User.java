@@ -13,8 +13,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import me.jaeyeop.blog.config.jpa.AbstractTimeAuditing;
-import me.jaeyeop.blog.config.security.OAuth2Attributes;
-import me.jaeyeop.blog.config.security.OAuth2Provider;
+import me.jaeyeop.blog.config.security.authentication.OAuth2Attributes;
+import me.jaeyeop.blog.config.security.authentication.OAuth2Provider;
 
 @Entity
 @Getter
@@ -71,11 +71,11 @@ public class User extends AbstractTimeAuditing {
 
   public static User from(final OAuth2Attributes attributes) {
     return User.builder()
-        .email(attributes.getEmail())
-        .name(attributes.getName())
-        .picture(attributes.getPicture())
+        .email(attributes.email())
+        .name(attributes.name())
+        .picture(attributes.picture())
         .role(Role.USER)
-        .provider(attributes.getProvider())
+        .provider(attributes.provider())
         .build();
   }
 

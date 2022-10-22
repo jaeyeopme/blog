@@ -2,12 +2,11 @@ package me.jaeyeop.blog.user.application.service;
 
 import javax.transaction.Transactional;
 import me.jaeyeop.blog.config.error.exception.EmailNotFoundException;
-import me.jaeyeop.blog.user.adapter.in.command.DeleteUserCommand;
-import me.jaeyeop.blog.user.adapter.in.command.UpdateUserCommand;
+import me.jaeyeop.blog.user.adapter.in.UserRequest.Delete;
+import me.jaeyeop.blog.user.adapter.in.UserRequest.Update;
 import me.jaeyeop.blog.user.application.port.in.UserCommandUseCase;
 import me.jaeyeop.blog.user.application.port.out.UserCommandPort;
 import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
-import me.jaeyeop.blog.user.domain.User;
 import org.springframework.stereotype.Service;
 
 @Transactional
@@ -26,16 +25,16 @@ public class UserCommandService implements UserCommandUseCase {
 
   @Override
   public void update(final String email,
-      final UpdateUserCommand command) {
-    final User user = userQueryPort.findByEmail(email)
+      final Update request) {
+    final var user = userQueryPort.findByEmail(email)
         .orElseThrow(EmailNotFoundException::new);
 
-    user.updateProfile(command.getName(), command.getPicture());
+    user.updateProfile(request.name(), request.picture());
   }
 
   @Override
-  public void delete(final DeleteUserCommand command) {
-    userCommandPort.deleteByEmail(command.getEmail());
+  public void delete(final Delete request) {
+    userCommandPort.deleteByEmail(request.email());
   }
 
 }

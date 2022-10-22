@@ -1,6 +1,6 @@
 package me.jaeyeop.blog.post.domain;
 
-import me.jaeyeop.blog.post.adapter.out.response.PostInfo;
+import static me.jaeyeop.blog.post.adapter.out.PostResponse.Info;
 import me.jaeyeop.blog.user.domain.User;
 
 public abstract class PostFactory {
@@ -19,7 +19,7 @@ public abstract class PostFactory {
         .build();
   }
 
-  public static Post createPost1WithAuthor(final User author) {
+  public static Post createPost1(final User author) {
     return Post.builder()
         .id(1L)
         .title(DEFAULT_TITLE)
@@ -28,8 +28,8 @@ public abstract class PostFactory {
         .build();
   }
 
-  public static PostInfo createInfo(final Long postId) {
-    return new PostInfo(
+  public static Info createInfo(final Long postId) {
+    return new Info(
         postId,
         DEFAULT_TITLE,
         DEFAULT_CONTENT,

@@ -1,11 +1,10 @@
 package me.jaeyeop.blog.user.application.service;
 
 import me.jaeyeop.blog.config.error.exception.EmailNotFoundException;
-import me.jaeyeop.blog.user.adapter.in.command.GetUserCommand;
-import me.jaeyeop.blog.user.adapter.out.response.UserProfile;
+import me.jaeyeop.blog.user.adapter.in.UserRequest;
+import me.jaeyeop.blog.user.adapter.out.UserResponse.Profile;
 import me.jaeyeop.blog.user.application.port.in.UserQueryUseCase;
 import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
-import me.jaeyeop.blog.user.domain.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,11 +19,11 @@ public class UserQueryService implements UserQueryUseCase {
   }
 
   @Override
-  public UserProfile getOneByEmail(final GetUserCommand command) {
-    final User user = userQueryPort.findByEmail(command.getEmail())
+  public Profile findOneByEmail(final UserRequest.Find request) {
+    final var user = userQueryPort.findByEmail(request.email())
         .orElseThrow(EmailNotFoundException::new);
 
-    return UserProfile.from(user);
+    return Profile.from(user);
   }
 
 }

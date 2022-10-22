@@ -1,9 +1,9 @@
 package me.jaeyeop.blog.comment.application.service;
 
-import me.jaeyeop.blog.comment.adapter.out.response.CommentInfo;
+import me.jaeyeop.blog.comment.adapter.in.CommentRequest.Find;
+import me.jaeyeop.blog.comment.adapter.out.CommentResponse.Info;
 import me.jaeyeop.blog.comment.application.port.in.CommentQueryUseCase;
 import me.jaeyeop.blog.comment.application.port.out.CommentQueryPort;
-import me.jaeyeop.blog.post.adapter.in.command.GetCommentsCommand;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,9 +19,9 @@ public class CommentQueryService implements CommentQueryUseCase {
   }
 
   @Override
-  public Page<CommentInfo> getPage(final GetCommentsCommand command) {
-    return commentQueryPort.findPageInfoByPostId(command.getPostId(),
-        command.getCommentsPageable());
+  public Page<Info> findCommentPage(final Find request) {
+    return commentQueryPort.findInfoPageByPostId(request.postId(),
+        request.commentPageable());
   }
 
 }

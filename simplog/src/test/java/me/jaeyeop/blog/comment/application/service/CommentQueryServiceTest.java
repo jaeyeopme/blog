@@ -2,9 +2,9 @@ package me.jaeyeop.blog.comment.application.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import me.jaeyeop.blog.comment.adapter.in.CommentRequest.Find;
 import me.jaeyeop.blog.comment.application.port.out.CommentQueryPort;
 import me.jaeyeop.blog.comment.domain.CommentFactory;
-import me.jaeyeop.blog.post.adapter.in.command.GetCommentsCommand;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,13 +26,12 @@ class CommentQueryServiceTest {
   void 댓글_페이지_조회() {
     final var postId = 1L;
     final var pageable = PageRequest.of(5, 10, Direction.DESC, "createdAt");
-    final var command = new GetCommentsCommand(postId, pageable);
-    final var expected = CommentFactory.createPageInfo(pageable);
-    given(commentQueryPort.findPageInfoByPostId(postId, pageable)).willReturn(expected);
+    final var infoPage = CommentFactory.createInfoPage(pageable);
+    given(commentQueryPort.findInfoPageByPostId(postId, pageable)).willReturn(infoPage);
 
-    final var actual = commentQueryService.getPage(command);
+    final var actual = commentQueryService.findCommentPage(new Find(postId, pageable));
 
-    assertThat(actual).isEqualTo(expected);
+    assertThat(actual).isEqualTo(infoPage);
   }
 
 }

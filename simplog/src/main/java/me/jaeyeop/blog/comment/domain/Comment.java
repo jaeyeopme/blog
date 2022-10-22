@@ -67,7 +67,7 @@ public class Comment extends AbstractTimeAuditing {
   }
 
   public void confirmAccess(final Long authorId) {
-    if (!this.author.getId().equals(authorId)) {
+    if (!this.author.id().equals(authorId)) {
       throw new PrincipalAccessDeniedException();
     }
   }

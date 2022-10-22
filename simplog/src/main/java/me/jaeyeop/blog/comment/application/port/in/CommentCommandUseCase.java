@@ -1,15 +1,15 @@
 package me.jaeyeop.blog.comment.application.port.in;
 
-import me.jaeyeop.blog.comment.adapter.in.DeleteCommentCommand;
-import me.jaeyeop.blog.comment.adapter.in.UpdateCommentCommand;
-import me.jaeyeop.blog.comment.adapter.in.command.CreateCommentCommand;
+import me.jaeyeop.blog.comment.adapter.in.CommentRequest.Create;
+import me.jaeyeop.blog.comment.adapter.in.CommentRequest.Delete;
+import me.jaeyeop.blog.comment.adapter.in.CommentRequest.Update;
 
 public interface CommentCommandUseCase {
 
-  void create(Long authorId, CreateCommentCommand command);
+  void create(Long authorId, Create request);
 
-  void update(Long authorId, Long commentId, UpdateCommentCommand command);
+  void update(Long authorId, Long commentId, Update request);
 
-  void delete(Long authorId, DeleteCommentCommand command);
+  void delete(Long authorId, Delete request);
 
 }

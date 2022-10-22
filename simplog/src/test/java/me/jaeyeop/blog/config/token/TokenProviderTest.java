@@ -1,7 +1,8 @@
 package me.jaeyeop.blog.config.token;
 
-import static org.assertj.core.api.BDDAssertions.then;
-import static org.assertj.core.api.BDDAssertions.thenThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -21,7 +22,7 @@ class TokenProviderTest {
 
     final var accessToken = tokenProvider.createAccess(email);
 
-    then(accessToken.getEmail()).isEqualTo(email);
+    assertThat(accessToken.email()).isEqualTo(email);
   }
 
   @Test
@@ -30,7 +31,7 @@ class TokenProviderTest {
 
     final var refreshToken = tokenProvider.createRefresh(email);
 
-    then(refreshToken.getEmail()).isEqualTo(email);
+    assertThat(refreshToken.email()).isEqualTo(email);
   }
 
   @Test
@@ -38,8 +39,9 @@ class TokenProviderTest {
     final var differentKeyProvider = TokenProviderFactory.createDifferentKey();
     final var accessToken = differentKeyProvider.createAccess("email@email.com");
 
-    thenThrownBy(() -> tokenProvider.authenticate(accessToken.getValue()))
-        .isInstanceOf(BadCredentialsException.class);
+    final ThrowingCallable when = () -> tokenProvider.authenticate(accessToken.value());
+
+    assertThatThrownBy(when).isInstanceOf(BadCredentialsException.class);
   }
 
   @Test
@@ -47,8 +49,9 @@ class TokenProviderTest {
     final var expiredProvider = TokenProviderFactory.createExpired();
     final var accessToken = expiredProvider.createAccess("email@email.com");
 
-    thenThrownBy(() -> tokenProvider.authenticate(accessToken.getValue()))
-        .isInstanceOf(BadCredentialsException.class);
+    final ThrowingCallable when = () -> tokenProvider.authenticate(accessToken.value());
+
+    assertThatThrownBy(when).isInstanceOf(BadCredentialsException.class);
   }
 
 }

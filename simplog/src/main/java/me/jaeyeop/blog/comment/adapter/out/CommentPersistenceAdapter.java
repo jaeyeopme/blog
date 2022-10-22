@@ -1,7 +1,7 @@
 package me.jaeyeop.blog.comment.adapter.out;
 
 import java.util.Optional;
-import me.jaeyeop.blog.comment.adapter.out.response.CommentInfo;
+import me.jaeyeop.blog.comment.adapter.out.CommentResponse.Info;
 import me.jaeyeop.blog.comment.application.port.out.CommentCommandPort;
 import me.jaeyeop.blog.comment.application.port.out.CommentQueryPort;
 import me.jaeyeop.blog.comment.domain.Comment;
@@ -23,9 +23,9 @@ public class CommentPersistenceAdapter implements CommentCommandPort, CommentQue
   }
 
   @Override
-  public Page<CommentInfo> findPageInfoByPostId(final Long postId,
+  public Page<Info> findInfoPageByPostId(final Long postId,
       final Pageable pageable) {
-    return commentQueryRepository.findPageInfoByPostId(postId, pageable);
+    return commentQueryRepository.findInfoPageByPostId(postId, pageable);
   }
 
   @Override

@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import java.util.Optional;
-import me.jaeyeop.blog.comment.adapter.in.command.CreateCommentCommand;
+import me.jaeyeop.blog.comment.adapter.in.CommentRequest.Create;
 import me.jaeyeop.blog.comment.application.service.CommentCommandService;
 import me.jaeyeop.blog.comment.application.service.CommentQueryService;
 import me.jaeyeop.blog.config.error.ErrorCode;
@@ -37,7 +37,7 @@ class CommentWebAdapterTest extends WebMvcTestSupport {
   void 댓글_작성() throws Exception {
     final var postId = 1L;
     final var post = PostFactory.createPost(postId);
-    final var command = new CreateCommentCommand(postId, "content");
+    final var command = new Create(postId, "content");
     given(postCrudRepository.findById(postId)).willReturn(Optional.of(post));
 
     final var when = mockMvc.perform(
@@ -52,7 +52,7 @@ class CommentWebAdapterTest extends WebMvcTestSupport {
   @ParameterizedTest
   void 비어있는_댓글_작성(final String content) throws Exception {
     final var post1Id = 1L;
-    final var command = new CreateCommentCommand(post1Id, content);
+    final var command = new Create(post1Id, content);
 
     final var when = mockMvc.perform(
         post(CommentWebAdapter.COMMENT_API_URI).contentType(MediaType.APPLICATION_JSON)
@@ -66,8 +66,8 @@ class CommentWebAdapterTest extends WebMvcTestSupport {
   @Test
   void 존재하지_않는_게시글에_댓글_작성() throws Exception {
     final var postId = 1L;
-    final var command = new CreateCommentCommand(postId, "content");
-    final var error = ErrorResponse.of(ErrorCode.POST_NOT_FOUND).getBody();
+    final var command = new Create(postId, "content");
+    final var error = new ErrorResponse(ErrorCode.POST_NOT_FOUND.message());
     given(postCrudRepository.findById(postId)).willReturn(Optional.empty());
 
     final var when = mockMvc.perform(

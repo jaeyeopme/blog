@@ -1,9 +1,9 @@
 package me.jaeyeop.blog.comment.application.service;
 
 import javax.transaction.Transactional;
-import me.jaeyeop.blog.comment.adapter.in.DeleteCommentCommand;
-import me.jaeyeop.blog.comment.adapter.in.UpdateCommentCommand;
-import me.jaeyeop.blog.comment.adapter.in.command.CreateCommentCommand;
+import me.jaeyeop.blog.comment.adapter.in.CommentRequest.Create;
+import me.jaeyeop.blog.comment.adapter.in.CommentRequest.Delete;
+import me.jaeyeop.blog.comment.adapter.in.CommentRequest.Update;
 import me.jaeyeop.blog.comment.application.port.in.CommentCommandUseCase;
 import me.jaeyeop.blog.comment.application.port.out.CommentCommandPort;
 import me.jaeyeop.blog.comment.application.port.out.CommentQueryPort;
@@ -11,7 +11,6 @@ import me.jaeyeop.blog.comment.domain.Comment;
 import me.jaeyeop.blog.config.error.exception.CommentNotFoundException;
 import me.jaeyeop.blog.config.error.exception.PostNotFoundException;
 import me.jaeyeop.blog.post.application.port.out.PostQueryPort;
-import me.jaeyeop.blog.post.domain.Post;
 import org.springframework.stereotype.Service;
 
 @Transactional
@@ -34,11 +33,11 @@ public class CommentCommandService implements CommentCommandUseCase {
 
   @Override
   public void create(final Long authorId,
-      final CreateCommentCommand command) {
-    final Post post = postQueryPort.findById(command.getPostId())
+      final Create request) {
+    final var post = postQueryPort.findById(request.postId())
         .orElseThrow(PostNotFoundException::new);
 
-    final Comment comment = Comment.of(authorId, command.getContent());
+    final var comment = Comment.of(authorId, request.content());
 
     post.addComments(comment);
   }
@@ -46,21 +45,21 @@ public class CommentCommandService implements CommentCommandUseCase {
   @Override
   public void update(final Long authorId,
       final Long commentId,
-      final UpdateCommentCommand command) {
-    final Comment comment = findById(authorId, commentId);
+      final Update request) {
+    final var comment = findById(authorId, commentId);
 
-    comment.updateInformation(command.getContent());
+    comment.updateInformation(request.content());
   }
 
   @Override
-  public void delete(final Long authorId, final DeleteCommentCommand command) {
-    final Comment comment = findById(authorId, command.getId());
+  public void delete(final Long authorId, final Delete request) {
+    final var comment = findById(authorId, request.commentId());
 
     commentCommandPort.delete(comment);
   }
 
   private Comment findById(final Long authorId, final Long commentId) {
-    final Comment comment = commentQueryPort.findById(commentId)
+    final var comment = commentQueryPort.findById(commentId)
         .orElseThrow(CommentNotFoundException::new);
 
     comment.confirmAccess(authorId);

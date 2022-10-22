@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import java.util.Optional;
 import me.jaeyeop.blog.config.error.exception.PostNotFoundException;
-import me.jaeyeop.blog.post.adapter.in.command.GetPostCommand;
+import me.jaeyeop.blog.post.adapter.in.PostRequest.Find;
 import me.jaeyeop.blog.post.application.port.out.PostQueryPort;
 import me.jaeyeop.blog.post.domain.PostFactory;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
@@ -27,22 +27,20 @@ class PostQueryServiceTest {
   @Test
   void 게시글_조회() {
     final var postId = 1L;
-    final var command = new GetPostCommand(postId);
-    final var expected = PostFactory.createInfo(postId);
-    given(postQueryPort.findInfoById(postId)).willReturn(Optional.of(expected));
+    final var postInfo = PostFactory.createInfo(postId);
+    given(postQueryPort.findInfoById(postId)).willReturn(Optional.of(postInfo));
 
-    final var actual = postQueryService.getOne(command);
+    final var actual = postQueryService.findOne(new Find(postId));
 
-    assertThat(actual).isEqualTo(expected);
+    assertThat(actual).isEqualTo(postInfo);
   }
 
   @Test
   void 존재하지_않는_게시글_조회() {
     final var postId = 1L;
-    final var command = new GetPostCommand(postId);
     given(postQueryPort.findInfoById(postId)).willReturn(Optional.empty());
 
-    final ThrowingCallable when = () -> postQueryService.getOne(command);
+    final ThrowingCallable when = () -> postQueryService.findOne(new Find(postId));
 
     assertThatThrownBy(when).isInstanceOf(PostNotFoundException.class);
   }

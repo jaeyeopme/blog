@@ -1,12 +1,12 @@
 package me.jaeyeop.blog.user.application.port.in;
 
-import me.jaeyeop.blog.user.adapter.in.command.DeleteUserCommand;
-import me.jaeyeop.blog.user.adapter.in.command.UpdateUserCommand;
+import static me.jaeyeop.blog.user.adapter.in.UserRequest.Delete;
+import static me.jaeyeop.blog.user.adapter.in.UserRequest.Update;
 
 public interface UserCommandUseCase {
 
-  void update(String email, UpdateUserCommand command);
+  void update(String email, Update request);
 
-  void delete(DeleteUserCommand command);
+  void delete(Delete request);
 
 }

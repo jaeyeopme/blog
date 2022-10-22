@@ -8,8 +8,8 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.only;
 import java.util.Optional;
 import me.jaeyeop.blog.config.error.exception.EmailNotFoundException;
-import me.jaeyeop.blog.user.adapter.in.command.DeleteUserCommand;
-import me.jaeyeop.blog.user.adapter.in.command.UpdateUserCommand;
+import me.jaeyeop.blog.user.adapter.in.UserRequest.Delete;
+import me.jaeyeop.blog.user.adapter.in.UserRequest.Update;
 import me.jaeyeop.blog.user.application.port.out.UserCommandPort;
 import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
 import me.jaeyeop.blog.user.domain.UserFactory;
@@ -35,24 +35,26 @@ class UserCommandServiceTest {
   @Test
   void 프로필_업데이트() {
     final var email = "email@email.com";
-    final var command = new UpdateUserCommand("newName", "newPicture");
     final var user1 = UserFactory.createUser1();
     given(userQueryPort.findByEmail(email)).willReturn(Optional.of(user1));
+    final var newName = "newName";
+    final var newPicture = "newPicture";
 
-    final ThrowingCallable when = () -> userCommandService.update(email, command);
+    final ThrowingCallable when = () -> userCommandService.update(email,
+        new Update(newName, newPicture));
 
     assertThatNoException().isThrownBy(when);
-    assertThat(user1.getName()).isEqualTo(command.getName());
-    assertThat(user1.getPicture()).isEqualTo(command.getPicture());
+    assertThat(user1.name()).isEqualTo(newName);
+    assertThat(user1.picture()).isEqualTo(newPicture);
   }
 
   @Test
   void 존재하지_않는_프로필_업데이트() {
     final var email = "anonymous@email.com";
-    final var command = new UpdateUserCommand("newName", "newPicture");
     given(userQueryPort.findByEmail(email)).willReturn(Optional.empty());
 
-    final ThrowingCallable when = () -> userCommandService.update(email, command);
+    final ThrowingCallable when = () -> userCommandService.update(email,
+        new Update("newName", "newPicture"));
 
     assertThatThrownBy(when).isInstanceOf(EmailNotFoundException.class);
   }
@@ -60,9 +62,8 @@ class UserCommandServiceTest {
   @Test
   void 프로필_삭제() {
     final var email = "email@email.com";
-    final var command = new DeleteUserCommand(email);
 
-    final ThrowingCallable when = () -> userCommandService.delete(command);
+    final ThrowingCallable when = () -> userCommandService.delete(new Delete(email));
 
     assertThatNoException().isThrownBy(when);
     then(userCommandPort).should(only()).deleteByEmail(email);

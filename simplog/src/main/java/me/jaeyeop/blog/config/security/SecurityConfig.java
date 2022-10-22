@@ -1,10 +1,14 @@
 package me.jaeyeop.blog.config.security;
 
-import static me.jaeyeop.blog.token.adapter.in.TokenWebAdaptor.AUTH_API_URI;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import me.jaeyeop.blog.auth.adapter.in.AuthWebAdaptor;
+import me.jaeyeop.blog.config.security.authentication.OAuth2AuthenticationFilter;
+import me.jaeyeop.blog.config.security.authentication.OAuth2SuccessHandler;
+import me.jaeyeop.blog.config.security.authentication.OAuth2UserServiceDelegator;
 import me.jaeyeop.blog.post.adapter.in.PostWebAdapter;
 import me.jaeyeop.blog.user.adapter.in.UserWebAdapter;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -42,6 +46,8 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain securityFilterChain(final HttpSecurity httpSecurity) throws Exception {
     httpSecurity
+        .headers().frameOptions().disable()
+        .and()
         .csrf().disable()
         .cors().disable()
         .formLogin().disable()
@@ -57,7 +63,7 @@ public class SecurityConfig {
         .userService(oAuth2UserServiceDelegator)
         .and()
         .authorizationEndpoint()
-        .baseUri(AUTH_API_URI + "/login");
+        .baseUri(AuthWebAdaptor.AUTH_API_URI + "/login");
 
     httpSecurity
         .exceptionHandling()
@@ -71,10 +77,18 @@ public class SecurityConfig {
   }
 
   private Customizer<ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry> getAuthorizeRequests() {
+    final var openApi = new String[]{"/swagger-ui/**", "/api-docs/**"};
+    final var permitAll = new String[]{
+        UserWebAdapter.USER_API_URI + "/*",
+        PostWebAdapter.POST_API_URI + "/**"};
+
     return urlRegistry -> urlRegistry
-        .mvcMatchers(HttpMethod.GET, UserWebAdapter.USER_API_URI + "/*")
+        .requestMatchers(
+            PathRequest.toStaticResources().atCommonLocations())
         .permitAll()
-        .mvcMatchers(HttpMethod.GET, PostWebAdapter.POST_API_URI + "/*")
+        .antMatchers(HttpMethod.GET, openApi)
+        .permitAll()
+        .antMatchers(HttpMethod.GET, permitAll)
         .permitAll()
         .anyRequest()
         .authenticated();

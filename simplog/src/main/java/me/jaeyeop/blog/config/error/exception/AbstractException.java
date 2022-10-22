@@ -9,7 +9,7 @@ public abstract class AbstractException extends RuntimeException {
   private final ErrorCode code;
 
   protected AbstractException(final ErrorCode code) {
-    super(code.getMessage());
+    super(code.message());
     this.code = code;
   }
 

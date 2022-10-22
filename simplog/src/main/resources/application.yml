@@ -4,6 +4,7 @@ spring:
     active: dev
     group:
       dev: common, dev
+      real: common, real
 ---
 server:
   error:
@@ -16,6 +17,11 @@ spring:
   config:
     activate:
       on-profile: common
+
+  web:
+    resources:
+      chain:
+        enabled: false
 
   jackson:
     visibility:
@@ -43,6 +49,14 @@ spring:
       sort:
         sort-parameter: "createdAt_desc"
 ---
+logging:
+  level:
+    org:
+      hibernate:
+        type: trace
+        sql: debug
+    root: debug
+
 spring:
   config:
     activate:
@@ -71,10 +85,48 @@ spring:
     host: localhost
     password: test
 
-logging:
-  level:
-    org:
+springdoc:
+  # @ControllerAdvice 응답 추가
+  override-with-generic-response: false
+  default-produces-media-type: application/json
+  cache:
+    disabled: true
+  swagger-ui:
+    path: /swagger-ui
+    operationsSorter: method
+    tagsSorter: alpha
+    disable-swagger-default-url: true
+    display-request-duration: true
+    doc-expansion: none
+  api-docs:
+    path: /api-docs
+    version:
+---
+spring:
+  config:
+    activate:
+      on-profile: real
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
       hibernate:
-        type: trace
-        sql: debug
-    root: debug
+        dialect: org.hibernate.dialect.MariaDB10Dialect
+
+  datasource:
+    url: jdbc:mariadb://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}
+    hikari:
+      driver-class-name: org.mariadb.jdbc.Driver
+      username: ${MYSQL_USER}
+      password: ${MYSQL_PASSWORD}
+      connection-init-sql: SELECT 1
+
+  redis:
+    port: ${TOKEN_REDIS_PORT}
+    host: ${TOKEN_REDIS_HOST}
+    password: ${TOKEN_REIDS_PASSWORD}
+
+springdoc:
+  swagger-ui:
+    enabled: false
