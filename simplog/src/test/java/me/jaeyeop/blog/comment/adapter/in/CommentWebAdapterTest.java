@@ -11,7 +11,7 @@ import java.util.Optional;
 import me.jaeyeop.blog.comment.adapter.in.CommentRequest.Create;
 import me.jaeyeop.blog.comment.application.service.CommentCommandService;
 import me.jaeyeop.blog.comment.application.service.CommentQueryService;
-import me.jaeyeop.blog.config.error.ErrorCode;
+import me.jaeyeop.blog.config.error.Error;
 import me.jaeyeop.blog.config.error.ErrorResponse;
 import me.jaeyeop.blog.config.security.WithUser1;
 import me.jaeyeop.blog.post.adapter.out.PostCrudRepository;
@@ -67,7 +67,7 @@ class CommentWebAdapterTest extends WebMvcTestSupport {
   void 존재하지_않는_게시글에_댓글_작성() throws Exception {
     final var postId = 1L;
     final var command = new Create(postId, "content");
-    final var error = new ErrorResponse(ErrorCode.POST_NOT_FOUND.message());
+    final var error = new ErrorResponse(Error.POST_NOT_FOUND.message());
     given(postCrudRepository.findById(postId)).willReturn(Optional.empty());
 
     final var when = mockMvc.perform(

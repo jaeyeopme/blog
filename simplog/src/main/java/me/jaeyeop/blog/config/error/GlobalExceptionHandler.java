@@ -1,7 +1,6 @@
 package me.jaeyeop.blog.config.error;
 
 import javax.validation.ConstraintViolationException;
-import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import me.jaeyeop.blog.config.error.exception.AbstractException;
 import org.springframework.http.HttpHeaders;
@@ -10,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,7 +28,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
    * 개발자 정의 예외 처리
    *
    * @param e 개발자 정의 예외
-   * @return {@link ErrorCode}
+   * @return {@link Error}
    */
   @ExceptionHandler(AbstractException.class)
   public ResponseEntity<ErrorResponse> blogExceptionHandler(
@@ -42,34 +42,34 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
    * 유효하지 않은 인증 정보 예외 처리
    *
    * @param e 유효하지 않은 인증 정보의 요청에 대한 예외
-   * @return {@link ErrorCode} UNAUTHORIZED
+   * @return {@link Error} UNAUTHORIZED
    */
   @ExceptionHandler(AuthenticationException.class)
   public ResponseEntity<ErrorResponse> authenticationExceptionHandler(
       final AuthenticationException e) {
     logError(e);
-    return ResponseEntity.status(ErrorCode.UNAUTHORIZED.status())
-        .body(new ErrorResponse(ErrorCode.UNAUTHORIZED.message()));
+    return ResponseEntity.status(Error.UNAUTHORIZED.status())
+        .body(new ErrorResponse(Error.UNAUTHORIZED.message()));
   }
 
   /**
    * 접근 권한 예외 처리
    *
    * @param e 권한이 없는 요청에 대한 예외
-   * @return {@link ErrorCode} FORBIDDEN
+   * @return {@link Error} FORBIDDEN
    */
   @ExceptionHandler(AccessDeniedException.class)
   public ResponseEntity<ErrorResponse> accessDeniedExceptionHandler(
       final AccessDeniedException e) {
     logError(e);
-    return ResponseEntity.status(ErrorCode.FORBIDDEN.status())
-        .body(new ErrorResponse(ErrorCode.FORBIDDEN.message()));
+    return ResponseEntity.status(Error.FORBIDDEN.status())
+        .body(new ErrorResponse(Error.FORBIDDEN.message()));
   }
 
   /**
    * 데이터 바인딩 에러 예외 처리
    *
-   * @param e {@link RequestBody}, {@link RequestPart} 를 제외한 {@link Valid} 주석이 달린 인수 바인딩 예외
+   * @param e {@link RequestBody}, {@link RequestPart}를 제외한 {@link Validated} 인수 바인딩 예외
    * @return 바인딩 에러 필드를 포함한 HTTP 400 BAD_REQUEST
    */
   @ExceptionHandler(ConstraintViolationException.class)
@@ -83,7 +83,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
   /**
    * 데이터 바인딩 에러 예외 처리 재정의
    *
-   * @param e {@link RequestBody} 에서 {@link Valid} 주석이 달린 인수 바인딩 예외
+   * @param e {@link RequestBody}에서 {@link Validated} 인수 바인딩 예외
    * @return 바인딩 에러 필드를 포함한 HTTP 400 BAD_REQUEST
    */
   @Override

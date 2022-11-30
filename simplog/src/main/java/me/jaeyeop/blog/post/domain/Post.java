@@ -21,6 +21,7 @@ import me.jaeyeop.blog.comment.domain.Comment;
 import me.jaeyeop.blog.config.error.exception.PrincipalAccessDeniedException;
 import me.jaeyeop.blog.config.jpa.AbstractTimeAuditing;
 import me.jaeyeop.blog.user.domain.User;
+import org.springframework.util.StringUtils;
 
 @Entity
 @Getter
@@ -70,9 +71,10 @@ public class Post extends AbstractTimeAuditing {
         .build();
   }
 
-  public void updateInformation(final String title,
-      final String content) {
-    this.title = title;
+  public void updateInformation(final String title, final String content) {
+    if (StringUtils.hasText(title)) {
+      this.title = title;
+    }
     this.content = content;
   }
 

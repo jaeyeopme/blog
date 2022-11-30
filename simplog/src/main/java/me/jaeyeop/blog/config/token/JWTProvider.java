@@ -9,7 +9,7 @@ import java.time.Clock;
 import java.util.Base64;
 import java.util.Date;
 import javax.crypto.SecretKey;
-import me.jaeyeop.blog.auth.domain.Token;
+import me.jaeyeop.blog.authentication.domain.Token;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
@@ -29,9 +29,9 @@ public class JWTProvider implements TokenProvider {
   private final Clock clock;
 
   public JWTProvider(
-      @Value("${jwt.key}") final String key,
-      @Value("${jwt.exp.access}") final long accessExp,
-      @Value("${jwt.exp.refresh}") final long refreshExp,
+      @Value("${token.key}") final String key,
+      @Value("${token.exp.access}") final long accessExp,
+      @Value("${token.exp.refresh}") final long refreshExp,
       final Clock clock) {
     this.key = encode(key);
     this.accessExp = accessExp;

@@ -1,9 +1,9 @@
 package me.jaeyeop.blog.config;
 
-import me.jaeyeop.blog.auth.adapter.out.AccessTokenPersistenceAdapter;
-import me.jaeyeop.blog.auth.adapter.out.AccessTokenRepository;
-import me.jaeyeop.blog.auth.adapter.out.RefreshTokenPersistenceAdapter;
-import me.jaeyeop.blog.auth.adapter.out.RefreshTokenRepository;
+import me.jaeyeop.blog.authentication.adapter.out.AccessTokenPersistenceAdapter;
+import me.jaeyeop.blog.authentication.adapter.out.AccessTokenRepository;
+import me.jaeyeop.blog.authentication.adapter.out.RefreshTokenPersistenceAdapter;
+import me.jaeyeop.blog.authentication.adapter.out.RefreshTokenRepository;
 import me.jaeyeop.blog.comment.adapter.out.CommentCrudRepository;
 import me.jaeyeop.blog.comment.adapter.out.CommentPersistenceAdapter;
 import me.jaeyeop.blog.comment.adapter.out.CommentQueryRepository;

@@ -1,5 +1,7 @@
 package me.jaeyeop.blog.user.domain;
 
+import me.jaeyeop.blog.config.security.authentication.OAuth2Provider;
+
 public abstract class UserFactory {
 
   private static final String DEFAULT_USER_EMAIL = "email@email.com";
@@ -17,6 +19,7 @@ public abstract class UserFactory {
         .name(DEFAULT_USER_NAME)
         .picture(DEFAULT_USER_PICTURE)
         .role(DEFAULT_USER_ROLE)
+        .provider(OAuth2Provider.GOOGLE)
         .build();
   }
 
@@ -27,6 +30,7 @@ public abstract class UserFactory {
         .name(DEFAULT_USER_NAME)
         .picture(DEFAULT_USER_PICTURE)
         .role(DEFAULT_USER_ROLE)
+        .provider(OAuth2Provider.GOOGLE)
         .build();
   }
 
@@ -37,6 +41,7 @@ public abstract class UserFactory {
         .name(DEFAULT_USER_NAME)
         .picture(DEFAULT_USER_PICTURE)
         .role(DEFAULT_USER_ROLE)
+        .provider(OAuth2Provider.GOOGLE)
         .build();
   }
 

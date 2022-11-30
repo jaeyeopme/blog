@@ -1,5 +1,0 @@
-jwt:
-  key: test-test-test-test-test
-  exp:
-    access: 7200000
-    refresh: 5259400000

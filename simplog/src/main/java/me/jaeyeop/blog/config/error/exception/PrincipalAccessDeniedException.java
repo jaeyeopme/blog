@@ -1,11 +1,11 @@
 package me.jaeyeop.blog.config.error.exception;
 
-import me.jaeyeop.blog.config.error.ErrorCode;
+import me.jaeyeop.blog.config.error.Error;
 
 public class PrincipalAccessDeniedException extends AbstractException {
 
   public PrincipalAccessDeniedException() {
-    super(ErrorCode.FORBIDDEN);
+    super(Error.FORBIDDEN);
   }
 
 }

@@ -15,6 +15,7 @@ import lombok.Getter;
 import me.jaeyeop.blog.config.jpa.AbstractTimeAuditing;
 import me.jaeyeop.blog.config.security.authentication.OAuth2Attributes;
 import me.jaeyeop.blog.config.security.authentication.OAuth2Provider;
+import org.springframework.util.StringUtils;
 
 @Entity
 @Getter
@@ -79,9 +80,10 @@ public class User extends AbstractTimeAuditing {
         .build();
   }
 
-  public void updateProfile(
-      final String name, final String picture) {
-    this.name = name;
+  public void updateProfile(final String name, final String picture) {
+    if (StringUtils.hasText(name)) {
+      this.name = name;
+    }
     this.picture = picture;
   }
 

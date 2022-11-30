@@ -1,5 +1,6 @@
 package me.jaeyeop.blog.post.adapter.in;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -13,7 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import java.util.Optional;
-import me.jaeyeop.blog.config.error.ErrorCode;
+import me.jaeyeop.blog.config.error.Error;
 import me.jaeyeop.blog.config.error.ErrorResponse;
 import me.jaeyeop.blog.config.security.WithUser1;
 import me.jaeyeop.blog.post.adapter.in.PostRequest.Create;
@@ -94,7 +95,7 @@ class PostWebAdapterTest extends WebMvcTestSupport {
   @Test
   void 존재하지_않는_게시글_조회() throws Exception {
     final var id = 1L;
-    final var error = new ErrorResponse(ErrorCode.POST_NOT_FOUND.message());
+    final var error = new ErrorResponse(Error.POST_NOT_FOUND.message());
     given(postQueryRepository.findInfoById(id)).willReturn(Optional.empty());
 
     final var when = mockMvc.perform(
@@ -126,15 +127,18 @@ class PostWebAdapterTest extends WebMvcTestSupport {
   @ParameterizedTest
   void 비어있는_제목으로_게시글_업데이트(final String title) throws Exception {
     final var id = 1L;
+    final var post1 = PostFactory.createPost1(UserFactory.createUser1());
     final var command = new Update(title, "newContent");
+    given(postCrudRepository.findById(id)).willReturn(Optional.of(post1));
 
     final var when = mockMvc.perform(
         patch(PostWebAdapter.POST_API_URI + "/{id}", id)
             .contentType(APPLICATION_JSON)
             .content(toJson(command)));
 
-    when.andExpectAll(status().isBadRequest());
-    then(postCrudRepository).should(never()).findById(any());
+    when.andExpectAll(status().isNoContent());
+    assertThat(post1.title()).isNotEqualTo(title);
+    assertThat(post1.content()).isEqualTo(command.content());
   }
 
   @WithUser1
@@ -142,7 +146,7 @@ class PostWebAdapterTest extends WebMvcTestSupport {
   void 존재하지_않는_게시글_업데이트() throws Exception {
     final var id = 1L;
     final var command = new Update("newTitle", "newContent");
-    final var error = new ErrorResponse(ErrorCode.POST_NOT_FOUND.message());
+    final var error = new ErrorResponse(Error.POST_NOT_FOUND.message());
     given(postCrudRepository.findById(id)).willReturn(Optional.empty());
 
     final var when = mockMvc.perform(
@@ -162,7 +166,7 @@ class PostWebAdapterTest extends WebMvcTestSupport {
     final var command = new Update("newTitle", "newContent");
     final var user2 = UserFactory.createUser2();
     final var post1 = PostFactory.createPost1(user2);
-    final var error = new ErrorResponse(ErrorCode.FORBIDDEN.message());
+    final var error = new ErrorResponse(Error.FORBIDDEN.message());
     given(postCrudRepository.findById(id)).willReturn(Optional.of(post1));
 
     final var when = mockMvc.perform(
@@ -193,7 +197,7 @@ class PostWebAdapterTest extends WebMvcTestSupport {
   @Test
   void 존재하지_않는_게시글_삭제() throws Exception {
     final var id = 1L;
-    final var error = new ErrorResponse(ErrorCode.POST_NOT_FOUND.message());
+    final var error = new ErrorResponse(Error.POST_NOT_FOUND.message());
     given(postCrudRepository.findById(id)).willReturn(Optional.empty());
 
     final var when = mockMvc.perform(
@@ -211,7 +215,7 @@ class PostWebAdapterTest extends WebMvcTestSupport {
     final var id = 1L;
     final var user2 = UserFactory.createUser2();
     final var post1 = PostFactory.createPost1(user2);
-    final var error = new ErrorResponse(ErrorCode.FORBIDDEN.message());
+    final var error = new ErrorResponse(Error.FORBIDDEN.message());
     given(postCrudRepository.findById(id)).willReturn(Optional.of(post1));
 
     final var when = mockMvc.perform(

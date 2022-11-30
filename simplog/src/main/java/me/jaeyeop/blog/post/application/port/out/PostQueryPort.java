@@ -10,4 +10,6 @@ public interface PostQueryPort {
 
   Optional<Post> findById(Long id);
 
+  boolean existsById(Long id);
+
 }

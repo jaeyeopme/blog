@@ -23,11 +23,14 @@ public class CommentQueryRepository {
 
   public Page<Info> findInfoPageByPostId(final Long postId,
       final Pageable pageable) {
+    final List<Info> content = getContent(postId, pageable);
+
     return PageableExecutionUtils
-        .getPage(getContent(postId, pageable), pageable, getTotalQuery(postId)::fetchOne);
+        .getPage(content, pageable, getTotalQuery(postId)::fetchOne);
   }
 
-  private List<Info> getContent(final Long postId,
+  private List<Info> getContent(
+      final Long postId,
       final Pageable pageable) {
     final var commentInfo = new QCommentResponse_Info(
         comment.id,
@@ -38,9 +41,10 @@ public class CommentQueryRepository {
 
     return jpaQueryFactory.select(commentInfo)
         .from(comment)
-        .innerJoin(comment.author, user)
         .innerJoin(comment.post, post)
+        .innerJoin(comment.author, user)
         .where(post.id.eq(postId))
+        .orderBy(comment.createdAt.asc())
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
         .fetch();

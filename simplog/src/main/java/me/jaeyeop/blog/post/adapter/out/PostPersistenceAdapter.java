@@ -40,4 +40,9 @@ public class PostPersistenceAdapter implements PostCommandPort, PostQueryPort {
     return postCrudRepository.findById(id);
   }
 
+  @Override
+  public boolean existsById(final Long id) {
+    return postCrudRepository.existsById(id);
+  }
+
 }

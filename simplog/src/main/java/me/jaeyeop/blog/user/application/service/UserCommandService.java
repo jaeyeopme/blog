@@ -17,10 +17,16 @@ public class UserCommandService implements UserCommandUseCase {
 
   private final UserCommandPort userCommandPort;
 
-  public UserCommandService(final UserQueryPort userQueryPort,
+  public UserCommandService(
+      final UserQueryPort userQueryPort,
       final UserCommandPort userCommandPort) {
     this.userQueryPort = userQueryPort;
     this.userCommandPort = userCommandPort;
+  }
+
+  @Override
+  public void delete(final Delete request) {
+    userCommandPort.deleteByEmail(request.email());
   }
 
   @Override
@@ -30,11 +36,6 @@ public class UserCommandService implements UserCommandUseCase {
         .orElseThrow(EmailNotFoundException::new);
 
     user.updateProfile(request.name(), request.picture());
-  }
-
-  @Override
-  public void delete(final Delete request) {
-    userCommandPort.deleteByEmail(request.email());
   }
 
 }

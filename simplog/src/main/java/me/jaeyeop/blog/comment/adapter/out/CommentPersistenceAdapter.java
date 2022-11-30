@@ -23,7 +23,8 @@ public class CommentPersistenceAdapter implements CommentCommandPort, CommentQue
   }
 
   @Override
-  public Page<Info> findInfoPageByPostId(final Long postId,
+  public Page<Info> findInfoPageByPostId(
+      final Long postId,
       final Pageable pageable) {
     return commentQueryRepository.findInfoPageByPostId(postId, pageable);
   }

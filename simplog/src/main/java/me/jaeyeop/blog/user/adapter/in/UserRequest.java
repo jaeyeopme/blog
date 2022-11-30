@@ -1,19 +1,21 @@
 package me.jaeyeop.blog.user.adapter.in;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import javax.validation.constraints.NotBlank;
 
 public final class UserRequest {
 
   private UserRequest() {
   }
 
-  @Schema
   public record Find(String email) {
 
   }
 
-  public record Update(@NotBlank String name, String picture) {
+  @Schema(name = "User Update Request", title = "사용자 프로필 수정 요청")
+  public record Update(@Schema(description = "이름")
+                       String name,
+                       @Schema(description = "프로필 사진")
+                       String picture) {
 
   }
 

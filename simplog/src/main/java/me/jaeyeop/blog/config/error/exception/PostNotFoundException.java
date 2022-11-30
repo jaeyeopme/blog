@@ -1,11 +1,11 @@
 package me.jaeyeop.blog.config.error.exception;
 
-import me.jaeyeop.blog.config.error.ErrorCode;
+import me.jaeyeop.blog.config.error.Error;
 
 public class PostNotFoundException extends AbstractException {
 
   public PostNotFoundException() {
-    super(ErrorCode.POST_NOT_FOUND);
+    super(Error.POST_NOT_FOUND);
   }
 
 }

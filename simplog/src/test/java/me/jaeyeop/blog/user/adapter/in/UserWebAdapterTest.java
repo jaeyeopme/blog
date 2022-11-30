@@ -1,10 +1,10 @@
 package me.jaeyeop.blog.user.adapter.in;
 
-import static me.jaeyeop.blog.config.error.ErrorCode.EMAIL_NOT_FOUND;
+import static me.jaeyeop.blog.config.error.Error.EMAIL_NOT_FOUND;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.only;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -99,15 +99,19 @@ class UserWebAdapterTest extends WebMvcTestSupport {
   @NullAndEmptySource
   @ParameterizedTest
   void 비어있는_이름으로_프로필_업데이트(final String name) throws Exception {
+    final var user1 = UserFactory.createUser1();
     final var command = new Update(name, "newPicture");
+    given(userRepository.findByEmail(user1.email())).willReturn(Optional.of(user1));
 
     final var when = mockMvc.perform(
         patch(UserWebAdapter.USER_API_URI)
             .contentType(APPLICATION_JSON)
             .content(toJson(command)));
 
-    when.andExpectAll(status().isBadRequest());
-    then(userRepository).should(never()).findByEmail(any());
+    when.andExpectAll(status().isNoContent());
+
+    assertThat(user1.email()).isNotEqualTo(name);
+    assertThat(user1.picture()).isEqualTo(command.picture());
   }
 
   @WithUser1

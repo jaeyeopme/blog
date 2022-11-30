@@ -1,0 +1,61 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDB106Dialect
+
+  datasource:
+    url: jdbc:mariadb://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}
+    hikari:
+      driver-class-name: org.mariadb.jdbc.Driver
+      username: ${MYSQL_USER}
+      password: ${MYSQL_PASSWORD}
+      connection-init-sql: SELECT 1
+
+  redis:
+    port: ${REDIS_PORT}
+    host: ${REDIS_HOST}
+    password: ${REDIS_PASSWORD}
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_SECRET}
+            scope:
+              - profile
+              - email
+
+springdoc:
+  override-with-generic-response: false
+  default-produces-media-type: application/json
+  cache:
+    disabled: true
+  swagger-ui:
+    path: /swagger-ui
+    operationsSorter: method
+    tagsSorter: alpha
+    disable-swagger-default-url: true
+    display-request-duration: true
+    doc-expansion: none
+  api-docs:
+    path: /api-docs
+
+token:
+  key: ${TOKEN_KEY}
+  exp:
+    access: ${TOKEN_ACCESS_EXP}
+    refresh: ${TOKEN_REFRESH_EXP}
+
+oas:
+  server:
+    host: ${OAS_SERVER_HOST}
+    port: ${OAS_SERVER_PORT}
+  contact:
+    name: ${OAS_CONTACT_NAME}
+    email: ${OAS_CONTACT_EMAIL}
+    url: ${OAS_CONTACT_URL}

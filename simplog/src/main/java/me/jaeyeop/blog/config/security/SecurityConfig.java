@@ -2,7 +2,8 @@ package me.jaeyeop.blog.config.security;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import me.jaeyeop.blog.auth.adapter.in.AuthWebAdaptor;
+import me.jaeyeop.blog.authentication.adapter.in.AuthenticationWebAdaptor;
+import me.jaeyeop.blog.comment.adapter.in.CommentWebAdapter;
 import me.jaeyeop.blog.config.security.authentication.OAuth2AuthenticationFilter;
 import me.jaeyeop.blog.config.security.authentication.OAuth2SuccessHandler;
 import me.jaeyeop.blog.config.security.authentication.OAuth2UserServiceDelegator;
@@ -63,7 +64,7 @@ public class SecurityConfig {
         .userService(oAuth2UserServiceDelegator)
         .and()
         .authorizationEndpoint()
-        .baseUri(AuthWebAdaptor.AUTH_API_URI + "/login");
+        .baseUri(AuthenticationWebAdaptor.AUTHENTICATION_API_URI);
 
     httpSecurity
         .exceptionHandling()
@@ -80,7 +81,8 @@ public class SecurityConfig {
     final var openApi = new String[]{"/swagger-ui/**", "/api-docs/**"};
     final var permitAll = new String[]{
         UserWebAdapter.USER_API_URI + "/*",
-        PostWebAdapter.POST_API_URI + "/**"};
+        PostWebAdapter.POST_API_URI + "/**",
+        CommentWebAdapter.COMMENT_API_URI + "/**"};
 
     return urlRegistry -> urlRegistry
         .requestMatchers(
