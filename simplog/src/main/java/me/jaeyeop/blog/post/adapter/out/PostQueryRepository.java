@@ -7,6 +7,9 @@ import java.util.Optional;
 import me.jaeyeop.blog.post.adapter.out.PostResponse.Info;
 import org.springframework.stereotype.Repository;
 
+/**
+ * @author jaeyeopme Created on 10/12/2022.
+ */
 @Repository
 public class PostQueryRepository {
 
@@ -23,7 +26,7 @@ public class PostQueryRepository {
         post.content,
         user.name,
         post.createdAt,
-        post.modifiedAt);
+        post.lastModifiedAt);
 
     return Optional.ofNullable(
         jpaQueryFactory.select(postInfo)

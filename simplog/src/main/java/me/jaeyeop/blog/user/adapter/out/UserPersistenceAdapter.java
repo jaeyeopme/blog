@@ -6,6 +6,9 @@ import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
 import me.jaeyeop.blog.user.domain.User;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author jaeyeopme Created on 10/06/2022.
+ */
 @Component
 public class UserPersistenceAdapter implements UserCommandPort, UserQueryPort {
 
@@ -23,6 +26,11 @@ public class UserPersistenceAdapter implements UserCommandPort, UserQueryPort {
   @Override
   public void deleteByEmail(final String email) {
     userRepository.deleteByEmail(email);
+  }
+
+  @Override
+  public Optional<User> findById(final Long id) {
+    return userRepository.findById(id);
   }
 
   @Override

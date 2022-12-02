@@ -2,6 +2,7 @@ package me.jaeyeop.blog.config.token;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import me.jaeyeop.blog.support.helper.TokenProviderHelper;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,7 +14,7 @@ class TokenProviderTest {
 
   @BeforeEach
   void setUp() {
-    tokenProvider = TokenProviderFactory.createDefault();
+    tokenProvider = TokenProviderHelper.create();
   }
 
   @Test
@@ -36,20 +37,20 @@ class TokenProviderTest {
 
   @Test
   void 다른_키를_가진_토큰_검증() {
-    final var differentKeyProvider = TokenProviderFactory.createDifferentKey();
+    final var differentKeyProvider = TokenProviderHelper.createDifferentKey();
     final var accessToken = differentKeyProvider.createAccess("email@email.com");
 
-    final ThrowingCallable when = () -> tokenProvider.authenticate(accessToken.value());
+    final ThrowingCallable when = () -> tokenProvider.verify(accessToken.value());
 
     assertThatThrownBy(when).isInstanceOf(BadCredentialsException.class);
   }
 
   @Test
   void 만료된_토큰_검증() {
-    final var expiredProvider = TokenProviderFactory.createExpired();
+    final var expiredProvider = TokenProviderHelper.createExpired();
     final var accessToken = expiredProvider.createAccess("email@email.com");
 
-    final ThrowingCallable when = () -> tokenProvider.authenticate(accessToken.value());
+    final ThrowingCallable when = () -> tokenProvider.verify(accessToken.value());
 
     assertThatThrownBy(when).isInstanceOf(BadCredentialsException.class);
   }

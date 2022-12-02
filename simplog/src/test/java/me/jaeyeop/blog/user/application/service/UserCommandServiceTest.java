@@ -7,56 +7,41 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.only;
 import java.util.Optional;
-import me.jaeyeop.blog.config.error.exception.EmailNotFoundException;
+import me.jaeyeop.blog.config.error.exception.UserNotFoundException;
+import me.jaeyeop.blog.support.UnitTestSupport;
+import me.jaeyeop.blog.support.helper.UserHelper;
 import me.jaeyeop.blog.user.adapter.in.UserRequest.Delete;
 import me.jaeyeop.blog.user.adapter.in.UserRequest.Update;
-import me.jaeyeop.blog.user.application.port.out.UserCommandPort;
-import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
-import me.jaeyeop.blog.user.domain.UserFactory;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-@ExtendWith(MockitoExtension.class)
-class UserCommandServiceTest {
-
-  @Mock
-  private UserCommandPort userCommandPort;
-
-  @Mock(stubOnly = true)
-  private UserQueryPort userQueryPort;
-
-  @InjectMocks
-  private UserCommandService userCommandService;
+class UserCommandServiceTest extends UnitTestSupport {
 
   @Test
   void 프로필_업데이트() {
     final var email = "email@email.com";
-    final var user1 = UserFactory.createUser1();
-    given(userQueryPort.findByEmail(email)).willReturn(Optional.of(user1));
+    final var user = UserHelper.create();
+    given(userQueryPort.findByEmail(email)).willReturn(Optional.of(user));
     final var newName = "newName";
     final var newPicture = "newPicture";
 
-    final ThrowingCallable when = () -> userCommandService.update(email,
-        new Update(newName, newPicture));
+    final ThrowingCallable when = () -> userCommandService.update(
+        email, new Update(newName, newPicture));
 
     assertThatNoException().isThrownBy(when);
-    assertThat(user1.name()).isEqualTo(newName);
-    assertThat(user1.picture()).isEqualTo(newPicture);
+    assertThat(user.name()).isEqualTo(newName);
+    assertThat(user.picture()).isEqualTo(newPicture);
   }
 
   @Test
-  void 존재하지_않는_프로필_업데이트() {
+  void 존재하지_않은_프로필_업데이트() {
     final var email = "anonymous@email.com";
     given(userQueryPort.findByEmail(email)).willReturn(Optional.empty());
 
-    final ThrowingCallable when = () -> userCommandService.update(email,
-        new Update("newName", "newPicture"));
+    final ThrowingCallable when = () -> userCommandService.update(
+        email, new Update("newName", "newPicture"));
 
-    assertThatThrownBy(when).isInstanceOf(EmailNotFoundException.class);
+    assertThatThrownBy(when).isInstanceOf(UserNotFoundException.class);
   }
 
   @Test

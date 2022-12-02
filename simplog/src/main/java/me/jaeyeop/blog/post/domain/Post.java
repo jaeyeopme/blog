@@ -6,30 +6,24 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import me.jaeyeop.blog.comment.domain.Comment;
 import me.jaeyeop.blog.config.error.exception.PrincipalAccessDeniedException;
-import me.jaeyeop.blog.config.jpa.AbstractTimeAuditing;
+import me.jaeyeop.blog.config.jpa.AbstractBaseEntity;
 import me.jaeyeop.blog.user.domain.User;
 import org.springframework.util.StringUtils;
 
+/**
+ * @author jaeyeopme Created on 10/10/2022.
+ */
 @Entity
 @Getter
-public class Post extends AbstractTimeAuditing {
-
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Id
-  private Long id;
+public class Post extends AbstractBaseEntity {
 
   @NotBlank
   @Column(nullable = false)
@@ -49,26 +43,20 @@ public class Post extends AbstractTimeAuditing {
   protected Post() {
   }
 
-  @Builder(access = AccessLevel.PACKAGE)
-  private Post(final Long id,
+  private Post(
       final String title,
       final String content,
       final User author) {
-    this.id = id;
     this.title = title;
     this.content = content;
     this.author = author;
   }
 
   public static Post of(
-      final Long authorId,
       final String title,
-      final String content) {
-    return Post.builder()
-        .title(title)
-        .content(content)
-        .author(User.proxy(authorId))
-        .build();
+      final String content,
+      final Long authorId) {
+    return new Post(title, content, User.reference(authorId));
   }
 
   public void updateInformation(final String title, final String content) {
@@ -86,7 +74,7 @@ public class Post extends AbstractTimeAuditing {
 
   public void addComments(final Comment comment) {
     this.comments.add(comment);
-    comment.setPost(this);
+    comment.post(this);
   }
 
 }

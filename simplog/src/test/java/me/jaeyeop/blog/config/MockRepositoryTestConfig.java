@@ -1,7 +1,7 @@
 package me.jaeyeop.blog.config;
 
 import me.jaeyeop.blog.authentication.adapter.out.AccessTokenPersistenceAdapter;
-import me.jaeyeop.blog.authentication.adapter.out.AccessTokenRepository;
+import me.jaeyeop.blog.authentication.adapter.out.ExpiredTokenRepository;
 import me.jaeyeop.blog.authentication.adapter.out.RefreshTokenPersistenceAdapter;
 import me.jaeyeop.blog.authentication.adapter.out.RefreshTokenRepository;
 import me.jaeyeop.blog.comment.adapter.out.CommentCrudRepository;
@@ -24,7 +24,7 @@ import org.springframework.context.annotation.Import;
     PostPersistenceAdapter.class,
     CommentPersistenceAdapter.class})
 @MockBeans({
-    @MockBean(AccessTokenRepository.class),
+    @MockBean(ExpiredTokenRepository.class),
     @MockBean(RefreshTokenRepository.class),
     @MockBean(UserRepository.class),
     @MockBean(PostCrudRepository.class),

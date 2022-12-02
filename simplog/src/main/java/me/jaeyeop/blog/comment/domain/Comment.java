@@ -3,28 +3,22 @@ package me.jaeyeop.blog.comment.domain;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import me.jaeyeop.blog.config.error.exception.PrincipalAccessDeniedException;
-import me.jaeyeop.blog.config.jpa.AbstractTimeAuditing;
+import me.jaeyeop.blog.config.jpa.AbstractBaseEntity;
 import me.jaeyeop.blog.post.domain.Post;
 import me.jaeyeop.blog.user.domain.User;
 
+/**
+ * @author jaeyeopme Created on 10/16/2022.
+ */
 @Entity
 @Getter
-public class Comment extends AbstractTimeAuditing {
-
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Id
-  private Long id;
+public class Comment extends AbstractBaseEntity {
 
   @NotBlank
   @Column(nullable = false)
@@ -43,26 +37,20 @@ public class Comment extends AbstractTimeAuditing {
   protected Comment() {
   }
 
-  @Builder(access = AccessLevel.PACKAGE)
-  public Comment(final Long id,
+  private Comment(
       final String content,
-      final User author,
-      final Post post) {
-    this.id = id;
+      final User author) {
     this.content = content;
     this.author = author;
-    this.post = post;
   }
 
-  public static Comment of(final Long authorId,
-      final String content) {
-    return Comment.builder()
-        .author(User.proxy(authorId))
-        .content(content)
-        .build();
+  public static Comment of(
+      final String content,
+      final Long authorId) {
+    return new Comment(content, User.reference(authorId));
   }
 
-  public void setPost(final Post post) {
+  public void post(final Post post) {
     this.post = post;
   }
 

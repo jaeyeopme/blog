@@ -23,6 +23,9 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
+/**
+ * @author jaeyeopme Created on 09/26/2022.
+ */
 @Configuration
 public class SecurityConfig {
 
@@ -34,7 +37,8 @@ public class SecurityConfig {
 
   private final HandlerExceptionResolver handlerExceptionResolver;
 
-  public SecurityConfig(final OAuth2AuthenticationFilter oAuth2AuthenticationFilter,
+  public SecurityConfig(
+      final OAuth2AuthenticationFilter oAuth2AuthenticationFilter,
       final OAuth2SuccessHandler oAuth2SuccessHandler,
       final OAuth2UserServiceDelegator oAuth2UserServiceDelegator,
       final HandlerExceptionResolver handlerExceptionResolver) {
@@ -78,7 +82,7 @@ public class SecurityConfig {
   }
 
   private Customizer<ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry> getAuthorizeRequests() {
-    final var openApi = new String[]{"/swagger-ui/**", "/api-docs/**"};
+    final var oas = new String[]{"/swagger-ui/**", "/api-docs/**"};
     final var permitAll = new String[]{
         UserWebAdapter.USER_API_URI + "/*",
         PostWebAdapter.POST_API_URI + "/**",
@@ -88,7 +92,7 @@ public class SecurityConfig {
         .requestMatchers(
             PathRequest.toStaticResources().atCommonLocations())
         .permitAll()
-        .antMatchers(HttpMethod.GET, openApi)
+        .antMatchers(HttpMethod.GET, oas)
         .permitAll()
         .antMatchers(HttpMethod.GET, permitAll)
         .permitAll()
@@ -104,7 +108,8 @@ public class SecurityConfig {
     return this::resolveException;
   }
 
-  private void resolveException(final HttpServletRequest request,
+  private void resolveException(
+      final HttpServletRequest request,
       final HttpServletResponse response,
       final RuntimeException exception) {
     handlerExceptionResolver.resolveException(request, response, null, exception);

@@ -27,12 +27,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * @author jaeyeopme Created on 10/18/2022.
+ */
 @Validated
 @RequestMapping(CommentWebAdapter.COMMENT_API_URI)
 @RestController
 public class CommentWebAdapter implements CommentOAS {
 
-  public static final String COMMENT_API_URI = "/v1/comments";
+  public static final String COMMENT_API_URI = "/api/v1/comments";
 
   private final CommentCommandUseCase commentCommandUseCase;
 

@@ -21,12 +21,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * @author jaeyeopme Created on 10/06/2022.
+ */
 @Validated
 @RequestMapping(UserWebAdapter.USER_API_URI)
 @RestController
 public class UserWebAdapter implements UserOAS {
 
-  public static final String USER_API_URI = "/v1/users";
+  public static final String USER_API_URI = "/api/v1/users";
 
   private final UserCommandUseCase userCommandUseCase;
 

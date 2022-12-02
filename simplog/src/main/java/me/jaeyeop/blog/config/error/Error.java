@@ -3,6 +3,9 @@ package me.jaeyeop.blog.config.error;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+/**
+ * @author jaeyeopme Created on 09/30/2022.
+ */
 @Getter
 public enum Error {
 
@@ -12,7 +15,7 @@ public enum Error {
 
   FORBIDDEN("접근 권한이 없습니다.", HttpStatus.FORBIDDEN),
 
-  EMAIL_NOT_FOUND("존재하지 않는 사용자입니다.", HttpStatus.NOT_FOUND),
+  USER_NOT_FOUND("존재하지 않는 사용자입니다.", HttpStatus.NOT_FOUND),
 
   POST_NOT_FOUND("존재하지 않는 게시글입니다.", HttpStatus.NOT_FOUND),
 

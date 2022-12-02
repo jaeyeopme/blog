@@ -1,28 +1,31 @@
 package me.jaeyeop.blog.authentication.adapter.out;
 
-import me.jaeyeop.blog.authentication.application.port.out.AccessTokenCommandPort;
-import me.jaeyeop.blog.authentication.application.port.out.AccessTokenQueryPort;
-import me.jaeyeop.blog.authentication.domain.AccessToken;
+import me.jaeyeop.blog.authentication.application.port.out.ExpiredTokenCommandPort;
+import me.jaeyeop.blog.authentication.application.port.out.ExpiredTokenQueryPort;
+import me.jaeyeop.blog.authentication.domain.ExpiredToken;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author jaeyeopme Created on 10/22/2022.
+ */
 @Component
 public class AccessTokenPersistenceAdapter
-    implements AccessTokenCommandPort, AccessTokenQueryPort {
+    implements ExpiredTokenCommandPort, ExpiredTokenQueryPort {
 
-  private final AccessTokenRepository accessTokenRepository;
+  private final ExpiredTokenRepository expiredTokenRepository;
 
-  public AccessTokenPersistenceAdapter(final AccessTokenRepository accessTokenRepository) {
-    this.accessTokenRepository = accessTokenRepository;
+  public AccessTokenPersistenceAdapter(final ExpiredTokenRepository expiredTokenRepository) {
+    this.expiredTokenRepository = expiredTokenRepository;
   }
 
   @Override
-  public void expire(final AccessToken token) {
-    accessTokenRepository.save(token);
+  public void expire(final ExpiredToken token) {
+    expiredTokenRepository.save(token);
   }
 
   @Override
   public boolean isExpired(final String token) {
-    return accessTokenRepository.existsById(token);
+    return expiredTokenRepository.existsById(token);
   }
 
 }

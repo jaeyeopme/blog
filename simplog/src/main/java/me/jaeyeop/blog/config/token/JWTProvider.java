@@ -15,6 +15,9 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+/**
+ * @author jaeyeopme Created on 09/28/2022.
+ */
 @Component
 public class JWTProvider implements TokenProvider {
 
@@ -67,13 +70,13 @@ public class JWTProvider implements TokenProvider {
   }
 
   @Override
-  public Token authenticate(final String token) {
+  public Token verify(final String token) {
     try {
       final var value = removeType(token);
       final var claims = getClaims(value);
       return new Token(value, claims.getAudience(), claims.getExpiration().getTime());
     } catch (final JwtException | IllegalArgumentException e) {
-      throw new BadCredentialsException("Bad credentials");
+      throw new BadCredentialsException("Invalid token");
     }
   }
 

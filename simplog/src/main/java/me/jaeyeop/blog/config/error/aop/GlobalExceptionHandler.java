@@ -1,8 +1,10 @@
-package me.jaeyeop.blog.config.error;
+package me.jaeyeop.blog.config.error.aop;
 
-import javax.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
-import me.jaeyeop.blog.config.error.exception.AbstractException;
+import me.jaeyeop.blog.config.error.Error;
+import me.jaeyeop.blog.config.error.ErrorResponse;
+import me.jaeyeop.blog.config.error.FieldErrorResponse;
+import me.jaeyeop.blog.config.error.exception.AbstractBaseException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,13 +13,17 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+/**
+ * @author jaeyeopme Created on 09/30/2022.
+ */
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -30,9 +36,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
    * @param e 개발자 정의 예외
    * @return {@link Error}
    */
-  @ExceptionHandler(AbstractException.class)
+  @ExceptionHandler(AbstractBaseException.class)
   public ResponseEntity<ErrorResponse> blogExceptionHandler(
-      final AbstractException e) {
+      final AbstractBaseException e) {
     logDebug(e);
     return ResponseEntity.status(e.code().status())
         .body(new ErrorResponse(e.code().message()));
@@ -67,17 +73,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
   }
 
   /**
-   * 데이터 바인딩 에러 예외 처리
+   * 헤더 바인딩 에러 예외 처리
    *
-   * @param e {@link RequestBody}, {@link RequestPart}를 제외한 {@link Validated} 인수 바인딩 예외
-   * @return 바인딩 에러 필드를 포함한 HTTP 400 BAD_REQUEST
+   * @param e {@link RequestHeader} 바인딩 예외
+   * @return {@link Error} INVALID_ARGUMENT
    */
-  @ExceptionHandler(ConstraintViolationException.class)
-  public ResponseEntity<FieldErrorResponse> constraintViolationExceptionHandler(
-      final ConstraintViolationException e) {
-    logDebug(e);
+  @ExceptionHandler(MissingRequestHeaderException.class)
+  public ResponseEntity<ErrorResponse> missingRequestHeaderExceptionHandler(
+      final MissingRequestHeaderException e) {
+    logError(e);
     return ResponseEntity.badRequest()
-        .body(FieldErrorResponse.from(e.getConstraintViolations()));
+        .body(new ErrorResponse(Error.INVALID_ARGUMENT.message()));
   }
 
   /**
@@ -92,7 +98,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
       @NonNull final HttpHeaders headers,
       @NonNull final HttpStatus status,
       @NonNull final WebRequest request) {
-    logDebug(e);
+    logError(e);
     return ResponseEntity.badRequest()
         .body(FieldErrorResponse.from(e.getBindingResult()));
   }

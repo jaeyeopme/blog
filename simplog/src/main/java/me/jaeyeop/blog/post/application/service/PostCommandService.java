@@ -11,6 +11,9 @@ import me.jaeyeop.blog.post.application.port.out.PostQueryPort;
 import me.jaeyeop.blog.post.domain.Post;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author jaeyeopme Created on 10/10/2022.
+ */
 @Transactional
 @Service
 public class PostCommandService implements PostCommandUseCase {
@@ -19,7 +22,8 @@ public class PostCommandService implements PostCommandUseCase {
 
   private final PostQueryPort postQueryPort;
 
-  public PostCommandService(final PostCommandPort postCommandPort,
+  public PostCommandService(
+      final PostCommandPort postCommandPort,
       final PostQueryPort postQueryPort) {
     this.postCommandPort = postCommandPort;
     this.postQueryPort = postQueryPort;
@@ -27,7 +31,7 @@ public class PostCommandService implements PostCommandUseCase {
 
   @Override
   public Long create(final Long authorId, final Create request) {
-    final var post = Post.of(authorId, request.title(), request.content());
+    final var post = Post.of(request.title(), request.content(), authorId);
     return postCommandPort.create(post).id();
   }
 

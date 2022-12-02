@@ -1,10 +1,15 @@
-package me.jaeyeop.blog.config.token;
+package me.jaeyeop.blog.support.helper;
 
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
+import me.jaeyeop.blog.config.token.JWTProvider;
+import me.jaeyeop.blog.config.token.TokenProvider;
 
-public class TokenProviderFactory {
+/**
+ * @author jaeyeopme Created on 10/02/2022.
+ */
+public class TokenProviderHelper {
 
   private static final Clock DEFAULT_JWT_CLOCK = Clock.fixed(Instant.now(), ZoneId.systemDefault());
 
@@ -30,7 +35,7 @@ public class TokenProviderFactory {
         DEFAULT_JWT_CLOCK);
   }
 
-  public static TokenProvider createDefault() {
+  public static TokenProvider create() {
     return new JWTProvider(
         DEFAULT_JWT_KEY,
         DEFAULT_JWT_ACCESS_EXP,

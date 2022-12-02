@@ -14,6 +14,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author jaeyeopme Created on 09/29/2022.
+ */
 @Component
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
@@ -50,7 +53,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
   private Token createRefresh(final UserPrincipal principal) {
     final var token = tokenProvider.createRefresh(principal.email());
-    refreshTokenCommandPort.activate(new RefreshToken(token.value(), token.expiration()));
+    refreshTokenCommandPort.activate(RefreshToken.from(token));
     return token;
   }
 

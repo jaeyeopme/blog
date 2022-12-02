@@ -3,12 +3,15 @@ package me.jaeyeop.blog.config.error.exception;
 import lombok.Getter;
 import me.jaeyeop.blog.config.error.Error;
 
+/**
+ * @author jaeyeopme Created on 10/04/2022.
+ */
 @Getter
-public abstract class AbstractException extends RuntimeException {
+public abstract class AbstractBaseException extends RuntimeException {
 
   private final Error code;
 
-  protected AbstractException(final Error code) {
+  protected AbstractBaseException(final Error code) {
     super(code.message());
     this.code = code;
   }

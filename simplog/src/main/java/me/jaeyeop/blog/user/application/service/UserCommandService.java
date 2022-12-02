@@ -1,7 +1,7 @@
 package me.jaeyeop.blog.user.application.service;
 
 import javax.transaction.Transactional;
-import me.jaeyeop.blog.config.error.exception.EmailNotFoundException;
+import me.jaeyeop.blog.config.error.exception.UserNotFoundException;
 import me.jaeyeop.blog.user.adapter.in.UserRequest.Delete;
 import me.jaeyeop.blog.user.adapter.in.UserRequest.Update;
 import me.jaeyeop.blog.user.application.port.in.UserCommandUseCase;
@@ -9,6 +9,9 @@ import me.jaeyeop.blog.user.application.port.out.UserCommandPort;
 import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author jaeyeopme Created on 10/07/2022.
+ */
 @Transactional
 @Service
 public class UserCommandService implements UserCommandUseCase {
@@ -33,7 +36,7 @@ public class UserCommandService implements UserCommandUseCase {
   public void update(final String email,
       final Update request) {
     final var user = userQueryPort.findByEmail(email)
-        .orElseThrow(EmailNotFoundException::new);
+        .orElseThrow(UserNotFoundException::new);
 
     user.updateProfile(request.name(), request.picture());
   }

@@ -24,12 +24,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * @author jaeyeopme Created on 10/10/2022.
+ */
 @Validated
 @RequestMapping(PostWebAdapter.POST_API_URI)
 @RestController
 public class PostWebAdapter implements PostOAS {
 
-  public static final String POST_API_URI = "/v1/posts";
+  public static final String POST_API_URI = "/api/v1/posts";
 
   private final PostCommandUseCase postCommandUseCase;
 

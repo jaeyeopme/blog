@@ -1,43 +1,23 @@
 package me.jaeyeop.blog.config.security.authentication;
 
 import java.util.Map;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 
-@Getter
-@EqualsAndHashCode
-public class OAuth2Attributes {
+/**
+ * @author jaeyeopme Created on 09/29/2022.
+ */
+public record OAuth2Attributes(OAuth2Provider provider,
+                               String email,
+                               String name,
+                               String picture) {
 
-  private final OAuth2Provider provider;
-
-  private final String email;
-
-  private final String name;
-
-  private final String picture;
-
-  @Builder(access = AccessLevel.PRIVATE)
-  private OAuth2Attributes(final OAuth2Provider provider,
-      final String email,
-      final String name,
-      final String picture) {
-    this.provider = provider;
-    this.email = email;
-    this.name = name;
-    this.picture = picture;
-  }
-
-
-  public static OAuth2Attributes of(final OAuth2Provider provider,
+  public static OAuth2Attributes of(
+      final OAuth2Provider provider,
       final Map<String, Object> attributes) {
-    return OAuth2Attributes.builder()
-        .provider(provider)
-        .email((String) attributes.get(provider.emailAttributeKey()))
-        .name((String) attributes.get(provider.nameAttributeKey()))
-        .picture((String) attributes.get(provider.pictureAttributeKey()))
-        .build();
+    return new OAuth2Attributes(
+        provider,
+        (String) attributes.get(provider.emailAttributeKey()),
+        (String) attributes.get(provider.nameAttributeKey()),
+        (String) attributes.get(provider.pictureAttributeKey()));
   }
 
 }

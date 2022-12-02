@@ -6,7 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import me.jaeyeop.blog.authentication.application.port.out.AccessTokenQueryPort;
+import me.jaeyeop.blog.authentication.application.port.out.ExpiredTokenQueryPort;
 import me.jaeyeop.blog.authentication.domain.Token;
 import me.jaeyeop.blog.config.token.TokenProvider;
 import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
@@ -24,22 +24,25 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+/**
+ * @author jaeyeopme Created on 09/29/2022.
+ */
 @Slf4j
 @Component
 public class OAuth2AuthenticationFilter extends OncePerRequestFilter {
 
   private final UserQueryPort userQueryPort;
 
-  private final AccessTokenQueryPort accessTokenQueryPort;
+  private final ExpiredTokenQueryPort expiredTokenQueryPort;
 
   private final TokenProvider tokenProvider;
 
   public OAuth2AuthenticationFilter(
       final UserQueryPort userQueryPort,
-      final AccessTokenQueryPort accessTokenQueryPort,
+      final ExpiredTokenQueryPort expiredTokenQueryPort,
       final TokenProvider tokenProvider) {
     this.userQueryPort = userQueryPort;
-    this.accessTokenQueryPort = accessTokenQueryPort;
+    this.expiredTokenQueryPort = expiredTokenQueryPort;
     this.tokenProvider = tokenProvider;
   }
 
@@ -67,11 +70,11 @@ public class OAuth2AuthenticationFilter extends OncePerRequestFilter {
   }
 
   private Token obtainToken(final HttpServletRequest httpServletRequest) {
-    final var accessToken = tokenProvider.authenticate(
+    final var accessToken = tokenProvider.verify(
         httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION));
 
-    if (accessTokenQueryPort.isExpired(accessToken.value())) {
-      throw new BadCredentialsException("Bad credentials");
+    if (expiredTokenQueryPort.isExpired(accessToken.value())) {
+      throw new BadCredentialsException("expired access token");
     }
 
     return accessToken;

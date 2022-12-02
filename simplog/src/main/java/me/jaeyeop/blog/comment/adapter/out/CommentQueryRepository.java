@@ -12,6 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
+/**
+ * @author jaeyeopme Created on 10/19/2022.
+ */
 @Repository
 public class CommentQueryRepository {
 
@@ -37,7 +40,7 @@ public class CommentQueryRepository {
         comment.content,
         user.name,
         comment.createdAt,
-        comment.modifiedAt);
+        comment.lastModifiedAt);
 
     return jpaQueryFactory.select(commentInfo)
         .from(comment)

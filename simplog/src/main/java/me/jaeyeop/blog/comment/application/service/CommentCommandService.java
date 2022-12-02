@@ -13,6 +13,9 @@ import me.jaeyeop.blog.config.error.exception.PostNotFoundException;
 import me.jaeyeop.blog.post.application.port.out.PostQueryPort;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author jaeyeopme Created on 10/18/2022.
+ */
 @Transactional
 @Service
 public class CommentCommandService implements CommentCommandUseCase {
@@ -23,7 +26,8 @@ public class CommentCommandService implements CommentCommandUseCase {
 
   private final PostQueryPort postQueryPort;
 
-  public CommentCommandService(final CommentCommandPort commentCommandPort,
+  public CommentCommandService(
+      final CommentCommandPort commentCommandPort,
       final CommentQueryPort commentQueryPort,
       final PostQueryPort postQueryPort) {
     this.commentCommandPort = commentCommandPort;
@@ -32,18 +36,20 @@ public class CommentCommandService implements CommentCommandUseCase {
   }
 
   @Override
-  public void create(final Long authorId,
+  public void create(
+      final Long authorId,
       final Create request) {
     final var post = postQueryPort.findById(request.postId())
         .orElseThrow(PostNotFoundException::new);
 
-    final var comment = Comment.of(authorId, request.content());
+    final var comment = Comment.of(request.content(), authorId);
 
     post.addComments(comment);
   }
 
   @Override
-  public void update(final Long authorId,
+  public void update(
+      final Long authorId,
       final Long commentId,
       final Update request) {
     final var comment = findById(authorId, commentId);

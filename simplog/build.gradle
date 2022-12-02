@@ -8,7 +8,7 @@ plugins {
 }
 
 group = 'me.jaeyeop'
-version = '0.0.1'
+version = '1.0.0'
 sourceCompatibility = '17'
 
 repositories {
@@ -35,9 +35,7 @@ dependencies {
     compileOnly 'org.springframework.boot:spring-boot-devtools'
     compileOnly 'io.jsonwebtoken:jjwt-api:0.11.5'
 
-    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5',
-            'io.jsonwebtoken:jjwt-jackson:0.11.5'
-    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5', 'io.jsonwebtoken:jjwt-jackson:0.11.5'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
@@ -77,18 +75,15 @@ compileQuerydsl {
     options.annotationProcessorPath = configurations.querydsl
 }
 
-bootBuildImage {
-
-}
-
 jib {
     from {
-        image = "amazoncorretto:17.0.5-alpine"
+        image = 'amazoncorretto:17.0.5-alpine'
     }
     to {
-        tags = ["${project.version}".toString(), "latest"]
+        tags = ["${project.version}".toString(), 'latest']
+
     }
     container {
-        creationTime = "USE_CURRENT_TIMESTAMP"
+        creationTime = 'USE_CURRENT_TIMESTAMP'
     }
 }
