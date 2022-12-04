@@ -34,7 +34,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @Disabled
 @Tag("unit")
 @ExtendWith(MockitoExtension.class)
-public abstract class UnitTestSupport {
+public abstract class UnitTest {
 
   @Mock
   protected ExpiredTokenCommandPort expiredTokenCommandPort;

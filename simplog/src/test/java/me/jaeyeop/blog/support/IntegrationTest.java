@@ -1,5 +1,6 @@
 package me.jaeyeop.blog.support;
 
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,8 +25,8 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @Tag("integration")
 @Transactional
 @AutoConfigureMockMvc
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public abstract class IntegrationTestSupport {
+@SpringBootTest(webEnvironment = RANDOM_PORT)
+public abstract class IntegrationTest {
 
   @Autowired
   protected WebApplicationContext context;
@@ -40,7 +41,6 @@ public abstract class IntegrationTestSupport {
   protected EntityManager entityManager;
 
   // TODO: 2022/12/02 테스트 컨테이너 연결
-
   @BeforeEach
   public void setUp() {
     this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context)
@@ -49,8 +49,8 @@ public abstract class IntegrationTestSupport {
         .build();
   }
 
-  protected String toJson(Object dto) throws JsonProcessingException {
-    return objectMapper.writeValueAsString(dto);
+  protected String toJson(final Object value) throws JsonProcessingException {
+    return objectMapper.writeValueAsString(value);
   }
 
 }

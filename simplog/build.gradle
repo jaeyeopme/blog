@@ -4,6 +4,7 @@ plugins {
     id 'io.freefair.lombok' version '6.5.1'
     id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
     id 'com.google.cloud.tools.jib' version '3.3.1'
+    id 'jacoco'
     id 'java'
 }
 
@@ -54,6 +55,7 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
 }
 
 def querydslDir = "$buildDir/generated/querydsl"
@@ -80,10 +82,73 @@ jib {
         image = 'amazoncorretto:17.0.5-alpine'
     }
     to {
-        tags = ["${project.version}".toString(), 'latest']
+        tags = ["$project.version".toString(), 'latest']
 
     }
     container {
         creationTime = 'USE_CURRENT_TIMESTAMP'
+    }
+}
+
+jacoco {
+    toolVersion = '0.8.8'
+}
+
+jacocoTestReport {
+    dependsOn test
+
+    reports {
+        html.enabled true
+        xml.enabled false
+        csv.enabled false
+    }
+
+    def QClasses = []
+    for (qPattern in '**/QA'..'**/QZ') {
+        QClasses.add(qPattern + '*')
+    }
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it,
+                    exclude: [
+                            '**/config/**',
+                            '**/*Application*'
+                    ] + QClasses)
+        }))
+    }
+
+    finalizedBy 'jacocoTestCoverageVerification'
+}
+
+jacocoTestCoverageVerification {
+    def QClasses = []
+
+    for (qPattern in '*.QA'..'*.QZ') {
+        QClasses.add(qPattern + '*')
+    }
+
+    violationRules {
+        rule {
+            enabled = true
+            element = 'CLASS'
+
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.1
+            }
+
+            limit {
+                counter = 'BRANCH'
+                value = 'COVEREDRATIO'
+                minimum = 1.0
+            }
+
+            excludes = [
+                    '**.config.**',
+                    '**.*Application'
+            ] + QClasses
+        }
     }
 }
