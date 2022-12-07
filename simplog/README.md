@@ -35,18 +35,15 @@
 
 ## Design
 
+### System Architecture
+
+![system-architecture](https://user-images.githubusercontent.com/67671991/205954016-a028bdbc-f0a6-4b24-b84f-064449cff989.png)
+<p align="center"><em>System Architecture v1</em></p>
+
 ### Hexagonal Architecture
 
 ![hexagonal-architecture](https://user-images.githubusercontent.com/67671991/204727244-7aa8c148-5265-4945-888b-c58015c71be7.png)
-<p align="center"><em>Post Domain v0.0.1</em></p>
-
-### System Infrastructure
-
-...
-
-### CI/CD Pipeline
-
-...
+<p align="center"><em>Post Domain v1.0.0</em></p>
 
 ## Use case
 
