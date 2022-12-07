@@ -1,7 +1,6 @@
 package me.jaeyeop.blog.authentication.application.service;
 
 import static me.jaeyeop.blog.config.token.JWTProvider.TYPE;
-import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -30,11 +29,9 @@ class AuthenticationCommandServiceTest extends UnitTest {
     given(refreshTokenQueryPort.isExpired(refreshToken)).willReturn(Boolean.FALSE);
 
     // WHEN
-    final ThrowingCallable when = () -> authCommandService.logout(
-        getLogoutRequest(accessToken, refreshToken));
+    authCommandService.logout(getLogoutRequest(accessToken, refreshToken));
 
     // THEN
-    assertThatNoException().isThrownBy(when);
     then(expiredTokenCommandPort).should().expire(any());
     then(refreshTokenCommandPort).should().expire(any());
   }
@@ -48,11 +45,9 @@ class AuthenticationCommandServiceTest extends UnitTest {
     given(expiredTokenQueryPort.isExpired(accessToken)).willReturn(Boolean.TRUE);
 
     // WHEN
-    final ThrowingCallable when = () -> authCommandService.logout(
-        getLogoutRequest(accessToken, refreshToken));
+    authCommandService.logout(getLogoutRequest(accessToken, refreshToken));
 
     // THEN
-    assertThatNoException().isThrownBy(when);
     then(expiredTokenCommandPort).should(never()).expire(any());
     then(refreshTokenCommandPort).should().expire(any());
   }
@@ -67,11 +62,9 @@ class AuthenticationCommandServiceTest extends UnitTest {
     given(refreshTokenQueryPort.isExpired(refreshToken)).willReturn(Boolean.TRUE);
 
     // WHEN
-    final ThrowingCallable when = () -> authCommandService.logout(
-        getLogoutRequest(accessToken, refreshToken));
+    authCommandService.logout(getLogoutRequest(accessToken, refreshToken));
 
     // THEN
-    assertThatNoException().isThrownBy(when);
     then(expiredTokenCommandPort).should().expire(any());
     then(refreshTokenCommandPort).should(never()).expire(any());
   }
@@ -121,11 +114,9 @@ class AuthenticationCommandServiceTest extends UnitTest {
     given(refreshTokenQueryPort.isExpired(refreshToken.value())).willReturn(Boolean.FALSE);
 
     // WHEN
-    final ThrowingCallable when = () -> authCommandService.refresh(
-        getRefreshRequest(accessToken.value(), refreshToken.value()));
+    authCommandService.refresh(getRefreshRequest(accessToken.value(), refreshToken.value()));
 
     // THEN
-    assertThatNoException().isThrownBy(when);
     then(expiredTokenCommandPort).should().expire(any());
   }
 

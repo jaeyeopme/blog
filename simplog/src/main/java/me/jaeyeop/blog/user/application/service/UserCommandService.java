@@ -7,10 +7,11 @@ import me.jaeyeop.blog.user.adapter.in.UserRequest.Update;
 import me.jaeyeop.blog.user.application.port.in.UserCommandUseCase;
 import me.jaeyeop.blog.user.application.port.out.UserCommandPort;
 import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
+import me.jaeyeop.blog.user.domain.User;
 import org.springframework.stereotype.Service;
 
 /**
- * @author jaeyeopme Created on 10/07/2022.
+ * @author jaeyeopme Created on 09/29/2022.
  */
 @Transactional
 @Service
@@ -29,16 +30,21 @@ public class UserCommandService implements UserCommandUseCase {
 
   @Override
   public void delete(final Delete request) {
-    userCommandPort.deleteByEmail(request.email());
+    final var user = getUser(request.userId());
+
+    userCommandPort.delete(user);
   }
 
   @Override
-  public void update(final String email,
-      final Update request) {
-    final var user = userQueryPort.findByEmail(email)
-        .orElseThrow(UserNotFoundException::new);
+  public void update(final Long userId, final Update request) {
+    final var user = getUser(userId);
 
     user.updateProfile(request.name(), request.picture());
+  }
+
+  private User getUser(final Long userId) {
+    return userQueryPort.findById(userId)
+        .orElseThrow(UserNotFoundException::new);
   }
 
 }

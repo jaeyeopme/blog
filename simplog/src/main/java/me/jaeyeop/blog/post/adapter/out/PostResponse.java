@@ -15,7 +15,7 @@ public final class PostResponse {
                      @Schema(description = "내용") String content,
                      @Schema(description = "작성자") String authorName,
                      @Schema(description = "작성일") LocalDateTime createdAt,
-                     @Schema(description = "수정일") LocalDateTime modifiedAt) {
+                     @Schema(description = "수정일") LocalDateTime lastModifiedAt) {
 
     @QueryProjection
     public Info {

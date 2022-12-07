@@ -1,11 +1,11 @@
 package me.jaeyeop.blog.user.application.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.never;
 import java.util.Optional;
 import me.jaeyeop.blog.config.error.exception.UserNotFoundException;
 import me.jaeyeop.blog.support.UnitTest;
@@ -25,18 +25,16 @@ class UserCommandServiceTest extends UnitTest {
   @Test
   void 프로필_업데이트() {
     // GIVEN
-    final var email = "email@email.com";
+    final var userId = 81L;
     final var user = UserHelper.create();
-    given(userQueryPort.findByEmail(email)).willReturn(Optional.of(user));
+    given(userQueryPort.findById(userId)).willReturn(Optional.of(user));
     final var newName = "newName";
     final var newPicture = "newPicture";
 
     // WHEN
-    final ThrowingCallable when = () -> userCommandService.update(
-        email, new Update(newName, newPicture));
+    userCommandService.update(userId, new Update(newName, newPicture));
 
     // THEN
-    assertThatNoException().isThrownBy(when);
     assertThat(user.name()).isEqualTo(newName);
     assertThat(user.picture()).isEqualTo(newPicture);
   }
@@ -45,17 +43,15 @@ class UserCommandServiceTest extends UnitTest {
   @ParameterizedTest
   void 비어있는_이름으로_프로필_업데이트(final String newName) {
     // GIVEN
-    final var email = "email@email.com";
+    final var userId = 12L;
     final var user = UserHelper.create();
-    given(userQueryPort.findByEmail(email)).willReturn(Optional.of(user));
+    given(userQueryPort.findById(userId)).willReturn(Optional.of(user));
     final var newPicture = "newPicture";
 
     // WHEN
-    final ThrowingCallable when = () -> userCommandService.update(
-        email, new Update(newName, newPicture));
+    userCommandService.update(userId, new Update(newName, newPicture));
 
     // THEN
-    assertThatNoException().isThrownBy(when);
     assertThat(user.name()).isEqualTo(user.name());
     assertThat(user.picture()).isEqualTo(newPicture);
   }
@@ -63,12 +59,12 @@ class UserCommandServiceTest extends UnitTest {
   @Test
   void 존재하지_않은_프로필_업데이트() {
     // GIVEN
-    final var email = "anonymous@email.com";
-    given(userQueryPort.findByEmail(email)).willReturn(Optional.empty());
+    final var userId = 4L;
+    given(userQueryPort.findById(userId)).willReturn(Optional.empty());
 
     // WHEN
     final ThrowingCallable when = () -> userCommandService.update(
-        email, new Update("newName", "newPicture"));
+        userId, new Update("newName", "newPicture"));
 
     // THEN
     assertThatThrownBy(when).isInstanceOf(UserNotFoundException.class);
@@ -77,14 +73,29 @@ class UserCommandServiceTest extends UnitTest {
   @Test
   void 프로필_삭제() {
     // GIVEN
-    final var email = "email@email.com";
+    final var userId = 66L;
+    final var user = UserHelper.create(userId);
+    given(userQueryPort.findById(userId)).willReturn(Optional.of(user));
 
     // WHEN
-    final ThrowingCallable when = () -> userCommandService.delete(new Delete(email));
+    userCommandService.delete(new Delete(userId));
 
     // THEN
-    assertThatNoException().isThrownBy(when);
-    then(userCommandPort).should(only()).deleteByEmail(email);
+    then(userCommandPort).should().delete(user);
+  }
+
+  @Test
+  void 존재하지_않은_프로필_삭제() {
+    // GIVEN
+    final var userId = 33L;
+    given(userQueryPort.findById(userId)).willReturn(Optional.empty());
+
+    // WHEN
+    final ThrowingCallable when = () -> userCommandService.delete(new Delete(userId));
+
+    // THEN
+    assertThatThrownBy(when).isInstanceOf(UserNotFoundException.class);
+    then(userCommandPort).should(never()).delete(any());
   }
 
 }

@@ -43,10 +43,6 @@ public class User extends AbstractBaseEntity {
   protected User() {
   }
 
-  private User(final long id) {
-    this.id = id;
-  }
-
   private User(
       final String email,
       final String name,
@@ -58,10 +54,6 @@ public class User extends AbstractBaseEntity {
     this.picture = picture;
     this.role = role;
     this.provider = provider;
-  }
-
-  public static User reference(final Long id) {
-    return new User(id);
   }
 
   public static User from(final OAuth2Attributes attributes) {

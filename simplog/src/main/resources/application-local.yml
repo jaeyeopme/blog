@@ -63,9 +63,6 @@ token:
     refresh:
 
 oas:
-  server:
-    host:
-    port:
   contact:
     name:
     email:

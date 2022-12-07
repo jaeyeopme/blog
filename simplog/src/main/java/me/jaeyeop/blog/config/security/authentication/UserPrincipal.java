@@ -8,13 +8,15 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-public record UserPrincipal(Long id,
-                            String email,
+/**
+ * @author jaeyeopme Created on 09/29/2022.
+ */
+public record UserPrincipal(User user,
                             Collection<? extends GrantedAuthority> authorities)
     implements OAuth2User {
 
   public static UserPrincipal from(final User user) {
-    return new UserPrincipal(user.id(), user.email(),
+    return new UserPrincipal(user,
         Collections.singleton(new SimpleGrantedAuthority(user.role().name())));
   }
 
@@ -30,7 +32,7 @@ public record UserPrincipal(Long id,
 
   @Override
   public String getName() {
-    return this.email;
+    return user.email();
   }
 
 }

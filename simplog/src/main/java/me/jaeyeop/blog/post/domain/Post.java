@@ -55,8 +55,8 @@ public class Post extends AbstractBaseEntity {
   public static Post of(
       final String title,
       final String content,
-      final Long authorId) {
-    return new Post(title, content, User.reference(authorId));
+      final User author) {
+    return new Post(title, content, author);
   }
 
   public void updateInformation(final String title, final String content) {

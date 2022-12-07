@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 import me.jaeyeop.blog.comment.adapter.out.CommentResponse.Info;
 import me.jaeyeop.blog.comment.domain.Comment;
+import me.jaeyeop.blog.user.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -20,8 +21,8 @@ public final class CommentHelper {
   private CommentHelper() {
   }
 
-  public static Comment createWithAuthor(final Long authorId) {
-    return Comment.of(DEFAULT_CONTENT, authorId);
+  public static Comment create(final User author) {
+    return Comment.of(DEFAULT_CONTENT, author);
   }
 
   public static Page<Info> createInfoPage(final PageRequest pageable) {

@@ -18,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithSecurityContext;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.test.util.ReflectionTestUtils;
 
 /**
  * @author jaeyeopme Created on 12/01/2022.
@@ -41,17 +42,28 @@ public final class UserHelper implements WithSecurityContextFactory<WithPrincipa
   }
 
   public static User create() {
-    return User.from(new OAuth2Attributes(
+    final var user = User.from(new OAuth2Attributes(
         OAuth2Provider.GOOGLE,
         DEFAULT_EMAIL,
         DEFAULT_NAME,
         DEFAULT_PICTURE));
+    ReflectionTestUtils.setField(user, "id", 1L);
+    return user;
+  }
+
+  public static User create(final Long userId) {
+    final var user = User.from(new OAuth2Attributes(
+        OAuth2Provider.GOOGLE,
+        DEFAULT_EMAIL,
+        DEFAULT_NAME,
+        DEFAULT_PICTURE));
+    ReflectionTestUtils.setField(user, "id", userId);
+    return user;
   }
 
   @Override
   public SecurityContext createSecurityContext(final WithPrincipal annotation) {
-    final var user = WithPrincipal.USER;
-    userRepository.save(user);
+    final var user = userRepository.save(WithPrincipal.USER);
     clearPersistenceContext();
 
     return createSecurityContext(user);

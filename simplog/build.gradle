@@ -53,9 +53,21 @@ dependencies {
     testCompileOnly 'io.jsonwebtoken:jjwt-api:0.11.5'
 }
 
-tasks.named('test') {
+tasks.named('test', Test) {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
+}
+
+tasks.register('unitTest', Test) {
+    useJUnitPlatform {
+        includeTags 'unit'
+    }
+}
+
+tasks.register('integrationTest', Test) {
+    useJUnitPlatform {
+        includeTags 'integration'
+    }
 }
 
 def querydslDir = "$buildDir/generated/querydsl"

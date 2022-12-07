@@ -9,6 +9,7 @@ import me.jaeyeop.blog.post.application.port.in.PostCommandUseCase;
 import me.jaeyeop.blog.post.application.port.out.PostCommandPort;
 import me.jaeyeop.blog.post.application.port.out.PostQueryPort;
 import me.jaeyeop.blog.post.domain.Post;
+import me.jaeyeop.blog.user.domain.User;
 import org.springframework.stereotype.Service;
 
 /**
@@ -30,24 +31,24 @@ public class PostCommandService implements PostCommandUseCase {
   }
 
   @Override
-  public Long create(final Long authorId, final Create request) {
-    final var post = Post.of(request.title(), request.content(), authorId);
+  public Long create(final User author, final Create request) {
+    final var post = Post.of(request.title(), request.content(), author);
     return postCommandPort.create(post).id();
   }
 
   @Override
   public void update(
-      final Long authorId,
+      final User author,
       final Long postId,
       final Update request) {
-    final var post = findById(authorId, postId);
+    final var post = findById(author.id(), postId);
 
     post.updateInformation(request.title(), request.content());
   }
 
   @Override
-  public void delete(final Long authorId, final Delete request) {
-    final var post = findById(authorId, request.postId());
+  public void delete(final User author, final Delete request) {
+    final var post = findById(author.id(), request.postId());
 
     postCommandPort.delete(post);
   }

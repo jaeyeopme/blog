@@ -1,7 +1,6 @@
 package me.jaeyeop.blog.post.application.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -15,11 +14,11 @@ import me.jaeyeop.blog.post.adapter.in.PostRequest.Delete;
 import me.jaeyeop.blog.post.adapter.in.PostRequest.Update;
 import me.jaeyeop.blog.support.UnitTest;
 import me.jaeyeop.blog.support.helper.PostHelper;
+import me.jaeyeop.blog.support.helper.UserHelper;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.springframework.test.util.ReflectionTestUtils;
 
 /**
  * @author jaeyeopme Created on 10/10/2022.
@@ -29,35 +28,32 @@ class PostCommandServiceTest extends UnitTest {
   @Test
   void 게시글_저장() {
     // GIVEN
-    final var postId = 1L;
-    final var post = PostHelper.create(postId);
-    ReflectionTestUtils.setField(post, "id", postId);
+    final var author = UserHelper.create();
+    final var post = PostHelper.create(author);
     given(postCommandPort.create(any())).willReturn(post);
 
     // WHEN
     final var actual = postCommandService.create(
-        1L, new Create(post.title(), post.content()));
+        author, new Create(post.title(), post.content()));
 
     // THEN
-    assertThat(actual).isEqualTo(postId);
+    assertThat(actual).isEqualTo(post.id());
   }
 
   @Test
   void 게시글_수정() {
     // GIVEN
     final var postId = 1L;
-    final var authorId = 1L;
-    final var post = PostHelper.createWithAuthor(authorId);
+    final var author = UserHelper.create();
+    final var post = PostHelper.create(author);
     given(postQueryPort.findById(postId)).willReturn(Optional.of(post));
     final var newTitle = "newTitle";
     final var newContent = "newContent";
 
     // WHEN
-    final ThrowingCallable when = () -> postCommandService.update(
-        authorId, postId, new Update(newTitle, newContent));
+    postCommandService.update(author, postId, new Update(newTitle, newContent));
 
     // THEN
-    assertThatNoException().isThrownBy(when);
     assertThat(post.title()).isEqualTo(newTitle);
     assertThat(post.content()).isEqualTo(newContent);
   }
@@ -67,18 +63,16 @@ class PostCommandServiceTest extends UnitTest {
   void 비어있는_제목으로_게시글_수정(final String newTitle) {
     // GIVEN
     final var postId = 1L;
-    final var authorId = 1L;
-    final var post = PostHelper.createWithAuthor(authorId);
+    final var author = UserHelper.create();
+    final var post = PostHelper.create(author);
     given(postQueryPort.findById(postId)).willReturn(Optional.of(post));
     final var newContent = "newContent";
 
     // WHEN
-    final ThrowingCallable when = () -> postCommandService.update(
-        authorId, postId, new Update(newTitle, newContent));
+    postCommandService.update(author, postId, new Update(newTitle, newContent));
 
     // THEN
-    assertThatNoException().isThrownBy(when);
-    assertThat(post.title()).isEqualTo(post.title());
+    assertThat(post.title()).isNotEqualTo(newTitle);
     assertThat(post.content()).isEqualTo(newContent);
   }
 
@@ -90,7 +84,7 @@ class PostCommandServiceTest extends UnitTest {
 
     // WHEN
     final ThrowingCallable when = () -> postCommandService.update(
-        1L, postId, new Update("newTitle", "newContent"));
+        UserHelper.create(), postId, new Update("newTitle", "newContent"));
 
     // THEN
     assertThatThrownBy(when).isInstanceOf(PostNotFoundException.class);
@@ -99,39 +93,37 @@ class PostCommandServiceTest extends UnitTest {
   @Test
   void 다른_사람의_게시글_수정() {
     // GIVEN
-    final var postId = 1L;
-    final var author1Id = 1L;
-    final var post = PostHelper.createWithAuthor(author1Id);
-    given(postQueryPort.findById(postId)).willReturn(Optional.of(post));
-    final var author2Id = 99L;
+    final var post2Id = 2L;
+    final var author2 = UserHelper.create(7L);
+    final var post2 = PostHelper.create(author2);
+    given(postQueryPort.findById(post2Id)).willReturn(Optional.of(post2));
+    final var author1 = UserHelper.create(5L);
     final var newTitle = "newTitle";
     final var newContent = "newContent";
 
     // WHEN
     final ThrowingCallable when = () -> postCommandService.update(
-        author2Id, postId, new Update(newTitle, newContent));
+        author1, post2Id, new Update(newTitle, newContent));
 
     // THEN
-    assertThat(author1Id).isNotEqualTo(author2Id);
+    assertThat(author2.id()).isNotEqualTo(author1.id());
     assertThatThrownBy(when).isInstanceOf(PrincipalAccessDeniedException.class);
-    assertThat(post.title()).isNotEqualTo(newTitle);
-    assertThat(post.content()).isNotEqualTo(newContent);
+    assertThat(post2.title()).isNotEqualTo(newTitle);
+    assertThat(post2.content()).isNotEqualTo(newContent);
   }
 
   @Test
   void 게시글_삭제() {
     // GIVEN
     final var postId = 1L;
-    final var authorId = 1L;
-    final var post = PostHelper.createWithAuthor(authorId);
+    final var author = UserHelper.create();
+    final var post = PostHelper.create(author);
     given(postQueryPort.findById(postId)).willReturn(Optional.of(post));
 
     // WHEN
-    final ThrowingCallable when = () -> postCommandService.delete(
-        authorId, new Delete(postId));
+    postCommandService.delete(author, new Delete(postId));
 
     // THEN
-    assertThatNoException().isThrownBy(when);
     then(postCommandPort).should().delete(post);
   }
 
@@ -139,11 +131,12 @@ class PostCommandServiceTest extends UnitTest {
   void 존재하지_않은_게시글_삭제() {
     // GIVEN
     final var postId = 1L;
+    final var author = UserHelper.create();
     given(postQueryPort.findById(postId)).willReturn(Optional.empty());
 
     // WHEN
     final ThrowingCallable when = () -> postCommandService.delete(
-        2L, new Delete(postId));
+        author, new Delete(postId));
 
     // THEN
     assertThatThrownBy(when).isInstanceOf(PostNotFoundException.class);
@@ -153,18 +146,18 @@ class PostCommandServiceTest extends UnitTest {
   @Test
   void 다른_사람의_게시글_삭제() {
     // GIVEN
-    final var postId = 1L;
-    final var author1Id = 1L;
-    final var post = PostHelper.createWithAuthor(author1Id);
-    given(postQueryPort.findById(postId)).willReturn(Optional.of(post));
-    final var author2Id = 99L;
+    final var post2Id = 1L;
+    final var author2 = UserHelper.create(8L);
+    final var post2 = PostHelper.create(author2);
+    given(postQueryPort.findById(post2Id)).willReturn(Optional.of(post2));
+    final var author1 = UserHelper.create(9L);
 
     // WHEN
     final ThrowingCallable when = () -> postCommandService.delete(
-        author2Id, new Delete(postId));
+        author1, new Delete(post2Id));
 
     // THEN
-    assertThat(author1Id).isNotEqualTo(author2Id);
+    assertThat(author2.id()).isNotEqualTo(author1.id());
     assertThatThrownBy(when).isInstanceOf(PrincipalAccessDeniedException.class);
     then(postCommandPort).should(never()).delete(any());
   }

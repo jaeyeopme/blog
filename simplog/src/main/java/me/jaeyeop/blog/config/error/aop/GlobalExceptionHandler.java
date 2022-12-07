@@ -1,5 +1,7 @@
 package me.jaeyeop.blog.config.error.aop;
 
+import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import me.jaeyeop.blog.config.error.Error;
 import me.jaeyeop.blog.config.error.ErrorResponse;
@@ -15,7 +17,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -26,7 +27,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
  */
 @Slf4j
 @RestControllerAdvice
-public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+public final class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
   private static final String LOG_FORMAT = "Class Name: {}, Message: {}";
 
@@ -89,7 +90,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
   /**
    * 데이터 바인딩 에러 예외 처리 재정의
    *
-   * @param e {@link RequestBody}에서 {@link Validated} 인수 바인딩 예외
+   * @param e 인수 바인딩 예외
+   * @return 바인딩 에러 필드를 포함한 HTTP 400 BAD_REQUEST
+   */
+  @ExceptionHandler(ConstraintViolationException.class)
+  public ResponseEntity<FieldErrorResponse> constraintViolationExceptionHandler(
+      final ConstraintViolationException e) {
+    logError(e);
+    return ResponseEntity.badRequest()
+        .body(FieldErrorResponse.from(e.getConstraintViolations()));
+  }
+
+  /**
+   * 데이터 바인딩 에러 예외 처리 재정의
+   *
+   * @param e {@link Validated} 및 {@link Valid} 인수 바인딩 예외
    * @return 바인딩 에러 필드를 포함한 HTTP 400 BAD_REQUEST
    */
   @Override

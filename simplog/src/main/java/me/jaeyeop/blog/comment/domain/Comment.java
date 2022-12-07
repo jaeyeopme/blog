@@ -46,8 +46,8 @@ public class Comment extends AbstractBaseEntity {
 
   public static Comment of(
       final String content,
-      final Long authorId) {
-    return new Comment(content, User.reference(authorId));
+      final User author) {
+    return new Comment(content, author);
   }
 
   public void post(final Post post) {

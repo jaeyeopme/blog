@@ -7,6 +7,6 @@ public interface UserCommandUseCase {
 
   void delete(Delete request);
 
-  void update(String email, Update request);
+  void update(Long userId, Update request);
 
 }

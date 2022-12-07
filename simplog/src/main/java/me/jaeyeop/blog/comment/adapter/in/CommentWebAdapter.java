@@ -2,7 +2,12 @@ package me.jaeyeop.blog.comment.adapter.in;
 
 import static me.jaeyeop.blog.comment.adapter.in.CommentRequest.Create;
 import static me.jaeyeop.blog.comment.adapter.in.CommentRequest.Update;
+import static me.jaeyeop.blog.comment.adapter.in.CommentWebAdapter.COMMENT_API_URI;
 import static me.jaeyeop.blog.comment.adapter.out.CommentResponse.Info;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.OK;
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import me.jaeyeop.blog.comment.adapter.in.CommentRequest.Delete;
@@ -14,7 +19,6 @@ import me.jaeyeop.blog.config.security.authentication.Principal;
 import me.jaeyeop.blog.config.security.authentication.UserPrincipal;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author jaeyeopme Created on 10/18/2022.
  */
 @Validated
-@RequestMapping(CommentWebAdapter.COMMENT_API_URI)
+@RequestMapping(COMMENT_API_URI)
 @RestController
 public class CommentWebAdapter implements CommentOAS {
 
@@ -48,17 +52,17 @@ public class CommentWebAdapter implements CommentOAS {
     this.commentQueryUseCase = commentQueryUseCase;
   }
 
-  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @ResponseStatus(NO_CONTENT)
   @DeleteMapping("/{id}")
   @Override
   public void delete(
       @Principal UserPrincipal principal,
       @PathVariable Long id) {
     final var request = new Delete(id);
-    commentCommandUseCase.delete(principal.id(), request);
+    commentCommandUseCase.delete(principal.user(), request);
   }
 
-  @ResponseStatus(HttpStatus.OK)
+  @ResponseStatus(OK)
   @GetMapping("/{postId}")
   @Override
   public Page<Info> findPage(
@@ -69,24 +73,23 @@ public class CommentWebAdapter implements CommentOAS {
     return commentQueryUseCase.findCommentPage(request);
   }
 
-  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @ResponseStatus(NO_CONTENT)
   @PatchMapping("/{id}")
   @Override
   public void update(
       @Principal UserPrincipal principal,
       @PathVariable Long id,
-      @RequestBody Update request) {
-    commentCommandUseCase.update(principal.id(), id, request);
+      @RequestBody @Valid Update request) {
+    commentCommandUseCase.update(principal.user(), id, request);
   }
 
-
-  @ResponseStatus(HttpStatus.CREATED)
+  @ResponseStatus(CREATED)
   @PostMapping
   @Override
   public void create(
       @Principal UserPrincipal principal,
-      @RequestBody Create request) {
-    commentCommandUseCase.create(principal.id(), request);
+      @RequestBody @Valid Create request) {
+    commentCommandUseCase.create(principal.user(), request);
   }
 
 }

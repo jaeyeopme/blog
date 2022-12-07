@@ -42,17 +42,17 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
       final Authentication authentication) throws IOException {
     response.setStatus(HttpStatus.OK.value());
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-    final var principal = (UserPrincipal) authentication.getPrincipal();
 
-    final var accessToken = tokenProvider.createAccess(principal.email());
-    final var refreshToken = createRefresh(principal);
+    final var principalEmail = ((UserPrincipal) authentication.getPrincipal()).user().email();
+    final var accessToken = tokenProvider.createAccess(principalEmail);
+    final var refreshToken = createRefresh(principalEmail);
 
     objectMapper.writeValue(response.getWriter(),
         new OAuth2Response(accessToken.value(), refreshToken.value()));
   }
 
-  private Token createRefresh(final UserPrincipal principal) {
-    final var token = tokenProvider.createRefresh(principal.email());
+  private Token createRefresh(final String email) {
+    final var token = tokenProvider.createRefresh(email);
     refreshTokenCommandPort.activate(RefreshToken.from(token));
     return token;
   }

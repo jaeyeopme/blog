@@ -19,7 +19,7 @@ public final class UserRequest {
 
   }
 
-  public record Delete(String email) {
+  public record Delete(Long userId) {
 
   }
 

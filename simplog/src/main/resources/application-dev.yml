@@ -52,9 +52,6 @@ token:
     refresh: ${TOKEN_REFRESH_EXP}
 
 oas:
-  server:
-    host: ${OAS_SERVER_HOST}
-    port: ${OAS_SERVER_PORT}
   contact:
     name: ${OAS_CONTACT_NAME}
     email: ${OAS_CONTACT_EMAIL}

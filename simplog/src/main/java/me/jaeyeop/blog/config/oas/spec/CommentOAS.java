@@ -5,6 +5,7 @@ import static me.jaeyeop.blog.comment.adapter.in.CommentRequest.Update;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import me.jaeyeop.blog.comment.adapter.out.CommentResponse.Info;
@@ -22,7 +23,7 @@ public interface CommentOAS {
 
   @NotFoundCommentResponse
   @SecurityResponse
-  @Operation(summary = "Delete my comment by comment id", description = "자신의 댓글을 삭제합니다.")
+  @Operation(summary = "Delete my comment by comment userId", description = "자신의 댓글을 삭제합니다.")
   void delete(
       UserPrincipal principal,
       @Schema(description = "댓글 식별자") Long id);
@@ -30,7 +31,7 @@ public interface CommentOAS {
   @InvalidArgumentResponse
   @NotFoundCommentResponse
   @PageParameters
-  @Operation(summary = "Find comments by post id", description = "댓글들을 조회합니다.")
+  @Operation(summary = "Find comments by post userId", description = "댓글들을 조회합니다.")
   Page<Info> findPage(
       @Schema(description = "게시글 식별자") Long postId,
       @Min(0) @Max(99) int page,
@@ -39,17 +40,17 @@ public interface CommentOAS {
   @InvalidArgumentResponse
   @NotFoundCommentResponse
   @SecurityResponse
-  @Operation(summary = "Update my comment by comment id", description = "자신의 댓글을 수정합니다.")
+  @Operation(summary = "Update my comment by comment userId", description = "자신의 댓글을 수정합니다.")
   void update(
       UserPrincipal principal,
       @Schema(description = "댓글 식별자") Long id,
-      Update request);
+      @Valid Update request);
 
   @InvalidArgumentResponse
   @SecurityResponse
-  @Operation(summary = "Create comment by post id", description = "댓글을 작성합니다.")
+  @Operation(summary = "Create comment by post userId", description = "댓글을 작성합니다.")
   void create(
       UserPrincipal principal,
-      Create request);
+      @Valid Create request);
 
 }

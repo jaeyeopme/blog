@@ -6,12 +6,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.charset.StandardCharsets;
 import javax.persistence.EntityManager;
+import me.jaeyeop.blog.config.security.authentication.UserPrincipal;
+import me.jaeyeop.blog.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,6 +54,16 @@ public abstract class IntegrationTest {
 
   protected String toJson(final Object value) throws JsonProcessingException {
     return objectMapper.writeValueAsString(value);
+  }
+
+  protected User getPrincipalUser() {
+    return ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
+        .getPrincipal()).user();
+  }
+
+  protected void clearPersistenceContext() {
+    entityManager.flush();
+    entityManager.clear();
   }
 
 }

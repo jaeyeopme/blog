@@ -1,6 +1,7 @@
 package me.jaeyeop.blog.comment.application.service;
 
 import javax.transaction.Transactional;
+import javax.validation.constraints.NotBlank;
 import me.jaeyeop.blog.comment.adapter.in.CommentRequest.Create;
 import me.jaeyeop.blog.comment.adapter.in.CommentRequest.Delete;
 import me.jaeyeop.blog.comment.adapter.in.CommentRequest.Update;
@@ -11,6 +12,7 @@ import me.jaeyeop.blog.comment.domain.Comment;
 import me.jaeyeop.blog.config.error.exception.CommentNotFoundException;
 import me.jaeyeop.blog.config.error.exception.PostNotFoundException;
 import me.jaeyeop.blog.post.application.port.out.PostQueryPort;
+import me.jaeyeop.blog.user.domain.User;
 import org.springframework.stereotype.Service;
 
 /**
@@ -37,29 +39,29 @@ public class CommentCommandService implements CommentCommandUseCase {
 
   @Override
   public void create(
-      final Long authorId,
+      final User author,
       final Create request) {
     final var post = postQueryPort.findById(request.postId())
         .orElseThrow(PostNotFoundException::new);
 
-    final var comment = Comment.of(request.content(), authorId);
+    final var comment = Comment.of(request.content(), author);
 
     post.addComments(comment);
   }
 
   @Override
   public void update(
-      final Long authorId,
+      @NotBlank final User author,
       final Long commentId,
       final Update request) {
-    final var comment = findById(authorId, commentId);
+    final var comment = findById(author.id(), commentId);
 
     comment.updateInformation(request.content());
   }
 
   @Override
-  public void delete(final Long authorId, final Delete request) {
-    final var comment = findById(authorId, request.commentId());
+  public void delete(final User author, final Delete request) {
+    final var comment = findById(author.id(), request.commentId());
 
     commentCommandPort.delete(comment);
   }

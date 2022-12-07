@@ -24,8 +24,8 @@ public class UserPersistenceAdapter implements UserCommandPort, UserQueryPort {
   }
 
   @Override
-  public void deleteByEmail(final String email) {
-    userRepository.deleteByEmail(email);
+  public void delete(final User user) {
+    userRepository.delete(user);
   }
 
   @Override

@@ -16,7 +16,7 @@ import me.jaeyeop.blog.user.adapter.out.UserResponse.Profile;
 import org.springframework.validation.annotation.Validated;
 
 /**
- * Validation 관련 어노테이션을 사용할 때 LSP 위배를 주의해야 한다.
+ * {@link Validated} 어노테이션을 사용할 때 LSP 위배를 주의해야 한다.
  *
  * @see ConstraintDeclarationException
  */

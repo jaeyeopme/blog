@@ -76,6 +76,7 @@ class AuthenticationIntegrationTest extends IntegrationTest {
 
     // THEN
     when.andExpectAll(status().isCreated());
+    tokenProvider.verify(TYPE + when.andReturn().getResponse().getContentAsString());
     assertThat(expiredTokenRepository.findById(accessTokenValue)).isPresent();
     assertThat(refreshTokenRepository.findById(refreshTokenValue)).isPresent();
   }

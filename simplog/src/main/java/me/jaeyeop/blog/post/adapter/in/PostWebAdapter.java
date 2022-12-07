@@ -4,14 +4,17 @@ import static me.jaeyeop.blog.post.adapter.in.PostRequest.Create;
 import static me.jaeyeop.blog.post.adapter.in.PostRequest.Delete;
 import static me.jaeyeop.blog.post.adapter.in.PostRequest.Find;
 import static me.jaeyeop.blog.post.adapter.in.PostRequest.Update;
+import static me.jaeyeop.blog.post.adapter.in.PostWebAdapter.POST_API_URI;
 import static me.jaeyeop.blog.post.adapter.out.PostResponse.Info;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.OK;
 import java.net.URI;
+import javax.validation.Valid;
 import me.jaeyeop.blog.config.oas.spec.PostOAS;
 import me.jaeyeop.blog.config.security.authentication.Principal;
 import me.jaeyeop.blog.config.security.authentication.UserPrincipal;
 import me.jaeyeop.blog.post.application.port.in.PostCommandUseCase;
 import me.jaeyeop.blog.post.application.port.in.PostQueryUseCase;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author jaeyeopme Created on 10/10/2022.
  */
 @Validated
-@RequestMapping(PostWebAdapter.POST_API_URI)
+@RequestMapping(POST_API_URI)
 @RestController
 public class PostWebAdapter implements PostOAS {
 
@@ -45,36 +48,36 @@ public class PostWebAdapter implements PostOAS {
     this.postQueryUseCase = postQueryUseCase;
   }
 
-  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @ResponseStatus(NO_CONTENT)
   @DeleteMapping("/{id}")
   public void delete(
       @Principal UserPrincipal principal,
       @PathVariable Long id) {
     final var request = new Delete(id);
-    postCommandUseCase.delete(principal.id(), request);
+    postCommandUseCase.delete(principal.user(), request);
   }
 
-  @ResponseStatus(HttpStatus.OK)
+  @ResponseStatus(OK)
   @GetMapping("/{id}")
   public Info findOne(@PathVariable Long id) {
     final var request = new Find(id);
     return postQueryUseCase.findOne(request);
   }
 
-  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @ResponseStatus(NO_CONTENT)
   @PatchMapping("/{id}")
   public void update(
       @Principal UserPrincipal principal,
       @PathVariable Long id,
       @RequestBody Update request) {
-    postCommandUseCase.update(principal.id(), id, request);
+    postCommandUseCase.update(principal.user(), id, request);
   }
 
   @PostMapping
   public ResponseEntity<Void> create(
       @Principal UserPrincipal principal,
-      @RequestBody Create request) {
-    final var id = postCommandUseCase.create(principal.id(), request);
+      @RequestBody @Valid Create request) {
+    final var id = postCommandUseCase.create(principal.user(), request);
     final var uri = URI.create(String.format("%s/%d", POST_API_URI, id));
     return ResponseEntity.created(uri).build();
   }
