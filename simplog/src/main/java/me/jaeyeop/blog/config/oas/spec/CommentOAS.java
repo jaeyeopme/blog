@@ -26,7 +26,7 @@ public interface CommentOAS {
   @Operation(summary = "Delete my comment by comment userId", description = "자신의 댓글을 삭제합니다.")
   void delete(
       UserPrincipal principal,
-      @Schema(description = "댓글 식별자") Long id);
+      @Schema(description = "댓글 식별자") Long commentId);
 
   @InvalidArgumentResponse
   @NotFoundCommentResponse
@@ -43,7 +43,7 @@ public interface CommentOAS {
   @Operation(summary = "Update my comment by comment userId", description = "자신의 댓글을 수정합니다.")
   void update(
       UserPrincipal principal,
-      @Schema(description = "댓글 식별자") Long id,
+      @Schema(description = "댓글 식별자") Long commentId,
       @Valid Update request);
 
   @InvalidArgumentResponse

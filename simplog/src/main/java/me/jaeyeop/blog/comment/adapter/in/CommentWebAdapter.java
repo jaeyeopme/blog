@@ -53,12 +53,12 @@ public class CommentWebAdapter implements CommentOAS {
   }
 
   @ResponseStatus(NO_CONTENT)
-  @DeleteMapping("/{id}")
+  @DeleteMapping("/{commentId}")
   @Override
   public void delete(
       @Principal UserPrincipal principal,
-      @PathVariable Long id) {
-    final var request = new Delete(id);
+      @PathVariable Long commentId) {
+    final var request = new Delete(commentId);
     commentCommandUseCase.delete(principal.user(), request);
   }
 
@@ -74,13 +74,13 @@ public class CommentWebAdapter implements CommentOAS {
   }
 
   @ResponseStatus(NO_CONTENT)
-  @PatchMapping("/{id}")
+  @PatchMapping("/{commentId}")
   @Override
   public void update(
       @Principal UserPrincipal principal,
-      @PathVariable Long id,
+      @PathVariable Long commentId,
       @RequestBody @Valid Update request) {
-    commentCommandUseCase.update(principal.user(), id, request);
+    commentCommandUseCase.update(principal.user(), commentId, request);
   }
 
   @ResponseStatus(CREATED)

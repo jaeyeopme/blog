@@ -44,7 +44,7 @@ class AuthenticationIntegrationTest extends IntegrationTest {
   @Test
   void 로그아웃() throws Exception {
     // GIVEN
-    final var user = WithPrincipal.USER;
+    final var user = getPrincipal();
     final var accessTokenValue = getAccessToken(user.email()).value();
     final var refreshTokenValue = getSavedRefreshToken(user.email()).value();
 
@@ -64,7 +64,7 @@ class AuthenticationIntegrationTest extends IntegrationTest {
   @Test
   void 엑세스_토큰_재발급() throws Exception {
     // GIVEN
-    final var user = WithPrincipal.USER;
+    final var user = getPrincipal();
     final var accessTokenValue = getAccessToken(user.email()).value();
     final var refreshTokenValue = getSavedRefreshToken(user.email()).value();
 
@@ -85,7 +85,7 @@ class AuthenticationIntegrationTest extends IntegrationTest {
   @Test
   void 리프레시_토큰_저장소에_없는_리프레시_토큰으로_엑세스_토큰_재발급() throws Exception {
     // GIVEN
-    final var user = WithPrincipal.USER;
+    final var user = getPrincipal();
     final var accessTokenValue = getAccessToken(user.email()).value();
     final var refreshTokenValue = getRefreshToken(user.email()).value();
 

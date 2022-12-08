@@ -19,7 +19,7 @@ public class PostQueryRepository {
     this.jpaQueryFactory = jpaQueryFactory;
   }
 
-  public Optional<Info> findInfoById(final Long id) {
+  public Optional<Info> findInfoById(final Long postId) {
     final var postInfo = new QPostResponse_Info(
         post.id,
         post.title,
@@ -32,7 +32,7 @@ public class PostQueryRepository {
         jpaQueryFactory.select(postInfo)
             .from(post)
             .innerJoin(post.author, user)
-            .where(post.id.eq(id))
+            .where(post.id.eq(postId))
             .fetchOne());
   }
 

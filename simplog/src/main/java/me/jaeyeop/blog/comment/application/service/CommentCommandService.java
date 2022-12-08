@@ -1,7 +1,6 @@
 package me.jaeyeop.blog.comment.application.service;
 
 import javax.transaction.Transactional;
-import javax.validation.constraints.NotBlank;
 import me.jaeyeop.blog.comment.adapter.in.CommentRequest.Create;
 import me.jaeyeop.blog.comment.adapter.in.CommentRequest.Delete;
 import me.jaeyeop.blog.comment.adapter.in.CommentRequest.Update;
@@ -44,14 +43,12 @@ public class CommentCommandService implements CommentCommandUseCase {
     final var post = postQueryPort.findById(request.postId())
         .orElseThrow(PostNotFoundException::new);
 
-    final var comment = Comment.of(request.content(), author);
-
-    post.addComments(comment);
+    post.addComments(Comment.of(request.content(), author));
   }
 
   @Override
   public void update(
-      @NotBlank final User author,
+      final User author,
       final Long commentId,
       final Update request) {
     final var comment = findById(author.id(), commentId);

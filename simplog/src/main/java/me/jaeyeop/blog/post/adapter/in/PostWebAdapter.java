@@ -49,28 +49,29 @@ public class PostWebAdapter implements PostOAS {
   }
 
   @ResponseStatus(NO_CONTENT)
-  @DeleteMapping("/{id}")
+  @DeleteMapping("/{postId}")
   public void delete(
       @Principal UserPrincipal principal,
-      @PathVariable Long id) {
-    final var request = new Delete(id);
+      @PathVariable Long postId) {
+    final var request = new Delete(postId);
     postCommandUseCase.delete(principal.user(), request);
   }
 
   @ResponseStatus(OK)
-  @GetMapping("/{id}")
-  public Info findOne(@PathVariable Long id) {
-    final var request = new Find(id);
+  @GetMapping("/{postId}")
+  public Info findOne(@PathVariable Long postId) {
+    final var request = new Find(postId);
     return postQueryUseCase.findOne(request);
   }
 
+
   @ResponseStatus(NO_CONTENT)
-  @PatchMapping("/{id}")
+  @PatchMapping("/{postId}")
   public void update(
       @Principal UserPrincipal principal,
-      @PathVariable Long id,
+      @PathVariable Long postId,
       @RequestBody Update request) {
-    postCommandUseCase.update(principal.user(), id, request);
+    postCommandUseCase.update(principal.user(), postId, request);
   }
 
   @PostMapping

@@ -28,13 +28,13 @@ public interface PostOAS {
   @Operation(summary = "Delete my post by post userId", description = "자신의 게시글을 삭제합니다.")
   void delete(
       UserPrincipal principal,
-      @Schema(description = "자신의 게시글 식별자") Long id);
+      @Schema(description = "자신의 게시글 식별자") Long postId);
 
   @NotFoundPostResponse
   @ApiResponse(responseCode = "200", description = "게시글 조회 성공",
       content = @Content(schema = @Schema(implementation = Info.class)))
   @Operation(summary = "Find one post by post userId", description = "게시글을 조회합니다.")
-  Info findOne(@Schema(description = "게시글 식별자") Long id);
+  Info findOne(@Schema(description = "게시글 식별자") Long postId);
 
   @InvalidArgumentResponse
   @NotFoundPostResponse
@@ -43,7 +43,7 @@ public interface PostOAS {
   @Operation(summary = "Update my post by post userId", description = "자신의 게시글을 수정합니다.")
   void update(
       UserPrincipal principal,
-      @Schema(description = "자신의 게시글 식별자") Long id, Update request);
+      @Schema(description = "자신의 게시글 식별자") Long postId, Update request);
 
   @InvalidArgumentResponse
   @SecurityResponse

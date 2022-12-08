@@ -56,7 +56,7 @@ public abstract class IntegrationTest {
     return objectMapper.writeValueAsString(value);
   }
 
-  protected User getPrincipalUser() {
+  protected User getPrincipal() {
     return ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
         .getPrincipal()).user();
   }

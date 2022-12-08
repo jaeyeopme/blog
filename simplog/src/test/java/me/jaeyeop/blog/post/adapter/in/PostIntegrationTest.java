@@ -36,10 +36,9 @@ class PostIntegrationTest extends IntegrationTest {
     final var command = new Create("title", "content");
 
     // WHEN
-    final var when = mockMvc.perform(
-        post(POST_API_URI)
-            .contentType(APPLICATION_JSON)
-            .content(toJson(command)));
+    final var when = mockMvc.perform(post(POST_API_URI)
+        .contentType(APPLICATION_JSON)
+        .content(toJson(command)));
 
     // THEN
     when.andExpectAll(status().isCreated());
@@ -49,14 +48,13 @@ class PostIntegrationTest extends IntegrationTest {
   @Test
   void 게시글_조회() throws Exception {
     // GIVEN
-    final var principalUser = getPrincipalUser();
-    final var savedPost = getSavedPost(principalUser);
+    final var author = getPrincipal();
+    final var savedPost = getSavedPost(author);
     final var info = new Info(savedPost.id(), savedPost.title(), savedPost.content(),
-        principalUser.name(), savedPost.createdAt(), savedPost.lastModifiedAt());
+        author.name(), savedPost.createdAt(), savedPost.lastModifiedAt());
 
     // WHEN
-    final var when = mockMvc.perform(
-        get(POST_API_URI + "/{id}", savedPost.id()));
+    final var when = mockMvc.perform(get(POST_API_URI + "/{id}", savedPost.id()));
 
     // THEN
     when.andExpectAll(
@@ -68,19 +66,18 @@ class PostIntegrationTest extends IntegrationTest {
   @Test
   void 게시글_업데이트() throws Exception {
     // GIVEN
-    final var post = getSavedPost(getPrincipalUser());
+    final var savedPost = getSavedPost(getPrincipal());
     final var command = new Update("newTitle", "newContent");
 
     // WHEN
-    final var when = mockMvc.perform(
-        patch(PostWebAdapter.POST_API_URI + "/{id}", post.id())
-            .contentType(APPLICATION_JSON)
-            .content(toJson(command)));
+    final var when = mockMvc.perform(patch(POST_API_URI + "/{id}", savedPost.id())
+        .contentType(APPLICATION_JSON)
+        .content(toJson(command)));
 
     // THEN
     when.andExpectAll(status().isNoContent());
-    final var updatedPost = postCrudRepository.findById(post.id()).get();
-    assertThat(updatedPost.id()).isEqualTo(post.id());
+    final var updatedPost = postCrudRepository.findById(savedPost.id()).get();
+    assertThat(updatedPost.id()).isEqualTo(savedPost.id());
     assertThat(updatedPost.title()).isEqualTo(command.title());
     assertThat(updatedPost.content()).isEqualTo(command.content());
   }
@@ -89,15 +86,14 @@ class PostIntegrationTest extends IntegrationTest {
   @Test
   void 게시글_삭제() throws Exception {
     // GIVEN
-    final var post = getSavedPost(getPrincipalUser());
+    final var savedPost = getSavedPost(getPrincipal());
 
     // WHEN
-    final var when = mockMvc.perform(
-        delete(PostWebAdapter.POST_API_URI + "/{id}", post.id()));
+    final var when = mockMvc.perform(delete(POST_API_URI + "/{id}", savedPost.id()));
 
     // THEN
     when.andExpectAll(status().isNoContent());
-    assertThat(postCrudRepository.findById(post.id())).isNotPresent();
+    assertThat(postCrudRepository.findById(savedPost.id())).isNotPresent();
   }
 
   private Post getSavedPost(final User author) {

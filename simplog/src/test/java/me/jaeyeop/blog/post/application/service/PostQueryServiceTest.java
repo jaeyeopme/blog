@@ -24,10 +24,10 @@ class PostQueryServiceTest extends UnitTest {
     given(postQueryPort.findInfoById(postId)).willReturn(Optional.of(info));
 
     // WHEN
-    final var actual = postQueryService.findOne(new Find(postId));
+    final var findedInfo = postQueryService.findOne(new Find(postId));
 
     // THEN
-    assertThat(actual).isEqualTo(info);
+    assertThat(findedInfo).isEqualTo(info);
   }
 
   @Test

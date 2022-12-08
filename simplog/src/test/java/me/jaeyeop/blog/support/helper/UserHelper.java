@@ -6,6 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import javax.persistence.EntityManager;
+import lombok.extern.slf4j.Slf4j;
 import me.jaeyeop.blog.config.security.authentication.OAuth2Attributes;
 import me.jaeyeop.blog.config.security.authentication.OAuth2Provider;
 import me.jaeyeop.blog.config.security.authentication.UserPrincipal;
@@ -18,11 +19,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithSecurityContext;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.test.util.ReflectionTestUtils;
 
 /**
  * @author jaeyeopme Created on 12/01/2022.
  */
+@Slf4j
 @Component
 public final class UserHelper implements WithSecurityContextFactory<WithPrincipal> {
 
@@ -38,40 +39,26 @@ public final class UserHelper implements WithSecurityContextFactory<WithPrincipa
   @Autowired
   private UserRepository userRepository;
 
-  private UserHelper() {
-  }
-
   public static User create() {
-    final var user = User.from(new OAuth2Attributes(
+    return User.from(new OAuth2Attributes(
         OAuth2Provider.GOOGLE,
         DEFAULT_EMAIL,
         DEFAULT_NAME,
         DEFAULT_PICTURE));
-    ReflectionTestUtils.setField(user, "id", 1L);
-    return user;
   }
 
-  public static User create(final Long userId) {
-    final var user = User.from(new OAuth2Attributes(
-        OAuth2Provider.GOOGLE,
-        DEFAULT_EMAIL,
-        DEFAULT_NAME,
-        DEFAULT_PICTURE));
-    ReflectionTestUtils.setField(user, "id", userId);
-    return user;
+  private void clearPersistenceContext() {
+    log.info("===== Clear Persistence Context =====");
+    entityManager.flush();
+    entityManager.clear();
   }
 
   @Override
   public SecurityContext createSecurityContext(final WithPrincipal annotation) {
-    final var user = userRepository.save(WithPrincipal.USER);
+    final var user = userRepository.save(UserHelper.create());
     clearPersistenceContext();
 
     return createSecurityContext(user);
-  }
-
-  private void clearPersistenceContext() {
-    entityManager.flush();
-    entityManager.clear();
   }
 
   private SecurityContext createSecurityContext(final User user) {
@@ -87,8 +74,6 @@ public final class UserHelper implements WithSecurityContextFactory<WithPrincipa
   @Retention(RetentionPolicy.RUNTIME)
   @WithSecurityContext(factory = UserHelper.class)
   public @interface WithPrincipal {
-
-    User USER = create();
 
   }
 

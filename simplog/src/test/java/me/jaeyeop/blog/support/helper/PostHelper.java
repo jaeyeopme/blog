@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import me.jaeyeop.blog.post.adapter.out.PostResponse.Info;
 import me.jaeyeop.blog.post.domain.Post;
 import me.jaeyeop.blog.user.domain.User;
-import org.springframework.test.util.ReflectionTestUtils;
 
 /**
  * @author jaeyeopme Created on 12/01/2022.
@@ -21,10 +20,7 @@ public final class PostHelper {
   }
 
   public static Post create(final User author) {
-    final var post = Post.of(DEFAULT_TITLE, DEFAULT_CONTENT, author);
-    ReflectionTestUtils.setField(post, "id", 1L);
-
-    return post;
+    return Post.of(DEFAULT_TITLE, DEFAULT_CONTENT, author);
   }
 
   public static Info createInfo(final Long postId) {

@@ -28,12 +28,11 @@ class UserIntegrationTest extends IntegrationTest {
   @Test
   void 자신의_프로필_조회() throws Exception {
     // GIVE
-    final var user = getPrincipalUser();
+    final var user = getPrincipal();
     final var profile = Profile.from(user);
 
     // WHEN
-    final var when = mockMvc.perform(
-        get(USER_API_URI));
+    final var when = mockMvc.perform(get(USER_API_URI));
 
     // THEN
     when.andExpectAll(
@@ -45,12 +44,11 @@ class UserIntegrationTest extends IntegrationTest {
   @Test
   void 이메일로_프로필_조회() throws Exception {
     // GIVE
-    final var user = getPrincipalUser();
+    final var user = getPrincipal();
     final var profile = Profile.from(user);
 
     // WHEN
-    final var when = mockMvc.perform(
-        get(USER_API_URI + "/{email}", user.email()));
+    final var when = mockMvc.perform(get(USER_API_URI + "/{email}", user.email()));
 
     // THEN
     when.andExpectAll(
@@ -62,14 +60,13 @@ class UserIntegrationTest extends IntegrationTest {
   @Test
   void 프로필_업데이트() throws Exception {
     // GIVEN
-    final var user = getPrincipalUser();
+    final var user = getPrincipal();
     final var command = new Update("newName", "newPicture");
 
     // THEN
-    final var when = mockMvc.perform(
-        patch(USER_API_URI)
-            .contentType(APPLICATION_JSON)
-            .content(toJson(command)));
+    final var when = mockMvc.perform(patch(USER_API_URI)
+        .contentType(APPLICATION_JSON)
+        .content(toJson(command)));
 
     // WHEN
     when.andExpectAll(status().isNoContent());
@@ -82,11 +79,10 @@ class UserIntegrationTest extends IntegrationTest {
   @Test
   void 프로필_삭제() throws Exception {
     // GIVEN
-    final var user = getPrincipalUser();
+    final var user = getPrincipal();
 
     // WHEN
-    final var when = mockMvc.perform(
-        delete(USER_API_URI));
+    final var when = mockMvc.perform(delete(USER_API_URI));
 
     // THEN
     when.andExpectAll(status().isNoContent());

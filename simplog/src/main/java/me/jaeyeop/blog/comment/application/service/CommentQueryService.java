@@ -28,7 +28,8 @@ public class CommentQueryService implements CommentQueryUseCase {
   @Override
   public Page<Info> findCommentPage(final Find request) {
     validatePost(request.postId());
-    return commentQueryPort.findInfoPageByPostId(request.postId(),
+    return commentQueryPort.findInfoPageByPostId(
+        request.postId(),
         request.pageable());
   }
 
