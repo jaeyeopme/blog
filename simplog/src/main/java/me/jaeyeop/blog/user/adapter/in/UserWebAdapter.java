@@ -45,7 +45,7 @@ public class UserWebAdapter implements UserOAS {
   }
 
   @ResponseStatus(NO_CONTENT)
-  @DeleteMapping
+  @DeleteMapping("/me")
   @Override
   public void delete(@Principal UserPrincipal principal) {
     final var request = new Delete(principal.user().id());
@@ -53,11 +53,20 @@ public class UserWebAdapter implements UserOAS {
   }
 
   @ResponseStatus(OK)
-  @GetMapping
+  @GetMapping("/me")
   @Override
   public Profile findByPrincipal(@Principal UserPrincipal principal) {
     final var request = new Find(principal.user().email());
     return userQueryUseCase.findOneByEmail(request);
+  }
+
+  @ResponseStatus(NO_CONTENT)
+  @PatchMapping("/me")
+  @Override
+  public void update(
+      @Principal UserPrincipal principal,
+      @RequestBody Update request) {
+    userCommandUseCase.update(principal.user().id(), request);
   }
 
   @ResponseStatus(OK)
@@ -66,15 +75,6 @@ public class UserWebAdapter implements UserOAS {
   public Profile findOneByEmail(@PathVariable @Email String email) {
     final var request = new Find(email);
     return userQueryUseCase.findOneByEmail(request);
-  }
-
-  @ResponseStatus(NO_CONTENT)
-  @PatchMapping
-  @Override
-  public void update(
-      @Principal UserPrincipal principal,
-      @RequestBody Update request) {
-    userCommandUseCase.update(principal.user().id(), request);
   }
 
 }

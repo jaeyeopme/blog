@@ -36,16 +36,16 @@ public interface UserOAS {
   Profile findByPrincipal(UserPrincipal principal);
 
   @InvalidArgumentResponse
+  @SecurityResponse
+  @ApiResponse(responseCode = "204", description = "자신의 프로필 업데이트 성공")
+  @Operation(summary = "Update my profile", description = "자신의 프로필을 수정합니다.")
+  void update(UserPrincipal principal, Update request);
+
+  @InvalidArgumentResponse
   @NotFoundUserResponse
   @ApiResponse(responseCode = "200", description = "사용자 프로필 조회 성공",
       content = @Content(schema = @Schema(implementation = Profile.class)))
   @Operation(summary = "Find user profile by user email", description = "사용자의 프로필을 조회합니다.")
   Profile findOneByEmail(@Schema(description = "사용자 이메일") @Email String email);
-
-  @InvalidArgumentResponse
-  @SecurityResponse
-  @ApiResponse(responseCode = "204", description = "자신의 프로필 업데이트 성공")
-  @Operation(summary = "Update my profile", description = "자신의 프로필을 수정합니다.")
-  void update(UserPrincipal principal, Update request);
 
 }

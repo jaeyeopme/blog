@@ -23,7 +23,7 @@ public class AuthenticationWebAdaptor implements AuthenticationOAS {
 
   public static final String AUTHENTICATION_API_URI = "/api/v1/auth";
 
-  public static final String REFRESH_AUTHORIZATION = "X-Authorization";
+  public static final String REFRESH_AUTHORIZATION = "Refresh-Authorization";
 
   private final AuthenticationCommandUseCase authenticationCommandUseCase;
 
