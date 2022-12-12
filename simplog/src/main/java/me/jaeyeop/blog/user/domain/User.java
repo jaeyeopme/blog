@@ -30,6 +30,9 @@ public class User extends AbstractBaseEntity {
   @Column
   private String picture;
 
+  @Column
+  private String introduce;
+
   @NotNull
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
@@ -65,11 +68,14 @@ public class User extends AbstractBaseEntity {
         attributes.provider());
   }
 
-  public void updateProfile(final String name, final String picture) {
+  public void updateProfile(final String name, final String introduce) {
     if (StringUtils.hasText(name)) {
       this.name = name;
     }
-    this.picture = picture;
+
+    if (StringUtils.hasText(introduce)) {
+      this.introduce = introduce;
+    }
   }
 
 }

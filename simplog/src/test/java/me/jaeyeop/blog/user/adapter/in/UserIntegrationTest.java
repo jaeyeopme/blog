@@ -32,7 +32,7 @@ class UserIntegrationTest extends IntegrationTest {
     final var profile = Profile.from(user);
 
     // WHEN
-    final var when = mockMvc.perform(get(USER_API_URI));
+    final var when = mockMvc.perform(get(USER_API_URI + "/me"));
 
     // THEN
     when.andExpectAll(
@@ -61,10 +61,10 @@ class UserIntegrationTest extends IntegrationTest {
   void 프로필_업데이트() throws Exception {
     // GIVEN
     final var user = getPrincipal();
-    final var command = new Update("newName", "newPicture");
+    final var command = new Update("newName", "newIntroduce");
 
     // THEN
-    final var when = mockMvc.perform(patch(USER_API_URI)
+    final var when = mockMvc.perform(patch(USER_API_URI + "/me")
         .contentType(APPLICATION_JSON)
         .content(toJson(command)));
 
@@ -72,7 +72,7 @@ class UserIntegrationTest extends IntegrationTest {
     when.andExpectAll(status().isNoContent());
     final var updatedUser = userRepository.findById(user.id()).get();
     assertThat(updatedUser.name()).isEqualTo(command.name());
-    assertThat(updatedUser.picture()).isEqualTo(command.picture());
+    assertThat(updatedUser.introduce()).isEqualTo(command.introduce());
   }
 
   @WithPrincipal
@@ -82,7 +82,7 @@ class UserIntegrationTest extends IntegrationTest {
     final var user = getPrincipal();
 
     // WHEN
-    final var when = mockMvc.perform(delete(USER_API_URI));
+    final var when = mockMvc.perform(delete(USER_API_URI + "/me"));
 
     // THEN
     when.andExpectAll(status().isNoContent());

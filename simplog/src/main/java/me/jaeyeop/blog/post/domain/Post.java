@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
@@ -29,8 +30,13 @@ public class Post extends AbstractBaseEntity {
   @Column(nullable = false)
   private String title;
 
-  @Column
+  @NotBlank
+  @Lob
+  @Column(nullable = false)
   private String content;
+
+  @Column
+  private String coverImage;
 
   @NotNull
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -63,7 +69,10 @@ public class Post extends AbstractBaseEntity {
     if (StringUtils.hasText(title)) {
       this.title = title;
     }
-    this.content = content;
+
+    if (StringUtils.hasText(content)) {
+      this.content = content;
+    }
   }
 
   public void confirmAccess(final Long authorId) {

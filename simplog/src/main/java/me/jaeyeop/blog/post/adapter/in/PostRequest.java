@@ -12,7 +12,7 @@ public final class PostRequest {
   public record Create(@Schema(description = "제목")
                        @NotBlank String title,
                        @Schema(description = "내용")
-                       String content) {
+                       @NotBlank String content) {
 
   }
 

@@ -39,7 +39,7 @@ public class UserCommandService implements UserCommandUseCase {
   public void update(final Long userId, final Update request) {
     final var user = getUser(userId);
 
-    user.updateProfile(request.name(), request.picture());
+    user.updateProfile(request.name(), request.introduce());
   }
 
   private User getUser(final Long userId) {

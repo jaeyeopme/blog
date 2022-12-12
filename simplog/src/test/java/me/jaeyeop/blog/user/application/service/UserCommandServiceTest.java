@@ -15,8 +15,6 @@ import me.jaeyeop.blog.user.adapter.in.UserRequest.Update;
 import me.jaeyeop.blog.user.domain.User;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.test.util.ReflectionTestUtils;
 
 /**
@@ -31,31 +29,14 @@ class UserCommandServiceTest extends UnitTest {
     final var user = getUser(userId);
     given(userQueryPort.findById(userId)).willReturn(Optional.of(user));
     final var newName = "newName";
-    final var newPicture = "newPicture";
+    final var newIntroduce = "newIntroduce";
 
     // WHEN
-    userCommandService.update(userId, new Update(newName, newPicture));
+    userCommandService.update(userId, new Update(newName, newIntroduce));
 
     // THEN
     assertThat(user.name()).isEqualTo(newName);
-    assertThat(user.picture()).isEqualTo(newPicture);
-  }
-
-  @NullAndEmptySource
-  @ParameterizedTest
-  void 비어있는_이름으로_프로필_업데이트(final String newName) {
-    // GIVEN
-    final var userId = 12L;
-    final var user = getUser(userId);
-    given(userQueryPort.findById(userId)).willReturn(Optional.of(user));
-    final var newPicture = "newPicture";
-
-    // WHEN
-    userCommandService.update(userId, new Update(newName, newPicture));
-
-    // THEN
-    assertThat(user.name()).isEqualTo(user.name());
-    assertThat(user.picture()).isEqualTo(newPicture);
+    assertThat(user.introduce()).isEqualTo(newIntroduce);
   }
 
   @Test
@@ -66,7 +47,7 @@ class UserCommandServiceTest extends UnitTest {
 
     // WHEN
     final ThrowingCallable when = () -> userCommandService.update(
-        userId, new Update("newName", "newPicture"));
+        userId, new Update("newName", "newIntroduce"));
 
     // THEN
     assertThatThrownBy(when).isInstanceOf(UserNotFoundException.class);
