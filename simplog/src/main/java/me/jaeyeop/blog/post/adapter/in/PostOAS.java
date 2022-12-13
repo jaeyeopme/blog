@@ -1,4 +1,4 @@
-package me.jaeyeop.blog.config.oas.spec;
+package me.jaeyeop.blog.post.adapter.in;
 
 import static me.jaeyeop.blog.post.adapter.in.PostRequest.Create;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,7 +25,7 @@ public interface PostOAS {
   @NotFoundPostResponse
   @SecurityResponse
   @ApiResponse(responseCode = "204", description = "자신의 게시글 삭제 성공")
-  @Operation(summary = "Delete my post by post userId", description = "자신의 게시글을 삭제합니다.")
+  @Operation(summary = "Delete my post by post targetId", description = "자신의 게시글을 삭제합니다.")
   void delete(
       UserPrincipal principal,
       @Schema(description = "자신의 게시글 식별자") Long postId);
@@ -33,14 +33,14 @@ public interface PostOAS {
   @NotFoundPostResponse
   @ApiResponse(responseCode = "200", description = "게시글 조회 성공",
       content = @Content(schema = @Schema(implementation = Info.class)))
-  @Operation(summary = "Find one post by post userId", description = "게시글을 조회합니다.")
+  @Operation(summary = "Find one post by post targetId", description = "게시글을 조회합니다.")
   Info findOne(@Schema(description = "게시글 식별자") Long postId);
 
   @InvalidArgumentResponse
   @NotFoundPostResponse
   @SecurityResponse
   @ApiResponse(responseCode = "204", description = "게시글 수정 성공")
-  @Operation(summary = "Update my post by post userId", description = "자신의 게시글을 수정합니다.")
+  @Operation(summary = "Update my post by post targetId", description = "자신의 게시글을 수정합니다.")
   void update(
       UserPrincipal principal,
       @Schema(description = "자신의 게시글 식별자") Long postId, Update request);

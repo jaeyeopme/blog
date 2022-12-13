@@ -10,8 +10,7 @@ import java.util.Optional;
 import me.jaeyeop.blog.config.error.exception.UserNotFoundException;
 import me.jaeyeop.blog.support.UnitTest;
 import me.jaeyeop.blog.support.helper.UserHelper;
-import me.jaeyeop.blog.user.adapter.in.UserRequest.Delete;
-import me.jaeyeop.blog.user.adapter.in.UserRequest.Update;
+import me.jaeyeop.blog.user.application.port.in.UserCommandUseCase;
 import me.jaeyeop.blog.user.domain.User;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
@@ -28,15 +27,15 @@ class UserCommandServiceTest extends UnitTest {
     final var userId = 81L;
     final var user = getUser(userId);
     given(userQueryPort.findById(userId)).willReturn(Optional.of(user));
-    final var newName = "newName";
-    final var newIntroduce = "newIntroduce";
+    final var command = new UserCommandUseCase.Update(
+        userId, "newName", "newIntroduce");
 
     // WHEN
-    userCommandService.update(userId, new Update(newName, newIntroduce));
+    userCommandService.update(command);
 
     // THEN
-    assertThat(user.name()).isEqualTo(newName);
-    assertThat(user.introduce()).isEqualTo(newIntroduce);
+    assertThat(user.profile().name()).isEqualTo(command.newName());
+    assertThat(user.profile().introduce()).isEqualTo(command.newIntroduce());
   }
 
   @Test
@@ -44,10 +43,11 @@ class UserCommandServiceTest extends UnitTest {
     // GIVEN
     final var userId = 4L;
     given(userQueryPort.findById(userId)).willReturn(Optional.empty());
+    final var command = new UserCommandUseCase.Update(
+        userId, "newName", "newIntroduce");
 
     // WHEN
-    final ThrowingCallable when = () -> userCommandService.update(
-        userId, new Update("newName", "newIntroduce"));
+    final ThrowingCallable when = () -> userCommandService.update(command);
 
     // THEN
     assertThatThrownBy(when).isInstanceOf(UserNotFoundException.class);
@@ -59,9 +59,10 @@ class UserCommandServiceTest extends UnitTest {
     final var userId = 66L;
     final var user = getUser(userId);
     given(userQueryPort.findById(userId)).willReturn(Optional.of(user));
+    final var command = new UserCommandUseCase.Delete(userId);
 
     // WHEN
-    userCommandService.delete(new Delete(userId));
+    userCommandService.delete(command);
 
     // THEN
     then(userCommandPort).should().delete(user);
@@ -72,9 +73,10 @@ class UserCommandServiceTest extends UnitTest {
     // GIVEN
     final var userId = 33L;
     given(userQueryPort.findById(userId)).willReturn(Optional.empty());
+    final var command = new UserCommandUseCase.Delete(userId);
 
     // WHEN
-    final ThrowingCallable when = () -> userCommandService.delete(new Delete(userId));
+    final ThrowingCallable when = () -> userCommandService.delete(command);
 
     // THEN
     assertThatThrownBy(when).isInstanceOf(UserNotFoundException.class);

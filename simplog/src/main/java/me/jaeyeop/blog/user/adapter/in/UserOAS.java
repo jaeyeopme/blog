@@ -1,6 +1,5 @@
-package me.jaeyeop.blog.config.oas.spec;
+package me.jaeyeop.blog.user.adapter.in;
 
-import static me.jaeyeop.blog.user.adapter.in.UserRequest.Update;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -12,7 +11,6 @@ import me.jaeyeop.blog.config.oas.dto.OASResponse.InvalidArgumentResponse;
 import me.jaeyeop.blog.config.oas.dto.OASResponse.NotFoundUserResponse;
 import me.jaeyeop.blog.config.oas.dto.OASResponse.SecurityResponse;
 import me.jaeyeop.blog.config.security.authentication.UserPrincipal;
-import me.jaeyeop.blog.user.adapter.out.UserResponse.Profile;
 import org.springframework.validation.annotation.Validated;
 
 /**
@@ -31,21 +29,21 @@ public interface UserOAS {
 
   @SecurityResponse
   @ApiResponse(responseCode = "200", description = "자신의 프로필 조회 성공",
-      content = @Content(schema = @Schema(implementation = Profile.class)))
+      content = @Content(schema = @Schema(implementation = UserProfileResponseDto.class)))
   @Operation(summary = "Find my profile", description = "자신의 프로필을 조회합니다.")
-  Profile findByPrincipal(UserPrincipal principal);
+  UserProfileResponseDto findByPrincipal(UserPrincipal principal);
 
   @InvalidArgumentResponse
   @SecurityResponse
   @ApiResponse(responseCode = "204", description = "자신의 프로필 업데이트 성공")
   @Operation(summary = "Update my profile", description = "자신의 프로필을 수정합니다.")
-  void update(UserPrincipal principal, Update request);
+  void update(UserPrincipal principal, UpdateUserRequestDto request);
 
   @InvalidArgumentResponse
   @NotFoundUserResponse
   @ApiResponse(responseCode = "200", description = "사용자 프로필 조회 성공",
-      content = @Content(schema = @Schema(implementation = Profile.class)))
+      content = @Content(schema = @Schema(implementation = UserProfileResponseDto.class)))
   @Operation(summary = "Find user profile by user email", description = "사용자의 프로필을 조회합니다.")
-  Profile findOneByEmail(@Schema(description = "사용자 이메일") @Email String email);
+  UserProfileResponseDto findOneByEmail(@Schema(description = "사용자 이메일") @Email String email);
 
 }

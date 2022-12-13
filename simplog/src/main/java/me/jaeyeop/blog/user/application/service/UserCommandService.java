@@ -2,8 +2,6 @@ package me.jaeyeop.blog.user.application.service;
 
 import javax.transaction.Transactional;
 import me.jaeyeop.blog.config.error.exception.UserNotFoundException;
-import me.jaeyeop.blog.user.adapter.in.UserRequest.Delete;
-import me.jaeyeop.blog.user.adapter.in.UserRequest.Update;
 import me.jaeyeop.blog.user.application.port.in.UserCommandUseCase;
 import me.jaeyeop.blog.user.application.port.out.UserCommandPort;
 import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
@@ -29,21 +27,19 @@ public class UserCommandService implements UserCommandUseCase {
   }
 
   @Override
-  public void delete(final Delete request) {
-    final var user = getUser(request.userId());
-
-    userCommandPort.delete(user);
+  public void update(final UserCommandUseCase.Update command) {
+    final var user = findById(command.targetId());
+    user.profile().update(command.newName(), command.newIntroduce());
   }
 
   @Override
-  public void update(final Long userId, final Update request) {
-    final var user = getUser(userId);
-
-    user.updateProfile(request.name(), request.introduce());
+  public void delete(final UserCommandUseCase.Delete command) {
+    final var user = findById(command.targetId());
+    userCommandPort.delete(user);
   }
 
-  private User getUser(final Long userId) {
-    return userQueryPort.findById(userId)
+  private User findById(final Long id) {
+    return userQueryPort.findById(id)
         .orElseThrow(UserNotFoundException::new);
   }
 

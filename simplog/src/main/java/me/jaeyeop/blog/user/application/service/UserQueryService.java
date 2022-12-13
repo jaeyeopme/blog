@@ -1,10 +1,10 @@
 package me.jaeyeop.blog.user.application.service;
 
 import me.jaeyeop.blog.config.error.exception.UserNotFoundException;
-import me.jaeyeop.blog.user.adapter.in.UserRequest.Find;
-import me.jaeyeop.blog.user.adapter.out.UserResponse.Profile;
 import me.jaeyeop.blog.user.application.port.in.UserQueryUseCase;
 import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
+import me.jaeyeop.blog.user.domain.Profile;
+import me.jaeyeop.blog.user.domain.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,11 +22,13 @@ public class UserQueryService implements UserQueryUseCase {
   }
 
   @Override
-  public Profile findOneByEmail(final Find request) {
-    final var user = userQueryPort.findByEmail(request.email())
-        .orElseThrow(UserNotFoundException::new);
+  public Profile findByEmail(final UserQueryUseCase.Query query) {
+    return findByEmail(query.email()).profile();
+  }
 
-    return Profile.from(user);
+  private User findByEmail(final String email) {
+    return userQueryPort.findByEmail(email)
+        .orElseThrow(UserNotFoundException::new);
   }
 
 }

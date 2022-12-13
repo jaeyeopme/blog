@@ -32,7 +32,7 @@ public record UserPrincipal(User user,
 
   @Override
   public String getName() {
-    return user.email();
+    return user.profile().email();
   }
 
 }

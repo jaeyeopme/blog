@@ -1,12 +1,20 @@
 package me.jaeyeop.blog.user.application.port.in;
 
-import static me.jaeyeop.blog.user.adapter.in.UserRequest.Delete;
-import static me.jaeyeop.blog.user.adapter.in.UserRequest.Update;
-
+/**
+ * @author jaeyeopme Created on 09/29/2022.
+ */
 public interface UserCommandUseCase {
 
-  void delete(Delete request);
+  void update(Update command);
 
-  void update(Long userId, Update request);
+  void delete(Delete command);
+
+  record Update(Long targetId, String newName, String newIntroduce) {
+
+  }
+
+  record Delete(Long targetId) {
+
+  }
 
 }

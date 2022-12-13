@@ -7,8 +7,7 @@ import java.util.Optional;
 import me.jaeyeop.blog.config.error.exception.UserNotFoundException;
 import me.jaeyeop.blog.support.UnitTest;
 import me.jaeyeop.blog.support.helper.UserHelper;
-import me.jaeyeop.blog.user.adapter.in.UserRequest.Find;
-import me.jaeyeop.blog.user.adapter.out.UserResponse.Profile;
+import me.jaeyeop.blog.user.application.port.in.UserQueryUseCase.Query;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
 
@@ -23,10 +22,10 @@ class UserQueryServiceTest extends UnitTest {
     final var email = "email@email.com";
     final var user = UserHelper.create();
     given(userQueryPort.findByEmail(email)).willReturn(Optional.of(user));
-    final var profile = Profile.from(user);
+    final var profile = user.profile();
 
     // WHEN
-    final var actual = userQueryService.findOneByEmail(new Find(email));
+    final var actual = userQueryService.findByEmail(new Query(email));
 
     // THEN
     assertThat(actual).isEqualTo(profile);
@@ -36,11 +35,10 @@ class UserQueryServiceTest extends UnitTest {
   void 존재하지_않는_프로필_조회() {
     // GIVEN
     final var email = "anonymous@email.com";
-    final var command = new Find(email);
     given(userQueryPort.findByEmail(email)).willReturn(Optional.empty());
 
     // WHEN
-    final ThrowingCallable when = () -> userQueryService.findOneByEmail(command);
+    final ThrowingCallable when = () -> userQueryService.findByEmail(new Query(email));
 
     // THEN
     assertThatThrownBy(when).isInstanceOf(UserNotFoundException.class);

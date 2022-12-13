@@ -10,9 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import me.jaeyeop.blog.support.IntegrationTest;
 import me.jaeyeop.blog.support.helper.UserHelper.WithPrincipal;
-import me.jaeyeop.blog.user.adapter.in.UserRequest.Update;
 import me.jaeyeop.blog.user.adapter.out.UserRepository;
-import me.jaeyeop.blog.user.adapter.out.UserResponse.Profile;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -28,8 +26,7 @@ class UserIntegrationTest extends IntegrationTest {
   @Test
   void 자신의_프로필_조회() throws Exception {
     // GIVE
-    final var user = getPrincipal();
-    final var profile = Profile.from(user);
+    final var profile = getPrincipal().profile();
 
     // WHEN
     final var when = mockMvc.perform(get(USER_API_URI + "/me"));
@@ -44,11 +41,11 @@ class UserIntegrationTest extends IntegrationTest {
   @Test
   void 이메일로_프로필_조회() throws Exception {
     // GIVE
-    final var user = getPrincipal();
-    final var profile = Profile.from(user);
+    final var profile = getPrincipal().profile();
 
     // WHEN
-    final var when = mockMvc.perform(get(USER_API_URI + "/{email}", user.email()));
+    final var when = mockMvc.perform(
+        get(USER_API_URI + "/{email}", getPrincipal().profile().email()));
 
     // THEN
     when.andExpectAll(
@@ -61,18 +58,18 @@ class UserIntegrationTest extends IntegrationTest {
   void 프로필_업데이트() throws Exception {
     // GIVEN
     final var user = getPrincipal();
-    final var command = new Update("newName", "newIntroduce");
+    final var request = new UpdateUserRequestDto("newName", "newIntroduce");
 
     // THEN
     final var when = mockMvc.perform(patch(USER_API_URI + "/me")
         .contentType(APPLICATION_JSON)
-        .content(toJson(command)));
+        .content(toJson(request)));
 
     // WHEN
     when.andExpectAll(status().isNoContent());
     final var updatedUser = userRepository.findById(user.id()).get();
-    assertThat(updatedUser.name()).isEqualTo(command.name());
-    assertThat(updatedUser.introduce()).isEqualTo(command.introduce());
+    assertThat(updatedUser.profile().name()).isEqualTo(request.name());
+    assertThat(updatedUser.profile().introduce()).isEqualTo(request.introduce());
   }
 
   @WithPrincipal

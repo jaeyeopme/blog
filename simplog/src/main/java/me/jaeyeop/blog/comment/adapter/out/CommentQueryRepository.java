@@ -38,7 +38,7 @@ public class CommentQueryRepository {
     final var commentInfo = new QCommentResponse_Info(
         comment.id,
         comment.content,
-        user.name,
+        user.profile.name,
         comment.createdAt,
         comment.lastModifiedAt);
 

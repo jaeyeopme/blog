@@ -43,7 +43,8 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     response.setStatus(HttpStatus.OK.value());
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
-    final var principalEmail = ((UserPrincipal) authentication.getPrincipal()).user().email();
+    final var principalEmail = ((UserPrincipal) authentication.getPrincipal()).user().profile()
+        .email();
     final var accessToken = tokenProvider.createAccess(principalEmail);
     final var refreshToken = createRefresh(principalEmail);
 

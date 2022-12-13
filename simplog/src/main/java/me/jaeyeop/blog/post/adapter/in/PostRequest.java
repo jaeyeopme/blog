@@ -3,6 +3,9 @@ package me.jaeyeop.blog.post.adapter.in;
 import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.constraints.NotBlank;
 
+/**
+ * @author jaeyeopme Created on 10/22/2022.
+ */
 public final class PostRequest {
 
   private PostRequest() {

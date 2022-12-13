@@ -10,7 +10,6 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 import java.net.URI;
 import javax.validation.Valid;
-import me.jaeyeop.blog.config.oas.spec.PostOAS;
 import me.jaeyeop.blog.config.security.authentication.Principal;
 import me.jaeyeop.blog.config.security.authentication.UserPrincipal;
 import me.jaeyeop.blog.post.application.port.in.PostCommandUseCase;

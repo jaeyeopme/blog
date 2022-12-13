@@ -45,8 +45,8 @@ class AuthenticationIntegrationTest extends IntegrationTest {
   void 로그아웃() throws Exception {
     // GIVEN
     final var user = getPrincipal();
-    final var accessTokenValue = getAccessToken(user.email()).value();
-    final var refreshTokenValue = getSavedRefreshToken(user.email()).value();
+    final var accessTokenValue = getAccessToken(user.profile().email()).value();
+    final var refreshTokenValue = getSavedRefreshToken(user.profile().email()).value();
 
     // WHEN
     final var when = mockMvc.perform(
@@ -65,8 +65,8 @@ class AuthenticationIntegrationTest extends IntegrationTest {
   void 엑세스_토큰_재발급() throws Exception {
     // GIVEN
     final var user = getPrincipal();
-    final var accessTokenValue = getAccessToken(user.email()).value();
-    final var refreshTokenValue = getSavedRefreshToken(user.email()).value();
+    final var accessTokenValue = getAccessToken(user.profile().email()).value();
+    final var refreshTokenValue = getSavedRefreshToken(user.profile().email()).value();
 
     // WHEN
     final var when = mockMvc.perform(
@@ -86,8 +86,8 @@ class AuthenticationIntegrationTest extends IntegrationTest {
   void 리프레시_토큰_저장소에_없는_리프레시_토큰으로_엑세스_토큰_재발급() throws Exception {
     // GIVEN
     final var user = getPrincipal();
-    final var accessTokenValue = getAccessToken(user.email()).value();
-    final var refreshTokenValue = getRefreshToken(user.email()).value();
+    final var accessTokenValue = getAccessToken(user.profile().email()).value();
+    final var refreshTokenValue = getRefreshToken(user.profile().email()).value();
 
     // WHEN
     final var when = mockMvc.perform(

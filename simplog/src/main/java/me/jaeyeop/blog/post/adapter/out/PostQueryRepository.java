@@ -24,7 +24,7 @@ public class PostQueryRepository {
         post.id,
         post.title,
         post.content,
-        user.name,
+        user.profile.name,
         post.createdAt,
         post.lastModifiedAt);
 

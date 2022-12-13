@@ -14,7 +14,6 @@ import me.jaeyeop.blog.comment.adapter.in.CommentRequest.Delete;
 import me.jaeyeop.blog.comment.adapter.in.CommentRequest.Find;
 import me.jaeyeop.blog.comment.application.port.in.CommentCommandUseCase;
 import me.jaeyeop.blog.comment.application.port.in.CommentQueryUseCase;
-import me.jaeyeop.blog.config.oas.spec.CommentOAS;
 import me.jaeyeop.blog.config.security.authentication.Principal;
 import me.jaeyeop.blog.config.security.authentication.UserPrincipal;
 import org.springframework.data.domain.Page;

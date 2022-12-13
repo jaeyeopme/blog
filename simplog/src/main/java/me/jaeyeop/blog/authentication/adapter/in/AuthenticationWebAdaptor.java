@@ -3,10 +3,10 @@ package me.jaeyeop.blog.authentication.adapter.in;
 import static me.jaeyeop.blog.authentication.adapter.in.AuthenticationRequest.Logout;
 import static me.jaeyeop.blog.authentication.adapter.in.AuthenticationWebAdaptor.AUTHENTICATION_API_URI;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import me.jaeyeop.blog.authentication.adapter.in.AuthenticationRequest.Refresh;
 import me.jaeyeop.blog.authentication.application.port.in.AuthenticationCommandUseCase;
-import me.jaeyeop.blog.config.oas.spec.AuthenticationOAS;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -31,7 +31,7 @@ public class AuthenticationWebAdaptor implements AuthenticationOAS {
     this.authenticationCommandUseCase = authenticationCommandUseCase;
   }
 
-  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @ResponseStatus(NO_CONTENT)
   @DeleteMapping("/logout")
   @Override
   public void logout(
@@ -41,7 +41,7 @@ public class AuthenticationWebAdaptor implements AuthenticationOAS {
     authenticationCommandUseCase.logout(request);
   }
 
-  @ResponseStatus(HttpStatus.CREATED)
+  @ResponseStatus(CREATED)
   @PostMapping("/refresh")
   @Override
   public String refresh(

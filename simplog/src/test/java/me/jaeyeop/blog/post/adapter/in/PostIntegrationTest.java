@@ -51,7 +51,7 @@ class PostIntegrationTest extends IntegrationTest {
     final var author = getPrincipal();
     final var savedPost = getSavedPost(author);
     final var info = new Info(savedPost.id(), savedPost.title(), savedPost.content(),
-        author.name(), savedPost.createdAt(), savedPost.lastModifiedAt());
+        author.profile().name(), savedPost.createdAt(), savedPost.lastModifiedAt());
 
     // WHEN
     final var when = mockMvc.perform(get(POST_API_URI + "/{id}", savedPost.id()));

@@ -83,7 +83,7 @@ class CommentIntegrationTest extends IntegrationTest {
     // GIVEN
     final var author = getPrincipal();
     final var savedComment = getSavedComment(author);
-    final var info = new Info(savedComment.id(), savedComment.content(), author.name(),
+    final var info = new Info(savedComment.id(), savedComment.content(), author.profile().name(),
         savedComment.createdAt(),
         savedComment.lastModifiedAt());
     final var pageable = PageRequest.of(0, 2);

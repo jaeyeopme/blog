@@ -1,4 +1,4 @@
-package me.jaeyeop.blog.config.oas.spec;
+package me.jaeyeop.blog.authentication.adapter.in;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
