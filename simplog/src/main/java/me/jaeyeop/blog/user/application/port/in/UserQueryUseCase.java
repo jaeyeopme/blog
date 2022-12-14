@@ -7,9 +7,9 @@ import me.jaeyeop.blog.user.domain.Profile;
  */
 public interface UserQueryUseCase {
 
-  Profile findByEmail(Query query);
+  Profile findProfileByEmail(ProfileQuery profileQuery);
 
-  record Query(String email) {
+  record ProfileQuery(String email) {
 
   }
 

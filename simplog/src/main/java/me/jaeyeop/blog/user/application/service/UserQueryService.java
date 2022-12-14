@@ -22,8 +22,8 @@ public class UserQueryService implements UserQueryUseCase {
   }
 
   @Override
-  public Profile findByEmail(final UserQueryUseCase.Query query) {
-    return findByEmail(query.email()).profile();
+  public Profile findProfileByEmail(final ProfileQuery profileQuery) {
+    return findByEmail(profileQuery.email()).profile();
   }
 
   private User findByEmail(final String email) {

@@ -5,15 +5,15 @@ package me.jaeyeop.blog.user.application.port.in;
  */
 public interface UserCommandUseCase {
 
-  void update(Update command);
+  void update(UpdateCommand command);
 
-  void delete(Delete command);
+  void delete(DeleteCommand command);
 
-  record Update(Long targetId, String newName, String newIntroduce) {
+  record UpdateCommand(Long targetId, String newName, String newIntroduce) {
 
   }
 
-  record Delete(Long targetId) {
+  record DeleteCommand(Long targetId) {
 
   }
 

@@ -1,6 +1,8 @@
 package me.jaeyeop.blog.user.adapter.in;
 
 import static me.jaeyeop.blog.user.adapter.in.UserWebAdapter.USER_API_URI;
+import static me.jaeyeop.blog.user.application.port.in.UserCommandUseCase.DeleteCommand;
+import static me.jaeyeop.blog.user.application.port.in.UserCommandUseCase.UpdateCommand;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 import javax.validation.constraints.Email;
@@ -8,7 +10,7 @@ import me.jaeyeop.blog.config.security.authentication.Principal;
 import me.jaeyeop.blog.config.security.authentication.UserPrincipal;
 import me.jaeyeop.blog.user.application.port.in.UserCommandUseCase;
 import me.jaeyeop.blog.user.application.port.in.UserQueryUseCase;
-import me.jaeyeop.blog.user.application.port.in.UserQueryUseCase.Query;
+import me.jaeyeop.blog.user.application.port.in.UserQueryUseCase.ProfileQuery;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,8 +46,8 @@ public class UserWebAdapter implements UserOAS {
   @GetMapping("/me")
   @Override
   public UserProfileResponseDto findByPrincipal(@Principal UserPrincipal principal) {
-    final var query = new Query(principal.user().profile().email());
-    final var profile = userQueryUseCase.findByEmail(query);
+    final var query = new ProfileQuery(principal.user().profile().email());
+    final var profile = userQueryUseCase.findProfileByEmail(query);
     return UserProfileResponseDto.from(profile);
   }
 
@@ -53,8 +55,8 @@ public class UserWebAdapter implements UserOAS {
   @GetMapping("/{email}")
   @Override
   public UserProfileResponseDto findOneByEmail(@PathVariable @Email String email) {
-    final var query = new Query(email);
-    final var profile = userQueryUseCase.findByEmail(query);
+    final var query = new ProfileQuery(email);
+    final var profile = userQueryUseCase.findProfileByEmail(query);
     return UserProfileResponseDto.from(profile);
   }
 
@@ -64,7 +66,7 @@ public class UserWebAdapter implements UserOAS {
   public void update(
       @Principal UserPrincipal principal,
       @RequestBody UpdateUserRequestDto request) {
-    final var command = new UserCommandUseCase.Update(
+    final var command = new UpdateCommand(
         principal.user().id(),
         request.name(),
         request.introduce());
@@ -75,7 +77,7 @@ public class UserWebAdapter implements UserOAS {
   @DeleteMapping("/me")
   @Override
   public void delete(@Principal UserPrincipal principal) {
-    final var command = new UserCommandUseCase.Delete(principal.user().id());
+    final var command = new DeleteCommand(principal.user().id());
     userCommandUseCase.delete(command);
   }
 

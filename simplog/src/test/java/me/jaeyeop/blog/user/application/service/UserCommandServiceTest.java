@@ -10,7 +10,8 @@ import java.util.Optional;
 import me.jaeyeop.blog.config.error.exception.UserNotFoundException;
 import me.jaeyeop.blog.support.UnitTest;
 import me.jaeyeop.blog.support.helper.UserHelper;
-import me.jaeyeop.blog.user.application.port.in.UserCommandUseCase;
+import me.jaeyeop.blog.user.application.port.in.UserCommandUseCase.DeleteCommand;
+import me.jaeyeop.blog.user.application.port.in.UserCommandUseCase.UpdateCommand;
 import me.jaeyeop.blog.user.domain.User;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,7 @@ class UserCommandServiceTest extends UnitTest {
     final var userId = 81L;
     final var user = getUser(userId);
     given(userQueryPort.findById(userId)).willReturn(Optional.of(user));
-    final var command = new UserCommandUseCase.Update(
+    final var command = new UpdateCommand(
         userId, "newName", "newIntroduce");
 
     // WHEN
@@ -43,7 +44,7 @@ class UserCommandServiceTest extends UnitTest {
     // GIVEN
     final var userId = 4L;
     given(userQueryPort.findById(userId)).willReturn(Optional.empty());
-    final var command = new UserCommandUseCase.Update(
+    final var command = new UpdateCommand(
         userId, "newName", "newIntroduce");
 
     // WHEN
@@ -59,7 +60,7 @@ class UserCommandServiceTest extends UnitTest {
     final var userId = 66L;
     final var user = getUser(userId);
     given(userQueryPort.findById(userId)).willReturn(Optional.of(user));
-    final var command = new UserCommandUseCase.Delete(userId);
+    final var command = new DeleteCommand(userId);
 
     // WHEN
     userCommandService.delete(command);
@@ -73,7 +74,7 @@ class UserCommandServiceTest extends UnitTest {
     // GIVEN
     final var userId = 33L;
     given(userQueryPort.findById(userId)).willReturn(Optional.empty());
-    final var command = new UserCommandUseCase.Delete(userId);
+    final var command = new DeleteCommand(userId);
 
     // WHEN
     final ThrowingCallable when = () -> userCommandService.delete(command);

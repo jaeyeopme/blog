@@ -10,9 +10,9 @@ import java.util.Optional;
 import me.jaeyeop.blog.comment.adapter.in.CommentRequest.Create;
 import me.jaeyeop.blog.comment.adapter.in.CommentRequest.Delete;
 import me.jaeyeop.blog.comment.adapter.in.CommentRequest.Update;
+import me.jaeyeop.blog.config.error.exception.AccessDeniedException;
 import me.jaeyeop.blog.config.error.exception.CommentNotFoundException;
 import me.jaeyeop.blog.config.error.exception.PostNotFoundException;
-import me.jaeyeop.blog.config.error.exception.PrincipalAccessDeniedException;
 import me.jaeyeop.blog.post.domain.Post;
 import me.jaeyeop.blog.support.UnitTest;
 import me.jaeyeop.blog.support.helper.CommentHelper;
@@ -20,7 +20,6 @@ import me.jaeyeop.blog.support.helper.PostHelper;
 import me.jaeyeop.blog.support.helper.UserHelper;
 import me.jaeyeop.blog.user.domain.User;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -104,7 +103,7 @@ class CommentCommandServiceTest extends UnitTest {
 
     // THEN
     assertThat(comment.author().id()).isNotEqualTo(author.id());
-    assertThatThrownBy(when).isInstanceOf(PrincipalAccessDeniedException.class);
+    assertThatThrownBy(when).isInstanceOf(AccessDeniedException.class);
     assertThat(comment.content()).isNotEqualTo(newContent);
   }
 
@@ -153,7 +152,7 @@ class CommentCommandServiceTest extends UnitTest {
 
     // THEN
     assertThat(comment.author().id()).isNotEqualTo(author.id());
-    assertThatThrownBy(when).isInstanceOf(PrincipalAccessDeniedException.class);
+    assertThatThrownBy(when).isInstanceOf(AccessDeniedException.class);
     then(commentCommandPort).should(never()).delete(any());
   }
 

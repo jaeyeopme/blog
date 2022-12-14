@@ -7,11 +7,11 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
 import java.util.Optional;
+import me.jaeyeop.blog.config.error.exception.AccessDeniedException;
 import me.jaeyeop.blog.config.error.exception.PostNotFoundException;
-import me.jaeyeop.blog.config.error.exception.PrincipalAccessDeniedException;
-import me.jaeyeop.blog.post.adapter.in.PostRequest.Create;
-import me.jaeyeop.blog.post.adapter.in.PostRequest.Delete;
-import me.jaeyeop.blog.post.adapter.in.PostRequest.Update;
+import me.jaeyeop.blog.post.application.port.in.PostCommandUseCase.DeleteCommand;
+import me.jaeyeop.blog.post.application.port.in.PostCommandUseCase.EditCommand;
+import me.jaeyeop.blog.post.application.port.in.PostCommandUseCase.WriteCommand;
 import me.jaeyeop.blog.post.domain.Post;
 import me.jaeyeop.blog.support.UnitTest;
 import me.jaeyeop.blog.support.helper.PostHelper;
@@ -31,63 +31,64 @@ class PostCommandServiceTest extends UnitTest {
   @Test
   void 게시글_저장() {
     // GIVEN
-    final var author = getAuthor(77L);
-    final var post = PostHelper.create(author);
-    given(postCommandPort.create(any())).willReturn(post);
+
+    final var stubAuthor = getStubAuthor(77L);
+    final var stubPost = PostHelper.create(stubAuthor);
+    given(userQueryPort.findById(stubAuthor.id())).willReturn(Optional.of(stubAuthor));
+    given(postCommandPort.create(any())).willReturn(stubPost);
+    final var command = new WriteCommand(
+        stubAuthor.id(), stubPost.information().title(), stubPost.information().content());
 
     // WHEN
-    final var savedPost = postCommandService.create(
-        author, new Create(post.title(), post.content()));
+    final var post = postCommandService.write(command);
 
     // THEN
-    assertThat(savedPost).isEqualTo(post.id());
+    assertThat(post).isEqualTo(stubPost.id());
   }
 
   @Test
   void 게시글_수정() {
     // GIVEN
-    final var postId = 1L;
-    final var author = getAuthor(54L);
-    final var post = getPost(postId, author);
-    given(postQueryPort.findById(postId)).willReturn(Optional.of(post));
-    final var newTitle = "newTitle";
-    final var newContent = "newContent";
+    final var stubAuthor = getStubAuthor(54L);
+    given(userQueryPort.findById(stubAuthor.id())).willReturn(Optional.of(stubAuthor));
+    final var stubPost = getStubPost(1L, stubAuthor);
+    given(postQueryPort.findById(stubPost.id())).willReturn(Optional.of(stubPost));
+    final var command = new EditCommand(stubAuthor.id(), stubPost.id(), "newTitle", "newContent");
 
     // WHEN
-    postCommandService.update(author, postId, new Update(newTitle, newContent));
+    postCommandService.edit(command);
 
     // THEN
-    assertThat(post.title()).isEqualTo(newTitle);
-    assertThat(post.content()).isEqualTo(newContent);
+    assertThat(stubPost.information().title()).isEqualTo(command.newTitle());
+    assertThat(stubPost.information().content()).isEqualTo(command.newContent());
   }
 
   @NullAndEmptySource
   @ParameterizedTest
   void 비어있는_제목으로_게시글_수정(final String newTitle) {
     // GIVEN
-    final var postId = 1L;
-    final var author = getAuthor(77L);
-    final var post = getPost(postId, author);
-    given(postQueryPort.findById(postId)).willReturn(Optional.of(post));
-    final var newContent = "newContent";
+    final var stubAuthor = getStubAuthor(77L);
+    given(userQueryPort.findById(stubAuthor.id())).willReturn(Optional.of(stubAuthor));
+    final var stubPost = getStubPost(1L, stubAuthor);
+    given(postQueryPort.findById(stubPost.id())).willReturn(Optional.of(stubPost));
+    final var command = new EditCommand(stubAuthor.id(), stubPost.id(), newTitle, "newContent");
 
     // WHEN
-    postCommandService.update(author, postId, new Update(newTitle, newContent));
+    postCommandService.edit(command);
 
     // THEN
-    assertThat(post.title()).isNotEqualTo(newTitle);
-    assertThat(post.content()).isEqualTo(newContent);
+    assertThat(stubPost.information().title()).isNotEqualTo(newTitle);
+    assertThat(stubPost.information().content()).isEqualTo(command.newContent());
   }
 
   @Test
   void 존재하지_않은_게시글_수정() {
     // GIVEN
-    final var postId = 1L;
-    given(postQueryPort.findById(postId)).willReturn(Optional.empty());
+    final var command = new EditCommand(1L, 1L, "newTitle", "newContent");
+    given(postQueryPort.findById(command.targetId())).willReturn(Optional.empty());
 
     // WHEN
-    final ThrowingCallable when = () -> postCommandService.update(
-        UserHelper.create(), postId, new Update("newTitle", "newContent"));
+    final ThrowingCallable when = () -> postCommandService.edit(command);
 
     // THEN
     assertThatThrownBy(when).isInstanceOf(PostNotFoundException.class);
@@ -96,37 +97,35 @@ class PostCommandServiceTest extends UnitTest {
   @Test
   void 다른_사람의_게시글_수정() {
     // GIVEN
-    final var postId = 2L;
-    final var post = getPost(postId, getAuthor(7L));
-    given(postQueryPort.findById(postId)).willReturn(Optional.of(post));
-    final var author = getAuthor(5L);
-    final var newTitle = "newTitle";
-    final var newContent = "newContent";
+    final var stubPost = getStubPost(2L, getStubAuthor(7L));
+    given(postQueryPort.findById(stubPost.id())).willReturn(Optional.of(stubPost));
+    final var stubAuthor = getStubAuthor(5L);
+    given(userQueryPort.findById(stubAuthor.id())).willReturn(Optional.of(stubAuthor));
+    final var command = new EditCommand(stubAuthor.id(), stubPost.id(), "newTitle", "newContent");
 
     // WHEN
-    final ThrowingCallable when = () -> postCommandService.update(
-        author, postId, new Update(newTitle, newContent));
+    final ThrowingCallable when = () -> postCommandService.edit(command);
 
     // THEN
-    assertThat(post.author().id()).isNotEqualTo(author.id());
-    assertThatThrownBy(when).isInstanceOf(PrincipalAccessDeniedException.class);
-    assertThat(post.title()).isNotEqualTo(newTitle);
-    assertThat(post.content()).isNotEqualTo(newContent);
+    assertThatThrownBy(when).isInstanceOf(AccessDeniedException.class);
+    assertThat(stubPost.information().title()).isNotEqualTo(command.newTitle());
+    assertThat(stubPost.information().content()).isNotEqualTo(command.newContent());
   }
 
   @Test
   void 게시글_삭제() {
     // GIVEN
-    final var postId = 1L;
-    final var author = getAuthor(22L);
-    final var post = getPost(postId, author);
-    given(postQueryPort.findById(postId)).willReturn(Optional.of(post));
+    final var stubAuthor = getStubAuthor(22L);
+    given(userQueryPort.findById(stubAuthor.id())).willReturn(Optional.of(stubAuthor));
+    final var stubPost = getStubPost(1L, stubAuthor);
+    given(postQueryPort.findById(stubPost.id())).willReturn(Optional.of(stubPost));
+    final var command = new DeleteCommand(stubAuthor.id(), stubPost.id());
 
     // WHEN
-    postCommandService.delete(author, new Delete(postId));
+    postCommandService.delete(command);
 
     // THEN
-    then(postCommandPort).should().delete(post);
+    then(postCommandPort).should().delete(stubPost);
   }
 
   @Test
@@ -134,10 +133,10 @@ class PostCommandServiceTest extends UnitTest {
     // GIVEN
     final var postId = 1L;
     given(postQueryPort.findById(postId)).willReturn(Optional.empty());
+    final var command = new DeleteCommand(2L, postId);
 
     // WHEN
-    final ThrowingCallable when = () -> postCommandService.delete(
-        UserHelper.create(), new Delete(postId));
+    final ThrowingCallable when = () -> postCommandService.delete(command);
 
     // THEN
     assertThatThrownBy(when).isInstanceOf(PostNotFoundException.class);
@@ -147,28 +146,27 @@ class PostCommandServiceTest extends UnitTest {
   @Test
   void 다른_사람의_게시글_삭제() {
     // GIVEN
-    final var postId = 1L;
-    final var post = getPost(postId, getAuthor(8L));
-    given(postQueryPort.findById(postId)).willReturn(Optional.of(post));
-    final var author = getAuthor(9L);
+    final var stubPost = getStubPost(1L, getStubAuthor(8L));
+    given(postQueryPort.findById(stubPost.id())).willReturn(Optional.of(stubPost));
+    final var stubAuthor = getStubAuthor(11L);
+    given(userQueryPort.findById(stubAuthor.id())).willReturn(Optional.of(stubAuthor));
+    final var command = new DeleteCommand(stubAuthor.id(), stubPost.id());
 
     // WHEN
-    final ThrowingCallable when = () -> postCommandService.delete(
-        author, new Delete(postId));
+    final ThrowingCallable when = () -> postCommandService.delete(command);
 
     // THEN
-    assertThat(post.author().id()).isNotEqualTo(author.id());
-    assertThatThrownBy(when).isInstanceOf(PrincipalAccessDeniedException.class);
+    assertThatThrownBy(when).isInstanceOf(AccessDeniedException.class);
     then(postCommandPort).should(never()).delete(any());
   }
 
-  private Post getPost(final Long postId, final User author) {
+  private Post getStubPost(final Long postId, final User author) {
     final var post2 = PostHelper.create(author);
     ReflectionTestUtils.setField(post2, "id", postId);
     return post2;
   }
 
-  private User getAuthor(final Long authorId) {
+  private User getStubAuthor(final Long authorId) {
     final var author = UserHelper.create();
     ReflectionTestUtils.setField(author, "id", authorId);
     return author;

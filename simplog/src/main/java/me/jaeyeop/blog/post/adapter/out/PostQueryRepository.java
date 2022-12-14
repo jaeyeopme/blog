@@ -4,7 +4,8 @@ import static me.jaeyeop.blog.post.domain.QPost.post;
 import static me.jaeyeop.blog.user.domain.QUser.user;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.Optional;
-import me.jaeyeop.blog.post.adapter.out.PostResponse.Info;
+import me.jaeyeop.blog.post.adapter.in.PostInformationProjectionDto;
+import me.jaeyeop.blog.post.adapter.in.QPostInformationProjectionDto;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -19,11 +20,10 @@ public class PostQueryRepository {
     this.jpaQueryFactory = jpaQueryFactory;
   }
 
-  public Optional<Info> findInfoById(final Long postId) {
-    final var postInfo = new QPostResponse_Info(
+  public Optional<PostInformationProjectionDto> findInfoById(final Long postId) {
+    final var postInfo = new QPostInformationProjectionDto(
         post.id,
-        post.title,
-        post.content,
+        post.information,
         user.profile.name,
         post.createdAt,
         post.lastModifiedAt);

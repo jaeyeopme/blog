@@ -5,7 +5,6 @@ import static me.jaeyeop.blog.comment.adapter.in.CommentRequest.Update;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import me.jaeyeop.blog.comment.adapter.out.CommentResponse.Info;
@@ -44,13 +43,13 @@ public interface CommentOAS {
   void update(
       UserPrincipal principal,
       @Schema(description = "댓글 식별자") Long commentId,
-      @Valid Update request);
+      @Validated Update request);
 
   @InvalidArgumentResponse
   @SecurityResponse
   @Operation(summary = "Create comment by post targetId", description = "댓글을 작성합니다.")
   void create(
       UserPrincipal principal,
-      @Valid Create request);
+      @Validated Create request);
 
 }

@@ -9,10 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import me.jaeyeop.blog.post.adapter.in.PostRequest.Create;
-import me.jaeyeop.blog.post.adapter.in.PostRequest.Update;
 import me.jaeyeop.blog.post.adapter.out.PostCrudRepository;
-import me.jaeyeop.blog.post.adapter.out.PostResponse.Info;
 import me.jaeyeop.blog.post.domain.Post;
 import me.jaeyeop.blog.support.IntegrationTest;
 import me.jaeyeop.blog.support.helper.PostHelper;
@@ -33,12 +30,12 @@ class PostIntegrationTest extends IntegrationTest {
   @Test
   void 게시글_작성() throws Exception {
     // GIVEN
-    final var command = new Create("title", "content");
+    final var request = new WritePostRequestDto("title", "content");
 
     // WHEN
     final var when = mockMvc.perform(post(POST_API_URI)
         .contentType(APPLICATION_JSON)
-        .content(toJson(command)));
+        .content(toJson(request)));
 
     // THEN
     when.andExpectAll(status().isCreated());
@@ -50,8 +47,11 @@ class PostIntegrationTest extends IntegrationTest {
     // GIVEN
     final var author = getPrincipal();
     final var savedPost = getSavedPost(author);
-    final var info = new Info(savedPost.id(), savedPost.title(), savedPost.content(),
-        author.profile().name(), savedPost.createdAt(), savedPost.lastModifiedAt());
+    final var postInformation = new PostInformationProjectionDto(
+        savedPost.id(),
+        savedPost.information(),
+        author.profile().name(),
+        savedPost.createdAt(), savedPost.lastModifiedAt());
 
     // WHEN
     final var when = mockMvc.perform(get(POST_API_URI + "/{id}", savedPost.id()));
@@ -59,7 +59,7 @@ class PostIntegrationTest extends IntegrationTest {
     // THEN
     when.andExpectAll(
         status().isOk(),
-        content().json(toJson(info)));
+        content().json(toJson(postInformation)));
   }
 
   @WithPrincipal
@@ -67,7 +67,7 @@ class PostIntegrationTest extends IntegrationTest {
   void 게시글_업데이트() throws Exception {
     // GIVEN
     final var savedPost = getSavedPost(getPrincipal());
-    final var command = new Update("newTitle", "newContent");
+    final var command = new EditPostRequestDto("newTitle", "newContent");
 
     // WHEN
     final var when = mockMvc.perform(patch(POST_API_URI + "/{id}", savedPost.id())
@@ -76,10 +76,10 @@ class PostIntegrationTest extends IntegrationTest {
 
     // THEN
     when.andExpectAll(status().isNoContent());
-    final var updatedPost = postCrudRepository.findById(savedPost.id()).get();
-    assertThat(updatedPost.id()).isEqualTo(savedPost.id());
-    assertThat(updatedPost.title()).isEqualTo(command.title());
-    assertThat(updatedPost.content()).isEqualTo(command.content());
+    final var post = postCrudRepository.findById(savedPost.id()).get();
+    assertThat(post.id()).isEqualTo(savedPost.id());
+    assertThat(post.information().title()).isEqualTo(command.title());
+    assertThat(post.information().content()).isEqualTo(command.content());
   }
 
   @WithPrincipal

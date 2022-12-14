@@ -27,13 +27,13 @@ public class UserCommandService implements UserCommandUseCase {
   }
 
   @Override
-  public void update(final UserCommandUseCase.Update command) {
-    final var user = findById(command.targetId());
-    user.profile().update(command.newName(), command.newIntroduce());
+  public void update(final UpdateCommand command) {
+    final var profile = findById(command.targetId()).profile();
+    profile.update(command.newName(), command.newIntroduce());
   }
 
   @Override
-  public void delete(final UserCommandUseCase.Delete command) {
+  public void delete(final DeleteCommand command) {
     final var user = findById(command.targetId());
     userCommandPort.delete(user);
   }

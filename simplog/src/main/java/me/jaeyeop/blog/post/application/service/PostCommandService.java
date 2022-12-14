@@ -1,14 +1,14 @@
 package me.jaeyeop.blog.post.application.service;
 
-import static me.jaeyeop.blog.post.adapter.in.PostRequest.Create;
-import static me.jaeyeop.blog.post.adapter.in.PostRequest.Delete;
-import static me.jaeyeop.blog.post.adapter.in.PostRequest.Update;
 import javax.transaction.Transactional;
 import me.jaeyeop.blog.config.error.exception.PostNotFoundException;
+import me.jaeyeop.blog.config.error.exception.UserNotFoundException;
 import me.jaeyeop.blog.post.application.port.in.PostCommandUseCase;
 import me.jaeyeop.blog.post.application.port.out.PostCommandPort;
 import me.jaeyeop.blog.post.application.port.out.PostQueryPort;
+import me.jaeyeop.blog.post.domain.Information;
 import me.jaeyeop.blog.post.domain.Post;
+import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
 import me.jaeyeop.blog.user.domain.User;
 import org.springframework.stereotype.Service;
 
@@ -23,43 +23,50 @@ public class PostCommandService implements PostCommandUseCase {
 
   private final PostQueryPort postQueryPort;
 
+  private final UserQueryPort userQueryPort;
+
   public PostCommandService(
       final PostCommandPort postCommandPort,
-      final PostQueryPort postQueryPort) {
+      final PostQueryPort postQueryPort,
+      final UserQueryPort userQueryPort
+  ) {
     this.postCommandPort = postCommandPort;
     this.postQueryPort = postQueryPort;
+    this.userQueryPort = userQueryPort;
   }
 
   @Override
-  public Long create(final User author, final Create request) {
-    final var post = Post.of(request.title(), request.content(), author);
-    return postCommandPort.create(post).id();
+  public Long write(final WriteCommand command) {
+    final var author = findUserById(command.authorId());
+    final var information = new Information(command.title(), command.content());
+    final var post = postCommandPort.create(Post.of(author, information));
+
+    return post.id();
   }
 
   @Override
-  public void update(
-      final User author,
-      final Long postId,
-      final Update request) {
-    final var post = findById(author.id(), postId);
-
-    post.updateInformation(request.title(), request.content());
+  public void edit(final EditCommand command) {
+    final var post = findById(command.targetId());
+    post.confirmAccess(findUserById(command.authorId()));
+    post.information().edit(command.newTitle(), command.newContent());
   }
 
   @Override
-  public void delete(final User author, final Delete request) {
-    final var post = findById(author.id(), request.postId());
+  public void delete(final DeleteCommand command) {
+    final var post = findById(command.targetId());
+    post.confirmAccess(findUserById(command.authorId()));
 
     postCommandPort.delete(post);
   }
 
-  private Post findById(final Long authorId, final Long postId) {
-    final var post = postQueryPort.findById(postId)
+  private Post findById(final Long postId) {
+    return postQueryPort.findById(postId)
         .orElseThrow(PostNotFoundException::new);
+  }
 
-    post.confirmAccess(authorId);
-
-    return post;
+  private User findUserById(final Long userId) {
+    return userQueryPort.findById(userId)
+        .orElseThrow(UserNotFoundException::new);
   }
 
 }

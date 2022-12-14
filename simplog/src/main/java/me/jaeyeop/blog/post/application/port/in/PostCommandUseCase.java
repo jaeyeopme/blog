@@ -1,19 +1,26 @@
 package me.jaeyeop.blog.post.application.port.in;
 
-import me.jaeyeop.blog.post.adapter.in.PostRequest.Create;
-import me.jaeyeop.blog.post.adapter.in.PostRequest.Delete;
-import me.jaeyeop.blog.post.adapter.in.PostRequest.Update;
-import me.jaeyeop.blog.user.domain.User;
-
 /**
  * @author jaeyeopme Created on 10/10/2022.
  */
 public interface PostCommandUseCase {
 
-  Long create(User author, Create request);
+  Long write(WriteCommand command);
 
-  void update(User author, Long postId, Update request);
+  void edit(EditCommand command);
 
-  void delete(User author, Delete request);
+  void delete(DeleteCommand command);
+
+  record WriteCommand(Long authorId, String title, String content) {
+
+  }
+
+  record EditCommand(Long authorId, Long targetId, String newTitle, String newContent) {
+
+  }
+
+  record DeleteCommand(Long authorId, Long targetId) {
+
+  }
 
 }

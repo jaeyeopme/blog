@@ -7,7 +7,6 @@ import static me.jaeyeop.blog.comment.adapter.out.CommentResponse.Info;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
-import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import me.jaeyeop.blog.comment.adapter.in.CommentRequest.Delete;
@@ -78,7 +77,7 @@ public class CommentWebAdapter implements CommentOAS {
   public void update(
       @Principal UserPrincipal principal,
       @PathVariable Long commentId,
-      @RequestBody @Valid Update request) {
+      @RequestBody @Validated Update request) {
     commentCommandUseCase.update(principal.user(), commentId, request);
   }
 
@@ -87,7 +86,7 @@ public class CommentWebAdapter implements CommentOAS {
   @Override
   public void create(
       @Principal UserPrincipal principal,
-      @RequestBody @Valid Create request) {
+      @RequestBody @Validated Create request) {
     commentCommandUseCase.create(principal.user(), request);
   }
 

@@ -8,7 +8,7 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
-import me.jaeyeop.blog.config.error.exception.PrincipalAccessDeniedException;
+import me.jaeyeop.blog.config.error.exception.AccessDeniedException;
 import me.jaeyeop.blog.config.jpa.AbstractBaseEntity;
 import me.jaeyeop.blog.post.domain.Post;
 import me.jaeyeop.blog.user.domain.User;
@@ -56,7 +56,7 @@ public class Comment extends AbstractBaseEntity {
 
   public void confirmAccess(final Long authorId) {
     if (!this.author.id().equals(authorId)) {
-      throw new PrincipalAccessDeniedException();
+      throw new AccessDeniedException();
     }
   }
 
