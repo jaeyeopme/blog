@@ -11,7 +11,7 @@ import org.springframework.util.StringUtils;
  */
 @Getter
 @Embeddable
-public class Profile {
+public class UserProfile {
 
   @NotBlank
   @Column(nullable = false, unique = true)
@@ -27,11 +27,11 @@ public class Profile {
   @Column
   private String introduce;
 
-  protected Profile() {
+  protected UserProfile() {
 
   }
 
-  public Profile(
+  public UserProfile(
       final String email,
       final String name,
       final String picture
@@ -41,7 +41,10 @@ public class Profile {
     this.picture = picture;
   }
 
-  public void update(final String newName, final String newIntroduce) {
+  public void update(
+      final String newName,
+      final String newIntroduce
+  ) {
     if (StringUtils.hasText(newName)) {
       this.name = newName;
     }

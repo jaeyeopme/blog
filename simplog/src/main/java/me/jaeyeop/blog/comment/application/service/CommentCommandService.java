@@ -1,16 +1,17 @@
 package me.jaeyeop.blog.comment.application.service;
 
 import javax.transaction.Transactional;
-import me.jaeyeop.blog.comment.adapter.in.CommentRequest.Create;
-import me.jaeyeop.blog.comment.adapter.in.CommentRequest.Delete;
-import me.jaeyeop.blog.comment.adapter.in.CommentRequest.Update;
 import me.jaeyeop.blog.comment.application.port.in.CommentCommandUseCase;
 import me.jaeyeop.blog.comment.application.port.out.CommentCommandPort;
 import me.jaeyeop.blog.comment.application.port.out.CommentQueryPort;
 import me.jaeyeop.blog.comment.domain.Comment;
+import me.jaeyeop.blog.comment.domain.CommentInformation;
 import me.jaeyeop.blog.config.error.exception.CommentNotFoundException;
 import me.jaeyeop.blog.config.error.exception.PostNotFoundException;
+import me.jaeyeop.blog.config.error.exception.UserNotFoundException;
 import me.jaeyeop.blog.post.application.port.out.PostQueryPort;
+import me.jaeyeop.blog.post.domain.Post;
+import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
 import me.jaeyeop.blog.user.domain.User;
 import org.springframework.stereotype.Service;
 
@@ -27,49 +28,56 @@ public class CommentCommandService implements CommentCommandUseCase {
 
   private final PostQueryPort postQueryPort;
 
+  private final UserQueryPort userQueryPort;
+
   public CommentCommandService(
       final CommentCommandPort commentCommandPort,
       final CommentQueryPort commentQueryPort,
-      final PostQueryPort postQueryPort) {
+      final PostQueryPort postQueryPort,
+      final UserQueryPort userQueryPort
+  ) {
     this.commentCommandPort = commentCommandPort;
     this.commentQueryPort = commentQueryPort;
     this.postQueryPort = postQueryPort;
+    this.userQueryPort = userQueryPort;
   }
 
   @Override
-  public void create(
-      final User author,
-      final Create request) {
-    final var post = postQueryPort.findById(request.postId())
-        .orElseThrow(PostNotFoundException::new);
-
-    post.addComments(Comment.of(request.content(), author));
+  public Long write(final WriteCommand command) {
+    final var post = findPostByPostId(command.targetId());
+    final var author = findAuthorByAuthorId(command.authorId());
+    final var information = new CommentInformation(command.content());
+    final var comment = commentCommandPort.save(Comment.of(post, author, information));
+    return comment.id();
   }
 
   @Override
-  public void update(
-      final User author,
-      final Long commentId,
-      final Update request) {
-    final var comment = findById(author.id(), commentId);
-
-    comment.updateInformation(request.content());
+  public void edit(final EditCommand command) {
+    final var comment = findById(command.targetId());
+    comment.confirmAccess(findAuthorByAuthorId(command.authorId()));
+    comment.information().edit(command.newContent());
   }
 
   @Override
-  public void delete(final User author, final Delete request) {
-    final var comment = findById(author.id(), request.commentId());
-
+  public void delete(final DeleteCommand command) {
+    final var comment = findById(command.targetId());
+    comment.confirmAccess(findAuthorByAuthorId(command.authorId()));
     commentCommandPort.delete(comment);
   }
 
-  private Comment findById(final Long authorId, final Long commentId) {
-    final var comment = commentQueryPort.findById(commentId)
+  private Comment findById(final Long commentId) {
+    return commentQueryPort.findById(commentId)
         .orElseThrow(CommentNotFoundException::new);
+  }
 
-    comment.confirmAccess(authorId);
+  private User findAuthorByAuthorId(final Long authorId) {
+    return userQueryPort.findById(authorId)
+        .orElseThrow(UserNotFoundException::new);
+  }
 
-    return comment;
+  private Post findPostByPostId(final Long postId) {
+    return postQueryPort.findById(postId)
+        .orElseThrow(PostNotFoundException::new);
   }
 
 }

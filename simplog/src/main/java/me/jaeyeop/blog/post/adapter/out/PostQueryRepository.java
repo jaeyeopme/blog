@@ -4,8 +4,6 @@ import static me.jaeyeop.blog.post.domain.QPost.post;
 import static me.jaeyeop.blog.user.domain.QUser.user;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.Optional;
-import me.jaeyeop.blog.post.adapter.in.PostInformationProjectionDto;
-import me.jaeyeop.blog.post.adapter.in.QPostInformationProjectionDto;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -33,7 +31,8 @@ public class PostQueryRepository {
             .from(post)
             .innerJoin(post.author, user)
             .where(post.id.eq(postId))
-            .fetchOne());
+            .fetchOne()
+    );
   }
 
 }

@@ -1,9 +1,9 @@
 package me.jaeyeop.blog.support.helper;
 
 import java.time.LocalDateTime;
-import me.jaeyeop.blog.post.adapter.in.PostInformationProjectionDto;
-import me.jaeyeop.blog.post.domain.Information;
+import me.jaeyeop.blog.post.adapter.out.PostInformationProjectionDto;
 import me.jaeyeop.blog.post.domain.Post;
+import me.jaeyeop.blog.post.domain.PostInformation;
 import me.jaeyeop.blog.user.domain.User;
 
 /**
@@ -20,7 +20,7 @@ public final class PostHelper {
   }
 
   public static Post create(final User author) {
-    return Post.of(author, new Information(DEFAULT_TITLE, DEFAULT_CONTENT));
+    return Post.of(author, new PostInformation(DEFAULT_TITLE, DEFAULT_CONTENT));
   }
 
   public static PostInformationProjectionDto createInformation(final Long postId) {

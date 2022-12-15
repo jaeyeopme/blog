@@ -1,17 +1,24 @@
 package me.jaeyeop.blog.comment.application.port.in;
 
-import me.jaeyeop.blog.comment.adapter.in.CommentRequest.Find;
-import me.jaeyeop.blog.comment.adapter.out.CommentResponse.Info;
+import me.jaeyeop.blog.comment.adapter.out.CommentInformationProjectionDto;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
+/**
+ * @author jaeyeopme Created on 10/19/2022.
+ */
 public interface CommentQueryUseCase {
 
-  /**
-   * 댓글 정보 페이지 조회
-   *
-   * @param request 게시글 식별자, 페이지 옵션
-   * @return 댓글 정보 페이지
-   */
-  Page<Info> findCommentPage(Find request);
+  CommentInformationProjectionDto findInformationById(Query query);
+
+  Page<CommentInformationProjectionDto> findInformationPageByPostId(PageQuery query);
+
+  record Query(Long commentId) {
+
+  }
+
+  record PageQuery(Long postId, Pageable pageable) {
+
+  }
 
 }

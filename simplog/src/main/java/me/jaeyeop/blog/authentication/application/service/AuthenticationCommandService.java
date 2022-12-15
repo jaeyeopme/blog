@@ -1,8 +1,6 @@
 package me.jaeyeop.blog.authentication.application.service;
 
 import javax.transaction.Transactional;
-import me.jaeyeop.blog.authentication.adapter.in.AuthenticationRequest.Logout;
-import me.jaeyeop.blog.authentication.adapter.in.AuthenticationRequest.Refresh;
 import me.jaeyeop.blog.authentication.application.port.in.AuthenticationCommandUseCase;
 import me.jaeyeop.blog.authentication.application.port.out.ExpiredTokenCommandPort;
 import me.jaeyeop.blog.authentication.application.port.out.ExpiredTokenQueryPort;
@@ -37,7 +35,8 @@ public class AuthenticationCommandService implements AuthenticationCommandUseCas
       final ExpiredTokenCommandPort expiredTokenCommandPort,
       final RefreshTokenCommandPort refreshTokenCommandPort,
       final RefreshTokenQueryPort refreshTokenQueryPort,
-      final TokenProvider tokenProvider) {
+      final TokenProvider tokenProvider
+  ) {
     this.expiredTokenQueryPort = expiredTokenQueryPort;
     this.expiredTokenCommandPort = expiredTokenCommandPort;
     this.refreshTokenCommandPort = refreshTokenCommandPort;
@@ -46,20 +45,26 @@ public class AuthenticationCommandService implements AuthenticationCommandUseCas
   }
 
   @Override
-  public void logout(final Logout request) {
-    final var accessToken = tokenProvider.verify(request.accessToken());
-    final var refreshToken = tokenProvider.verify(request.refreshToken());
+  public void logout(final LogoutCommand command) {
+    final var accessToken = tokenProvider.verify(command.accessToken());
+    final var refreshToken = tokenProvider.verify(command.refreshToken());
 
     expireAccessToken(accessToken);
     expireRefreshToken(refreshToken);
   }
 
   @Override
-  public String refresh(final Refresh request) {
-    final var refreshToken = verify(request);
-    final var newAccessToken = tokenProvider.createAccess(refreshToken.email());
+  public String refresh(final RefreshCommand command) {
+    final var verifiedAccessToken = tokenProvider.verify(command.accessToken());
+    final var verifiedRefreshToken = tokenProvider.verify(command.refreshToken());
 
-    return newAccessToken.value();
+    if (refreshTokenQueryPort.isExpired(verifiedRefreshToken.value())) {
+      throw new BadCredentialsException("Expired refresh token");
+    }
+
+    expiredTokenCommandPort.expire(ExpiredToken.from(verifiedAccessToken));
+
+    return tokenProvider.createAccess(verifiedRefreshToken.email()).value();
   }
 
   private void expireAccessToken(final Token accessToken) {
@@ -72,18 +77,6 @@ public class AuthenticationCommandService implements AuthenticationCommandUseCas
     if (!refreshTokenQueryPort.isExpired(refreshToken.value())) {
       refreshTokenCommandPort.expire(RefreshToken.from(refreshToken));
     }
-  }
-
-  private Token verify(final Refresh request) {
-    final var accessToken = tokenProvider.verify(request.accessToken());
-    final var refreshToken = tokenProvider.verify(request.refreshToken());
-
-    if (refreshTokenQueryPort.isExpired(refreshToken.value())) {
-      throw new BadCredentialsException("expired refresh token");
-    }
-
-    expiredTokenCommandPort.expire(ExpiredToken.from(accessToken));
-    return refreshToken;
   }
 
 }

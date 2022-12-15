@@ -1,4 +1,4 @@
-package me.jaeyeop.blog.authentication.adapter.in;
+package me.jaeyeop.blog.integration;
 
 import static me.jaeyeop.blog.authentication.adapter.in.AuthenticationWebAdaptor.AUTHENTICATION_API_URI;
 import static me.jaeyeop.blog.authentication.adapter.in.AuthenticationWebAdaptor.REFRESH_AUTHORIZATION;

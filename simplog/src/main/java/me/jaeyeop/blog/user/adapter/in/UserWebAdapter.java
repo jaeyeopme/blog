@@ -37,7 +37,8 @@ public class UserWebAdapter implements UserOAS {
 
   public UserWebAdapter(
       final UserCommandUseCase userCommandUseCase,
-      final UserQueryUseCase userQueryUseCase) {
+      final UserQueryUseCase userQueryUseCase
+  ) {
     this.userCommandUseCase = userCommandUseCase;
     this.userQueryUseCase = userQueryUseCase;
   }
@@ -45,7 +46,7 @@ public class UserWebAdapter implements UserOAS {
   @ResponseStatus(OK)
   @GetMapping("/me")
   @Override
-  public UserProfileResponseDto findByPrincipal(@Principal UserPrincipal principal) {
+  public UserProfileResponseDto findById(@Principal UserPrincipal principal) {
     final var query = new ProfileQuery(principal.user().profile().email());
     final var profile = userQueryUseCase.findProfileByEmail(query);
     return UserProfileResponseDto.from(profile);
@@ -54,7 +55,7 @@ public class UserWebAdapter implements UserOAS {
   @ResponseStatus(OK)
   @GetMapping("/{email}")
   @Override
-  public UserProfileResponseDto findOneByEmail(@PathVariable @Email String email) {
+  public UserProfileResponseDto findByEmail(@PathVariable @Email String email) {
     final var query = new ProfileQuery(email);
     final var profile = userQueryUseCase.findProfileByEmail(query);
     return UserProfileResponseDto.from(profile);
@@ -65,7 +66,8 @@ public class UserWebAdapter implements UserOAS {
   @Override
   public void update(
       @Principal UserPrincipal principal,
-      @RequestBody UpdateUserRequestDto request) {
+      @RequestBody UpdateUserRequestDto request
+  ) {
     final var command = new UpdateCommand(
         principal.user().id(),
         request.name(),

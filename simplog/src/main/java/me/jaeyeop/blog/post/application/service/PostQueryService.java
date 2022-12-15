@@ -1,7 +1,7 @@
 package me.jaeyeop.blog.post.application.service;
 
 import me.jaeyeop.blog.config.error.exception.PostNotFoundException;
-import me.jaeyeop.blog.post.adapter.in.PostInformationProjectionDto;
+import me.jaeyeop.blog.post.adapter.out.PostInformationProjectionDto;
 import me.jaeyeop.blog.post.application.port.in.PostQueryUseCase;
 import me.jaeyeop.blog.post.application.port.out.PostQueryPort;
 import org.springframework.stereotype.Service;

@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithSecurityContext;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.test.util.ReflectionTestUtils;
 
 /**
  * @author jaeyeopme Created on 12/01/2022.
@@ -28,9 +29,7 @@ import org.springframework.stereotype.Component;
 public final class UserHelper implements WithSecurityContextFactory<WithPrincipal> {
 
   private static final String DEFAULT_EMAIL = "email@email.com";
-
   private static final String DEFAULT_NAME = "name";
-
   private static final String DEFAULT_PICTURE = "picture";
 
   @Autowired
@@ -40,11 +39,17 @@ public final class UserHelper implements WithSecurityContextFactory<WithPrincipa
   private UserRepository userRepository;
 
   public static User create() {
-    return User.from(new OAuth2Attributes(
-        OAuth2Provider.GOOGLE,
-        DEFAULT_EMAIL,
-        DEFAULT_NAME,
-        DEFAULT_PICTURE));
+    final var user = User.from(
+        new OAuth2Attributes(
+            OAuth2Provider.GOOGLE,
+            DEFAULT_EMAIL,
+            DEFAULT_NAME,
+            DEFAULT_PICTURE
+        )
+    );
+    ReflectionTestUtils.setField(user.profile(), "name", "name");
+    ReflectionTestUtils.setField(user.profile(), "introduce", "introduce");
+    return user;
   }
 
   private void clearPersistenceContext() {

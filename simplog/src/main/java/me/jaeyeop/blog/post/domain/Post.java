@@ -24,7 +24,7 @@ import me.jaeyeop.blog.user.domain.User;
 public class Post extends AbstractBaseEntity {
 
   @Embedded
-  private Information information;
+  private PostInformation information;
 
   @NotNull
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -39,7 +39,7 @@ public class Post extends AbstractBaseEntity {
 
   private Post(
       final User author,
-      final Information information
+      final PostInformation information
   ) {
     this.information = information;
     this.author = author;
@@ -47,14 +47,9 @@ public class Post extends AbstractBaseEntity {
 
   public static Post of(
       final User author,
-      final Information information
+      final PostInformation information
   ) {
     return new Post(author, information);
-  }
-
-  public void addComments(final Comment comment) {
-    this.comments.add(comment);
-    comment.post(this);
   }
 
   public void confirmAccess(final User author) {

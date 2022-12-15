@@ -1,7 +1,8 @@
-package me.jaeyeop.blog.config.token;
+package me.jaeyeop.blog.unit.authentication;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import me.jaeyeop.blog.config.token.TokenProvider;
 import me.jaeyeop.blog.support.helper.TokenProviderHelper;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.BeforeEach;

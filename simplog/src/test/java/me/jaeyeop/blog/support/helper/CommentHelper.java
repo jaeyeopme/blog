@@ -2,8 +2,10 @@ package me.jaeyeop.blog.support.helper;
 
 import java.util.List;
 import java.util.stream.IntStream;
-import me.jaeyeop.blog.comment.adapter.out.CommentResponse.Info;
+import me.jaeyeop.blog.comment.adapter.out.CommentInformationProjectionDto;
 import me.jaeyeop.blog.comment.domain.Comment;
+import me.jaeyeop.blog.comment.domain.CommentInformation;
+import me.jaeyeop.blog.post.domain.Post;
 import me.jaeyeop.blog.user.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -21,22 +23,24 @@ public final class CommentHelper {
   private CommentHelper() {
   }
 
-  public static Comment create(final User author) {
-    return Comment.of(DEFAULT_CONTENT, author);
+  public static Comment create(final Post post, final User author) {
+    return Comment.of(post, author, new CommentInformation(DEFAULT_CONTENT));
   }
 
-  public static Page<Info> createInfoPage(final PageRequest pageable) {
-    final List<Info> content = IntStream.range(
+  public static Page<CommentInformationProjectionDto> createInformationPage(
+      final PageRequest pageable) {
+    final List<CommentInformationProjectionDto> content = IntStream.range(
             pageable.getPageNumber(),
             pageable.getPageSize())
-        .mapToObj(CommentHelper::createInfo)
+        .asLongStream()
+        .mapToObj(CommentHelper::createInformation)
         .toList();
     return new PageImpl<>(content, pageable, content.size());
   }
 
-  private static Info createInfo(final int id) {
-    return new Info(
-        (long) id,
+  public static CommentInformationProjectionDto createInformation(final Long commentId) {
+    return new CommentInformationProjectionDto(
+        commentId,
         DEFAULT_CONTENT,
         DEFAULT_AUTHOR_NAME,
         null,

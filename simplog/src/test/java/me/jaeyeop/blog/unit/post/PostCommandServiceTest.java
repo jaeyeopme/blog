@@ -1,4 +1,4 @@
-package me.jaeyeop.blog.post.application.service;
+package me.jaeyeop.blog.unit.post;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -31,13 +31,12 @@ class PostCommandServiceTest extends UnitTest {
   @Test
   void 게시글_저장() {
     // GIVEN
-
-    final var stubAuthor = getStubAuthor(77L);
-    final var stubPost = PostHelper.create(stubAuthor);
-    given(userQueryPort.findById(stubAuthor.id())).willReturn(Optional.of(stubAuthor));
+    final var stubPost = getStubPost(2L, getStubAuthor(77L));
+    given(userQueryPort.findById(stubPost.author().id())).willReturn(
+        Optional.of(stubPost.author()));
     given(postCommandPort.create(any())).willReturn(stubPost);
     final var command = new WriteCommand(
-        stubAuthor.id(), stubPost.information().title(), stubPost.information().content());
+        stubPost.author().id(), stubPost.information().title(), stubPost.information().content());
 
     // WHEN
     final var post = postCommandService.write(command);
@@ -49,11 +48,12 @@ class PostCommandServiceTest extends UnitTest {
   @Test
   void 게시글_수정() {
     // GIVEN
-    final var stubAuthor = getStubAuthor(54L);
-    given(userQueryPort.findById(stubAuthor.id())).willReturn(Optional.of(stubAuthor));
-    final var stubPost = getStubPost(1L, stubAuthor);
+    final var stubPost = getStubPost(1L, getStubAuthor(54L));
+    given(userQueryPort.findById(stubPost.author().id())).willReturn(
+        Optional.of(stubPost.author()));
     given(postQueryPort.findById(stubPost.id())).willReturn(Optional.of(stubPost));
-    final var command = new EditCommand(stubAuthor.id(), stubPost.id(), "newTitle", "newContent");
+    final var command = new EditCommand(
+        stubPost.author().id(), stubPost.id(), "newTitle", "newContent");
 
     // WHEN
     postCommandService.edit(command);
@@ -67,11 +67,12 @@ class PostCommandServiceTest extends UnitTest {
   @ParameterizedTest
   void 비어있는_제목으로_게시글_수정(final String newTitle) {
     // GIVEN
-    final var stubAuthor = getStubAuthor(77L);
-    given(userQueryPort.findById(stubAuthor.id())).willReturn(Optional.of(stubAuthor));
-    final var stubPost = getStubPost(1L, stubAuthor);
+    final var stubPost = getStubPost(1L, getStubAuthor(77L));
+    given(userQueryPort.findById(stubPost.author().id())).willReturn(
+        Optional.of(stubPost.author()));
     given(postQueryPort.findById(stubPost.id())).willReturn(Optional.of(stubPost));
-    final var command = new EditCommand(stubAuthor.id(), stubPost.id(), newTitle, "newContent");
+    final var command = new EditCommand(
+        stubPost.author().id(), stubPost.id(), newTitle, "newContent");
 
     // WHEN
     postCommandService.edit(command);
@@ -79,6 +80,25 @@ class PostCommandServiceTest extends UnitTest {
     // THEN
     assertThat(stubPost.information().title()).isNotEqualTo(newTitle);
     assertThat(stubPost.information().content()).isEqualTo(command.newContent());
+  }
+
+  @NullAndEmptySource
+  @ParameterizedTest
+  void 비어있는_내용으로_게시글_수정(final String newContent) {
+    // GIVEN
+    final var stubPost = getStubPost(1L, getStubAuthor(77L));
+    given(userQueryPort.findById(stubPost.author().id())).willReturn(
+        Optional.of(stubPost.author()));
+    given(postQueryPort.findById(stubPost.id())).willReturn(Optional.of(stubPost));
+    final var command = new EditCommand(
+        stubPost.author().id(), stubPost.id(), "newTitle", newContent);
+
+    // WHEN
+    postCommandService.edit(command);
+
+    // THEN
+    assertThat(stubPost.information().title()).isEqualTo(command.newTitle());
+    assertThat(stubPost.information().content()).isNotEqualTo(command.newContent());
   }
 
   @Test
@@ -99,6 +119,7 @@ class PostCommandServiceTest extends UnitTest {
     // GIVEN
     final var stubPost = getStubPost(2L, getStubAuthor(7L));
     given(postQueryPort.findById(stubPost.id())).willReturn(Optional.of(stubPost));
+
     final var stubAuthor = getStubAuthor(5L);
     given(userQueryPort.findById(stubAuthor.id())).willReturn(Optional.of(stubAuthor));
     final var command = new EditCommand(stubAuthor.id(), stubPost.id(), "newTitle", "newContent");
@@ -107,6 +128,7 @@ class PostCommandServiceTest extends UnitTest {
     final ThrowingCallable when = () -> postCommandService.edit(command);
 
     // THEN
+    assertThat(stubPost.author().id()).isNotEqualTo(command.authorId());
     assertThatThrownBy(when).isInstanceOf(AccessDeniedException.class);
     assertThat(stubPost.information().title()).isNotEqualTo(command.newTitle());
     assertThat(stubPost.information().content()).isNotEqualTo(command.newContent());
@@ -115,11 +137,11 @@ class PostCommandServiceTest extends UnitTest {
   @Test
   void 게시글_삭제() {
     // GIVEN
-    final var stubAuthor = getStubAuthor(22L);
-    given(userQueryPort.findById(stubAuthor.id())).willReturn(Optional.of(stubAuthor));
-    final var stubPost = getStubPost(1L, stubAuthor);
+    final var stubPost = getStubPost(1L, getStubAuthor(22L));
+    given(userQueryPort.findById(stubPost.author().id())).willReturn(
+        Optional.of(stubPost.author()));
     given(postQueryPort.findById(stubPost.id())).willReturn(Optional.of(stubPost));
-    final var command = new DeleteCommand(stubAuthor.id(), stubPost.id());
+    final var command = new DeleteCommand(stubPost.author().id(), stubPost.id());
 
     // WHEN
     postCommandService.delete(command);
@@ -140,7 +162,7 @@ class PostCommandServiceTest extends UnitTest {
 
     // THEN
     assertThatThrownBy(when).isInstanceOf(PostNotFoundException.class);
-    then(postCommandPort).should(never()).delete(any());
+    then(postCommandPort).should(never()).delete(any(Post.class));
   }
 
   @Test
@@ -148,6 +170,7 @@ class PostCommandServiceTest extends UnitTest {
     // GIVEN
     final var stubPost = getStubPost(1L, getStubAuthor(8L));
     given(postQueryPort.findById(stubPost.id())).willReturn(Optional.of(stubPost));
+
     final var stubAuthor = getStubAuthor(11L);
     given(userQueryPort.findById(stubAuthor.id())).willReturn(Optional.of(stubAuthor));
     final var command = new DeleteCommand(stubAuthor.id(), stubPost.id());
@@ -156,14 +179,15 @@ class PostCommandServiceTest extends UnitTest {
     final ThrowingCallable when = () -> postCommandService.delete(command);
 
     // THEN
+    assertThat(stubPost.author().id()).isNotEqualTo(command.authorId());
     assertThatThrownBy(when).isInstanceOf(AccessDeniedException.class);
-    then(postCommandPort).should(never()).delete(any());
+    then(postCommandPort).should(never()).delete(any(Post.class));
   }
 
   private Post getStubPost(final Long postId, final User author) {
-    final var post2 = PostHelper.create(author);
-    ReflectionTestUtils.setField(post2, "id", postId);
-    return post2;
+    final var post = PostHelper.create(author);
+    ReflectionTestUtils.setField(post, "id", postId);
+    return post;
   }
 
   private User getStubAuthor(final Long authorId) {

@@ -86,9 +86,7 @@ jib {
 }
 
 tasks.named('test', Test) {
-    useJUnitPlatform {
-        excludeTags 'integration'
-    }
+    useJUnitPlatform()
     finalizedBy jacocoTestReport
 }
 
@@ -150,13 +148,13 @@ jacocoTestCoverageVerification {
             limit {
                 counter = 'LINE'
                 value = 'COVEREDRATIO'
-//                minimum = 0.75
+                minimum = 0.75
             }
 
             limit {
                 counter = 'BRANCH'
                 value = 'COVEREDRATIO'
-//                minimum = 1.0
+                minimum = 1.0
             }
 
             excludes = [

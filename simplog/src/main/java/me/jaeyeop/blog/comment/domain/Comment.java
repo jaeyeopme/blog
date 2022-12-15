@@ -1,11 +1,10 @@
 package me.jaeyeop.blog.comment.domain;
 
-import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import me.jaeyeop.blog.config.error.exception.AccessDeniedException;
@@ -20,9 +19,8 @@ import me.jaeyeop.blog.user.domain.User;
 @Getter
 public class Comment extends AbstractBaseEntity {
 
-  @NotBlank
-  @Column(nullable = false)
-  private String content;
+  @Embedded
+  private CommentInformation information;
 
   @NotNull
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -38,30 +36,27 @@ public class Comment extends AbstractBaseEntity {
   }
 
   private Comment(
-      final String content,
-      final User author) {
-    this.content = content;
+      final Post post,
+      final User author,
+      final CommentInformation information
+  ) {
+    this.post = post;
+    this.information = information;
     this.author = author;
   }
 
   public static Comment of(
-      final String content,
-      final User author) {
-    return new Comment(content, author);
+      final Post post,
+      final User author,
+      final CommentInformation information
+  ) {
+    return new Comment(post, author, information);
   }
 
-  public void post(final Post post) {
-    this.post = post;
-  }
-
-  public void confirmAccess(final Long authorId) {
-    if (!this.author.id().equals(authorId)) {
+  public void confirmAccess(final User author) {
+    if (!this.author.equals(author)) {
       throw new AccessDeniedException();
     }
-  }
-
-  public void updateInformation(final String content) {
-    this.content = content;
   }
 
 }

@@ -7,6 +7,7 @@ import static org.springframework.http.HttpStatus.OK;
 import java.net.URI;
 import me.jaeyeop.blog.config.security.authentication.Principal;
 import me.jaeyeop.blog.config.security.authentication.UserPrincipal;
+import me.jaeyeop.blog.post.adapter.out.PostInformationProjectionDto;
 import me.jaeyeop.blog.post.application.port.in.PostCommandUseCase;
 import me.jaeyeop.blog.post.application.port.in.PostCommandUseCase.EditCommand;
 import me.jaeyeop.blog.post.application.port.in.PostCommandUseCase.WriteCommand;
@@ -76,13 +77,14 @@ public class PostWebAdapter implements PostOAS {
   }
 
   @PostMapping
-  public ResponseEntity<Void> create(
+  public ResponseEntity<Void> write(
       @Principal UserPrincipal principal,
       @RequestBody @Validated WritePostRequestDto request
   ) {
     final var command = new WriteCommand(principal.user().id(), request.title(), request.content());
     final var id = postCommandUseCase.write(command);
-    return ResponseEntity.created(URI.create(String.format("%s/%d", POST_API_URI, id))).build();
+    final var uri = URI.create(String.format("%s/%d", POST_API_URI, id));
+    return ResponseEntity.created(uri).build();
   }
 
 }

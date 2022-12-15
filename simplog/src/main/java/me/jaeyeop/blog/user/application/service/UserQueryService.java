@@ -3,8 +3,8 @@ package me.jaeyeop.blog.user.application.service;
 import me.jaeyeop.blog.config.error.exception.UserNotFoundException;
 import me.jaeyeop.blog.user.application.port.in.UserQueryUseCase;
 import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
-import me.jaeyeop.blog.user.domain.Profile;
 import me.jaeyeop.blog.user.domain.User;
+import me.jaeyeop.blog.user.domain.UserProfile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +22,7 @@ public class UserQueryService implements UserQueryUseCase {
   }
 
   @Override
-  public Profile findProfileByEmail(final ProfileQuery profileQuery) {
+  public UserProfile findProfileByEmail(final ProfileQuery profileQuery) {
     return findByEmail(profileQuery.email()).profile();
   }
 

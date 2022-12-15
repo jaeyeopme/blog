@@ -19,7 +19,7 @@ import me.jaeyeop.blog.config.security.authentication.OAuth2Provider;
 public class User extends AbstractBaseEntity {
 
   @Embedded
-  private Profile profile;
+  private UserProfile profile;
 
   @NotNull
   @Enumerated(EnumType.STRING)
@@ -35,7 +35,7 @@ public class User extends AbstractBaseEntity {
   }
 
   private User(
-      final Profile profile,
+      final UserProfile profile,
       final Role role,
       final OAuth2Provider provider
   ) {
@@ -46,9 +46,10 @@ public class User extends AbstractBaseEntity {
 
   public static User from(final OAuth2Attributes attributes) {
     return new User(
-        new Profile(attributes.email(), attributes.name(), attributes.picture()),
+        new UserProfile(attributes.email(), attributes.name(), attributes.picture()),
         Role.USER,
-        attributes.provider());
+        attributes.provider()
+    );
   }
 
 }

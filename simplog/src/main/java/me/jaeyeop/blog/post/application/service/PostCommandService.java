@@ -6,8 +6,8 @@ import me.jaeyeop.blog.config.error.exception.UserNotFoundException;
 import me.jaeyeop.blog.post.application.port.in.PostCommandUseCase;
 import me.jaeyeop.blog.post.application.port.out.PostCommandPort;
 import me.jaeyeop.blog.post.application.port.out.PostQueryPort;
-import me.jaeyeop.blog.post.domain.Information;
 import me.jaeyeop.blog.post.domain.Post;
+import me.jaeyeop.blog.post.domain.PostInformation;
 import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
 import me.jaeyeop.blog.user.domain.User;
 import org.springframework.stereotype.Service;
@@ -37,8 +37,8 @@ public class PostCommandService implements PostCommandUseCase {
 
   @Override
   public Long write(final WriteCommand command) {
-    final var author = findUserById(command.authorId());
-    final var information = new Information(command.title(), command.content());
+    final var author = findAuthorByAuthorId(command.authorId());
+    final var information = new PostInformation(command.title(), command.content());
     final var post = postCommandPort.create(Post.of(author, information));
 
     return post.id();
@@ -47,14 +47,14 @@ public class PostCommandService implements PostCommandUseCase {
   @Override
   public void edit(final EditCommand command) {
     final var post = findById(command.targetId());
-    post.confirmAccess(findUserById(command.authorId()));
+    post.confirmAccess(findAuthorByAuthorId(command.authorId()));
     post.information().edit(command.newTitle(), command.newContent());
   }
 
   @Override
   public void delete(final DeleteCommand command) {
     final var post = findById(command.targetId());
-    post.confirmAccess(findUserById(command.authorId()));
+    post.confirmAccess(findAuthorByAuthorId(command.authorId()));
 
     postCommandPort.delete(post);
   }
@@ -64,8 +64,8 @@ public class PostCommandService implements PostCommandUseCase {
         .orElseThrow(PostNotFoundException::new);
   }
 
-  private User findUserById(final Long userId) {
-    return userQueryPort.findById(userId)
+  private User findAuthorByAuthorId(final Long authorId) {
+    return userQueryPort.findById(authorId)
         .orElseThrow(UserNotFoundException::new);
   }
 

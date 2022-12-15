@@ -1,12 +1,14 @@
 package me.jaeyeop.blog.post.adapter.out;
 
 import java.util.Optional;
-import me.jaeyeop.blog.post.adapter.in.PostInformationProjectionDto;
 import me.jaeyeop.blog.post.application.port.out.PostCommandPort;
 import me.jaeyeop.blog.post.application.port.out.PostQueryPort;
 import me.jaeyeop.blog.post.domain.Post;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author jaeyeopme Created on 10/10/2022.
+ */
 @Component
 public class PostPersistenceAdapter implements PostCommandPort, PostQueryPort {
 
@@ -14,8 +16,10 @@ public class PostPersistenceAdapter implements PostCommandPort, PostQueryPort {
 
   private final PostQueryRepository postQueryRepository;
 
-  public PostPersistenceAdapter(final PostCrudRepository postCrudRepository,
-      final PostQueryRepository postQueryRepository) {
+  public PostPersistenceAdapter(
+      final PostCrudRepository postCrudRepository,
+      final PostQueryRepository postQueryRepository
+  ) {
     this.postCrudRepository = postCrudRepository;
     this.postQueryRepository = postQueryRepository;
   }
@@ -31,8 +35,8 @@ public class PostPersistenceAdapter implements PostCommandPort, PostQueryPort {
   }
 
   @Override
-  public Optional<PostInformationProjectionDto> findInformationById(final Long id) {
-    return postQueryRepository.findInfoById(id);
+  public boolean existsById(final Long id) {
+    return postCrudRepository.existsById(id);
   }
 
   @Override
@@ -41,8 +45,8 @@ public class PostPersistenceAdapter implements PostCommandPort, PostQueryPort {
   }
 
   @Override
-  public boolean existsById(final Long id) {
-    return postCrudRepository.existsById(id);
+  public Optional<PostInformationProjectionDto> findInformationById(final Long id) {
+    return postQueryRepository.findInfoById(id);
   }
 
 }

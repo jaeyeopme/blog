@@ -1,4 +1,4 @@
-package me.jaeyeop.blog.authentication.application.service;
+package me.jaeyeop.blog.unit.authentication;
 
 import static me.jaeyeop.blog.config.token.JWTProvider.TYPE;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -6,8 +6,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
-import me.jaeyeop.blog.authentication.adapter.in.AuthenticationRequest.Logout;
-import me.jaeyeop.blog.authentication.adapter.in.AuthenticationRequest.Refresh;
+import me.jaeyeop.blog.authentication.application.port.in.AuthenticationCommandUseCase.LogoutCommand;
+import me.jaeyeop.blog.authentication.application.port.in.AuthenticationCommandUseCase.RefreshCommand;
 import me.jaeyeop.blog.support.UnitTest;
 import me.jaeyeop.blog.support.helper.TokenProviderHelper;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
@@ -27,9 +27,10 @@ class AuthenticationCommandServiceTest extends UnitTest {
     final var refreshToken = tokenProvider.createRefresh(email).value();
     given(expiredTokenQueryPort.isExpired(accessToken)).willReturn(Boolean.FALSE);
     given(refreshTokenQueryPort.isExpired(refreshToken)).willReturn(Boolean.FALSE);
+    final var command = new LogoutCommand(TYPE + accessToken, TYPE + refreshToken);
 
     // WHEN
-    authCommandService.logout(getLogoutRequest(accessToken, refreshToken));
+    authCommandService.logout(command);
 
     // THEN
     then(expiredTokenCommandPort).should().expire(any());
@@ -43,9 +44,10 @@ class AuthenticationCommandServiceTest extends UnitTest {
     final var accessToken = tokenProvider.createAccess(email).value();
     final var refreshToken = tokenProvider.createRefresh(email).value();
     given(expiredTokenQueryPort.isExpired(accessToken)).willReturn(Boolean.TRUE);
+    final var command = new LogoutCommand(TYPE + accessToken, TYPE + refreshToken);
 
     // WHEN
-    authCommandService.logout(getLogoutRequest(accessToken, refreshToken));
+    authCommandService.logout(command);
 
     // THEN
     then(expiredTokenCommandPort).should(never()).expire(any());
@@ -60,9 +62,10 @@ class AuthenticationCommandServiceTest extends UnitTest {
     final var refreshToken = tokenProvider.createRefresh(email).value();
     given(expiredTokenQueryPort.isExpired(accessToken)).willReturn(Boolean.FALSE);
     given(refreshTokenQueryPort.isExpired(refreshToken)).willReturn(Boolean.TRUE);
+    final var command = new LogoutCommand(TYPE + accessToken, TYPE + refreshToken);
 
     // WHEN
-    authCommandService.logout(getLogoutRequest(accessToken, refreshToken));
+    authCommandService.logout(command);
 
     // THEN
     then(expiredTokenCommandPort).should().expire(any());
@@ -76,10 +79,10 @@ class AuthenticationCommandServiceTest extends UnitTest {
     final var expiredProvider = TokenProviderHelper.createExpired();
     final var accessToken = expiredProvider.createAccess(email).value();
     final var refreshToken = tokenProvider.createRefresh(email).value();
+    final var command = new LogoutCommand(TYPE + accessToken, TYPE + refreshToken);
 
     // WHEN
-    final ThrowingCallable when = () -> authCommandService.logout(
-        getLogoutRequest(accessToken, refreshToken));
+    final ThrowingCallable when = () -> authCommandService.logout(command);
 
     // THEN
     assertThatThrownBy(when).isInstanceOf(BadCredentialsException.class);
@@ -94,10 +97,10 @@ class AuthenticationCommandServiceTest extends UnitTest {
     final var expiredProvider = TokenProviderHelper.createExpired();
     final var accessToken = tokenProvider.createAccess(email).value();
     final var refreshToken = expiredProvider.createRefresh(email).value();
+    final var command = new LogoutCommand(TYPE + accessToken, TYPE + refreshToken);
 
     // WHEN
-    final ThrowingCallable when = () -> authCommandService.logout(
-        getLogoutRequest(accessToken, refreshToken));
+    final ThrowingCallable when = () -> authCommandService.logout(command);
 
     // THEN
     assertThatThrownBy(when).isInstanceOf(BadCredentialsException.class);
@@ -112,9 +115,11 @@ class AuthenticationCommandServiceTest extends UnitTest {
     final var accessToken = tokenProvider.createAccess(email);
     final var refreshToken = tokenProvider.createRefresh(email);
     given(refreshTokenQueryPort.isExpired(refreshToken.value())).willReturn(Boolean.FALSE);
+    final var command = new RefreshCommand(
+        TYPE + accessToken.value(), TYPE + refreshToken.value());
 
     // WHEN
-    authCommandService.refresh(getRefreshRequest(accessToken.value(), refreshToken.value()));
+    authCommandService.refresh(command);
 
     // THEN
     then(expiredTokenCommandPort).should().expire(any());
@@ -127,21 +132,14 @@ class AuthenticationCommandServiceTest extends UnitTest {
     final var accessToken = tokenProvider.createAccess(email);
     final var refreshToken = tokenProvider.createRefresh(email);
     given(refreshTokenQueryPort.isExpired(refreshToken.value())).willReturn(Boolean.TRUE);
+    final var command = new RefreshCommand(
+        TYPE + accessToken.value(), TYPE + refreshToken.value());
 
     // WHEN
-    final ThrowingCallable when = () -> authCommandService.refresh(
-        getRefreshRequest(accessToken.value(), refreshToken.value()));
+    final ThrowingCallable when = () -> authCommandService.refresh(command);
 
     // THEN
     assertThatThrownBy(when).isInstanceOf(BadCredentialsException.class);
-  }
-
-  private Logout getLogoutRequest(final String accessToken, final String refreshToken) {
-    return new Logout(TYPE + accessToken, TYPE + refreshToken);
-  }
-
-  private Refresh getRefreshRequest(final String accessToken, final String refreshToken) {
-    return new Refresh(TYPE + accessToken, TYPE + refreshToken);
   }
 
 }

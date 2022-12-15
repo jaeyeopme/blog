@@ -1,4 +1,4 @@
-package me.jaeyeop.blog.post.application.service;
+package me.jaeyeop.blog.unit.post;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

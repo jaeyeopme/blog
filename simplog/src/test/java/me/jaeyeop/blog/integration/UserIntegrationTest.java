@@ -1,4 +1,4 @@
-package me.jaeyeop.blog.user.adapter.in;
+package me.jaeyeop.blog.integration;
 
 import static me.jaeyeop.blog.user.adapter.in.UserWebAdapter.USER_API_URI;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import me.jaeyeop.blog.support.IntegrationTest;
 import me.jaeyeop.blog.support.helper.UserHelper.WithPrincipal;
+import me.jaeyeop.blog.user.adapter.in.UpdateUserRequestDto;
 import me.jaeyeop.blog.user.adapter.out.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * @author jaeyeopme Created on 12/02/2022.
  */
+@SuppressWarnings("OptionalGetWithoutIsPresent")
 class UserIntegrationTest extends IntegrationTest {
 
   @Autowired
@@ -29,12 +31,15 @@ class UserIntegrationTest extends IntegrationTest {
     final var profile = getPrincipal().profile();
 
     // WHEN
-    final var when = mockMvc.perform(get(USER_API_URI + "/me"));
+    final var when = mockMvc.perform(
+        get(USER_API_URI + "/me")
+    );
 
     // THEN
     when.andExpectAll(
         status().isOk(),
-        content().json(toJson(profile)));
+        content().json(toJson(profile))
+    );
   }
 
   @WithPrincipal
@@ -45,12 +50,14 @@ class UserIntegrationTest extends IntegrationTest {
 
     // WHEN
     final var when = mockMvc.perform(
-        get(USER_API_URI + "/{email}", getPrincipal().profile().email()));
+        get(USER_API_URI + "/{email}", getPrincipal().profile().email())
+    );
 
     // THEN
     when.andExpectAll(
         status().isOk(),
-        content().json(toJson(profile)));
+        content().json(toJson(profile))
+    );
   }
 
   @WithPrincipal
@@ -61,9 +68,11 @@ class UserIntegrationTest extends IntegrationTest {
     final var request = new UpdateUserRequestDto("newName", "newIntroduce");
 
     // THEN
-    final var when = mockMvc.perform(patch(USER_API_URI + "/me")
-        .contentType(APPLICATION_JSON)
-        .content(toJson(request)));
+    final var when = mockMvc.perform(
+        patch(USER_API_URI + "/me")
+            .contentType(APPLICATION_JSON)
+            .content(toJson(request))
+    );
 
     // WHEN
     when.andExpectAll(status().isNoContent());
@@ -79,12 +88,13 @@ class UserIntegrationTest extends IntegrationTest {
     final var user = getPrincipal();
 
     // WHEN
-    final var when = mockMvc.perform(delete(USER_API_URI + "/me"));
+    final var when = mockMvc.perform(
+        delete(USER_API_URI + "/me")
+    );
 
     // THEN
     when.andExpectAll(status().isNoContent());
-    final var optional = userRepository.findById(user.id());
-    assertThat(optional).isNotPresent();
+    assertThat(userRepository.findById(user.id())).isNotPresent();
   }
 
 }

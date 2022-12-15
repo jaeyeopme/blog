@@ -12,7 +12,7 @@ import org.springframework.util.StringUtils;
  */
 @Embeddable
 @Getter
-public class Information {
+public class PostInformation {
 
   @NotBlank
   @Column(nullable = false)
@@ -26,15 +26,21 @@ public class Information {
   @Column
   private String coverImage;
 
-  protected Information() {
+  protected PostInformation() {
   }
 
-  public Information(final String title, final String content) {
+  public PostInformation(
+      final String title,
+      final String content
+  ) {
     this.title = title;
     this.content = content;
   }
 
-  public void edit(final String newTitle, final String newContent) {
+  public void edit(
+      final String newTitle,
+      final String newContent
+  ) {
     if (StringUtils.hasText(newTitle)) {
       this.title = newTitle;
     }
