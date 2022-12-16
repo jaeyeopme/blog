@@ -1,7 +1,7 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MariaDB106Dialect
@@ -9,26 +9,13 @@ spring:
         show_sql: true
         use_sql_comments: true
 
-  datasource:
-    url:
-    hikari:
-      driver-class-name: org.mariadb.jdbc.Driver
-      username:
-      password:
-      connection-init-sql: SELECT 1
-
-  redis:
-    port:
-    host:
-    password:
-
   security:
     oauth2:
       client:
         registration:
           google:
-            client-id:
-            client-secret:
+            client-id: test
+            client-secret: test
             scope:
               - profile
               - email
@@ -57,13 +44,13 @@ logging:
     root: debug
 
 token:
-  key:
+  key: test-test-test-test-test
   exp:
-    access:
-    refresh:
+    access: 7200000
+    refresh: 172800000
 
 oas:
   contact:
-    name:
-    email:
-    url:
+    name: test
+    email: test
+    url: test

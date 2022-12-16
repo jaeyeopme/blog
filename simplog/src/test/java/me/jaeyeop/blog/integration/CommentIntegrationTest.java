@@ -145,7 +145,8 @@ class CommentIntegrationTest extends IntegrationTest {
     final var when = mockMvc.perform(
         patch(COMMENT_API_URI + "/{commentId}", comment.id())
             .contentType(APPLICATION_JSON)
-            .content(toJson(request)));
+            .content(toJson(request))
+    );
 
     // THEN
     when.andExpectAll(status().isNoContent());
@@ -162,7 +163,8 @@ class CommentIntegrationTest extends IntegrationTest {
     // WHEN
     final var when = mockMvc.perform(
         delete(COMMENT_API_URI + "/{commentId}", comment.id())
-            .contentType(APPLICATION_JSON));
+            .contentType(APPLICATION_JSON)
+    );
 
     // THEN
     when.andExpectAll(status().isNoContent());

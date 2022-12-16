@@ -29,7 +29,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @Transactional
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-public abstract class IntegrationTest {
+public abstract class IntegrationTest extends ContainerTest {
 
   @Autowired
   protected WebApplicationContext context;
@@ -43,7 +43,6 @@ public abstract class IntegrationTest {
   @Autowired
   protected EntityManager entityManager;
 
-  // TODO: 2022/12/02 테스트 컨테이너 연결
   @BeforeEach
   public void setUp() {
     this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context)
