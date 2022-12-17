@@ -16,7 +16,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
-@Tag(name = "3. post", description = "게시글(게시글 작성, 게시글 조회, 게시글 수정, 게시글 삭제)")
+@Tag(
+    name = "3.post",
+    description = "게시글(게시글 작성, 게시글 조회, 게시글 수정, 게시글 삭제)"
+)
 public interface PostOAS {
 
   @InvalidArgumentResponse

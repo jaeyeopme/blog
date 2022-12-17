@@ -9,7 +9,7 @@ import me.jaeyeop.blog.config.oas.dto.OASResponse.SecurityResponse;
 import org.springframework.http.MediaType;
 
 @Tag(
-    name = "1. authentication",
+    name = "1.authentication",
     description = "인증(로그아웃, 엑세스 토큰 재발급)"
 )
 public interface AuthenticationOAS {

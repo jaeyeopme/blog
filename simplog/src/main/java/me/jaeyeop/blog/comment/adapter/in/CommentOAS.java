@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @Validated
 @Tag(
-    name = "4. comment",
+    name = "4.comment",
     description = "댓글(댓글 작성, 댓글 조회, 댓글 수정, 댓글 삭제)"
 )
 public interface CommentOAS {

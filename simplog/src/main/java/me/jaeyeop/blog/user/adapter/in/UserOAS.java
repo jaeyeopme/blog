@@ -20,7 +20,7 @@ import org.springframework.validation.annotation.Validated;
  */
 @Validated
 @Tag(
-    name = "2. user",
+    name = "2.user",
     description = "사용자(프로필 조회, 프로필 수정, 프로필 삭제)"
 )
 public interface UserOAS {
