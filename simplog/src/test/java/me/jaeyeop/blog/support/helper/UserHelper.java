@@ -39,10 +39,14 @@ public final class UserHelper implements WithSecurityContextFactory<WithPrincipa
   private UserRepository userRepository;
 
   public static User create() {
+    return create(DEFAULT_EMAIL);
+  }
+
+  public static User create(final String email) {
     final var user = User.from(
         new OAuth2Attributes(
             OAuth2Provider.GOOGLE,
-            DEFAULT_EMAIL,
+            email,
             DEFAULT_NAME,
             DEFAULT_PICTURE
         )

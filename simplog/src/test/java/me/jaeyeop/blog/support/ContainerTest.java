@@ -31,12 +31,12 @@ public abstract class ContainerTest {
         .withDatabaseName("blog")
         .withExposedPorts(3306)
         .withUsername("test")
-        .withPassword("test")
-        .withReuse(true);
-
+        .withPassword("test");
     REDIS_CONTAINER = new GenericContainer<>(REDIS_IMAGE)
-        .withExposedPorts(REDIS_PORT)
-        .withReuse(true);
+        .withExposedPorts(REDIS_PORT);
+
+    MARIADB_CONTAINER.start();
+    REDIS_CONTAINER.start();
   }
 
   @DynamicPropertySource

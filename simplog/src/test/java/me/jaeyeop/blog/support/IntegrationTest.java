@@ -6,7 +6,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.charset.StandardCharsets;
 import javax.persistence.EntityManager;
+import lombok.extern.slf4j.Slf4j;
+import me.jaeyeop.blog.comment.adapter.out.CommentJpaRepository;
+import me.jaeyeop.blog.comment.domain.Comment;
 import me.jaeyeop.blog.config.security.authentication.UserPrincipal;
+import me.jaeyeop.blog.post.adapter.out.PostJpaRepository;
+import me.jaeyeop.blog.post.domain.Post;
+import me.jaeyeop.blog.support.helper.CommentHelper;
+import me.jaeyeop.blog.support.helper.PostHelper;
+import me.jaeyeop.blog.user.adapter.out.UserRepository;
 import me.jaeyeop.blog.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -24,6 +32,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 /**
  * @author jaeyeopme Created on 12/01/2022.
  */
+@Slf4j
 @Disabled
 @Tag("integration")
 @Transactional
@@ -43,12 +52,27 @@ public abstract class IntegrationTest extends ContainerTest {
   @Autowired
   protected EntityManager entityManager;
 
+  @Autowired
+  protected UserRepository userRepository;
+
+  @Autowired
+  protected PostJpaRepository postJpaRepository;
+
+  @Autowired
+  protected CommentJpaRepository commentJpaRepository;
+
   @BeforeEach
   public void setUp() {
     this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context)
         .alwaysDo(print())
+        .alwaysDo(result -> clearPersistenceContext())
         .addFilter(new CharacterEncodingFilter(StandardCharsets.UTF_8.name(), true))
         .build();
+  }
+
+  protected void clearPersistenceContext() {
+    entityManager.flush();
+    entityManager.clear();
   }
 
   protected String toJson(final Object value) throws JsonProcessingException {
@@ -59,10 +83,17 @@ public abstract class IntegrationTest extends ContainerTest {
     return ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
         .getPrincipal()).user();
   }
+  
+  protected Post getPost(final User author) {
+    final var post = postJpaRepository.save(PostHelper.create(author));
+    clearPersistenceContext();
+    return post;
+  }
 
-  protected void clearPersistenceContext() {
-    entityManager.flush();
-    entityManager.clear();
+  protected Comment getComment(final Post post, final User author) {
+    final var comment = commentJpaRepository.save(CommentHelper.create(post, author));
+    clearPersistenceContext();
+    return comment;
   }
 
 }

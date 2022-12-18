@@ -1,5 +1,6 @@
 package me.jaeyeop.blog.comment.adapter.out;
 
+import java.util.List;
 import java.util.Optional;
 import me.jaeyeop.blog.comment.application.port.out.CommentCommandPort;
 import me.jaeyeop.blog.comment.application.port.out.CommentQueryPort;
@@ -12,33 +13,39 @@ import org.springframework.stereotype.Component;
  * @author jaeyeopme Created on 10/19/2022.
  */
 @Component
-public class CommentPersistenceAdapter implements CommentCommandPort, CommentQueryPort {
+public class CommentPersistenceAdapter
+    implements CommentCommandPort, CommentQueryPort {
 
-  private final CommentCrudRepository commentCrudRepository;
+  private final CommentJpaRepository commentJpaRepository;
 
   private final CommentQueryRepository commentQueryRepository;
 
   public CommentPersistenceAdapter(
-      final CommentCrudRepository commentCrudRepository,
+      final CommentJpaRepository commentJpaRepository,
       final CommentQueryRepository commentQueryRepository
   ) {
-    this.commentCrudRepository = commentCrudRepository;
+    this.commentJpaRepository = commentJpaRepository;
     this.commentQueryRepository = commentQueryRepository;
   }
 
   @Override
   public Comment save(final Comment comment) {
-    return commentCrudRepository.save(comment);
+    return commentJpaRepository.save(comment);
   }
 
   @Override
   public void delete(final Comment comment) {
-    commentCrudRepository.delete(comment);
+    commentJpaRepository.delete(comment);
+  }
+
+  @Override
+  public void deleteAll(final List<Comment> comments) {
+    commentJpaRepository.deleteAllInBatch(comments);
   }
 
   @Override
   public Optional<Comment> findById(final Long id) {
-    return commentCrudRepository.findById(id);
+    return commentJpaRepository.findById(id);
   }
 
   @Override

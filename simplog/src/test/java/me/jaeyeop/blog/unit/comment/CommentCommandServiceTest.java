@@ -34,7 +34,7 @@ class CommentCommandServiceTest extends UnitTest {
     // GIVEN
     final var stubComment = getStubComment(
         52L,
-        getStubPost(1L, getStubAuthor(12L)),
+        getStubPost(1L),
         getStubAuthor(24L)
     );
     given(postQueryPort.findById(stubComment.post().id())).willReturn(
@@ -72,7 +72,7 @@ class CommentCommandServiceTest extends UnitTest {
     // GIVEN
     final var stubComment = getStubComment(
         8L,
-        getStubPost(11L, getStubAuthor(7L)),
+        getStubPost(11L),
         getStubAuthor(12L)
     );
     given(userQueryPort.findById(stubComment.author().id())).willReturn(
@@ -105,7 +105,7 @@ class CommentCommandServiceTest extends UnitTest {
     // GIVEN
     final var stubComment = getStubComment(
         8L,
-        getStubPost(11L, getStubAuthor(7L)),
+        getStubPost(11L),
         getStubAuthor(88L)
     );
     given(commentQueryPort.findById(stubComment.id())).willReturn(Optional.of(stubComment));
@@ -128,7 +128,7 @@ class CommentCommandServiceTest extends UnitTest {
     // GIVEN
     final var stubComment = getStubComment(
         56L,
-        getStubPost(65L, getStubAuthor(6L)),
+        getStubPost(65L),
         getStubAuthor(6L)
     );
     given(commentQueryPort.findById(stubComment.id())).willReturn(Optional.of(stubComment));
@@ -161,7 +161,10 @@ class CommentCommandServiceTest extends UnitTest {
   void 다른_사람의_댓글_삭제() {
     // GIVEN
     final var stubComment = getStubComment(
-        8L, getStubPost(11L, getStubAuthor(7L)), getStubAuthor(88L));
+        8L,
+        getStubPost(11L),
+        getStubAuthor(88L)
+    );
     given(commentQueryPort.findById(stubComment.id())).willReturn(Optional.of(stubComment));
 
     final var stubAuthor = getStubAuthor(12L);
@@ -183,8 +186,8 @@ class CommentCommandServiceTest extends UnitTest {
     return comment;
   }
 
-  private Post getStubPost(final Long postId, final User author) {
-    final var post = PostHelper.create(author);
+  private Post getStubPost(final Long postId) {
+    final var post = PostHelper.create();
     ReflectionTestUtils.setField(post, "id", postId);
     return post;
   }

@@ -13,20 +13,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.List;
 import me.jaeyeop.blog.comment.adapter.in.EditCommentRequestDto;
 import me.jaeyeop.blog.comment.adapter.in.WriteCommentRequestDto;
-import me.jaeyeop.blog.comment.adapter.out.CommentCrudRepository;
 import me.jaeyeop.blog.comment.adapter.out.CommentInformationProjectionDto;
-import me.jaeyeop.blog.comment.domain.Comment;
-import me.jaeyeop.blog.post.adapter.out.PostCrudRepository;
-import me.jaeyeop.blog.post.domain.Post;
 import me.jaeyeop.blog.support.IntegrationTest;
-import me.jaeyeop.blog.support.helper.CommentHelper;
-import me.jaeyeop.blog.support.helper.PostHelper;
 import me.jaeyeop.blog.support.helper.UserHelper.WithPrincipal;
-import me.jaeyeop.blog.user.domain.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
@@ -35,12 +27,6 @@ import org.springframework.data.domain.PageRequest;
  */
 @SuppressWarnings("OptionalGetWithoutIsPresent")
 class CommentIntegrationTest extends IntegrationTest {
-
-  @Autowired
-  private CommentCrudRepository commentCrudRepository;
-
-  @Autowired
-  private PostCrudRepository postCrudRepository;
 
   @WithPrincipal
   @Test
@@ -83,7 +69,10 @@ class CommentIntegrationTest extends IntegrationTest {
   @Test
   void 댓글_조회() throws Exception {
     // GIVEN
-    final var comment = getComment(getPrincipal());
+    final var comment = getComment(
+        getPost(getPrincipal()),
+        getPrincipal()
+    );
     final var information = new CommentInformationProjectionDto(
         comment.id(),
         comment.author().profile().name(),
@@ -109,7 +98,10 @@ class CommentIntegrationTest extends IntegrationTest {
   @Test
   void 댓글_페이지_조회() throws Exception {
     // GIVEN
-    final var comment = getComment(getPrincipal());
+    final var comment = getComment(
+        getPost(getPrincipal()),
+        getPrincipal()
+    );
     final var info = new CommentInformationProjectionDto(
         comment.id(),
         comment.author().profile().name(),
@@ -138,7 +130,10 @@ class CommentIntegrationTest extends IntegrationTest {
   @Test
   void 댓글_업데이트() throws Exception {
     // GIVEN
-    final var comment = getComment(getPrincipal());
+    final var comment = getComment(
+        getPost(getPrincipal()),
+        getPrincipal()
+    );
     final var request = new EditCommentRequestDto("newContent");
 
     // WHEN
@@ -150,7 +145,7 @@ class CommentIntegrationTest extends IntegrationTest {
 
     // THEN
     when.andExpectAll(status().isNoContent());
-    assertThat(commentCrudRepository.findById(comment.id()).get().information().content())
+    assertThat(commentJpaRepository.findById(comment.id()).get().information().content())
         .isEqualTo(request.content());
   }
 
@@ -158,7 +153,10 @@ class CommentIntegrationTest extends IntegrationTest {
   @Test
   void 댓글_삭제() throws Exception {
     // GIVEN
-    final var comment = getComment(getPrincipal());
+    final var comment = getComment(
+        getPost(getPrincipal()),
+        getPrincipal()
+    );
 
     // WHEN
     final var when = mockMvc.perform(
@@ -168,20 +166,7 @@ class CommentIntegrationTest extends IntegrationTest {
 
     // THEN
     when.andExpectAll(status().isNoContent());
-    assertThat(commentCrudRepository.findById(comment.id())).isNotPresent();
-  }
-
-  private Post getPost(final User author) {
-    final var post = postCrudRepository.save(PostHelper.create(author));
-    clearPersistenceContext();
-    return post;
-  }
-
-  private Comment getComment(final User author) {
-    final var post = postCrudRepository.save(PostHelper.create(author));
-    final var comment = commentCrudRepository.save(CommentHelper.create(post, author));
-    clearPersistenceContext();
-    return comment;
+    assertThat(commentJpaRepository.findById(comment.id())).isNotPresent();
   }
 
 }

@@ -11,18 +11,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import me.jaeyeop.blog.support.IntegrationTest;
 import me.jaeyeop.blog.support.helper.UserHelper.WithPrincipal;
 import me.jaeyeop.blog.user.adapter.in.UpdateUserRequestDto;
-import me.jaeyeop.blog.user.adapter.out.UserRepository;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author jaeyeopme Created on 12/02/2022.
  */
 @SuppressWarnings("OptionalGetWithoutIsPresent")
 class UserIntegrationTest extends IntegrationTest {
-
-  @Autowired
-  private UserRepository userRepository;
 
   @WithPrincipal
   @Test
@@ -86,6 +81,8 @@ class UserIntegrationTest extends IntegrationTest {
   void 프로필_삭제() throws Exception {
     // GIVEN
     final var user = getPrincipal();
+    final var post = getPost(user);
+    final var comment = getComment(post, user);
 
     // WHEN
     final var when = mockMvc.perform(
@@ -95,6 +92,8 @@ class UserIntegrationTest extends IntegrationTest {
     // THEN
     when.andExpectAll(status().isNoContent());
     assertThat(userRepository.findById(user.id())).isNotPresent();
+    assertThat(postJpaRepository.findById(post.id())).isNotPresent();
+    assertThat(commentJpaRepository.findById(comment.id())).isNotPresent();
   }
 
 }

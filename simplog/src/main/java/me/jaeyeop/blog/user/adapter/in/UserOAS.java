@@ -72,7 +72,7 @@ public interface UserOAS {
   )
   @Operation(
       summary = "Delete my profile",
-      description = "자신의 프로필을 삭제합니다.(회원 탈퇴)"
+      description = "자신의 프로필을 삭제합니다.(작성한 게시글과 댓글 모두 삭제)"
   )
   void delete(UserPrincipal principal);
 

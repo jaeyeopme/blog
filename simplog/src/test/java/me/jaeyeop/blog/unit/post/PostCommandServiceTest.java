@@ -3,6 +3,7 @@ package me.jaeyeop.blog.unit.post;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
@@ -31,7 +32,7 @@ class PostCommandServiceTest extends UnitTest {
   @Test
   void 게시글_저장() {
     // GIVEN
-    final var stubPost = getStubPost(2L, getStubAuthor(77L));
+    final var stubPost = getStubPost(2L);
     given(userQueryPort.findById(stubPost.author().id())).willReturn(
         Optional.of(stubPost.author()));
     given(postCommandPort.create(any())).willReturn(stubPost);
@@ -48,7 +49,7 @@ class PostCommandServiceTest extends UnitTest {
   @Test
   void 게시글_수정() {
     // GIVEN
-    final var stubPost = getStubPost(1L, getStubAuthor(54L));
+    final var stubPost = getStubPost(1L);
     given(userQueryPort.findById(stubPost.author().id())).willReturn(
         Optional.of(stubPost.author()));
     given(postQueryPort.findById(stubPost.id())).willReturn(Optional.of(stubPost));
@@ -67,7 +68,7 @@ class PostCommandServiceTest extends UnitTest {
   @ParameterizedTest
   void 비어있는_제목으로_게시글_수정(final String newTitle) {
     // GIVEN
-    final var stubPost = getStubPost(1L, getStubAuthor(77L));
+    final var stubPost = getStubPost(1L);
     given(userQueryPort.findById(stubPost.author().id())).willReturn(
         Optional.of(stubPost.author()));
     given(postQueryPort.findById(stubPost.id())).willReturn(Optional.of(stubPost));
@@ -86,7 +87,7 @@ class PostCommandServiceTest extends UnitTest {
   @ParameterizedTest
   void 비어있는_내용으로_게시글_수정(final String newContent) {
     // GIVEN
-    final var stubPost = getStubPost(1L, getStubAuthor(77L));
+    final var stubPost = getStubPost(1L);
     given(userQueryPort.findById(stubPost.author().id())).willReturn(
         Optional.of(stubPost.author()));
     given(postQueryPort.findById(stubPost.id())).willReturn(Optional.of(stubPost));
@@ -117,7 +118,7 @@ class PostCommandServiceTest extends UnitTest {
   @Test
   void 다른_사람의_게시글_수정() {
     // GIVEN
-    final var stubPost = getStubPost(2L, getStubAuthor(7L));
+    final var stubPost = getStubPost(2L);
     given(postQueryPort.findById(stubPost.id())).willReturn(Optional.of(stubPost));
 
     final var stubAuthor = getStubAuthor(5L);
@@ -137,7 +138,7 @@ class PostCommandServiceTest extends UnitTest {
   @Test
   void 게시글_삭제() {
     // GIVEN
-    final var stubPost = getStubPost(1L, getStubAuthor(22L));
+    final var stubPost = getStubPost(1L);
     given(userQueryPort.findById(stubPost.author().id())).willReturn(
         Optional.of(stubPost.author()));
     given(postQueryPort.findById(stubPost.id())).willReturn(Optional.of(stubPost));
@@ -148,6 +149,7 @@ class PostCommandServiceTest extends UnitTest {
 
     // THEN
     then(postCommandPort).should().delete(stubPost);
+    then(commentCommandPort).should().deleteAll(stubPost.comments());
   }
 
   @Test
@@ -163,12 +165,13 @@ class PostCommandServiceTest extends UnitTest {
     // THEN
     assertThatThrownBy(when).isInstanceOf(PostNotFoundException.class);
     then(postCommandPort).should(never()).delete(any(Post.class));
+    then(commentCommandPort).should(never()).deleteAll(anyList());
   }
 
   @Test
   void 다른_사람의_게시글_삭제() {
     // GIVEN
-    final var stubPost = getStubPost(1L, getStubAuthor(8L));
+    final var stubPost = getStubPost(1L);
     given(postQueryPort.findById(stubPost.id())).willReturn(Optional.of(stubPost));
 
     final var stubAuthor = getStubAuthor(11L);
@@ -182,10 +185,11 @@ class PostCommandServiceTest extends UnitTest {
     assertThat(stubPost.author().id()).isNotEqualTo(command.authorId());
     assertThatThrownBy(when).isInstanceOf(AccessDeniedException.class);
     then(postCommandPort).should(never()).delete(any(Post.class));
+    then(commentCommandPort).should(never()).deleteAll(anyList());
   }
 
-  private Post getStubPost(final Long postId, final User author) {
-    final var post = PostHelper.create(author);
+  private Post getStubPost(final Long postId) {
+    final var post = PostHelper.create();
     ReflectionTestUtils.setField(post, "id", postId);
     return post;
   }

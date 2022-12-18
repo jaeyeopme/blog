@@ -1,6 +1,7 @@
 package me.jaeyeop.blog.post.application.service;
 
 import javax.transaction.Transactional;
+import me.jaeyeop.blog.comment.application.port.out.CommentCommandPort;
 import me.jaeyeop.blog.config.error.exception.PostNotFoundException;
 import me.jaeyeop.blog.config.error.exception.UserNotFoundException;
 import me.jaeyeop.blog.post.application.port.in.PostCommandUseCase;
@@ -23,15 +24,19 @@ public class PostCommandService implements PostCommandUseCase {
 
   private final PostQueryPort postQueryPort;
 
+  private final CommentCommandPort commentCommandPort;
+
   private final UserQueryPort userQueryPort;
 
   public PostCommandService(
       final PostCommandPort postCommandPort,
       final PostQueryPort postQueryPort,
+      final CommentCommandPort commentCommandPort,
       final UserQueryPort userQueryPort
   ) {
     this.postCommandPort = postCommandPort;
     this.postQueryPort = postQueryPort;
+    this.commentCommandPort = commentCommandPort;
     this.userQueryPort = userQueryPort;
   }
 
@@ -40,7 +45,6 @@ public class PostCommandService implements PostCommandUseCase {
     final var author = findAuthorByAuthorId(command.authorId());
     final var information = new PostInformation(command.title(), command.content());
     final var post = postCommandPort.create(Post.of(author, information));
-
     return post.id();
   }
 
@@ -55,7 +59,7 @@ public class PostCommandService implements PostCommandUseCase {
   public void delete(final DeleteCommand command) {
     final var post = findById(command.targetId());
     post.confirmAccess(findAuthorByAuthorId(command.authorId()));
-
+    preRemove(post);
     postCommandPort.delete(post);
   }
 
@@ -67,6 +71,10 @@ public class PostCommandService implements PostCommandUseCase {
   private User findAuthorByAuthorId(final Long authorId) {
     return userQueryPort.findById(authorId)
         .orElseThrow(UserNotFoundException::new);
+  }
+
+  private void preRemove(final Post post) {
+    commentCommandPort.deleteAll(post.comments());
   }
 
 }

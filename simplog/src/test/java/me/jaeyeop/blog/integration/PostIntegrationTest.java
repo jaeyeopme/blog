@@ -11,24 +11,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import me.jaeyeop.blog.post.adapter.in.EditPostRequestDto;
 import me.jaeyeop.blog.post.adapter.in.WritePostRequestDto;
-import me.jaeyeop.blog.post.adapter.out.PostCrudRepository;
 import me.jaeyeop.blog.post.adapter.out.PostInformationProjectionDto;
-import me.jaeyeop.blog.post.domain.Post;
 import me.jaeyeop.blog.support.IntegrationTest;
-import me.jaeyeop.blog.support.helper.PostHelper;
 import me.jaeyeop.blog.support.helper.UserHelper.WithPrincipal;
-import me.jaeyeop.blog.user.domain.User;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author jaeyeopme Created on 12/06/2022.
  */
 @SuppressWarnings("OptionalGetWithoutIsPresent")
 class PostIntegrationTest extends IntegrationTest {
-
-  @Autowired
-  private PostCrudRepository postCrudRepository;
 
   @WithPrincipal
   @Test
@@ -87,7 +79,7 @@ class PostIntegrationTest extends IntegrationTest {
 
     // THEN
     when.andExpectAll(status().isNoContent());
-    final var post = postCrudRepository.findById(savedPost.id()).get();
+    final var post = postJpaRepository.findById(savedPost.id()).get();
     assertThat(post.id()).isEqualTo(savedPost.id());
     assertThat(post.information().title()).isEqualTo(request.title());
     assertThat(post.information().content()).isEqualTo(request.content());
@@ -97,7 +89,9 @@ class PostIntegrationTest extends IntegrationTest {
   @Test
   void 게시글_삭제() throws Exception {
     // GIVEN
-    final var post = getPost(getPrincipal());
+    final var author = getPrincipal();
+    final var post = getPost(author);
+    final var comment = getComment(post, author);
 
     // WHEN
     final var when = mockMvc.perform(
@@ -106,13 +100,8 @@ class PostIntegrationTest extends IntegrationTest {
 
     // THEN
     when.andExpectAll(status().isNoContent());
-    assertThat(postCrudRepository.findById(post.id())).isNotPresent();
-  }
-
-  private Post getPost(final User author) {
-    final var post = postCrudRepository.save(PostHelper.create(author));
-    clearPersistenceContext();
-    return post;
+    assertThat(postJpaRepository.findById(post.id())).isNotPresent();
+    assertThat(commentJpaRepository.findById(comment.id())).isNotPresent();
   }
 
 }

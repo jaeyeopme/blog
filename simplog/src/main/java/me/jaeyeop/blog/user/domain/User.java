@@ -1,15 +1,20 @@
 package me.jaeyeop.blog.user.domain;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
+import me.jaeyeop.blog.comment.domain.Comment;
 import me.jaeyeop.blog.config.jpa.AbstractBaseEntity;
 import me.jaeyeop.blog.config.security.authentication.OAuth2Attributes;
 import me.jaeyeop.blog.config.security.authentication.OAuth2Provider;
+import me.jaeyeop.blog.post.domain.Post;
 
 /**
  * @author jaeyeopme Created on 09/27/2022.
@@ -30,6 +35,12 @@ public class User extends AbstractBaseEntity {
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   private OAuth2Provider provider;
+
+  @OneToMany(mappedBy = "author")
+  private List<Post> posts = new ArrayList<>();
+
+  @OneToMany(mappedBy = "author")
+  private List<Comment> comments = new ArrayList<>();
 
   protected User() {
   }

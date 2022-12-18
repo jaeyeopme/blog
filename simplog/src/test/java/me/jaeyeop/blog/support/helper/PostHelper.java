@@ -11,12 +11,17 @@ import me.jaeyeop.blog.user.domain.User;
  */
 public final class PostHelper {
 
+  public static final User DEFAULT_AUTHOR = UserHelper.create();
   private static final String DEFAULT_TITLE = "post default title";
   private static final String DEFAULT_CONTENT = "post default content";
   private static final String DEFAULT_COVER_IMAGE = "post default cover image";
-  private static final String DEFAULT_AUTHOR_NAME = "post default author";
+  private static final String DEFAULT_AUTHOR_NAME = DEFAULT_AUTHOR.profile().name();
 
   private PostHelper() {
+  }
+
+  public static Post create() {
+    return Post.of(DEFAULT_AUTHOR, new PostInformation(DEFAULT_TITLE, DEFAULT_CONTENT));
   }
 
   public static Post create(final User author) {

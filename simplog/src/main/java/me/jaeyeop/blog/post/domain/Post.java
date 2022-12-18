@@ -2,7 +2,6 @@ package me.jaeyeop.blog.post.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -31,7 +30,7 @@ public class Post extends AbstractBaseEntity {
   @JoinColumn(nullable = false, updatable = false)
   private User author;
 
-  @OneToMany(cascade = CascadeType.ALL, mappedBy = "post", orphanRemoval = true)
+  @OneToMany(mappedBy = "post")
   private List<Comment> comments = new ArrayList<>();
 
   protected Post() {
