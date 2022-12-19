@@ -15,8 +15,8 @@ import me.jaeyeop.blog.comment.application.port.in.CommentCommandUseCase.WriteCo
 import me.jaeyeop.blog.comment.application.port.in.CommentQueryUseCase;
 import me.jaeyeop.blog.comment.application.port.in.CommentQueryUseCase.PageQuery;
 import me.jaeyeop.blog.comment.application.port.in.CommentQueryUseCase.Query;
-import me.jaeyeop.blog.config.security.authentication.Principal;
-import me.jaeyeop.blog.config.security.authentication.UserPrincipal;
+import me.jaeyeop.blog.commons.config.security.Principal;
+import me.jaeyeop.blog.commons.config.security.UserPrincipal;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;

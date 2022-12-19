@@ -1,6 +1,6 @@
 package me.jaeyeop.blog.unit.authentication;
 
-import static me.jaeyeop.blog.config.token.JWTProvider.TYPE;
+import static me.jaeyeop.blog.commons.token.JWTProvider.TYPE;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;

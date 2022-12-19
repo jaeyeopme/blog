@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import java.util.Optional;
-import me.jaeyeop.blog.config.error.exception.PostNotFoundException;
+import me.jaeyeop.blog.commons.error.exception.PostNotFoundException;
 import me.jaeyeop.blog.post.application.port.in.PostQueryUseCase.InformationQuery;
 import me.jaeyeop.blog.support.UnitTest;
 import me.jaeyeop.blog.support.helper.PostHelper;

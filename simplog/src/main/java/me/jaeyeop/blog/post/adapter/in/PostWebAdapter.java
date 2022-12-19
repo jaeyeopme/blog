@@ -5,8 +5,8 @@ import static me.jaeyeop.blog.post.application.port.in.PostCommandUseCase.Delete
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 import java.net.URI;
-import me.jaeyeop.blog.config.security.authentication.Principal;
-import me.jaeyeop.blog.config.security.authentication.UserPrincipal;
+import me.jaeyeop.blog.commons.config.security.Principal;
+import me.jaeyeop.blog.commons.config.security.UserPrincipal;
 import me.jaeyeop.blog.post.adapter.out.PostInformationProjectionDto;
 import me.jaeyeop.blog.post.application.port.in.PostCommandUseCase;
 import me.jaeyeop.blog.post.application.port.in.PostCommandUseCase.EditCommand;

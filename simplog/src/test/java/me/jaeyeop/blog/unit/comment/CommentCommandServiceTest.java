@@ -11,9 +11,9 @@ import me.jaeyeop.blog.comment.application.port.in.CommentCommandUseCase.DeleteC
 import me.jaeyeop.blog.comment.application.port.in.CommentCommandUseCase.EditCommand;
 import me.jaeyeop.blog.comment.application.port.in.CommentCommandUseCase.WriteCommand;
 import me.jaeyeop.blog.comment.domain.Comment;
-import me.jaeyeop.blog.config.error.exception.AccessDeniedException;
-import me.jaeyeop.blog.config.error.exception.CommentNotFoundException;
-import me.jaeyeop.blog.config.error.exception.PostNotFoundException;
+import me.jaeyeop.blog.commons.error.exception.AccessDeniedException;
+import me.jaeyeop.blog.commons.error.exception.CommentNotFoundException;
+import me.jaeyeop.blog.commons.error.exception.PostNotFoundException;
 import me.jaeyeop.blog.post.domain.Post;
 import me.jaeyeop.blog.support.UnitTest;
 import me.jaeyeop.blog.support.helper.CommentHelper;

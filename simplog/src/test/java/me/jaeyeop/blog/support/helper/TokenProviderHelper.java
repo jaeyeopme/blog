@@ -3,8 +3,8 @@ package me.jaeyeop.blog.support.helper;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
-import me.jaeyeop.blog.config.token.JWTProvider;
-import me.jaeyeop.blog.config.token.TokenProvider;
+import me.jaeyeop.blog.commons.token.JWTProvider;
+import me.jaeyeop.blog.commons.token.TokenProvider;
 
 /**
  * @author jaeyeopme Created on 10/02/2022.

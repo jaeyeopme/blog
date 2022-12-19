@@ -7,10 +7,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.ConstraintDeclarationException;
 import javax.validation.constraints.Email;
-import me.jaeyeop.blog.config.oas.dto.OASResponse.InvalidArgumentResponse;
-import me.jaeyeop.blog.config.oas.dto.OASResponse.NotFoundUserResponse;
-import me.jaeyeop.blog.config.oas.dto.OASResponse.SecurityResponse;
-import me.jaeyeop.blog.config.security.authentication.UserPrincipal;
+import me.jaeyeop.blog.commons.config.oas.OASResponse.InvalidArgumentResponse;
+import me.jaeyeop.blog.commons.config.oas.OASResponse.NotFoundUserResponse;
+import me.jaeyeop.blog.commons.config.oas.OASResponse.SecurityResponse;
+import me.jaeyeop.blog.commons.config.security.UserPrincipal;
 import org.springframework.validation.annotation.Validated;
 
 /**

@@ -2,7 +2,7 @@ package me.jaeyeop.blog.integration;
 
 import static me.jaeyeop.blog.authentication.adapter.in.AuthenticationWebAdaptor.AUTHENTICATION_API_URI;
 import static me.jaeyeop.blog.authentication.adapter.in.AuthenticationWebAdaptor.REFRESH_AUTHORIZATION;
-import static me.jaeyeop.blog.config.token.JWTProvider.TYPE;
+import static me.jaeyeop.blog.commons.token.JWTProvider.TYPE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -13,7 +13,7 @@ import me.jaeyeop.blog.authentication.adapter.out.ExpiredTokenRepository;
 import me.jaeyeop.blog.authentication.adapter.out.RefreshTokenRepository;
 import me.jaeyeop.blog.authentication.domain.RefreshToken;
 import me.jaeyeop.blog.authentication.domain.Token;
-import me.jaeyeop.blog.config.token.TokenProvider;
+import me.jaeyeop.blog.commons.token.TokenProvider;
 import me.jaeyeop.blog.support.IntegrationTest;
 import me.jaeyeop.blog.support.helper.UserHelper.WithPrincipal;
 import org.junit.jupiter.api.AfterEach;

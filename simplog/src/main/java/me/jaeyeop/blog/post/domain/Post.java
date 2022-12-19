@@ -11,8 +11,8 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import me.jaeyeop.blog.comment.domain.Comment;
-import me.jaeyeop.blog.config.error.exception.AccessDeniedException;
-import me.jaeyeop.blog.config.jpa.AbstractBaseEntity;
+import me.jaeyeop.blog.commons.error.exception.AccessDeniedException;
+import me.jaeyeop.blog.commons.persistence.AbstractBaseEntity;
 import me.jaeyeop.blog.user.domain.User;
 
 /**

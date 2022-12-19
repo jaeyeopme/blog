@@ -11,9 +11,9 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import me.jaeyeop.blog.comment.domain.Comment;
-import me.jaeyeop.blog.config.jpa.AbstractBaseEntity;
-import me.jaeyeop.blog.config.security.authentication.OAuth2Attributes;
-import me.jaeyeop.blog.config.security.authentication.OAuth2Provider;
+import me.jaeyeop.blog.commons.authentication.OAuth2Attributes;
+import me.jaeyeop.blog.commons.authentication.OAuth2Provider;
+import me.jaeyeop.blog.commons.persistence.AbstractBaseEntity;
 import me.jaeyeop.blog.post.domain.Post;
 
 /**

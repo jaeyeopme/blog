@@ -9,7 +9,7 @@ import me.jaeyeop.blog.authentication.application.port.out.RefreshTokenQueryPort
 import me.jaeyeop.blog.authentication.domain.ExpiredToken;
 import me.jaeyeop.blog.authentication.domain.RefreshToken;
 import me.jaeyeop.blog.authentication.domain.Token;
-import me.jaeyeop.blog.config.token.TokenProvider;
+import me.jaeyeop.blog.commons.token.TokenProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 

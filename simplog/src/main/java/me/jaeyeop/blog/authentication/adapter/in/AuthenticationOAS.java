@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import me.jaeyeop.blog.config.oas.dto.OASResponse.SecurityResponse;
+import me.jaeyeop.blog.commons.config.oas.OASResponse.SecurityResponse;
 import org.springframework.http.MediaType;
 
 @Tag(

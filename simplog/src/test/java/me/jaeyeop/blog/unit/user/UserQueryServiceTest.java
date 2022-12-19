@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import java.util.Optional;
-import me.jaeyeop.blog.config.error.exception.UserNotFoundException;
+import me.jaeyeop.blog.commons.error.exception.UserNotFoundException;
 import me.jaeyeop.blog.support.UnitTest;
 import me.jaeyeop.blog.support.helper.UserHelper;
 import me.jaeyeop.blog.user.application.port.in.UserQueryUseCase.ProfileQuery;

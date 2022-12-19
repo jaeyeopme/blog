@@ -2,7 +2,7 @@ package me.jaeyeop.blog.user.application.service;
 
 import javax.transaction.Transactional;
 import me.jaeyeop.blog.comment.application.port.out.CommentCommandPort;
-import me.jaeyeop.blog.config.error.exception.UserNotFoundException;
+import me.jaeyeop.blog.commons.error.exception.UserNotFoundException;
 import me.jaeyeop.blog.post.application.port.out.PostCommandPort;
 import me.jaeyeop.blog.user.application.port.in.UserCommandUseCase;
 import me.jaeyeop.blog.user.application.port.out.UserCommandPort;

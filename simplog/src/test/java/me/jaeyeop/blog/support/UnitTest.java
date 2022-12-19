@@ -9,7 +9,7 @@ import me.jaeyeop.blog.comment.application.port.out.CommentCommandPort;
 import me.jaeyeop.blog.comment.application.port.out.CommentQueryPort;
 import me.jaeyeop.blog.comment.application.service.CommentCommandService;
 import me.jaeyeop.blog.comment.application.service.CommentQueryService;
-import me.jaeyeop.blog.config.token.TokenProvider;
+import me.jaeyeop.blog.commons.token.TokenProvider;
 import me.jaeyeop.blog.post.application.port.out.PostCommandPort;
 import me.jaeyeop.blog.post.application.port.out.PostQueryPort;
 import me.jaeyeop.blog.post.application.service.PostCommandService;

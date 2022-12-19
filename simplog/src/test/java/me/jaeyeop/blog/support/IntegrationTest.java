@@ -9,7 +9,7 @@ import javax.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import me.jaeyeop.blog.comment.adapter.out.CommentJpaRepository;
 import me.jaeyeop.blog.comment.domain.Comment;
-import me.jaeyeop.blog.config.security.authentication.UserPrincipal;
+import me.jaeyeop.blog.commons.config.security.UserPrincipal;
 import me.jaeyeop.blog.post.adapter.out.PostJpaRepository;
 import me.jaeyeop.blog.post.domain.Post;
 import me.jaeyeop.blog.support.helper.CommentHelper;
@@ -83,7 +83,7 @@ public abstract class IntegrationTest extends ContainerTest {
     return ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
         .getPrincipal()).user();
   }
-  
+
   protected Post getPost(final User author) {
     final var post = postJpaRepository.save(PostHelper.create(author));
     clearPersistenceContext();

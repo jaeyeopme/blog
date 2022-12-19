@@ -7,8 +7,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
-import me.jaeyeop.blog.config.error.exception.AccessDeniedException;
-import me.jaeyeop.blog.config.jpa.AbstractBaseEntity;
+import me.jaeyeop.blog.commons.error.exception.AccessDeniedException;
+import me.jaeyeop.blog.commons.persistence.AbstractBaseEntity;
 import me.jaeyeop.blog.post.domain.Post;
 import me.jaeyeop.blog.user.domain.User;
 
