@@ -2,7 +2,7 @@
 
 게시글을 작성하고, 다른 사용자의 게시글에 댓글을 작성할 수 있는 블로그 API 서버입니다.
 
-* [Blog API Docs v1.0.0](https://shorturl.at/sUXZ1)
+* ~~[Blog API Docs v1.0.0](https://shorturl.at/sUXZ1)~~(서버 운영 중단)
 
 ## Tech Stacks
 
