@@ -1,0 +1,80 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - develop
+
+env:
+  IMAGE_TAG: latest
+  CONTAINER_NAME: green
+  CONTAINER_PORT: 80
+  CONTAINER_NETWORK: blog
+
+jobs:
+  build:
+    name: CI
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout GitHub Actions
+        uses: actions/checkout@v3
+        with:
+          ref: develop
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+
+      - name: Set Gradle Permission
+        run: chmod +x ./gradlew
+
+      - name: Test with Gradle
+        run: ./gradlew unitTest
+
+      - name: Build And Push Image to Amazon ECR with Jib
+        run: |
+          ./gradlew clean jib --image '${{ secrets.IMAGE_NAME }}' \
+              -Djib.container.jvmFlags=-Dspring.profiles.active='dev',-Dserver.port='${{ env.CONTAINER_PORT }}' \
+              -Djib.container.ports='${{ env.CONTAINER_PORT }}'
+
+  deploy:
+    name: CD
+    needs: build
+    runs-on: [ self-hosted, blog ]
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Docker Run
+        run: |
+          docker rm -f ${{ env.CONTAINER_NAME }}
+          docker system prune -a -f
+          docker run -d \
+            --env-file '${{ secrets.CONTAINER_ENV_FILE }}' \
+            -p 80:${{ env.CONTAINER_PORT }} \
+            --network ${{ env.CONTAINER_NETWORK }} \
+            --name '${{ env.CONTAINER_NAME }}' \
+            '${{ secrets.IMAGE_NAME }}:${{ env.IMAGE_TAG }}'

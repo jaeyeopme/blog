@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  cache:
+    platform: linux/amd64
+    image: redis:7.0.4-alpine
+    container_name: cache
+    environment:
+      TZ: UTC
+    volumes:
+      - redis:/data
+    ports:
+      - '6379:6379'
+    command:
+      - '--requirepass test'
+
+  database:
+    platform: linux/amd64
+    image: mariadb:10.7.3
+    container_name: database
+    environment:
+      MYSQL_HOST: localhost
+      MYSQL_PORT: 3306
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: blog
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+      TZ: UTC
+    volumes:
+      - mariadb:/var/lib/mysql
+    ports:
+      - '3306:3306'
+    command:
+      - '--character-set-server=utf8mb4'
+      - '--collation-server=utf8mb4_general_ci'
+
+volumes:
+  redis:
+  mariadb:
+
+networks:
+  blog:
+    driver: bridge
