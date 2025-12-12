@@ -3,7 +3,6 @@ plugins {
     id "org.springframework.boot" version "3.5.8"
     id "io.spring.dependency-management" version "1.1.7"
     id "com.google.cloud.tools.jib" version "3.5.1"
-    id "io.freefair.lombok" version "9.1.0"
 }
 
 group = "me.jaeyeop"
@@ -29,41 +28,48 @@ def testcontainersVersion = "1.17.4"
 
 
 dependencies {
-    implementation "org.springframework.boot:spring-boot-starter-web"
-    implementation "org.springframework.boot:spring-boot-starter-validation"
-
+    // implementation — spring boot starters
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "org.springframework.boot:spring-boot-starter-data-redis"
+    implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
+    implementation "org.springframework.boot:spring-boot-starter-security"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    implementation "org.springframework.boot:spring-boot-starter-web"
 
+    // implementation — libraries
     implementation "io.github.openfeign.querydsl:querydsl-core:${querydslVersion}"
     implementation "io.github.openfeign.querydsl:querydsl-jpa:${querydslVersion}"
-    annotationProcessor "io.github.openfeign.querydsl:querydsl-apt:${querydslVersion}:jpa"
-
-    implementation "org.springframework.boot:spring-boot-starter-security"
-    implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
-
-    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.14"
     implementation "org.mapstruct:mapstruct:1.5.3.Final"
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.14"
 
-    compileOnly "org.springframework.boot:spring-boot-devtools"
+    // compileOnly
     compileOnly "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
+    compileOnly "org.projectlombok:lombok"
+    compileOnly "org.springframework.boot:spring-boot-devtools"
 
+    // runtimeOnly
     runtimeOnly "io.jsonwebtoken:jjwt-impl:${jjwtVersion}", "io.jsonwebtoken:jjwt-jackson:${jjwtVersion}"
     runtimeOnly "org.mariadb.jdbc:mariadb-java-client"
 
+    // annotationProcessor
+    annotationProcessor "io.github.openfeign.querydsl:querydsl-apt:${querydslVersion}:jpa"
     annotationProcessor "org.mapstruct:mapstruct-processor:1.5.3.Final"
+    annotationProcessor "org.projectlombok:lombok"
     annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
 
-    testImplementation "org.testcontainers:testcontainers:${testcontainersVersion}"
+    // testImplementation
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.springframework.security:spring-security-test"
     testImplementation "org.testcontainers:junit-jupiter:${testcontainersVersion}"
     testImplementation "org.testcontainers:mariadb:${testcontainersVersion}"
+    testImplementation "org.testcontainers:testcontainers:${testcontainersVersion}"
 
-    testImplementation("org.springframework.boot:spring-boot-starter-test") {
-        exclude group: "org.junit.vintage", module: "junit-vintage-engine"
-    }
-    testImplementation "org.springframework.security:spring-security-test"
-
+    // testCompileOnly
     testCompileOnly "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
+    testCompileOnly "org.projectlombok:lombok"
+
+    // testAnnotationProcessor
+    testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
 jib {
@@ -79,18 +85,27 @@ jib {
     }
 }
 
-tasks.named("test", Test) {
+tasks.withType(Test).configureEach {
     useJUnitPlatform()
+
+    jvmArgs '-XX:+EnableDynamicAgentLoading'
+
+    testLogging { events "passed", "skipped", "failed" }
+
+    outputs.upToDateWhen { false }
+}
+
+def setupTestPath = {
+    testClassesDirs = tasks.test.testClassesDirs
+    classpath = tasks.test.classpath
 }
 
 tasks.register("unitTest", Test) {
-    useJUnitPlatform {
-        includeTags "unit"
-    }
+    useJUnitPlatform { includeTags "unit" }
+    configure setupTestPath
 }
 
 tasks.register("integrationTest", Test) {
-    useJUnitPlatform {
-        includeTags "integration"
-    }
+    useJUnitPlatform { includeTags "integration" }
+    configure setupTestPath
 }

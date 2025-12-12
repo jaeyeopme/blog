@@ -1,5 +1,6 @@
 package me.jaeyeop.blog.user.domain;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -36,10 +37,10 @@ public class User extends AbstractBaseEntity {
   @Column(nullable = false)
   private OAuth2Provider provider;
 
-  @OneToMany(mappedBy = "author")
+  @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE, orphanRemoval = true)
   private final List<Post> posts = new ArrayList<>();
 
-  @OneToMany(mappedBy = "author")
+  @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE, orphanRemoval = true)
   private final List<Comment> comments = new ArrayList<>();
 
   protected User() {

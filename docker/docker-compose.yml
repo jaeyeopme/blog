@@ -1,20 +1,8 @@
 version: "3.8"
 
 services:
-  cache:
-    platform: linux/amd64
-    image: redis:7.0.4-alpine
-    container_name: cache
-    environment:
-      TZ: UTC
-    volumes:
-      - redis:/data
-    ports:
-      - '6379:6379'
-    command:
-      - '--requirepass test'
-
   database:
+    restart: always
     platform: linux/amd64
     image: mariadb:10.7.3
     container_name: database
@@ -33,6 +21,19 @@ services:
     command:
       - '--character-set-server=utf8mb4'
       - '--collation-server=utf8mb4_general_ci'
+  cache:
+    restart: always
+    platform: linux/amd64
+    image: redis:7.0.4-alpine
+    container_name: cache
+    environment:
+      TZ: UTC
+    volumes:
+      - redis:/data
+    ports:
+      - '6379:6379'
+    command:
+      - '--requirepass test'
 
 volumes:
   redis:

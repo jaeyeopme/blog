@@ -3,7 +3,6 @@ package me.jaeyeop.blog.unit.user;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
@@ -41,8 +40,8 @@ class UserCommandServiceTest extends UnitTest {
     assertThat(user.profile().introduce()).isEqualTo(command.newIntroduce());
   }
 
-  @NullAndEmptySource
   @ParameterizedTest
+  @NullAndEmptySource
   void 비어있는_이름으로_프로필_업데이트(final String newName) {
     // GIVEN
     final var user = getUser(81L);
@@ -58,8 +57,8 @@ class UserCommandServiceTest extends UnitTest {
     assertThat(user.profile().introduce()).isEqualTo(command.newIntroduce());
   }
 
-  @NullAndEmptySource
   @ParameterizedTest
+  @NullAndEmptySource
   void 비어있는_소개로_프로필_업데이트(final String newIntroduce) {
     // GIVEN
     final var user = getUser(81L);
@@ -101,8 +100,6 @@ class UserCommandServiceTest extends UnitTest {
 
     // THEN
     then(userCommandPort).should().delete(user);
-    then(postCommandPort).should().deleteAll(user.posts());
-    then(commentCommandPort).should().deleteAll(user.comments());
   }
 
   @Test
@@ -117,8 +114,6 @@ class UserCommandServiceTest extends UnitTest {
     // THEN
     assertThatThrownBy(when).isInstanceOf(UserNotFoundException.class);
     then(userCommandPort).should(never()).delete(any(User.class));
-    then(postCommandPort).should(never()).deleteAll(anyList());
-    then(commentCommandPort).should(never()).deleteAll(anyList());
   }
 
   private User getUser(final Long userId) {

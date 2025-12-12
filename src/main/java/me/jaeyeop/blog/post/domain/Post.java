@@ -1,5 +1,6 @@
 package me.jaeyeop.blog.post.domain;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -30,7 +31,7 @@ public class Post extends AbstractBaseEntity {
   @JoinColumn(nullable = false, updatable = false)
   private User author;
 
-  @OneToMany(mappedBy = "post")
+  @OneToMany(mappedBy = "post",cascade = CascadeType.REMOVE, orphanRemoval = true)
   private final List<Comment> comments = new ArrayList<>();
 
   protected Post() {

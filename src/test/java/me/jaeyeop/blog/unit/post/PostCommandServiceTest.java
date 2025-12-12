@@ -3,7 +3,6 @@ package me.jaeyeop.blog.unit.post;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
@@ -64,8 +63,8 @@ class PostCommandServiceTest extends UnitTest {
     assertThat(stubPost.information().content()).isEqualTo(command.newContent());
   }
 
-  @NullAndEmptySource
   @ParameterizedTest
+  @NullAndEmptySource
   void 비어있는_제목으로_게시글_수정(final String newTitle) {
     // GIVEN
     final var stubPost = getStubPost(1L);
@@ -83,8 +82,8 @@ class PostCommandServiceTest extends UnitTest {
     assertThat(stubPost.information().content()).isEqualTo(command.newContent());
   }
 
-  @NullAndEmptySource
   @ParameterizedTest
+  @NullAndEmptySource
   void 비어있는_내용으로_게시글_수정(final String newContent) {
     // GIVEN
     final var stubPost = getStubPost(1L);
@@ -149,7 +148,6 @@ class PostCommandServiceTest extends UnitTest {
 
     // THEN
     then(postCommandPort).should().delete(stubPost);
-    then(commentCommandPort).should().deleteAll(stubPost.comments());
   }
 
   @Test
@@ -165,7 +163,6 @@ class PostCommandServiceTest extends UnitTest {
     // THEN
     assertThatThrownBy(when).isInstanceOf(PostNotFoundException.class);
     then(postCommandPort).should(never()).delete(any(Post.class));
-    then(commentCommandPort).should(never()).deleteAll(anyList());
   }
 
   @Test
@@ -185,7 +182,6 @@ class PostCommandServiceTest extends UnitTest {
     assertThat(stubPost.author().id()).isNotEqualTo(command.authorId());
     assertThatThrownBy(when).isInstanceOf(AccessDeniedException.class);
     then(postCommandPort).should(never()).delete(any(Post.class));
-    then(commentCommandPort).should(never()).deleteAll(anyList());
   }
 
   private Post getStubPost(final Long postId) {
