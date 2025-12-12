@@ -1,7 +1,7 @@
 package me.jaeyeop.blog.commons.config.security;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import me.jaeyeop.blog.authentication.adapter.in.AuthenticationWebAdaptor;
 import me.jaeyeop.blog.comment.adapter.in.CommentWebAdapter;
 import me.jaeyeop.blog.commons.authentication.OAuth2AuthenticationFilter;
@@ -13,9 +13,9 @@ import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
@@ -50,54 +50,39 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(final HttpSecurity httpSecurity) throws Exception {
-    httpSecurity
-        .headers().frameOptions().disable()
-        .and()
-        .csrf().disable()
-        .cors().disable()
-        .formLogin().disable()
-        .httpBasic().disable()
-        .sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-    httpSecurity
-        .addFilterAt(oAuth2AuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-        .oauth2Login()
-        .successHandler(oAuth2SuccessHandler)
-        .userInfoEndpoint()
-        .userService(oAuth2UserServiceDelegator)
-        .and()
-        .authorizationEndpoint()
-        .baseUri(AuthenticationWebAdaptor.AUTHENTICATION_API_URI);
-
-    httpSecurity
-        .exceptionHandling()
-        .accessDeniedHandler(getAccessDeniedHandler())
-        .authenticationEntryPoint(getAuthenticationEntryPoint());
-
-    httpSecurity
-        .authorizeRequests(getAuthorizeRequests());
-
-    return httpSecurity.build();
-  }
-
-  private Customizer<ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry> getAuthorizeRequests() {
     final var oas = new String[]{"/swagger-ui/**", "/api-docs/**"};
-    final var permitAll = new String[]{
+    final var endpoint = new String[]{
         UserWebAdapter.USER_API_URI + "/*",
         PostWebAdapter.POST_API_URI + "/**",
         CommentWebAdapter.COMMENT_API_URI + "/**"};
 
-    return urlRegistry -> urlRegistry
-        .requestMatchers(
-            PathRequest.toStaticResources().atCommonLocations())
-        .permitAll()
-        .antMatchers(HttpMethod.GET, oas)
-        .permitAll()
-        .antMatchers(HttpMethod.GET, permitAll)
-        .permitAll()
-        .anyRequest()
-        .authenticated();
+    httpSecurity
+        .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+        .csrf(AbstractHttpConfigurer::disable)
+        .cors(AbstractHttpConfigurer::disable)
+        .formLogin(AbstractHttpConfigurer::disable)
+        .httpBasic(AbstractHttpConfigurer::disable)
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .addFilterAt(oAuth2AuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+        .oauth2Login(oauth2 -> oauth2
+            .successHandler(oAuth2SuccessHandler)
+            .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserServiceDelegator))
+            .authorizationEndpoint(authorization -> authorization
+                .baseUri(AuthenticationWebAdaptor.AUTHENTICATION_API_URI))
+        )
+        .exceptionHandling(exceptions -> exceptions
+            .accessDeniedHandler(getAccessDeniedHandler())
+            .authenticationEntryPoint(getAuthenticationEntryPoint())
+        )
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+            .requestMatchers(HttpMethod.GET, oas).permitAll()
+            .requestMatchers(HttpMethod.GET, endpoint).permitAll()
+            .anyRequest().authenticated()
+        );
+
+    return httpSecurity.build();
   }
 
   private AuthenticationEntryPoint getAuthenticationEntryPoint() {

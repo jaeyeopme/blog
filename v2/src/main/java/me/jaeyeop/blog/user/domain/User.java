@@ -1,14 +1,14 @@
 package me.jaeyeop.blog.user.domain;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.OneToMany;
-import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import me.jaeyeop.blog.comment.domain.Comment;
 import me.jaeyeop.blog.commons.authentication.OAuth2Attributes;
@@ -37,10 +37,10 @@ public class User extends AbstractBaseEntity {
   private OAuth2Provider provider;
 
   @OneToMany(mappedBy = "author")
-  private List<Post> posts = new ArrayList<>();
+  private final List<Post> posts = new ArrayList<>();
 
   @OneToMany(mappedBy = "author")
-  private List<Comment> comments = new ArrayList<>();
+  private final List<Comment> comments = new ArrayList<>();
 
   protected User() {
   }

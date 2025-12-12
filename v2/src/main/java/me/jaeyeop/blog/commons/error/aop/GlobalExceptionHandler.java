@@ -1,16 +1,13 @@
 package me.jaeyeop.blog.commons.error.aop;
 
-import javax.validation.ConstraintViolationException;
-import javax.validation.Valid;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import me.jaeyeop.blog.commons.error.Error;
 import me.jaeyeop.blog.commons.error.ErrorResponse;
 import me.jaeyeop.blog.commons.error.FieldErrorResponse;
 import me.jaeyeop.blog.commons.error.exception.AbstractBaseException;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.NonNull;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.annotation.Validated;
@@ -19,15 +16,13 @@ import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 /**
  * @author jaeyeopme Created on 09/30/2022.
  */
 @Slf4j
 @RestControllerAdvice
-public final class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+public final class GlobalExceptionHandler {
 
   private static final String LOG_FORMAT = "Class Name: {}, Message: {}";
 
@@ -88,7 +83,7 @@ public final class GlobalExceptionHandler extends ResponseEntityExceptionHandler
   }
 
   /**
-   * 데이터 바인딩 에러 예외 처리 재정의
+   * 데이터 바인딩 에러 예외 처리
    *
    * @param e 인수 바인딩 예외
    * @return 바인딩 에러 필드를 포함한 HTTP 400 BAD_REQUEST
@@ -102,17 +97,14 @@ public final class GlobalExceptionHandler extends ResponseEntityExceptionHandler
   }
 
   /**
-   * 데이터 바인딩 에러 예외 처리 재정의
+   * 데이터 바인딩 에러 예외 처리
    *
    * @param e {@link Validated} 및 {@link Valid} 인수 바인딩 예외
    * @return 바인딩 에러 필드를 포함한 HTTP 400 BAD_REQUEST
    */
-  @Override
-  protected @NonNull ResponseEntity<Object> handleMethodArgumentNotValid(
-      @NonNull final MethodArgumentNotValidException e,
-      @NonNull final HttpHeaders headers,
-      @NonNull final HttpStatus status,
-      @NonNull final WebRequest request) {
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ResponseEntity<FieldErrorResponse> handleMethodArgumentNotValid(
+      final MethodArgumentNotValidException e) {
     logError(e);
     return ResponseEntity.badRequest()
         .body(FieldErrorResponse.from(e.getBindingResult()));

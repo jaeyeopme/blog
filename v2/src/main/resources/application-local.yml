@@ -17,10 +17,11 @@ spring:
       password: test
       connection-init-sql: SELECT 1
 
-  redis:
-    port: 6379
-    host: localhost
-    password: test
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: test
 
   security:
     oauth2:

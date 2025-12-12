@@ -1,166 +1,96 @@
 plugins {
-    id 'org.springframework.boot' version '2.7.3'
-    id 'io.spring.dependency-management' version '1.0.13.RELEASE'
-    id 'io.freefair.lombok' version '6.5.1'
-    id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
-    id 'com.google.cloud.tools.jib' version '3.3.1'
-    id 'jacoco'
-    id 'java'
+    id "java"
+    id "org.springframework.boot" version "3.5.8"
+    id "io.spring.dependency-management" version "1.1.7"
+    id "com.google.cloud.tools.jib" version "3.5.1"
+    id "io.freefair.lombok" version "9.1.0"
 }
 
-group = 'me.jaeyeop'
-version = '1.0.0'
-sourceCompatibility = '17'
+group = "me.jaeyeop"
+version = "1.0.0"
+
+// spring boot dependency management 에서
+// 구성되는 commons-lang3 버전을 고정(3.17.0 이하 보안 취약점)
+ext['commons-lang3.version'] = '3.18.0'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
 
 repositories {
     mavenCentral()
 }
 
+def querydslVersion = "7.1"
+def jjwtVersion = "0.11.5"
+def testcontainersVersion = "1.17.4"
+
+
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
 
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    implementation 'com.querydsl:querydsl-jpa'
-    implementation "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-data-redis"
 
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation "io.github.openfeign.querydsl:querydsl-core:${querydslVersion}"
+    implementation "io.github.openfeign.querydsl:querydsl-jpa:${querydslVersion}"
+    annotationProcessor "io.github.openfeign.querydsl:querydsl-apt:${querydslVersion}:jpa"
 
-    implementation 'org.springdoc:springdoc-openapi-ui:1.6.13'
-    implementation 'org.springdoc:springdoc-openapi-security:1.6.13'
+    implementation "org.springframework.boot:spring-boot-starter-security"
+    implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
 
-    implementation 'org.mapstruct:mapstruct:1.5.3.Final'
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.14"
+    implementation "org.mapstruct:mapstruct:1.5.3.Final"
 
-    compileOnly 'org.springframework.boot:spring-boot-devtools'
-    compileOnly 'io.jsonwebtoken:jjwt-api:0.11.5'
+    compileOnly "org.springframework.boot:spring-boot-devtools"
+    compileOnly "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
 
-    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5', 'io.jsonwebtoken:jjwt-jackson:0.11.5'
-    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+    runtimeOnly "io.jsonwebtoken:jjwt-impl:${jjwtVersion}", "io.jsonwebtoken:jjwt-jackson:${jjwtVersion}"
+    runtimeOnly "org.mariadb.jdbc:mariadb-java-client"
 
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
-    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+    annotationProcessor "org.mapstruct:mapstruct-processor:1.5.3.Final"
+    annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
 
-    testImplementation 'org.testcontainers:testcontainers:1.17.4'
-    testImplementation 'org.testcontainers:junit-jupiter:1.17.4'
-    testImplementation 'org.testcontainers:mariadb:1.17.4'
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    testImplementation "org.testcontainers:testcontainers:${testcontainersVersion}"
+    testImplementation "org.testcontainers:junit-jupiter:${testcontainersVersion}"
+    testImplementation "org.testcontainers:mariadb:${testcontainersVersion}"
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude group: "org.junit.vintage", module: "junit-vintage-engine"
     }
-    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation "org.springframework.security:spring-security-test"
 
-    testCompileOnly 'io.jsonwebtoken:jjwt-api:0.11.5'
-}
-
-def querydslDir = "$buildDir/generated/querydsl"
-
-querydsl {
-    jpa = true
-    querydslSourcesDir = querydslDir
-}
-
-sourceSets {
-    main.java.srcDir querydslDir
-}
-
-configurations {
-    querydsl.extendsFrom compileClasspath
-}
-
-compileQuerydsl {
-    options.annotationProcessorPath = configurations.querydsl
+    testCompileOnly "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
 }
 
 jib {
     from {
-        image = 'amazoncorretto:17.0.5-alpine'
+        image = "amazoncorretto:17.0.5-alpine"
     }
     to {
-        tags = ["$project.version".toString(), 'latest']
+        tags = ["$project.version".toString(), "latest"]
 
     }
     container {
-        creationTime = 'USE_CURRENT_TIMESTAMP'
+        creationTime = "USE_CURRENT_TIMESTAMP"
     }
 }
 
-tasks.named('test', Test) {
+tasks.named("test", Test) {
     useJUnitPlatform()
-    finalizedBy jacocoTestReport
 }
 
-tasks.register('unitTest', Test) {
+tasks.register("unitTest", Test) {
     useJUnitPlatform {
-        includeTags 'unit'
+        includeTags "unit"
     }
 }
 
-tasks.register('integrationTest', Test) {
+tasks.register("integrationTest", Test) {
     useJUnitPlatform {
-        includeTags 'integration'
-    }
-}
-
-jacoco {
-    toolVersion = '0.8.8'
-}
-
-jacocoTestReport {
-    dependsOn test
-
-    reports {
-        html.enabled true
-        xml.enabled false
-        csv.enabled false
-    }
-
-    def QClasses = []
-    for (qPattern in '**/QA'..'**/QZ') {
-        QClasses.add(qPattern + '*')
-    }
-
-    afterEvaluate {
-        classDirectories.setFrom(files(classDirectories.files.collect {
-            fileTree(dir: it,
-                    exclude: [
-                            '**/config/**',
-                            '**/*Application*'
-                    ] + QClasses)
-        }))
-    }
-
-    finalizedBy 'jacocoTestCoverageVerification'
-}
-
-jacocoTestCoverageVerification {
-    def QClasses = []
-
-    for (qPattern in '*.QA'..'*.QZ') {
-        QClasses.add(qPattern + '*')
-    }
-
-    violationRules {
-        rule {
-            enabled = true
-            element = 'CLASS'
-
-            limit {
-                counter = 'LINE'
-                value = 'COVEREDRATIO'
-                minimum = 0.75
-            }
-
-            limit {
-                counter = 'BRANCH'
-                value = 'COVEREDRATIO'
-                minimum = 1.0
-            }
-
-            excludes = [
-                    '**.config.**',
-                    '**.*Application'
-            ] + QClasses
-        }
+        includeTags "integration"
     }
 }

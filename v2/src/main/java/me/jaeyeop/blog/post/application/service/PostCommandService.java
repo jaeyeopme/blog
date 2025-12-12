@@ -1,6 +1,6 @@
 package me.jaeyeop.blog.post.application.service;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import me.jaeyeop.blog.comment.application.port.out.CommentCommandPort;
 import me.jaeyeop.blog.commons.error.exception.PostNotFoundException;
 import me.jaeyeop.blog.commons.error.exception.UserNotFoundException;

@@ -1,6 +1,6 @@
 package me.jaeyeop.blog.commons.authentication;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import me.jaeyeop.blog.commons.config.security.UserPrincipal;
 import me.jaeyeop.blog.user.application.port.out.UserCommandPort;
 import me.jaeyeop.blog.user.application.port.out.UserQueryPort;

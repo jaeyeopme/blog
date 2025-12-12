@@ -1,8 +1,8 @@
 package me.jaeyeop.blog.commons.error;
 
+import jakarta.validation.ConstraintViolation;
 import java.util.List;
 import java.util.Set;
-import javax.validation.ConstraintViolation;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;

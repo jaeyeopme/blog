@@ -14,10 +14,11 @@ spring:
       password: ${MYSQL_PASSWORD}
       connection-init-sql: SELECT 1
 
-  redis:
-    port: ${REDIS_PORT}
-    host: ${REDIS_HOST}
-    password: ${REDIS_PASSWORD}
+  data:
+    redis:
+      port: ${REDIS_PORT}
+      host: ${REDIS_HOST}
+      password: ${REDIS_PASSWORD}
 
   security:
     oauth2:

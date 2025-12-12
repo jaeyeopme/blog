@@ -1,11 +1,11 @@
 package me.jaeyeop.blog.comment.domain;
 
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import me.jaeyeop.blog.commons.error.exception.AccessDeniedException;
 import me.jaeyeop.blog.commons.persistence.AbstractBaseEntity;

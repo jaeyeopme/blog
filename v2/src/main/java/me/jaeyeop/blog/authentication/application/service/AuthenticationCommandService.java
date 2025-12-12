@@ -1,6 +1,6 @@
 package me.jaeyeop.blog.authentication.application.service;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import me.jaeyeop.blog.authentication.application.port.in.AuthenticationCommandUseCase;
 import me.jaeyeop.blog.authentication.application.port.out.ExpiredTokenCommandPort;
 import me.jaeyeop.blog.authentication.application.port.out.ExpiredTokenQueryPort;

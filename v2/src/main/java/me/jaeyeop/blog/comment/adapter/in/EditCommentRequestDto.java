@@ -1,7 +1,7 @@
 package me.jaeyeop.blog.comment.adapter.in;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * @author jaeyeopme Created on 12/12/2022.

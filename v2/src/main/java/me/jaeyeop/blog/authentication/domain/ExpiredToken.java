@@ -1,7 +1,7 @@
 package me.jaeyeop.blog.authentication.domain;
 
+import jakarta.validation.constraints.NotBlank;
 import java.util.concurrent.TimeUnit;
-import javax.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;

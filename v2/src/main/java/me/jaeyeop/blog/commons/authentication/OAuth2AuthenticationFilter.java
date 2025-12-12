@@ -1,10 +1,10 @@
 package me.jaeyeop.blog.commons.authentication;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import me.jaeyeop.blog.authentication.application.port.out.ExpiredTokenQueryPort;
 import me.jaeyeop.blog.authentication.domain.Token;

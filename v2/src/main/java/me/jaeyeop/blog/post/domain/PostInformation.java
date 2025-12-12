@@ -1,9 +1,9 @@
 package me.jaeyeop.blog.post.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.Lob;
-import javax.validation.constraints.NotBlank;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Lob;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import org.springframework.util.StringUtils;
 

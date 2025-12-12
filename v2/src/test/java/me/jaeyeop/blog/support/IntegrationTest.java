@@ -5,7 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.charset.StandardCharsets;
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import me.jaeyeop.blog.comment.adapter.out.CommentJpaRepository;
 import me.jaeyeop.blog.comment.domain.Comment;

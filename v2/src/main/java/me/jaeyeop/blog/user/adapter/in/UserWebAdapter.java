@@ -5,7 +5,7 @@ import static me.jaeyeop.blog.user.application.port.in.UserCommandUseCase.Delete
 import static me.jaeyeop.blog.user.application.port.in.UserCommandUseCase.UpdateCommand;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
-import javax.validation.constraints.Email;
+import jakarta.validation.constraints.Email;
 import me.jaeyeop.blog.commons.config.security.Principal;
 import me.jaeyeop.blog.commons.config.security.UserPrincipal;
 import me.jaeyeop.blog.user.application.port.in.UserCommandUseCase;
