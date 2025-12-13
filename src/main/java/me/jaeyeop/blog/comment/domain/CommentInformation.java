@@ -12,19 +12,17 @@ import lombok.Getter;
 @Getter
 public class CommentInformation {
 
-  @NotBlank
-  @Column(nullable = false)
-  private String content;
+    @NotBlank
+    @Column(nullable = false)
+    private String content;
 
-  protected CommentInformation() {
-  }
+    protected CommentInformation() {}
 
-  public CommentInformation(final String content) {
-    this.content = content;
-  }
+    public CommentInformation(final String content) {
+        this.content = content;
+    }
 
-  public void edit(final String newContent) {
-    this.content = newContent;
-  }
-
+    public void edit(final String newContent) {
+        this.content = newContent;
+    }
 }

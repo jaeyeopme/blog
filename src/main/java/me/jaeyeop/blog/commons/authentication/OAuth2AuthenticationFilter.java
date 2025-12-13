@@ -32,85 +32,84 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 public class OAuth2AuthenticationFilter extends OncePerRequestFilter {
 
-  private final UserQueryPort userQueryPort;
+    private final UserQueryPort userQueryPort;
 
-  private final ExpiredTokenQueryPort expiredTokenQueryPort;
+    private final ExpiredTokenQueryPort expiredTokenQueryPort;
 
-  private final TokenProvider tokenProvider;
+    private final TokenProvider tokenProvider;
 
-  public OAuth2AuthenticationFilter(
-      final UserQueryPort userQueryPort,
-      final ExpiredTokenQueryPort expiredTokenQueryPort,
-      final TokenProvider tokenProvider) {
-    this.userQueryPort = userQueryPort;
-    this.expiredTokenQueryPort = expiredTokenQueryPort;
-    this.tokenProvider = tokenProvider;
-  }
-
-  @Override
-  protected void doFilterInternal(
-      @NonNull final HttpServletRequest request,
-      @NonNull final HttpServletResponse response,
-      @NonNull final FilterChain chain)
-      throws ServletException, IOException {
-    try {
-      final var authResult = attemptAuthentication(request);
-      successfulAuthentication(authResult);
-    } catch (final AuthenticationException e) {
-      unsuccessfulAuthentication(e);
+    public OAuth2AuthenticationFilter(
+            final UserQueryPort userQueryPort,
+            final ExpiredTokenQueryPort expiredTokenQueryPort,
+            final TokenProvider tokenProvider) {
+        this.userQueryPort = userQueryPort;
+        this.expiredTokenQueryPort = expiredTokenQueryPort;
+        this.tokenProvider = tokenProvider;
     }
 
-    chain.doFilter(request, response);
-  }
+    @Override
+    protected void doFilterInternal(
+            @NonNull final HttpServletRequest request,
+            @NonNull final HttpServletResponse response,
+            @NonNull final FilterChain chain)
+            throws ServletException, IOException {
+        try {
+            final var authResult = attemptAuthentication(request);
+            successfulAuthentication(authResult);
+        } catch (final AuthenticationException e) {
+            unsuccessfulAuthentication(e);
+        }
 
-  private Authentication attemptAuthentication(final HttpServletRequest request) {
-    final var acessToken = obtainToken(request);
-    final var user = retrieveUser(acessToken.email());
-
-    return createSuccessAuthentication(request, UserPrincipal.from(user));
-  }
-
-  private Token obtainToken(final HttpServletRequest httpServletRequest) {
-    final var accessToken = tokenProvider.verify(
-        httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION));
-
-    if (expiredTokenQueryPort.isExpired(accessToken.value())) {
-      throw new BadCredentialsException("expired access token");
+        chain.doFilter(request, response);
     }
 
-    return accessToken;
-  }
+    private Authentication attemptAuthentication(final HttpServletRequest request) {
+        final var acessToken = obtainToken(request);
+        final var user = retrieveUser(acessToken.email());
 
-  private User retrieveUser(final String email) {
-    return userQueryPort.findByEmail(email)
-        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-  }
+        return createSuccessAuthentication(request, UserPrincipal.from(user));
+    }
 
-  private Authentication createSuccessAuthentication(
-      final HttpServletRequest request,
-      final UserPrincipal principal) {
-    final var result = getResult(principal);
-    result.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-    return result;
-  }
+    private Token obtainToken(final HttpServletRequest httpServletRequest) {
+        final var accessToken =
+                tokenProvider.verify(httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION));
 
-  private UsernamePasswordAuthenticationToken getResult(final UserPrincipal principal) {
-    return new UsernamePasswordAuthenticationToken(principal, Strings.EMPTY,
-        principal.getAuthorities());
-  }
+        if (expiredTokenQueryPort.isExpired(accessToken.value())) {
+            throw new BadCredentialsException("expired access token");
+        }
 
-  private void successfulAuthentication(final Authentication authResult) {
-    final var context = SecurityContextHolder.createEmptyContext();
-    context.setAuthentication(authResult);
-    SecurityContextHolder.setContext(context);
-    log.debug("Set SecurityContextHolder to {}", authResult);
-  }
+        return accessToken;
+    }
 
-  private void unsuccessfulAuthentication(final AuthenticationException failed) {
-    SecurityContextHolder.clearContext();
-    log.trace("Failed to process authentication request", failed);
-    log.trace("Cleared SecurityContextHolder");
-    log.trace("Handling authentication failure");
-  }
+    private User retrieveUser(final String email) {
+        return userQueryPort
+                .findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
 
+    private Authentication createSuccessAuthentication(
+            final HttpServletRequest request, final UserPrincipal principal) {
+        final var result = getResult(principal);
+        result.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        return result;
+    }
+
+    private UsernamePasswordAuthenticationToken getResult(final UserPrincipal principal) {
+        return new UsernamePasswordAuthenticationToken(
+                principal, Strings.EMPTY, principal.getAuthorities());
+    }
+
+    private void successfulAuthentication(final Authentication authResult) {
+        final var context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(authResult);
+        SecurityContextHolder.setContext(context);
+        log.debug("Set SecurityContextHolder to {}", authResult);
+    }
+
+    private void unsuccessfulAuthentication(final AuthenticationException failed) {
+        SecurityContextHolder.clearContext();
+        log.trace("Failed to process authentication request", failed);
+        log.trace("Cleared SecurityContextHolder");
+        log.trace("Handling authentication failure");
+    }
 }

@@ -15,33 +15,29 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserCommandService implements UserCommandUseCase {
 
-  private final UserQueryPort userQueryPort;
+    private final UserQueryPort userQueryPort;
 
-  private final UserCommandPort userCommandPort;
+    private final UserCommandPort userCommandPort;
 
-  public UserCommandService(
-      final UserQueryPort userQueryPort,
-      final UserCommandPort userCommandPort
-  ) {
-    this.userQueryPort = userQueryPort;
-    this.userCommandPort = userCommandPort;
-  }
+    public UserCommandService(
+            final UserQueryPort userQueryPort, final UserCommandPort userCommandPort) {
+        this.userQueryPort = userQueryPort;
+        this.userCommandPort = userCommandPort;
+    }
 
-  @Override
-  public void update(final UpdateCommand command) {
-    final var profile = findById(command.targetId()).profile();
-    profile.update(command.newName(), command.newIntroduce());
-  }
+    @Override
+    public void update(final UpdateCommand command) {
+        final var profile = findById(command.targetId()).profile();
+        profile.update(command.newName(), command.newIntroduce());
+    }
 
-  @Override
-  public void delete(final DeleteCommand command) {
-    final var user = findById(command.targetId());
-    userCommandPort.delete(user);
-  }
+    @Override
+    public void delete(final DeleteCommand command) {
+        final var user = findById(command.targetId());
+        userCommandPort.delete(user);
+    }
 
-  private User findById(final Long id) {
-    return userQueryPort.findById(id)
-        .orElseThrow(UserNotFoundException::new);
-  }
-
+    private User findById(final Long id) {
+        return userQueryPort.findById(id).orElseThrow(UserNotFoundException::new);
+    }
 }

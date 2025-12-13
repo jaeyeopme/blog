@@ -2,6 +2,7 @@ package me.jaeyeop.blog.commons.authentication;
 
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,44 +22,43 @@ import org.springframework.stereotype.Component;
 @Component
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
-  private final RefreshTokenCommandPort refreshTokenCommandPort;
+    private final RefreshTokenCommandPort refreshTokenCommandPort;
 
-  private final TokenProvider tokenProvider;
+    private final TokenProvider tokenProvider;
 
-  private final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
-  public OAuth2SuccessHandler(
-      final RefreshTokenCommandPort refreshTokenCommandPort,
-      final TokenProvider tokenProvider,
-      final ObjectMapper objectMapper
-  ) {
-    this.refreshTokenCommandPort = refreshTokenCommandPort;
-    this.tokenProvider = tokenProvider;
-    this.objectMapper = objectMapper;
-  }
+    public OAuth2SuccessHandler(
+            final RefreshTokenCommandPort refreshTokenCommandPort,
+            final TokenProvider tokenProvider,
+            final ObjectMapper objectMapper) {
+        this.refreshTokenCommandPort = refreshTokenCommandPort;
+        this.tokenProvider = tokenProvider;
+        this.objectMapper = objectMapper;
+    }
 
-  @Override
-  public void onAuthenticationSuccess(
-      final HttpServletRequest request,
-      final HttpServletResponse response,
-      final Authentication authentication
-  ) throws IOException {
-    response.setStatus(OK.value());
-    response.setContentType(APPLICATION_JSON_VALUE);
+    @Override
+    public void onAuthenticationSuccess(
+            final HttpServletRequest request,
+            final HttpServletResponse response,
+            final Authentication authentication)
+            throws IOException {
+        response.setStatus(OK.value());
+        response.setContentType(APPLICATION_JSON_VALUE);
 
-    final var principalEmail = ((UserPrincipal) authentication.getPrincipal()).user()
-        .profile().email();
-    final var accessToken = tokenProvider.createAccess(principalEmail);
-    final var refreshToken = createRefresh(principalEmail);
+        final var principalEmail =
+                ((UserPrincipal) authentication.getPrincipal()).user().profile().email();
+        final var accessToken = tokenProvider.createAccess(principalEmail);
+        final var refreshToken = createRefresh(principalEmail);
 
-    objectMapper.writeValue(response.getWriter(),
-        new OAuth2Response(accessToken.value(), refreshToken.value()));
-  }
+        objectMapper.writeValue(
+                response.getWriter(),
+                new OAuth2Response(accessToken.value(), refreshToken.value()));
+    }
 
-  private Token createRefresh(final String email) {
-    final var token = tokenProvider.createRefresh(email);
-    refreshTokenCommandPort.activate(RefreshToken.from(token));
-    return token;
-  }
-
+    private Token createRefresh(final String email) {
+        final var token = tokenProvider.createRefresh(email);
+        refreshTokenCommandPort.activate(RefreshToken.from(token));
+        return token;
+    }
 }

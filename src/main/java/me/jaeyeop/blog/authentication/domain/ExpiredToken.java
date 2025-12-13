@@ -14,25 +14,19 @@ import org.springframework.data.redis.core.TimeToLive;
 @RedisHash("expiredToken")
 public class ExpiredToken {
 
-  @NotBlank
-  @Id
-  private String value;
+    @NotBlank @Id private String value;
 
-  @TimeToLive(unit = TimeUnit.MILLISECONDS)
-  private long remaining;
+    @TimeToLive(unit = TimeUnit.MILLISECONDS)
+    private long remaining;
 
-  protected ExpiredToken() {
-  }
+    protected ExpiredToken() {}
 
-  private ExpiredToken(
-      final String value,
-      final long remaining) {
-    this.value = value;
-    this.remaining = remaining;
-  }
+    private ExpiredToken(final String value, final long remaining) {
+        this.value = value;
+        this.remaining = remaining;
+    }
 
-  public static ExpiredToken from(final Token token) {
-    return new ExpiredToken(token.value(), token.remaining());
-  }
-
+    public static ExpiredToken from(final Token token) {
+        return new ExpiredToken(token.value(), token.remaining());
+    }
 }

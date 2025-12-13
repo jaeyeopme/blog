@@ -7,6 +7,5 @@ import me.jaeyeop.blog.authentication.domain.ExpiredToken;
  */
 public interface ExpiredTokenCommandPort {
 
-  void expire(ExpiredToken token);
-
+    void expire(ExpiredToken token);
 }

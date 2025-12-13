@@ -20,16 +20,15 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @MappedSuperclass
 public abstract class AbstractBaseEntity {
 
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Id
-  protected Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    protected Long id;
 
-  @CreatedDate
-  @Column(nullable = false, updatable = false)
-  private LocalDateTime createdAt;
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
-  @LastModifiedDate
-  @Column(nullable = false)
-  private LocalDateTime lastModifiedAt;
-
+    @LastModifiedDate
+    @Column(nullable = false)
+    private LocalDateTime lastModifiedAt;
 }

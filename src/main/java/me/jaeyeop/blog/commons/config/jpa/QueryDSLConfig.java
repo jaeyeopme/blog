@@ -8,9 +8,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class QueryDSLConfig {
 
-  @Bean
-  public JPAQueryFactory jpaQueryFactory(final EntityManager entityManager) {
-    return new JPAQueryFactory(entityManager);
-  }
-
+    @Bean
+    public JPAQueryFactory jpaQueryFactory(final EntityManager entityManager) {
+        return new JPAQueryFactory(entityManager);
+    }
 }

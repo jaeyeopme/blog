@@ -5,6 +5,7 @@ import static me.jaeyeop.blog.user.application.port.in.UserCommandUseCase.Delete
 import static me.jaeyeop.blog.user.application.port.in.UserCommandUseCase.UpdateCommand;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
+
 import jakarta.validation.constraints.Email;
 import me.jaeyeop.blog.commons.config.security.Principal;
 import me.jaeyeop.blog.commons.config.security.UserPrincipal;
@@ -29,58 +30,51 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserWebAdapter implements UserOAS {
 
-  public static final String USER_API_URI = "/api/v1/users";
+    public static final String USER_API_URI = "/api/v1/users";
 
-  private final UserCommandUseCase userCommandUseCase;
+    private final UserCommandUseCase userCommandUseCase;
 
-  private final UserQueryUseCase userQueryUseCase;
+    private final UserQueryUseCase userQueryUseCase;
 
-  public UserWebAdapter(
-      final UserCommandUseCase userCommandUseCase,
-      final UserQueryUseCase userQueryUseCase
-  ) {
-    this.userCommandUseCase = userCommandUseCase;
-    this.userQueryUseCase = userQueryUseCase;
-  }
+    public UserWebAdapter(
+            final UserCommandUseCase userCommandUseCase, final UserQueryUseCase userQueryUseCase) {
+        this.userCommandUseCase = userCommandUseCase;
+        this.userQueryUseCase = userQueryUseCase;
+    }
 
-  @ResponseStatus(OK)
-  @GetMapping("/me")
-  @Override
-  public UserProfileResponseDto findById(@Principal UserPrincipal principal) {
-    final var query = new ProfileQuery(principal.user().profile().email());
-    final var profile = userQueryUseCase.findProfileByEmail(query);
-    return UserProfileResponseDto.from(profile);
-  }
+    @ResponseStatus(OK)
+    @GetMapping("/me")
+    @Override
+    public UserProfileResponseDto findById(@Principal UserPrincipal principal) {
+        final var query = new ProfileQuery(principal.user().profile().email());
+        final var profile = userQueryUseCase.findProfileByEmail(query);
+        return UserProfileResponseDto.from(profile);
+    }
 
-  @ResponseStatus(OK)
-  @GetMapping("/{email}")
-  @Override
-  public UserProfileResponseDto findByEmail(@PathVariable @Email String email) {
-    final var query = new ProfileQuery(email);
-    final var profile = userQueryUseCase.findProfileByEmail(query);
-    return UserProfileResponseDto.from(profile);
-  }
+    @ResponseStatus(OK)
+    @GetMapping("/{email}")
+    @Override
+    public UserProfileResponseDto findByEmail(@PathVariable @Email String email) {
+        final var query = new ProfileQuery(email);
+        final var profile = userQueryUseCase.findProfileByEmail(query);
+        return UserProfileResponseDto.from(profile);
+    }
 
-  @ResponseStatus(NO_CONTENT)
-  @PatchMapping("/me")
-  @Override
-  public void update(
-      @Principal UserPrincipal principal,
-      @RequestBody UpdateUserRequestDto request
-  ) {
-    final var command = new UpdateCommand(
-        principal.user().id(),
-        request.name(),
-        request.introduce());
-    userCommandUseCase.update(command);
-  }
+    @ResponseStatus(NO_CONTENT)
+    @PatchMapping("/me")
+    @Override
+    public void update(
+            @Principal UserPrincipal principal, @RequestBody UpdateUserRequestDto request) {
+        final var command =
+                new UpdateCommand(principal.user().id(), request.name(), request.introduce());
+        userCommandUseCase.update(command);
+    }
 
-  @ResponseStatus(NO_CONTENT)
-  @DeleteMapping("/me")
-  @Override
-  public void delete(@Principal UserPrincipal principal) {
-    final var command = new DeleteCommand(principal.user().id());
-    userCommandUseCase.delete(command);
-  }
-
+    @ResponseStatus(NO_CONTENT)
+    @DeleteMapping("/me")
+    @Override
+    public void delete(@Principal UserPrincipal principal) {
+        final var command = new DeleteCommand(principal.user().id());
+        userCommandUseCase.delete(command);
+    }
 }

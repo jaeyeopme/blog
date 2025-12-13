@@ -11,10 +11,10 @@ import org.springframework.data.domain.Pageable;
  */
 public interface CommentQueryPort {
 
-  Optional<Comment> findById(Long id);
+    Optional<Comment> findById(Long id);
 
-  Optional<CommentInformationProjectionDto> findInformationById(Long id);
+    Optional<CommentInformationProjectionDto> findInformationById(Long id);
 
-  Page<CommentInformationProjectionDto> findInformationPageByPostId(Long postId, Pageable pageable);
-
+    Page<CommentInformationProjectionDto> findInformationPageByPostId(
+            Long postId, Pageable pageable);
 }

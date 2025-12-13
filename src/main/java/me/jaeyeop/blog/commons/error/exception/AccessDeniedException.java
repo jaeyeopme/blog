@@ -7,8 +7,7 @@ import me.jaeyeop.blog.commons.error.Error;
  */
 public class AccessDeniedException extends AbstractBaseException {
 
-  public AccessDeniedException() {
-    super(Error.FORBIDDEN);
-  }
-
+    public AccessDeniedException() {
+        super(Error.FORBIDDEN);
+    }
 }

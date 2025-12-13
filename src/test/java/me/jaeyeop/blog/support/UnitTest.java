@@ -27,7 +27,6 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-
 /**
  * @author jaeyeopme Created on 12/01/2022.
  */
@@ -36,58 +35,44 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public abstract class UnitTest {
 
-  @Mock
-  protected ExpiredTokenCommandPort expiredTokenCommandPort;
+    @Mock protected ExpiredTokenCommandPort expiredTokenCommandPort;
 
-  @Mock(stubOnly = true)
-  protected ExpiredTokenQueryPort expiredTokenQueryPort;
+    @Mock(stubOnly = true)
+    protected ExpiredTokenQueryPort expiredTokenQueryPort;
 
-  @Mock
-  protected RefreshTokenCommandPort refreshTokenCommandPort;
+    @Mock protected RefreshTokenCommandPort refreshTokenCommandPort;
 
-  @Mock(stubOnly = true)
-  protected RefreshTokenQueryPort refreshTokenQueryPort;
+    @Mock(stubOnly = true)
+    protected RefreshTokenQueryPort refreshTokenQueryPort;
 
-  @Spy
-  protected TokenProvider tokenProvider = TokenProviderHelper.create();
+    @Spy protected TokenProvider tokenProvider = TokenProviderHelper.create();
 
-  @InjectMocks
-  protected AuthenticationCommandService authCommandService;
+    @InjectMocks protected AuthenticationCommandService authCommandService;
 
-  @Mock
-  protected UserCommandPort userCommandPort;
+    @Mock protected UserCommandPort userCommandPort;
 
-  @Mock(stubOnly = true)
-  protected UserQueryPort userQueryPort;
+    @Mock(stubOnly = true)
+    protected UserQueryPort userQueryPort;
 
-  @InjectMocks
-  protected UserCommandService userCommandService;
+    @InjectMocks protected UserCommandService userCommandService;
 
-  @InjectMocks
-  protected UserQueryService userQueryService;
+    @InjectMocks protected UserQueryService userQueryService;
 
-  @Mock
-  protected PostCommandPort postCommandPort;
+    @Mock protected PostCommandPort postCommandPort;
 
-  @Mock(stubOnly = true)
-  protected PostQueryPort postQueryPort;
+    @Mock(stubOnly = true)
+    protected PostQueryPort postQueryPort;
 
-  @InjectMocks
-  protected PostCommandService postCommandService;
+    @InjectMocks protected PostCommandService postCommandService;
 
-  @InjectMocks
-  protected PostQueryService postQueryService;
+    @InjectMocks protected PostQueryService postQueryService;
 
-  @Mock
-  protected CommentCommandPort commentCommandPort;
+    @Mock protected CommentCommandPort commentCommandPort;
 
-  @Mock(stubOnly = true)
-  protected CommentQueryPort commentQueryPort;
+    @Mock(stubOnly = true)
+    protected CommentQueryPort commentQueryPort;
 
-  @InjectMocks
-  protected CommentCommandService commentCommandService;
+    @InjectMocks protected CommentCommandService commentCommandService;
 
-  @InjectMocks
-  protected CommentQueryService commentQueryService;
-
+    @InjectMocks protected CommentQueryService commentQueryService;
 }

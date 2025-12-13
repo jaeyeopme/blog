@@ -17,32 +17,30 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CommentQueryService implements CommentQueryUseCase {
 
-  private final CommentQueryPort commentQueryPort;
+    private final CommentQueryPort commentQueryPort;
 
-  private final PostQueryPort postQueryPort;
+    private final PostQueryPort postQueryPort;
 
-  public CommentQueryService(
-      final CommentQueryPort commentQueryPort,
-      final PostQueryPort postQueryPort
-  ) {
-    this.commentQueryPort = commentQueryPort;
-    this.postQueryPort = postQueryPort;
-  }
-
-  @Override
-  public CommentInformationProjectionDto findInformationById(final Query query) {
-    return commentQueryPort.findInformationById(query.commentId())
-        .orElseThrow(CommentNotFoundException::new);
-  }
-
-  @Override
-  public Page<CommentInformationProjectionDto> findInformationPageByPostId(final PageQuery query) {
-    if (!postQueryPort.existsById(query.postId())) {
-      throw new PostNotFoundException();
+    public CommentQueryService(
+            final CommentQueryPort commentQueryPort, final PostQueryPort postQueryPort) {
+        this.commentQueryPort = commentQueryPort;
+        this.postQueryPort = postQueryPort;
     }
 
-    return commentQueryPort.findInformationPageByPostId(
-        query.postId(), query.pageable());
-  }
+    @Override
+    public CommentInformationProjectionDto findInformationById(final Query query) {
+        return commentQueryPort
+                .findInformationById(query.commentId())
+                .orElseThrow(CommentNotFoundException::new);
+    }
 
+    @Override
+    public Page<CommentInformationProjectionDto> findInformationPageByPostId(
+            final PageQuery query) {
+        if (!postQueryPort.existsById(query.postId())) {
+            throw new PostNotFoundException();
+        }
+
+        return commentQueryPort.findInformationPageByPostId(query.postId(), query.pageable());
+    }
 }

@@ -6,6 +6,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 /**
  * @author jaeyeopme Created on 10/19/2022.
  */
-public interface CommentJpaRepository extends JpaRepository<Comment, Long> {
-
-}
+public interface CommentJpaRepository extends JpaRepository<Comment, Long> {}

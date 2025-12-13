@@ -5,22 +5,15 @@ package me.jaeyeop.blog.post.application.port.in;
  */
 public interface PostCommandUseCase {
 
-  Long write(WriteCommand command);
+    Long write(WriteCommand command);
 
-  void edit(EditCommand command);
+    void edit(EditCommand command);
 
-  void delete(DeleteCommand command);
+    void delete(DeleteCommand command);
 
-  record WriteCommand(Long authorId, String title, String content) {
+    record WriteCommand(Long authorId, String title, String content) {}
 
-  }
+    record EditCommand(Long authorId, Long targetId, String newTitle, String newContent) {}
 
-  record EditCommand(Long authorId, Long targetId, String newTitle, String newContent) {
-
-  }
-
-  record DeleteCommand(Long authorId, Long targetId) {
-
-  }
-
+    record DeleteCommand(Long authorId, Long targetId) {}
 }

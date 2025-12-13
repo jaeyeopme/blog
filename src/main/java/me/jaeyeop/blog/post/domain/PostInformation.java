@@ -14,40 +14,31 @@ import org.springframework.util.StringUtils;
 @Getter
 public class PostInformation {
 
-  @NotBlank
-  @Column(nullable = false)
-  private String title;
+    @NotBlank
+    @Column(nullable = false)
+    private String title;
 
-  @NotBlank
-  @Lob
-  @Column(nullable = false)
-  private String content;
+    @NotBlank
+    @Lob
+    @Column(nullable = false)
+    private String content;
 
-  @Column
-  private String coverImage;
+    @Column private String coverImage;
 
-  protected PostInformation() {
-  }
+    protected PostInformation() {}
 
-  public PostInformation(
-      final String title,
-      final String content
-  ) {
-    this.title = title;
-    this.content = content;
-  }
-
-  public void edit(
-      final String newTitle,
-      final String newContent
-  ) {
-    if (StringUtils.hasText(newTitle)) {
-      this.title = newTitle;
+    public PostInformation(final String title, final String content) {
+        this.title = title;
+        this.content = content;
     }
 
-    if (StringUtils.hasText(newContent)) {
-      this.content = newContent;
-    }
-  }
+    public void edit(final String newTitle, final String newContent) {
+        if (StringUtils.hasText(newTitle)) {
+            this.title = newTitle;
+        }
 
+        if (StringUtils.hasText(newContent)) {
+            this.content = newContent;
+        }
+    }
 }

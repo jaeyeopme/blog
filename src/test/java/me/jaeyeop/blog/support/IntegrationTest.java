@@ -2,10 +2,11 @@ package me.jaeyeop.blog.support;
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.nio.charset.StandardCharsets;
 import jakarta.persistence.EntityManager;
+import java.nio.charset.StandardCharsets;
 import lombok.extern.slf4j.Slf4j;
 import me.jaeyeop.blog.comment.adapter.out.CommentJpaRepository;
 import me.jaeyeop.blog.comment.domain.Comment;
@@ -40,60 +41,54 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 public abstract class IntegrationTest extends ContainerTest {
 
-  @Autowired
-  protected WebApplicationContext context;
+    @Autowired protected WebApplicationContext context;
 
-  @Autowired
-  protected MockMvc mockMvc;
+    @Autowired protected MockMvc mockMvc;
 
-  @Autowired
-  protected ObjectMapper objectMapper;
+    @Autowired protected ObjectMapper objectMapper;
 
-  @Autowired
-  protected EntityManager entityManager;
+    @Autowired protected EntityManager entityManager;
 
-  @Autowired
-  protected UserRepository userRepository;
+    @Autowired protected UserRepository userRepository;
 
-  @Autowired
-  protected PostJpaRepository postJpaRepository;
+    @Autowired protected PostJpaRepository postJpaRepository;
 
-  @Autowired
-  protected CommentJpaRepository commentJpaRepository;
+    @Autowired protected CommentJpaRepository commentJpaRepository;
 
-  @BeforeEach
-  public void setUp() {
-    this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context)
-        .alwaysDo(print())
-        .alwaysDo(result -> clearPersistenceContext())
-        .addFilter(new CharacterEncodingFilter(StandardCharsets.UTF_8.name(), true))
-        .build();
-  }
+    @BeforeEach
+    public void setUp() {
+        this.mockMvc =
+                MockMvcBuilders.webAppContextSetup(this.context)
+                        .alwaysDo(print())
+                        .alwaysDo(result -> clearPersistenceContext())
+                        .addFilter(new CharacterEncodingFilter(StandardCharsets.UTF_8.name(), true))
+                        .build();
+    }
 
-  protected void clearPersistenceContext() {
-    entityManager.flush();
-    entityManager.clear();
-  }
+    protected void clearPersistenceContext() {
+        entityManager.flush();
+        entityManager.clear();
+    }
 
-  protected String toJson(final Object value) throws JsonProcessingException {
-    return objectMapper.writeValueAsString(value);
-  }
+    protected String toJson(final Object value) throws JsonProcessingException {
+        return objectMapper.writeValueAsString(value);
+    }
 
-  protected User getPrincipal() {
-    return ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication()
-        .getPrincipal()).user();
-  }
+    protected User getPrincipal() {
+        return ((UserPrincipal)
+                        SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+                .user();
+    }
 
-  protected Post getPost(final User author) {
-    final var post = postJpaRepository.save(PostHelper.create(author));
-    clearPersistenceContext();
-    return post;
-  }
+    protected Post getPost(final User author) {
+        final var post = postJpaRepository.save(PostHelper.create(author));
+        clearPersistenceContext();
+        return post;
+    }
 
-  protected Comment getComment(final Post post, final User author) {
-    final var comment = commentJpaRepository.save(CommentHelper.create(post, author));
-    clearPersistenceContext();
-    return comment;
-  }
-
+    protected Comment getComment(final Post post, final User author) {
+        final var comment = commentJpaRepository.save(CommentHelper.create(post, author));
+        clearPersistenceContext();
+        return comment;
+    }
 }

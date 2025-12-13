@@ -8,10 +8,9 @@ import me.jaeyeop.blog.post.domain.Post;
  */
 public interface PostCommandPort {
 
-  Post create(Post post);
+    Post create(Post post);
 
-  void delete(Post post);
+    void delete(Post post);
 
-  void deleteAll(List<Post> posts);
-
+    void deleteAll(List<Post> posts);
 }

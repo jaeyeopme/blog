@@ -12,30 +12,29 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserPersistenceAdapter implements UserCommandPort, UserQueryPort {
 
-  private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-  public UserPersistenceAdapter(final UserRepository userRepository) {
-    this.userRepository = userRepository;
-  }
+    public UserPersistenceAdapter(final UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
-  @Override
-  public User save(final User user) {
-    return userRepository.save(user);
-  }
+    @Override
+    public User save(final User user) {
+        return userRepository.save(user);
+    }
 
-  @Override
-  public Optional<User> findById(final Long id) {
-    return userRepository.findById(id);
-  }
+    @Override
+    public Optional<User> findById(final Long id) {
+        return userRepository.findById(id);
+    }
 
-  @Override
-  public Optional<User> findByEmail(final String email) {
-    return userRepository.findByProfileEmail(email);
-  }
+    @Override
+    public Optional<User> findByEmail(final String email) {
+        return userRepository.findByProfileEmail(email);
+    }
 
-  @Override
-  public void delete(final User user) {
-    userRepository.delete(user);
-  }
-
+    @Override
+    public void delete(final User user) {
+        userRepository.delete(user);
+    }
 }

@@ -15,34 +15,32 @@ import org.springframework.stereotype.Service;
 @Service
 public class OAuth2UserServiceDelegator extends DefaultOAuth2UserService {
 
-  private final UserQueryPort userQueryPort;
+    private final UserQueryPort userQueryPort;
 
-  private final UserCommandPort userCommandPort;
+    private final UserCommandPort userCommandPort;
 
-  public OAuth2UserServiceDelegator(
-      final UserQueryPort userQueryPort,
-      final UserCommandPort userCommandPort
-  ) {
-    this.userQueryPort = userQueryPort;
-    this.userCommandPort = userCommandPort;
-  }
+    public OAuth2UserServiceDelegator(
+            final UserQueryPort userQueryPort, final UserCommandPort userCommandPort) {
+        this.userQueryPort = userQueryPort;
+        this.userCommandPort = userCommandPort;
+    }
 
-  @Override
-  public OAuth2User loadUser(final OAuth2UserRequest userRequest)
-      throws OAuth2AuthenticationException {
-    final var attributes = super.loadUser(userRequest).getAttributes();
-    final var provider = OAuth2Provider.find(
-        userRequest.getClientRegistration().getRegistrationId());
+    @Override
+    public OAuth2User loadUser(final OAuth2UserRequest userRequest)
+            throws OAuth2AuthenticationException {
+        final var attributes = super.loadUser(userRequest).getAttributes();
+        final var provider =
+                OAuth2Provider.find(userRequest.getClientRegistration().getRegistrationId());
 
-    final var oAuth2Attributes = OAuth2Attributes.of(provider, attributes);
-    final var user = findOrSave(oAuth2Attributes);
+        final var oAuth2Attributes = OAuth2Attributes.of(provider, attributes);
+        final var user = findOrSave(oAuth2Attributes);
 
-    return UserPrincipal.from(user);
-  }
+        return UserPrincipal.from(user);
+    }
 
-  private User findOrSave(final OAuth2Attributes oAuth2Attributes) {
-    return userQueryPort.findByEmail(oAuth2Attributes.email())
-        .orElseGet(() -> userCommandPort.save(User.from(oAuth2Attributes)));
-  }
-
+    private User findOrSave(final OAuth2Attributes oAuth2Attributes) {
+        return userQueryPort
+                .findByEmail(oAuth2Attributes.email())
+                .orElseGet(() -> userCommandPort.save(User.from(oAuth2Attributes)));
+    }
 }

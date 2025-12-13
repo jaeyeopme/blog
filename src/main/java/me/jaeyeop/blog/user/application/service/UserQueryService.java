@@ -15,20 +15,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserQueryService implements UserQueryUseCase {
 
-  private final UserQueryPort userQueryPort;
+    private final UserQueryPort userQueryPort;
 
-  public UserQueryService(final UserQueryPort userQueryPort) {
-    this.userQueryPort = userQueryPort;
-  }
+    public UserQueryService(final UserQueryPort userQueryPort) {
+        this.userQueryPort = userQueryPort;
+    }
 
-  @Override
-  public UserProfile findProfileByEmail(final ProfileQuery profileQuery) {
-    return findByEmail(profileQuery.email()).profile();
-  }
+    @Override
+    public UserProfile findProfileByEmail(final ProfileQuery profileQuery) {
+        return findByEmail(profileQuery.email()).profile();
+    }
 
-  private User findByEmail(final String email) {
-    return userQueryPort.findByEmail(email)
-        .orElseThrow(UserNotFoundException::new);
-  }
-
+    private User findByEmail(final String email) {
+        return userQueryPort.findByEmail(email).orElseThrow(UserNotFoundException::new);
+    }
 }

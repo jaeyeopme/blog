@@ -19,61 +19,34 @@ import org.springframework.validation.annotation.Validated;
  * @see ConstraintDeclarationException
  */
 @Validated
-@Tag(
-    name = "2.user",
-    description = "사용자(프로필 조회, 프로필 수정, 프로필 삭제)"
-)
+@Tag(name = "2.user", description = "사용자(프로필 조회, 프로필 수정, 프로필 삭제)")
 public interface UserOAS {
 
-  @SecurityResponse
-  @ApiResponse(
-      responseCode = "200",
-      description = "자신의 프로필 조회 성공",
-      content = @Content(schema = @Schema(implementation = UserProfileResponseDto.class))
-  )
-  @Operation(
-      summary = "Find my profile",
-      description = "자신의 프로필을 조회합니다."
-  )
-  UserProfileResponseDto findById(UserPrincipal principal);
+    @SecurityResponse
+    @ApiResponse(
+            responseCode = "200",
+            description = "자신의 프로필 조회 성공",
+            content = @Content(schema = @Schema(implementation = UserProfileResponseDto.class)))
+    @Operation(summary = "Find my profile", description = "자신의 프로필을 조회합니다.")
+    UserProfileResponseDto findById(UserPrincipal principal);
 
-  @InvalidArgumentResponse
-  @NotFoundUserResponse
-  @ApiResponse(
-      responseCode = "200",
-      description = "사용자 프로필 조회 성공",
-      content = @Content(schema = @Schema(implementation = UserProfileResponseDto.class))
-  )
-  @Operation(
-      summary = "Find user profile by user email",
-      description = "사용자의 프로필을 조회합니다."
-  )
-  UserProfileResponseDto findByEmail(@Schema(description = "사용자 이메일") @Email String email);
+    @InvalidArgumentResponse
+    @NotFoundUserResponse
+    @ApiResponse(
+            responseCode = "200",
+            description = "사용자 프로필 조회 성공",
+            content = @Content(schema = @Schema(implementation = UserProfileResponseDto.class)))
+    @Operation(summary = "Find user profile by user email", description = "사용자의 프로필을 조회합니다.")
+    UserProfileResponseDto findByEmail(@Schema(description = "사용자 이메일") @Email String email);
 
-  @InvalidArgumentResponse
-  @SecurityResponse
-  @ApiResponse(
-      responseCode = "204",
-      description = "자신의 프로필 업데이트 성공"
-  )
-  @Operation(
-      summary = "Update my profile",
-      description = "자신의 프로필을 수정합니다."
-  )
-  void update(
-      UserPrincipal principal,
-      UpdateUserRequestDto request
-  );
+    @InvalidArgumentResponse
+    @SecurityResponse
+    @ApiResponse(responseCode = "204", description = "자신의 프로필 업데이트 성공")
+    @Operation(summary = "Update my profile", description = "자신의 프로필을 수정합니다.")
+    void update(UserPrincipal principal, UpdateUserRequestDto request);
 
-  @SecurityResponse
-  @ApiResponse(
-      responseCode = "204",
-      description = "자신의 프로필 삭제 성공"
-  )
-  @Operation(
-      summary = "Delete my profile",
-      description = "자신의 프로필을 삭제합니다.(작성한 게시글과 댓글 모두 삭제)"
-  )
-  void delete(UserPrincipal principal);
-
+    @SecurityResponse
+    @ApiResponse(responseCode = "204", description = "자신의 프로필 삭제 성공")
+    @Operation(summary = "Delete my profile", description = "자신의 프로필을 삭제합니다.(작성한 게시글과 댓글 모두 삭제)")
+    void delete(UserPrincipal principal);
 }

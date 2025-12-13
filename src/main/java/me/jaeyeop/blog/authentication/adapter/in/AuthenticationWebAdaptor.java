@@ -4,6 +4,7 @@ import static me.jaeyeop.blog.authentication.adapter.in.AuthenticationWebAdaptor
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
+
 import me.jaeyeop.blog.authentication.application.port.in.AuthenticationCommandUseCase;
 import me.jaeyeop.blog.authentication.application.port.in.AuthenticationCommandUseCase.LogoutCommand;
 import me.jaeyeop.blog.authentication.application.port.in.AuthenticationCommandUseCase.RefreshCommand;
@@ -21,35 +22,33 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(AUTHENTICATION_API_URI)
 public class AuthenticationWebAdaptor implements AuthenticationOAS {
 
-  public static final String AUTHENTICATION_API_URI = "/api/v1/auth";
-  public static final String REFRESH_AUTHORIZATION = "Refresh-Authorization";
+    public static final String AUTHENTICATION_API_URI = "/api/v1/auth";
+    public static final String REFRESH_AUTHORIZATION = "Refresh-Authorization";
 
-  private final AuthenticationCommandUseCase authenticationCommandUseCase;
+    private final AuthenticationCommandUseCase authenticationCommandUseCase;
 
-  public AuthenticationWebAdaptor(final AuthenticationCommandUseCase authenticationCommandUseCase) {
-    this.authenticationCommandUseCase = authenticationCommandUseCase;
-  }
+    public AuthenticationWebAdaptor(
+            final AuthenticationCommandUseCase authenticationCommandUseCase) {
+        this.authenticationCommandUseCase = authenticationCommandUseCase;
+    }
 
-  @ResponseStatus(NO_CONTENT)
-  @DeleteMapping("/logout")
-  @Override
-  public void logout(
-      @RequestHeader(AUTHORIZATION) final String accessToken,
-      @RequestHeader(REFRESH_AUTHORIZATION) final String refreshToken
-  ) {
-    final var command = new LogoutCommand(accessToken, refreshToken);
-    authenticationCommandUseCase.logout(command);
-  }
+    @ResponseStatus(NO_CONTENT)
+    @DeleteMapping("/logout")
+    @Override
+    public void logout(
+            @RequestHeader(AUTHORIZATION) final String accessToken,
+            @RequestHeader(REFRESH_AUTHORIZATION) final String refreshToken) {
+        final var command = new LogoutCommand(accessToken, refreshToken);
+        authenticationCommandUseCase.logout(command);
+    }
 
-  @ResponseStatus(CREATED)
-  @PostMapping("/refresh")
-  @Override
-  public String refresh(
-      @RequestHeader(AUTHORIZATION) final String accessToken,
-      @RequestHeader(REFRESH_AUTHORIZATION) final String refreshToken
-  ) {
-    final var command = new RefreshCommand(accessToken, refreshToken);
-    return authenticationCommandUseCase.refresh(command);
-  }
-
+    @ResponseStatus(CREATED)
+    @PostMapping("/refresh")
+    @Override
+    public String refresh(
+            @RequestHeader(AUTHORIZATION) final String accessToken,
+            @RequestHeader(REFRESH_AUTHORIZATION) final String refreshToken) {
+        final var command = new RefreshCommand(accessToken, refreshToken);
+        return authenticationCommandUseCase.refresh(command);
+    }
 }

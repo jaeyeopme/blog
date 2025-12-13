@@ -23,39 +23,30 @@ import me.jaeyeop.blog.user.domain.User;
 @Getter
 public class Post extends AbstractBaseEntity {
 
-  @Embedded
-  private PostInformation information;
+    @Embedded private PostInformation information;
 
-  @NotNull
-  @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(nullable = false, updatable = false)
-  private User author;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(nullable = false, updatable = false)
+    private User author;
 
-  @OneToMany(mappedBy = "post",cascade = CascadeType.REMOVE, orphanRemoval = true)
-  private final List<Comment> comments = new ArrayList<>();
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private final List<Comment> comments = new ArrayList<>();
 
-  protected Post() {
-  }
+    protected Post() {}
 
-  private Post(
-      final User author,
-      final PostInformation information
-  ) {
-    this.information = information;
-    this.author = author;
-  }
-
-  public static Post of(
-      final User author,
-      final PostInformation information
-  ) {
-    return new Post(author, information);
-  }
-
-  public void confirmAccess(final User author) {
-    if (!this.author().equals(author)) {
-      throw new AccessDeniedException();
+    private Post(final User author, final PostInformation information) {
+        this.information = information;
+        this.author = author;
     }
-  }
 
+    public static Post of(final User author, final PostInformation information) {
+        return new Post(author, information);
+    }
+
+    public void confirmAccess(final User author) {
+        if (!this.author().equals(author)) {
+            throw new AccessDeniedException();
+        }
+    }
 }

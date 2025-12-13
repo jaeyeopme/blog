@@ -5,16 +5,11 @@ import me.jaeyeop.blog.user.domain.UserProfile;
 
 @Schema(name = "User Profile Response", title = "사용자 프로필 응답")
 record UserProfileResponseDto(
-    @Schema(description = "이메일") String email,
-    @Schema(description = "이름") String name,
-    @Schema(description = "프로필 사진") String picture
-) {
+        @Schema(description = "이메일") String email,
+        @Schema(description = "이름") String name,
+        @Schema(description = "프로필 사진") String picture) {
 
-  public static UserProfileResponseDto from(final UserProfile profile) {
-    return new UserProfileResponseDto(
-        profile.email(),
-        profile.name(),
-        profile.picture());
-  }
-
+    public static UserProfileResponseDto from(final UserProfile profile) {
+        return new UserProfileResponseDto(profile.email(), profile.name(), profile.picture());
+    }
 }

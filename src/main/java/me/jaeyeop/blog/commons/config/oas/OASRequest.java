@@ -10,24 +10,20 @@ import java.lang.annotation.Target;
 
 public final class OASRequest {
 
-  private OASRequest() {
-  }
+    private OASRequest() {}
 
-  @Parameter(
-      name = "page",
-      in = ParameterIn.QUERY,
-      description = "0 ~ 99 범위를 벗어나면 기본 값이 적용됩니다.",
-      schema = @Schema(type = "integer($int32)", defaultValue = "0"))
-  @Parameter(
-      name = "size",
-      in = ParameterIn.QUERY,
-      description = "0 ~ 99 범위를 벗어나면 기본 값이 적용됩니다.",
-      schema = @Schema(type = "integer($int32)", defaultValue = "10"))
-  @Parameter(name = "pageable", hidden = true)
-  @Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
-  @Retention(RetentionPolicy.RUNTIME)
-  public @interface PageParameters {
-
-  }
-
+    @Parameter(
+            name = "page",
+            in = ParameterIn.QUERY,
+            description = "0 ~ 99 범위를 벗어나면 기본 값이 적용됩니다.",
+            schema = @Schema(type = "integer($int32)", defaultValue = "0"))
+    @Parameter(
+            name = "size",
+            in = ParameterIn.QUERY,
+            description = "0 ~ 99 범위를 벗어나면 기본 값이 적용됩니다.",
+            schema = @Schema(type = "integer($int32)", defaultValue = "10"))
+    @Parameter(name = "pageable", hidden = true)
+    @Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface PageParameters {}
 }

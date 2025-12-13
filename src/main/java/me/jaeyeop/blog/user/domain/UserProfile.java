@@ -13,45 +13,33 @@ import org.springframework.util.StringUtils;
 @Embeddable
 public class UserProfile {
 
-  @NotBlank
-  @Column(nullable = false, unique = true)
-  private String email;
+    @NotBlank
+    @Column(nullable = false, unique = true)
+    private String email;
 
-  @NotBlank
-  @Column(nullable = false)
-  private String name;
+    @NotBlank
+    @Column(nullable = false)
+    private String name;
 
-  @Column
-  private String picture;
+    @Column private String picture;
 
-  @Column
-  private String introduce;
+    @Column private String introduce;
 
-  protected UserProfile() {
+    protected UserProfile() {}
 
-  }
-
-  public UserProfile(
-      final String email,
-      final String name,
-      final String picture
-  ) {
-    this.email = email;
-    this.name = name;
-    this.picture = picture;
-  }
-
-  public void update(
-      final String newName,
-      final String newIntroduce
-  ) {
-    if (StringUtils.hasText(newName)) {
-      this.name = newName;
+    public UserProfile(final String email, final String name, final String picture) {
+        this.email = email;
+        this.name = name;
+        this.picture = picture;
     }
 
-    if (StringUtils.hasText(newIntroduce)) {
-      this.introduce = newIntroduce;
-    }
-  }
+    public void update(final String newName, final String newIntroduce) {
+        if (StringUtils.hasText(newName)) {
+            this.name = newName;
+        }
 
+        if (StringUtils.hasText(newIntroduce)) {
+            this.introduce = newIntroduce;
+        }
+    }
 }

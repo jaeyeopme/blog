@@ -9,16 +9,11 @@ import org.springframework.data.domain.Pageable;
  */
 public interface CommentQueryUseCase {
 
-  CommentInformationProjectionDto findInformationById(Query query);
+    CommentInformationProjectionDto findInformationById(Query query);
 
-  Page<CommentInformationProjectionDto> findInformationPageByPostId(PageQuery query);
+    Page<CommentInformationProjectionDto> findInformationPageByPostId(PageQuery query);
 
-  record Query(Long commentId) {
+    record Query(Long commentId) {}
 
-  }
-
-  record PageQuery(Long postId, Pageable pageable) {
-
-  }
-
+    record PageQuery(Long postId, Pageable pageable) {}
 }

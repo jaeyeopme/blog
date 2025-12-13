@@ -7,27 +7,26 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RefreshTokenPersistenceAdapter
-    implements RefreshTokenCommandPort, RefreshTokenQueryPort {
+        implements RefreshTokenCommandPort, RefreshTokenQueryPort {
 
-  private final RefreshTokenRepository refreshTokenRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
-  public RefreshTokenPersistenceAdapter(final RefreshTokenRepository refreshTokenRepository) {
-    this.refreshTokenRepository = refreshTokenRepository;
-  }
+    public RefreshTokenPersistenceAdapter(final RefreshTokenRepository refreshTokenRepository) {
+        this.refreshTokenRepository = refreshTokenRepository;
+    }
 
-  @Override
-  public void activate(final RefreshToken token) {
-    refreshTokenRepository.save(token);
-  }
+    @Override
+    public void activate(final RefreshToken token) {
+        refreshTokenRepository.save(token);
+    }
 
-  @Override
-  public void expire(final RefreshToken token) {
-    refreshTokenRepository.delete(token);
-  }
+    @Override
+    public void expire(final RefreshToken token) {
+        refreshTokenRepository.delete(token);
+    }
 
-  @Override
-  public boolean isExpired(final String token) {
-    return !refreshTokenRepository.existsById(token);
-  }
-
+    @Override
+    public boolean isExpired(final String token) {
+        return !refreshTokenRepository.existsById(token);
+    }
 }

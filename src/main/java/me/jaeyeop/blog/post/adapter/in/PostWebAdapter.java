@@ -4,6 +4,7 @@ import static me.jaeyeop.blog.post.adapter.in.PostWebAdapter.POST_API_URI;
 import static me.jaeyeop.blog.post.application.port.in.PostCommandUseCase.DeleteCommand;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
+
 import java.net.URI;
 import me.jaeyeop.blog.commons.config.security.Principal;
 import me.jaeyeop.blog.commons.config.security.UserPrincipal;
@@ -33,58 +34,51 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PostWebAdapter implements PostOAS {
 
-  public static final String POST_API_URI = "/api/v1/posts";
+    public static final String POST_API_URI = "/api/v1/posts";
 
-  private final PostCommandUseCase postCommandUseCase;
+    private final PostCommandUseCase postCommandUseCase;
 
-  private final PostQueryUseCase postQueryUseCase;
+    private final PostQueryUseCase postQueryUseCase;
 
-  public PostWebAdapter(
-      final PostCommandUseCase postCommandUseCase,
-      final PostQueryUseCase postQueryUseCase
-  ) {
-    this.postCommandUseCase = postCommandUseCase;
-    this.postQueryUseCase = postQueryUseCase;
-  }
+    public PostWebAdapter(
+            final PostCommandUseCase postCommandUseCase, final PostQueryUseCase postQueryUseCase) {
+        this.postCommandUseCase = postCommandUseCase;
+        this.postQueryUseCase = postQueryUseCase;
+    }
 
-  @ResponseStatus(NO_CONTENT)
-  @DeleteMapping("/{postId}")
-  public void delete(
-      @Principal UserPrincipal principal,
-      @PathVariable Long postId
-  ) {
-    final var command = new DeleteCommand(principal.user().id(), postId);
-    postCommandUseCase.delete(command);
-  }
+    @ResponseStatus(NO_CONTENT)
+    @DeleteMapping("/{postId}")
+    public void delete(@Principal UserPrincipal principal, @PathVariable Long postId) {
+        final var command = new DeleteCommand(principal.user().id(), postId);
+        postCommandUseCase.delete(command);
+    }
 
-  @ResponseStatus(OK)
-  @GetMapping("/{postId}")
-  public PostInformationProjectionDto findInformationById(@PathVariable Long postId) {
-    final var query = new InformationQuery(postId);
-    return postQueryUseCase.findInformationById(query);
-  }
+    @ResponseStatus(OK)
+    @GetMapping("/{postId}")
+    public PostInformationProjectionDto findInformationById(@PathVariable Long postId) {
+        final var query = new InformationQuery(postId);
+        return postQueryUseCase.findInformationById(query);
+    }
 
-  @ResponseStatus(NO_CONTENT)
-  @PatchMapping("/{postId}")
-  public void edit(
-      @Principal UserPrincipal principal,
-      @PathVariable Long postId,
-      @RequestBody EditPostRequestDto request
-  ) {
-    final var command = new EditCommand(principal.user().id(), postId, request.title(),
-        request.content());
-    postCommandUseCase.edit(command);
-  }
+    @ResponseStatus(NO_CONTENT)
+    @PatchMapping("/{postId}")
+    public void edit(
+            @Principal UserPrincipal principal,
+            @PathVariable Long postId,
+            @RequestBody EditPostRequestDto request) {
+        final var command =
+                new EditCommand(principal.user().id(), postId, request.title(), request.content());
+        postCommandUseCase.edit(command);
+    }
 
-  @PostMapping
-  public ResponseEntity<Void> write(
-      @Principal UserPrincipal principal,
-      @RequestBody @Validated WritePostRequestDto request
-  ) {
-    final var command = new WriteCommand(principal.user().id(), request.title(), request.content());
-    final var id = postCommandUseCase.write(command);
-    final var uri = URI.create(String.format("%s/%d", POST_API_URI, id));
-    return ResponseEntity.created(uri).build();
-  }
-
+    @PostMapping
+    public ResponseEntity<Void> write(
+            @Principal UserPrincipal principal,
+            @RequestBody @Validated WritePostRequestDto request) {
+        final var command =
+                new WriteCommand(principal.user().id(), request.title(), request.content());
+        final var id = postCommandUseCase.write(command);
+        final var uri = URI.create(String.format("%s/%d", POST_API_URI, id));
+        return ResponseEntity.created(uri).build();
+    }
 }

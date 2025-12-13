@@ -20,63 +20,61 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthenticationCommandService implements AuthenticationCommandUseCase {
 
-  private final ExpiredTokenCommandPort expiredTokenCommandPort;
+    private final ExpiredTokenCommandPort expiredTokenCommandPort;
 
-  private final ExpiredTokenQueryPort expiredTokenQueryPort;
+    private final ExpiredTokenQueryPort expiredTokenQueryPort;
 
-  private final RefreshTokenCommandPort refreshTokenCommandPort;
+    private final RefreshTokenCommandPort refreshTokenCommandPort;
 
-  private final RefreshTokenQueryPort refreshTokenQueryPort;
+    private final RefreshTokenQueryPort refreshTokenQueryPort;
 
-  private final TokenProvider tokenProvider;
+    private final TokenProvider tokenProvider;
 
-  public AuthenticationCommandService(
-      final ExpiredTokenQueryPort expiredTokenQueryPort,
-      final ExpiredTokenCommandPort expiredTokenCommandPort,
-      final RefreshTokenCommandPort refreshTokenCommandPort,
-      final RefreshTokenQueryPort refreshTokenQueryPort,
-      final TokenProvider tokenProvider
-  ) {
-    this.expiredTokenQueryPort = expiredTokenQueryPort;
-    this.expiredTokenCommandPort = expiredTokenCommandPort;
-    this.refreshTokenCommandPort = refreshTokenCommandPort;
-    this.refreshTokenQueryPort = refreshTokenQueryPort;
-    this.tokenProvider = tokenProvider;
-  }
-
-  @Override
-  public void logout(final LogoutCommand command) {
-    final var accessToken = tokenProvider.verify(command.accessToken());
-    final var refreshToken = tokenProvider.verify(command.refreshToken());
-
-    expireAccessToken(accessToken);
-    expireRefreshToken(refreshToken);
-  }
-
-  @Override
-  public String refresh(final RefreshCommand command) {
-    final var verifiedAccessToken = tokenProvider.verify(command.accessToken());
-    final var verifiedRefreshToken = tokenProvider.verify(command.refreshToken());
-
-    if (refreshTokenQueryPort.isExpired(verifiedRefreshToken.value())) {
-      throw new BadCredentialsException("Expired refresh token");
+    public AuthenticationCommandService(
+            final ExpiredTokenQueryPort expiredTokenQueryPort,
+            final ExpiredTokenCommandPort expiredTokenCommandPort,
+            final RefreshTokenCommandPort refreshTokenCommandPort,
+            final RefreshTokenQueryPort refreshTokenQueryPort,
+            final TokenProvider tokenProvider) {
+        this.expiredTokenQueryPort = expiredTokenQueryPort;
+        this.expiredTokenCommandPort = expiredTokenCommandPort;
+        this.refreshTokenCommandPort = refreshTokenCommandPort;
+        this.refreshTokenQueryPort = refreshTokenQueryPort;
+        this.tokenProvider = tokenProvider;
     }
 
-    expiredTokenCommandPort.expire(ExpiredToken.from(verifiedAccessToken));
+    @Override
+    public void logout(final LogoutCommand command) {
+        final var accessToken = tokenProvider.verify(command.accessToken());
+        final var refreshToken = tokenProvider.verify(command.refreshToken());
 
-    return tokenProvider.createAccess(verifiedRefreshToken.email()).value();
-  }
-
-  private void expireAccessToken(final Token accessToken) {
-    if (!expiredTokenQueryPort.isExpired(accessToken.value())) {
-      expiredTokenCommandPort.expire(ExpiredToken.from(accessToken));
+        expireAccessToken(accessToken);
+        expireRefreshToken(refreshToken);
     }
-  }
 
-  private void expireRefreshToken(final Token refreshToken) {
-    if (!refreshTokenQueryPort.isExpired(refreshToken.value())) {
-      refreshTokenCommandPort.expire(RefreshToken.from(refreshToken));
+    @Override
+    public String refresh(final RefreshCommand command) {
+        final var verifiedAccessToken = tokenProvider.verify(command.accessToken());
+        final var verifiedRefreshToken = tokenProvider.verify(command.refreshToken());
+
+        if (refreshTokenQueryPort.isExpired(verifiedRefreshToken.value())) {
+            throw new BadCredentialsException("Expired refresh token");
+        }
+
+        expiredTokenCommandPort.expire(ExpiredToken.from(verifiedAccessToken));
+
+        return tokenProvider.createAccess(verifiedRefreshToken.email()).value();
     }
-  }
 
+    private void expireAccessToken(final Token accessToken) {
+        if (!expiredTokenQueryPort.isExpired(accessToken.value())) {
+            expiredTokenCommandPort.expire(ExpiredToken.from(accessToken));
+        }
+    }
+
+    private void expireRefreshToken(final Token refreshToken) {
+        if (!refreshTokenQueryPort.isExpired(refreshToken.value())) {
+            refreshTokenCommandPort.expire(RefreshToken.from(refreshToken));
+        }
+    }
 }

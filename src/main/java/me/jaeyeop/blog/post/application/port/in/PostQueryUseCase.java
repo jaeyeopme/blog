@@ -7,10 +7,7 @@ import me.jaeyeop.blog.post.adapter.out.PostInformationProjectionDto;
  */
 public interface PostQueryUseCase {
 
-  PostInformationProjectionDto findInformationById(InformationQuery informationQuery);
+    PostInformationProjectionDto findInformationById(InformationQuery informationQuery);
 
-  record InformationQuery(Long postId) {
-
-  }
-
+    record InformationQuery(Long postId) {}
 }

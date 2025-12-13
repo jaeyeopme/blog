@@ -19,44 +19,34 @@ import me.jaeyeop.blog.user.domain.User;
 @Getter
 public class Comment extends AbstractBaseEntity {
 
-  @Embedded
-  private CommentInformation information;
+    @Embedded private CommentInformation information;
 
-  @NotNull
-  @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(nullable = false, updatable = false)
-  private User author;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(nullable = false, updatable = false)
+    private User author;
 
-  @NotNull
-  @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(nullable = false, updatable = false)
-  private Post post;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(nullable = false, updatable = false)
+    private Post post;
 
-  protected Comment() {
-  }
+    protected Comment() {}
 
-  private Comment(
-      final Post post,
-      final User author,
-      final CommentInformation information
-  ) {
-    this.post = post;
-    this.information = information;
-    this.author = author;
-  }
-
-  public static Comment of(
-      final Post post,
-      final User author,
-      final CommentInformation information
-  ) {
-    return new Comment(post, author, information);
-  }
-
-  public void confirmAccess(final User author) {
-    if (!this.author.equals(author)) {
-      throw new AccessDeniedException();
+    private Comment(final Post post, final User author, final CommentInformation information) {
+        this.post = post;
+        this.information = information;
+        this.author = author;
     }
-  }
 
+    public static Comment of(
+            final Post post, final User author, final CommentInformation information) {
+        return new Comment(post, author, information);
+    }
+
+    public void confirmAccess(final User author) {
+        if (!this.author.equals(author)) {
+            throw new AccessDeniedException();
+        }
+    }
 }

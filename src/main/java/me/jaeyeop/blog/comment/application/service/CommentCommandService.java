@@ -22,62 +22,57 @@ import org.springframework.stereotype.Service;
 @Service
 public class CommentCommandService implements CommentCommandUseCase {
 
-  private final CommentCommandPort commentCommandPort;
+    private final CommentCommandPort commentCommandPort;
 
-  private final CommentQueryPort commentQueryPort;
+    private final CommentQueryPort commentQueryPort;
 
-  private final PostQueryPort postQueryPort;
+    private final PostQueryPort postQueryPort;
 
-  private final UserQueryPort userQueryPort;
+    private final UserQueryPort userQueryPort;
 
-  public CommentCommandService(
-      final CommentCommandPort commentCommandPort,
-      final CommentQueryPort commentQueryPort,
-      final PostQueryPort postQueryPort,
-      final UserQueryPort userQueryPort
-  ) {
-    this.commentCommandPort = commentCommandPort;
-    this.commentQueryPort = commentQueryPort;
-    this.postQueryPort = postQueryPort;
-    this.userQueryPort = userQueryPort;
-  }
+    public CommentCommandService(
+            final CommentCommandPort commentCommandPort,
+            final CommentQueryPort commentQueryPort,
+            final PostQueryPort postQueryPort,
+            final UserQueryPort userQueryPort) {
+        this.commentCommandPort = commentCommandPort;
+        this.commentQueryPort = commentQueryPort;
+        this.postQueryPort = postQueryPort;
+        this.userQueryPort = userQueryPort;
+    }
 
-  @Override
-  public Long write(final WriteCommand command) {
-    final var post = findPostByPostId(command.targetId());
-    final var author = findAuthorByAuthorId(command.authorId());
-    final var information = new CommentInformation(command.content());
-    final var comment = commentCommandPort.save(Comment.of(post, author, information));
-    return comment.id();
-  }
+    @Override
+    public Long write(final WriteCommand command) {
+        final var post = findPostByPostId(command.targetId());
+        final var author = findAuthorByAuthorId(command.authorId());
+        final var information = new CommentInformation(command.content());
+        final var comment = commentCommandPort.save(Comment.of(post, author, information));
+        return comment.id();
+    }
 
-  @Override
-  public void edit(final EditCommand command) {
-    final var comment = findById(command.targetId());
-    comment.confirmAccess(findAuthorByAuthorId(command.authorId()));
-    comment.information().edit(command.newContent());
-  }
+    @Override
+    public void edit(final EditCommand command) {
+        final var comment = findById(command.targetId());
+        comment.confirmAccess(findAuthorByAuthorId(command.authorId()));
+        comment.information().edit(command.newContent());
+    }
 
-  @Override
-  public void delete(final DeleteCommand command) {
-    final var comment = findById(command.targetId());
-    comment.confirmAccess(findAuthorByAuthorId(command.authorId()));
-    commentCommandPort.delete(comment);
-  }
+    @Override
+    public void delete(final DeleteCommand command) {
+        final var comment = findById(command.targetId());
+        comment.confirmAccess(findAuthorByAuthorId(command.authorId()));
+        commentCommandPort.delete(comment);
+    }
 
-  private Comment findById(final Long commentId) {
-    return commentQueryPort.findById(commentId)
-        .orElseThrow(CommentNotFoundException::new);
-  }
+    private Comment findById(final Long commentId) {
+        return commentQueryPort.findById(commentId).orElseThrow(CommentNotFoundException::new);
+    }
 
-  private User findAuthorByAuthorId(final Long authorId) {
-    return userQueryPort.findById(authorId)
-        .orElseThrow(UserNotFoundException::new);
-  }
+    private User findAuthorByAuthorId(final Long authorId) {
+        return userQueryPort.findById(authorId).orElseThrow(UserNotFoundException::new);
+    }
 
-  private Post findPostByPostId(final Long postId) {
-    return postQueryPort.findById(postId)
-        .orElseThrow(PostNotFoundException::new);
-  }
-
+    private Post findPostByPostId(final Long postId) {
+        return postQueryPort.findById(postId).orElseThrow(PostNotFoundException::new);
+    }
 }

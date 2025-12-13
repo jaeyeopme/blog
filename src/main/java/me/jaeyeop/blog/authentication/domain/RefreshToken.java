@@ -14,25 +14,19 @@ import org.springframework.data.redis.core.TimeToLive;
 @RedisHash("refreshToken")
 public class RefreshToken {
 
-  @NotBlank
-  @Id
-  private String value;
+    @NotBlank @Id private String value;
 
-  @TimeToLive(unit = TimeUnit.MILLISECONDS)
-  private long expiration;
+    @TimeToLive(unit = TimeUnit.MILLISECONDS)
+    private long expiration;
 
-  protected RefreshToken() {
-  }
+    protected RefreshToken() {}
 
-  private RefreshToken(final String value,
-      final long expiration) {
-    this.value = value;
-    this.expiration = expiration;
-  }
+    private RefreshToken(final String value, final long expiration) {
+        this.value = value;
+        this.expiration = expiration;
+    }
 
-  public static RefreshToken from(Token token) {
-    return new RefreshToken(token.value(), token.expiration());
-  }
-
+    public static RefreshToken from(Token token) {
+        return new RefreshToken(token.value(), token.expiration());
+    }
 }
-

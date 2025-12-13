@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
+
 import java.util.Optional;
 import me.jaeyeop.blog.commons.error.exception.UserNotFoundException;
 import me.jaeyeop.blog.support.UnitTest;
@@ -24,102 +25,97 @@ import org.springframework.test.util.ReflectionTestUtils;
  */
 class UserCommandServiceTest extends UnitTest {
 
-  @Test
-  void 프로필_업데이트() {
-    // GIVEN
-    final var user = getUser(81L);
-    given(userQueryPort.findById(user.id())).willReturn(Optional.of(user));
-    final var command = new UpdateCommand(
-        user.id(), "newName", "newIntroduce");
+    @Test
+    void 프로필_업데이트() {
+        // GIVEN
+        final var user = getUser(81L);
+        given(userQueryPort.findById(user.id())).willReturn(Optional.of(user));
+        final var command = new UpdateCommand(user.id(), "newName", "newIntroduce");
 
-    // WHEN
-    userCommandService.update(command);
+        // WHEN
+        userCommandService.update(command);
 
-    // THEN
-    assertThat(user.profile().name()).isEqualTo(command.newName());
-    assertThat(user.profile().introduce()).isEqualTo(command.newIntroduce());
-  }
+        // THEN
+        assertThat(user.profile().name()).isEqualTo(command.newName());
+        assertThat(user.profile().introduce()).isEqualTo(command.newIntroduce());
+    }
 
-  @ParameterizedTest
-  @NullAndEmptySource
-  void 비어있는_이름으로_프로필_업데이트(final String newName) {
-    // GIVEN
-    final var user = getUser(81L);
-    given(userQueryPort.findById(user.id())).willReturn(Optional.of(user));
-    final var command = new UpdateCommand(
-        user.id(), newName, "newIntroduce");
+    @ParameterizedTest
+    @NullAndEmptySource
+    void 비어있는_이름으로_프로필_업데이트(final String newName) {
+        // GIVEN
+        final var user = getUser(81L);
+        given(userQueryPort.findById(user.id())).willReturn(Optional.of(user));
+        final var command = new UpdateCommand(user.id(), newName, "newIntroduce");
 
-    // WHEN
-    userCommandService.update(command);
+        // WHEN
+        userCommandService.update(command);
 
-    // THEN
-    assertThat(user.profile().name()).isNotEqualTo(command.newName());
-    assertThat(user.profile().introduce()).isEqualTo(command.newIntroduce());
-  }
+        // THEN
+        assertThat(user.profile().name()).isNotEqualTo(command.newName());
+        assertThat(user.profile().introduce()).isEqualTo(command.newIntroduce());
+    }
 
-  @ParameterizedTest
-  @NullAndEmptySource
-  void 비어있는_소개로_프로필_업데이트(final String newIntroduce) {
-    // GIVEN
-    final var user = getUser(81L);
-    given(userQueryPort.findById(user.id())).willReturn(Optional.of(user));
-    final var command = new UpdateCommand(
-        user.id(), "newName", newIntroduce);
+    @ParameterizedTest
+    @NullAndEmptySource
+    void 비어있는_소개로_프로필_업데이트(final String newIntroduce) {
+        // GIVEN
+        final var user = getUser(81L);
+        given(userQueryPort.findById(user.id())).willReturn(Optional.of(user));
+        final var command = new UpdateCommand(user.id(), "newName", newIntroduce);
 
-    // WHEN
-    userCommandService.update(command);
+        // WHEN
+        userCommandService.update(command);
 
-    // THEN
-    assertThat(user.profile().name()).isEqualTo(command.newName());
-    assertThat(user.profile().introduce()).isNotEqualTo(command.newIntroduce());
-  }
+        // THEN
+        assertThat(user.profile().name()).isEqualTo(command.newName());
+        assertThat(user.profile().introduce()).isNotEqualTo(command.newIntroduce());
+    }
 
-  @Test
-  void 존재하지_않은_프로필_업데이트() {
-    // GIVEN
-    final var command = new UpdateCommand(
-        4L, "newName", "newIntroduce");
-    given(userQueryPort.findById(command.targetId())).willReturn(Optional.empty());
+    @Test
+    void 존재하지_않은_프로필_업데이트() {
+        // GIVEN
+        final var command = new UpdateCommand(4L, "newName", "newIntroduce");
+        given(userQueryPort.findById(command.targetId())).willReturn(Optional.empty());
 
-    // WHEN
-    final ThrowingCallable when = () -> userCommandService.update(command);
+        // WHEN
+        final ThrowingCallable when = () -> userCommandService.update(command);
 
-    // THEN
-    assertThatThrownBy(when).isInstanceOf(UserNotFoundException.class);
-  }
+        // THEN
+        assertThatThrownBy(when).isInstanceOf(UserNotFoundException.class);
+    }
 
-  @Test
-  void 프로필_삭제() {
-    // GIVEN
-    final var user = getUser(66L);
-    given(userQueryPort.findById(user.id())).willReturn(Optional.of(user));
-    final var command = new DeleteCommand(user.id());
+    @Test
+    void 프로필_삭제() {
+        // GIVEN
+        final var user = getUser(66L);
+        given(userQueryPort.findById(user.id())).willReturn(Optional.of(user));
+        final var command = new DeleteCommand(user.id());
 
-    // WHEN
-    userCommandService.delete(command);
+        // WHEN
+        userCommandService.delete(command);
 
-    // THEN
-    then(userCommandPort).should().delete(user);
-  }
+        // THEN
+        then(userCommandPort).should().delete(user);
+    }
 
-  @Test
-  void 존재하지_않은_프로필_삭제() {
-    // GIVEN
-    final var command = new DeleteCommand(33L);
-    given(userQueryPort.findById(command.targetId())).willReturn(Optional.empty());
+    @Test
+    void 존재하지_않은_프로필_삭제() {
+        // GIVEN
+        final var command = new DeleteCommand(33L);
+        given(userQueryPort.findById(command.targetId())).willReturn(Optional.empty());
 
-    // WHEN
-    final ThrowingCallable when = () -> userCommandService.delete(command);
+        // WHEN
+        final ThrowingCallable when = () -> userCommandService.delete(command);
 
-    // THEN
-    assertThatThrownBy(when).isInstanceOf(UserNotFoundException.class);
-    then(userCommandPort).should(never()).delete(any(User.class));
-  }
+        // THEN
+        assertThatThrownBy(when).isInstanceOf(UserNotFoundException.class);
+        then(userCommandPort).should(never()).delete(any(User.class));
+    }
 
-  private User getUser(final Long userId) {
-    final var user = UserHelper.create();
-    ReflectionTestUtils.setField(user, "id", userId);
-    return user;
-  }
-
+    private User getUser(final Long userId) {
+        final var user = UserHelper.create();
+        ReflectionTestUtils.setField(user, "id", userId);
+        return user;
+    }
 }

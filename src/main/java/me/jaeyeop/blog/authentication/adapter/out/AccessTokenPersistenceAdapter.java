@@ -10,22 +10,21 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class AccessTokenPersistenceAdapter
-    implements ExpiredTokenCommandPort, ExpiredTokenQueryPort {
+        implements ExpiredTokenCommandPort, ExpiredTokenQueryPort {
 
-  private final ExpiredTokenRepository expiredTokenRepository;
+    private final ExpiredTokenRepository expiredTokenRepository;
 
-  public AccessTokenPersistenceAdapter(final ExpiredTokenRepository expiredTokenRepository) {
-    this.expiredTokenRepository = expiredTokenRepository;
-  }
+    public AccessTokenPersistenceAdapter(final ExpiredTokenRepository expiredTokenRepository) {
+        this.expiredTokenRepository = expiredTokenRepository;
+    }
 
-  @Override
-  public void expire(final ExpiredToken token) {
-    expiredTokenRepository.save(token);
-  }
+    @Override
+    public void expire(final ExpiredToken token) {
+        expiredTokenRepository.save(token);
+    }
 
-  @Override
-  public boolean isExpired(final String token) {
-    return expiredTokenRepository.existsById(token);
-  }
-
+    @Override
+    public boolean isExpired(final String token) {
+        return expiredTokenRepository.existsById(token);
+    }
 }

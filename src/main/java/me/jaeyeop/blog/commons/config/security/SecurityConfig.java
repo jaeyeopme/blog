@@ -29,75 +29,91 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 @Configuration
 public class SecurityConfig {
 
-  private final OAuth2AuthenticationFilter oAuth2AuthenticationFilter;
+    private final OAuth2AuthenticationFilter oAuth2AuthenticationFilter;
 
-  private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
-  private final OAuth2UserServiceDelegator oAuth2UserServiceDelegator;
+    private final OAuth2UserServiceDelegator oAuth2UserServiceDelegator;
 
-  private final HandlerExceptionResolver handlerExceptionResolver;
+    private final HandlerExceptionResolver handlerExceptionResolver;
 
-  public SecurityConfig(
-      final OAuth2AuthenticationFilter oAuth2AuthenticationFilter,
-      final OAuth2SuccessHandler oAuth2SuccessHandler,
-      final OAuth2UserServiceDelegator oAuth2UserServiceDelegator,
-      final HandlerExceptionResolver handlerExceptionResolver) {
-    this.oAuth2AuthenticationFilter = oAuth2AuthenticationFilter;
-    this.oAuth2SuccessHandler = oAuth2SuccessHandler;
-    this.oAuth2UserServiceDelegator = oAuth2UserServiceDelegator;
-    this.handlerExceptionResolver = handlerExceptionResolver;
-  }
+    public SecurityConfig(
+            final OAuth2AuthenticationFilter oAuth2AuthenticationFilter,
+            final OAuth2SuccessHandler oAuth2SuccessHandler,
+            final OAuth2UserServiceDelegator oAuth2UserServiceDelegator,
+            final HandlerExceptionResolver handlerExceptionResolver) {
+        this.oAuth2AuthenticationFilter = oAuth2AuthenticationFilter;
+        this.oAuth2SuccessHandler = oAuth2SuccessHandler;
+        this.oAuth2UserServiceDelegator = oAuth2UserServiceDelegator;
+        this.handlerExceptionResolver = handlerExceptionResolver;
+    }
 
-  @Bean
-  public SecurityFilterChain securityFilterChain(final HttpSecurity httpSecurity) throws Exception {
-    final var oas = new String[]{"/swagger-ui/**", "/api-docs/**"};
-    final var endpoint = new String[]{
-        UserWebAdapter.USER_API_URI + "/*",
-        PostWebAdapter.POST_API_URI + "/**",
-        CommentWebAdapter.COMMENT_API_URI + "/**"};
+    @Bean
+    public SecurityFilterChain securityFilterChain(final HttpSecurity httpSecurity)
+            throws Exception {
+        final var oas = new String[] {"/swagger-ui/**", "/api-docs/**"};
+        final var endpoint =
+                new String[] {
+                    UserWebAdapter.USER_API_URI + "/*",
+                    PostWebAdapter.POST_API_URI + "/**",
+                    CommentWebAdapter.COMMENT_API_URI + "/**"
+                };
 
-    httpSecurity
-        .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-        .csrf(AbstractHttpConfigurer::disable)
-        .cors(AbstractHttpConfigurer::disable)
-        .formLogin(AbstractHttpConfigurer::disable)
-        .httpBasic(AbstractHttpConfigurer::disable)
-        .sessionManagement(
-            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .addFilterAt(oAuth2AuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-        .oauth2Login(oauth2 -> oauth2
-            .successHandler(oAuth2SuccessHandler)
-            .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserServiceDelegator))
-            .authorizationEndpoint(authorization -> authorization
-                .baseUri(AuthenticationWebAdaptor.AUTHENTICATION_API_URI))
-        )
-        .exceptionHandling(exceptions -> exceptions
-            .accessDeniedHandler(getAccessDeniedHandler())
-            .authenticationEntryPoint(getAuthenticationEntryPoint())
-        )
-        .authorizeHttpRequests(auth -> auth
-            .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-            .requestMatchers(HttpMethod.GET, oas).permitAll()
-            .requestMatchers(HttpMethod.GET, endpoint).permitAll()
-            .anyRequest().authenticated()
-        );
+        httpSecurity
+                .headers(
+                        headers ->
+                                headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .sessionManagement(
+                        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterAt(oAuth2AuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .oauth2Login(
+                        oauth2 ->
+                                oauth2.successHandler(oAuth2SuccessHandler)
+                                        .userInfoEndpoint(
+                                                userInfo ->
+                                                        userInfo.userService(
+                                                                oAuth2UserServiceDelegator))
+                                        .authorizationEndpoint(
+                                                authorization ->
+                                                        authorization.baseUri(
+                                                                AuthenticationWebAdaptor
+                                                                        .AUTHENTICATION_API_URI)))
+                .exceptionHandling(
+                        exceptions ->
+                                exceptions
+                                        .accessDeniedHandler(getAccessDeniedHandler())
+                                        .authenticationEntryPoint(getAuthenticationEntryPoint()))
+                .authorizeHttpRequests(
+                        auth ->
+                                auth.requestMatchers(
+                                                PathRequest.toStaticResources().atCommonLocations())
+                                        .permitAll()
+                                        .requestMatchers(HttpMethod.GET, oas)
+                                        .permitAll()
+                                        .requestMatchers(HttpMethod.GET, endpoint)
+                                        .permitAll()
+                                        .anyRequest()
+                                        .authenticated());
 
-    return httpSecurity.build();
-  }
+        return httpSecurity.build();
+    }
 
-  private AuthenticationEntryPoint getAuthenticationEntryPoint() {
-    return this::resolveException;
-  }
+    private AuthenticationEntryPoint getAuthenticationEntryPoint() {
+        return this::resolveException;
+    }
 
-  private AccessDeniedHandler getAccessDeniedHandler() {
-    return this::resolveException;
-  }
+    private AccessDeniedHandler getAccessDeniedHandler() {
+        return this::resolveException;
+    }
 
-  private void resolveException(
-      final HttpServletRequest request,
-      final HttpServletResponse response,
-      final RuntimeException exception) {
-    handlerExceptionResolver.resolveException(request, response, null, exception);
-  }
-
+    private void resolveException(
+            final HttpServletRequest request,
+            final HttpServletResponse response,
+            final RuntimeException exception) {
+        handlerExceptionResolver.resolveException(request, response, null, exception);
+    }
 }

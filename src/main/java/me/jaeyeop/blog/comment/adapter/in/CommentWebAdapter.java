@@ -4,6 +4,7 @@ import static me.jaeyeop.blog.post.adapter.in.PostWebAdapter.POST_API_URI;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
+
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import java.net.URI;
@@ -38,77 +39,67 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CommentWebAdapter implements CommentOAS {
 
-  public static final String COMMENT_API_URI = "/api/v1/comments";
+    public static final String COMMENT_API_URI = "/api/v1/comments";
 
-  private final CommentCommandUseCase commentCommandUseCase;
+    private final CommentCommandUseCase commentCommandUseCase;
 
-  private final CommentQueryUseCase commentQueryUseCase;
+    private final CommentQueryUseCase commentQueryUseCase;
 
-  public CommentWebAdapter(
-      final CommentCommandUseCase commentCommandUseCase,
-      final CommentQueryUseCase commentQueryUseCase
-  ) {
-    this.commentCommandUseCase = commentCommandUseCase;
-    this.commentQueryUseCase = commentQueryUseCase;
-  }
+    public CommentWebAdapter(
+            final CommentCommandUseCase commentCommandUseCase,
+            final CommentQueryUseCase commentQueryUseCase) {
+        this.commentCommandUseCase = commentCommandUseCase;
+        this.commentQueryUseCase = commentQueryUseCase;
+    }
 
-  @ResponseStatus(CREATED)
-  @PostMapping(POST_API_URI + "/{postId}/comments")
-  @Override
-  public ResponseEntity<Void> write(
-      @Principal UserPrincipal principal,
-      @PathVariable Long postId,
-      @RequestBody @Validated WriteCommentRequestDto request
-  ) {
-    final var command = new WriteCommand(
-        principal.user().id(), postId, request.content());
-    final var id = commentCommandUseCase.write(command);
-    final var uri = URI.create(String.format("%s/%d", COMMENT_API_URI, id));
-    return ResponseEntity.created(uri).build();
-  }
+    @ResponseStatus(CREATED)
+    @PostMapping(POST_API_URI + "/{postId}/comments")
+    @Override
+    public ResponseEntity<Void> write(
+            @Principal UserPrincipal principal,
+            @PathVariable Long postId,
+            @RequestBody @Validated WriteCommentRequestDto request) {
+        final var command = new WriteCommand(principal.user().id(), postId, request.content());
+        final var id = commentCommandUseCase.write(command);
+        final var uri = URI.create(String.format("%s/%d", COMMENT_API_URI, id));
+        return ResponseEntity.created(uri).build();
+    }
 
-  @ResponseStatus(OK)
-  @GetMapping(POST_API_URI + "/{postId}/comments")
-  @Override
-  public Page<CommentInformationProjectionDto> findInformationPageByPostId(
-      @PathVariable Long postId,
-      @RequestParam(defaultValue = "0") @Min(0) @Max(99) int page,
-      @RequestParam(defaultValue = "10") @Min(0) @Max(99) int size
-  ) {
-    final var query = new PageQuery(postId, PageRequest.of(page, size));
-    return commentQueryUseCase.findInformationPageByPostId(query);
-  }
+    @ResponseStatus(OK)
+    @GetMapping(POST_API_URI + "/{postId}/comments")
+    @Override
+    public Page<CommentInformationProjectionDto> findInformationPageByPostId(
+            @PathVariable Long postId,
+            @RequestParam(defaultValue = "0") @Min(0) @Max(99) int page,
+            @RequestParam(defaultValue = "10") @Min(0) @Max(99) int size) {
+        final var query = new PageQuery(postId, PageRequest.of(page, size));
+        return commentQueryUseCase.findInformationPageByPostId(query);
+    }
 
-  @ResponseStatus(OK)
-  @GetMapping(COMMENT_API_URI + "/{commentId}")
-  @Override
-  public CommentInformationProjectionDto findInformationById(@PathVariable Long commentId) {
-    final var query = new Query(commentId);
-    return commentQueryUseCase.findInformationById(query);
-  }
+    @ResponseStatus(OK)
+    @GetMapping(COMMENT_API_URI + "/{commentId}")
+    @Override
+    public CommentInformationProjectionDto findInformationById(@PathVariable Long commentId) {
+        final var query = new Query(commentId);
+        return commentQueryUseCase.findInformationById(query);
+    }
 
-  @ResponseStatus(NO_CONTENT)
-  @PatchMapping(COMMENT_API_URI + "/{commentId}")
-  @Override
-  public void edit(
-      @Principal UserPrincipal principal,
-      @PathVariable Long commentId,
-      @RequestBody @Validated EditCommentRequestDto request
-  ) {
-    final var command = new EditCommand(
-        principal.user().id(), commentId, request.content());
-    commentCommandUseCase.edit(command);
-  }
+    @ResponseStatus(NO_CONTENT)
+    @PatchMapping(COMMENT_API_URI + "/{commentId}")
+    @Override
+    public void edit(
+            @Principal UserPrincipal principal,
+            @PathVariable Long commentId,
+            @RequestBody @Validated EditCommentRequestDto request) {
+        final var command = new EditCommand(principal.user().id(), commentId, request.content());
+        commentCommandUseCase.edit(command);
+    }
 
-  @ResponseStatus(NO_CONTENT)
-  @DeleteMapping(COMMENT_API_URI + "/{commentId}")
-  @Override
-  public void delete(
-      @Principal UserPrincipal principal,
-      @PathVariable Long commentId
-  ) {
-    final var command = new DeleteCommand(principal.user().id(), commentId);
-    commentCommandUseCase.delete(command);
-  }
-
+    @ResponseStatus(NO_CONTENT)
+    @DeleteMapping(COMMENT_API_URI + "/{commentId}")
+    @Override
+    public void delete(@Principal UserPrincipal principal, @PathVariable Long commentId) {
+        final var command = new DeleteCommand(principal.user().id(), commentId);
+        commentCommandUseCase.delete(command);
+    }
 }

@@ -9,10 +9,9 @@ import me.jaeyeop.blog.post.domain.Post;
  */
 public interface PostQueryPort {
 
-  boolean existsById(Long id);
+    boolean existsById(Long id);
 
-  Optional<Post> findById(Long id);
+    Optional<Post> findById(Long id);
 
-  Optional<PostInformationProjectionDto> findInformationById(Long id);
-
+    Optional<PostInformationProjectionDto> findInformationById(Long id);
 }

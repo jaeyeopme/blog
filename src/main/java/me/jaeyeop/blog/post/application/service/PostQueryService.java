@@ -14,16 +14,17 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class PostQueryService implements PostQueryUseCase {
 
-  private final PostQueryPort postQueryPort;
+    private final PostQueryPort postQueryPort;
 
-  public PostQueryService(final PostQueryPort postQueryPort) {
-    this.postQueryPort = postQueryPort;
-  }
+    public PostQueryService(final PostQueryPort postQueryPort) {
+        this.postQueryPort = postQueryPort;
+    }
 
-  @Override
-  public PostInformationProjectionDto findInformationById(final InformationQuery informationQuery) {
-    return postQueryPort.findInformationById(informationQuery.postId())
-        .orElseThrow(PostNotFoundException::new);
-  }
-
+    @Override
+    public PostInformationProjectionDto findInformationById(
+            final InformationQuery informationQuery) {
+        return postQueryPort
+                .findInformationById(informationQuery.postId())
+                .orElseThrow(PostNotFoundException::new);
+    }
 }
