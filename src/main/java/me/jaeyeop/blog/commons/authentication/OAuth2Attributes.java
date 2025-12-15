@@ -2,9 +2,6 @@ package me.jaeyeop.blog.commons.authentication;
 
 import java.util.Map;
 
-/**
- * @author jaeyeopme Created on 09/29/2022.
- */
 public record OAuth2Attributes(OAuth2Provider provider, String email, String name, String picture) {
 
     public static OAuth2Attributes of(

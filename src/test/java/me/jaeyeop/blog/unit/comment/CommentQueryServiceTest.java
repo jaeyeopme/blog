@@ -16,9 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 
-/**
- * @author jaeyeopme Created on 10/19/2022.
- */
 class CommentQueryServiceTest extends UnitTest {
 
     @Test

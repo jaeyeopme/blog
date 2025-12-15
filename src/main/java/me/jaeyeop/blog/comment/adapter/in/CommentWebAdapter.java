@@ -32,9 +32,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * @author jaeyeopme Created on 10/18/2022.
- */
 @Validated
 @RestController
 public class CommentWebAdapter implements CommentOAS {

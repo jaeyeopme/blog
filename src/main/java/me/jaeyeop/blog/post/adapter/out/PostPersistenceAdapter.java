@@ -7,9 +7,6 @@ import me.jaeyeop.blog.post.application.port.out.PostQueryPort;
 import me.jaeyeop.blog.post.domain.Post;
 import org.springframework.stereotype.Component;
 
-/**
- * @author jaeyeopme Created on 10/10/2022.
- */
 @Component
 public class PostPersistenceAdapter implements PostCommandPort, PostQueryPort {
 

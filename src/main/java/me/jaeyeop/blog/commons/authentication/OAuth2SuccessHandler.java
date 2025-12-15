@@ -16,9 +16,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-/**
- * @author jaeyeopme Created on 09/29/2022.
- */
 @Component
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 

@@ -21,9 +21,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-/**
- * @author jaeyeopme Created on 12/01/2022.
- */
 @Slf4j
 class AuthenticationIntegrationTest extends IntegrationTest {
 

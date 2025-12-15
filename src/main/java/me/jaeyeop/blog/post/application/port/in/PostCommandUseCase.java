@@ -1,8 +1,5 @@
 package me.jaeyeop.blog.post.application.port.in;
 
-/**
- * @author jaeyeopme Created on 10/10/2022.
- */
 public interface PostCommandUseCase {
 
     Long write(WriteCommand command);

@@ -8,9 +8,6 @@ import org.testcontainers.containers.MariaDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-/**
- * @author jaeyeopme Created on 12/13/2022.
- */
 @SuppressWarnings({"rawtypes", "resource"})
 @DirtiesContext
 @Testcontainers

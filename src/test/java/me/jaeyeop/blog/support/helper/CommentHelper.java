@@ -11,9 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
-/**
- * @author jaeyeopme Created on 12/01/2022.
- */
 public final class CommentHelper {
 
     private static final String DEFAULT_CONTENT = "content";

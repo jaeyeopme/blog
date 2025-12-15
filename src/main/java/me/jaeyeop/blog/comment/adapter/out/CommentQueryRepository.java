@@ -13,9 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
-/**
- * @author jaeyeopme Created on 10/19/2022.
- */
 @Repository
 public class CommentQueryRepository {
 

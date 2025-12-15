@@ -8,9 +8,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-/**
- * @author jaeyeopme Created on 09/29/2022.
- */
 public record UserPrincipal(User user, Collection<? extends GrantedAuthority> authorities)
         implements OAuth2User {
 

@@ -13,9 +13,6 @@ import me.jaeyeop.blog.commons.token.TokenProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
-/**
- * @author jaeyeopme Created on 10/02/2022.
- */
 @Transactional
 @Service
 public class AuthenticationCommandService implements AuthenticationCommandUseCase {

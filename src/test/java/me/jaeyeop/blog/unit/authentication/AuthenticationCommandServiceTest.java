@@ -15,9 +15,6 @@ import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.BadCredentialsException;
 
-/**
- * @author jaeyeopme Created on 10/02/2022.
- */
 class AuthenticationCommandServiceTest extends UnitTest {
 
     @Test

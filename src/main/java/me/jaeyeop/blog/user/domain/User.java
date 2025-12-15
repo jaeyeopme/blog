@@ -17,9 +17,6 @@ import me.jaeyeop.blog.commons.authentication.OAuth2Provider;
 import me.jaeyeop.blog.commons.persistence.AbstractBaseEntity;
 import me.jaeyeop.blog.post.domain.Post;
 
-/**
- * @author jaeyeopme Created on 09/27/2022.
- */
 @Entity
 @Getter
 public class User extends AbstractBaseEntity {

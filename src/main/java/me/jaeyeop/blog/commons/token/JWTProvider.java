@@ -15,9 +15,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-/**
- * @author jaeyeopme Created on 09/28/2022.
- */
 @Component
 public class JWTProvider implements TokenProvider {
 

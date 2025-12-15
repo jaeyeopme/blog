@@ -12,9 +12,6 @@ import me.jaeyeop.blog.user.application.port.in.UserQueryUseCase.ProfileQuery;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
 
-/**
- * @author jaeyeopme Created on 10/09/2022.
- */
 class UserQueryServiceTest extends UnitTest {
 
     @Test

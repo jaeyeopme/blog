@@ -6,9 +6,6 @@ import me.jaeyeop.blog.post.domain.Post;
 import me.jaeyeop.blog.post.domain.PostInformation;
 import me.jaeyeop.blog.user.domain.User;
 
-/**
- * @author jaeyeopme Created on 12/01/2022.
- */
 public final class PostHelper {
 
     public static final User DEFAULT_AUTHOR = UserHelper.create();

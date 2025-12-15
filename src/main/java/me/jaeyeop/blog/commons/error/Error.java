@@ -3,9 +3,6 @@ package me.jaeyeop.blog.commons.error;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-/**
- * @author jaeyeopme Created on 09/30/2022.
- */
 @Getter
 public enum Error {
     INVALID_ARGUMENT("잘못된 입력값입니다", HttpStatus.BAD_REQUEST),

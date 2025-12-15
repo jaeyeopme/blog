@@ -6,9 +6,6 @@ import java.time.ZoneId;
 import me.jaeyeop.blog.commons.token.JWTProvider;
 import me.jaeyeop.blog.commons.token.TokenProvider;
 
-/**
- * @author jaeyeopme Created on 10/02/2022.
- */
 public class TokenProviderHelper {
 
     private static final Clock DEFAULT_JWT_CLOCK =

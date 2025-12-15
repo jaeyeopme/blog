@@ -15,9 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * @author jaeyeopme Created on 10/02/2022.
- */
 @RestController
 @RequestMapping(AUTHENTICATION_API_URI)
 public class AuthenticationWebAdaptor implements AuthenticationOAS {

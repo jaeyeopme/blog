@@ -22,9 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * @author jaeyeopme Created on 10/06/2022.
- */
 @Validated
 @RequestMapping(USER_API_URI)
 @RestController

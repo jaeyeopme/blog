@@ -30,9 +30,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
-/**
- * @author jaeyeopme Created on 12/01/2022.
- */
 @Slf4j
 @Disabled
 @Tag("integration")

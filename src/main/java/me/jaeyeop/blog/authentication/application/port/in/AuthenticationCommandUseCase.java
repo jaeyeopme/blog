@@ -1,8 +1,5 @@
 package me.jaeyeop.blog.authentication.application.port.in;
 
-/**
- * @author jaeyeopme Created on 10/02/2022.
- */
 public interface AuthenticationCommandUseCase {
 
     void logout(LogoutCommand command);

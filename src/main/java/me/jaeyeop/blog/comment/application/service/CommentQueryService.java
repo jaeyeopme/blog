@@ -10,9 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * @author jaeyeopme Created on 10/19/2022.
- */
 @Transactional(readOnly = true)
 @Service
 public class CommentQueryService implements CommentQueryUseCase {

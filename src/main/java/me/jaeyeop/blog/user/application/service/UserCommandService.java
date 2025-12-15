@@ -8,9 +8,6 @@ import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
 import me.jaeyeop.blog.user.domain.User;
 import org.springframework.stereotype.Service;
 
-/**
- * @author jaeyeopme Created on 09/29/2022.
- */
 @Transactional
 @Service
 public class UserCommandService implements UserCommandUseCase {

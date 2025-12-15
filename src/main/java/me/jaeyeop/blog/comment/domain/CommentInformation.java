@@ -5,9 +5,6 @@ import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
-/**
- * @author jaeyeopme Created on 12/12/2022.
- */
 @Embeddable
 @Getter
 public class CommentInformation {

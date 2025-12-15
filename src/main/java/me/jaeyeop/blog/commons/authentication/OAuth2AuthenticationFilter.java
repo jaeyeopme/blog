@@ -25,9 +25,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-/**
- * @author jaeyeopme Created on 09/29/2022.
- */
 @Slf4j
 @Component
 public class OAuth2AuthenticationFilter extends OncePerRequestFilter {

@@ -23,9 +23,6 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
-/**
- * @author jaeyeopme Created on 12/07/2022.
- */
 @SuppressWarnings("OptionalGetWithoutIsPresent")
 class CommentIntegrationTest extends IntegrationTest {
 

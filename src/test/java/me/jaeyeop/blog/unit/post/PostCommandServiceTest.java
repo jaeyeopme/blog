@@ -24,9 +24,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.test.util.ReflectionTestUtils;
 
-/**
- * @author jaeyeopme Created on 10/10/2022.
- */
 class PostCommandServiceTest extends UnitTest {
 
     @Test

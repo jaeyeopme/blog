@@ -14,9 +14,6 @@ import me.jaeyeop.blog.support.helper.UserHelper.WithPrincipal;
 import me.jaeyeop.blog.user.adapter.in.UpdateUserRequestDto;
 import org.junit.jupiter.api.Test;
 
-/**
- * @author jaeyeopme Created on 12/02/2022.
- */
 @SuppressWarnings("OptionalGetWithoutIsPresent")
 class UserIntegrationTest extends IntegrationTest {
 

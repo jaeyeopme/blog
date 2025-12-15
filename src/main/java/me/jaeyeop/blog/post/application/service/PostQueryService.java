@@ -7,9 +7,6 @@ import me.jaeyeop.blog.post.application.port.out.PostQueryPort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * @author jaeyeopme Created on 10/12/2022.
- */
 @Transactional(readOnly = true)
 @Service
 public class PostQueryService implements PostQueryUseCase {

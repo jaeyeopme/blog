@@ -7,9 +7,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
 
-/**
- * @author jaeyeopme Created on 10/02/2022.
- */
 @EqualsAndHashCode
 @RedisHash("refreshToken")
 public class RefreshToken {

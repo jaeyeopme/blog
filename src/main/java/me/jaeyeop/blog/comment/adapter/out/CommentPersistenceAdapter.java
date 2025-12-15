@@ -9,9 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-/**
- * @author jaeyeopme Created on 10/19/2022.
- */
 @Component
 public class CommentPersistenceAdapter implements CommentCommandPort, CommentQueryPort {
 

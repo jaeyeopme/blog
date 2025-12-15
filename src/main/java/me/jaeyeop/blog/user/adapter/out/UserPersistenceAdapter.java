@@ -6,9 +6,6 @@ import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
 import me.jaeyeop.blog.user.domain.User;
 import org.springframework.stereotype.Component;
 
-/**
- * @author jaeyeopme Created on 10/06/2022.
- */
 @Component
 public class UserPersistenceAdapter implements UserCommandPort, UserQueryPort {
 

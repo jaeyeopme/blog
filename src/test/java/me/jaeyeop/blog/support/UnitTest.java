@@ -27,9 +27,6 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-/**
- * @author jaeyeopme Created on 12/01/2022.
- */
 @Disabled
 @Tag("unit")
 @ExtendWith(MockitoExtension.class)

@@ -8,9 +8,6 @@ import me.jaeyeop.blog.user.domain.UserProfile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * @author jaeyeopme Created on 10/06/2022.
- */
 @Transactional(readOnly = true)
 @Service
 public class UserQueryService implements UserQueryUseCase {

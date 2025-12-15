@@ -12,9 +12,6 @@ import me.jaeyeop.blog.support.helper.PostHelper;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
 
-/**
- * @author jaeyeopme Created on 10/12/2022.
- */
 class PostQueryServiceTest extends UnitTest {
 
     @Test

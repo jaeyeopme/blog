@@ -22,9 +22,6 @@ import org.springframework.security.test.context.support.WithSecurityContextFact
 import org.springframework.stereotype.Component;
 import org.springframework.test.util.ReflectionTestUtils;
 
-/**
- * @author jaeyeopme Created on 12/01/2022.
- */
 @Slf4j
 @Component
 public final class UserHelper implements WithSecurityContextFactory<WithPrincipal> {

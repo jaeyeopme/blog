@@ -7,9 +7,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
-/**
- * @author jaeyeopme Created on 10/12/2022.
- */
 @Repository
 public class PostQueryRepository {
 

@@ -5,9 +5,6 @@ import me.jaeyeop.blog.authentication.application.port.out.ExpiredTokenQueryPort
 import me.jaeyeop.blog.authentication.domain.ExpiredToken;
 import org.springframework.stereotype.Component;
 
-/**
- * @author jaeyeopme Created on 10/22/2022.
- */
 @Component
 public class AccessTokenPersistenceAdapter
         implements ExpiredTokenCommandPort, ExpiredTokenQueryPort {

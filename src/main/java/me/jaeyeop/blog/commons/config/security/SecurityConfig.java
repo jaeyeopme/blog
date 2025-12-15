@@ -23,9 +23,6 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
-/**
- * @author jaeyeopme Created on 09/26/2022.
- */
 @Configuration
 public class SecurityConfig {
 

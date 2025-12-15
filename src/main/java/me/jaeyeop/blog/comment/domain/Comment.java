@@ -12,9 +12,6 @@ import me.jaeyeop.blog.commons.persistence.AbstractBaseEntity;
 import me.jaeyeop.blog.post.domain.Post;
 import me.jaeyeop.blog.user.domain.User;
 
-/**
- * @author jaeyeopme Created on 10/16/2022.
- */
 @Entity
 @Getter
 public class Comment extends AbstractBaseEntity {

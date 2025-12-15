@@ -25,9 +25,6 @@ import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
-/**
- * @author jaeyeopme Created on 10/20/2022.
- */
 class CommentCommandServiceTest extends UnitTest {
 
     @Test

@@ -6,9 +6,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import org.springframework.util.StringUtils;
 
-/**
- * @author jaeyeopme Created on 12/11/2022.
- */
 @Getter
 @Embeddable
 public class UserProfile {
