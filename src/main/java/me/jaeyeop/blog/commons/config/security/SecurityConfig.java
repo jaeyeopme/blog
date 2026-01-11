@@ -25,13 +25,9 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Configuration
 public class SecurityConfig {
-
     private final OAuth2AuthenticationFilter oAuth2AuthenticationFilter;
-
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
-
     private final OAuth2UserServiceDelegator oAuth2UserServiceDelegator;
-
     private final HandlerExceptionResolver handlerExceptionResolver;
 
     public SecurityConfig(
@@ -78,7 +74,7 @@ public class SecurityConfig {
                                                 authorization ->
                                                         authorization.baseUri(
                                                                 AuthenticationWebAdaptor
-                                                                        .AUTHENTICATION_API_URI)))
+                                                                        .AUTHENTICATION_API_URI + "/login")))
                 .exceptionHandling(
                         exceptions ->
                                 exceptions

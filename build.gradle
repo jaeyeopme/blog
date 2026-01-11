@@ -25,7 +25,6 @@ repositories {
 
 def querydslVersion = "7.1"
 def jjwtVersion = "0.11.5"
-def testcontainersVersion = "1.17.4"
 
 
 dependencies {
@@ -40,8 +39,9 @@ dependencies {
     // implementation — libraries
     implementation "io.github.openfeign.querydsl:querydsl-core:${querydslVersion}"
     implementation "io.github.openfeign.querydsl:querydsl-jpa:${querydslVersion}"
-    implementation "org.mapstruct:mapstruct:1.5.3.Final"
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.14"
+
+    implementation platform("org.testcontainers:testcontainers-bom:2.0.3")
 
     // compileOnly
     compileOnly "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
@@ -50,27 +50,27 @@ dependencies {
 
     // runtimeOnly
     runtimeOnly "io.jsonwebtoken:jjwt-impl:${jjwtVersion}", "io.jsonwebtoken:jjwt-jackson:${jjwtVersion}"
-    runtimeOnly "org.mariadb.jdbc:mariadb-java-client"
+    runtimeOnly "com.mysql:mysql-connector-j"
 
     // annotationProcessor
     annotationProcessor "io.github.openfeign.querydsl:querydsl-apt:${querydslVersion}:jpa"
-    annotationProcessor "org.mapstruct:mapstruct-processor:1.5.3.Final"
     annotationProcessor "org.projectlombok:lombok"
-    annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
 
     // testImplementation
     testImplementation "org.springframework.boot:spring-boot-starter-test"
     testImplementation "org.springframework.security:spring-security-test"
-    testImplementation "org.testcontainers:junit-jupiter:${testcontainersVersion}"
-    testImplementation "org.testcontainers:mariadb:${testcontainersVersion}"
-    testImplementation "org.testcontainers:testcontainers:${testcontainersVersion}"
+    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+    testImplementation "org.testcontainers:testcontainers"
+    testImplementation "org.testcontainers:junit-jupiter"
+    testImplementation "org.testcontainers:mysql"
+    testImplementation "com.redis:testcontainers-redis:2.2.4"
 
     // testCompileOnly
     testCompileOnly "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
     testCompileOnly "org.projectlombok:lombok"
 
     // testAnnotationProcessor
-    testAnnotationProcessor 'org.projectlombok:lombok'
+    testAnnotationProcessor "org.projectlombok:lombok"
 }
 
 jib {
@@ -94,11 +94,8 @@ spotless {
 
 tasks.withType(Test).configureEach {
     useJUnitPlatform()
-
     jvmArgs '-XX:+EnableDynamicAgentLoading'
-
     testLogging { events "passed", "skipped", "failed" }
-
     outputs.upToDateWhen { false }
 }
 

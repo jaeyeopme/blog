@@ -4,12 +4,12 @@ spring:
       ddl-auto: validate
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MariaDB106Dialect
+        dialect: org.hibernate.dialect.MySQLDialect
 
   datasource:
-    url: jdbc:mariadb://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}
+    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}
     hikari:
-      driver-class-name: org.mariadb.jdbc.Driver
+      driver-class-name: com.mysql.cj.jdbc.Driver
       username: ${MYSQL_USER}
       password: ${MYSQL_PASSWORD}
       connection-init-sql: SELECT 1

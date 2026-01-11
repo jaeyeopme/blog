@@ -1,4 +1,4 @@
-package me.jaeyeop.blog.support.helper;
+package me.jaeyeop.blog.support.factory;
 
 import java.time.LocalDateTime;
 import me.jaeyeop.blog.post.adapter.out.PostInformationProjectionDto;
@@ -6,15 +6,14 @@ import me.jaeyeop.blog.post.domain.Post;
 import me.jaeyeop.blog.post.domain.PostInformation;
 import me.jaeyeop.blog.user.domain.User;
 
-public final class PostHelper {
-
-    public static final User DEFAULT_AUTHOR = UserHelper.create();
+public final class PostFactory {
+    public static final User DEFAULT_AUTHOR = UserFactory.create();
     private static final String DEFAULT_TITLE = "post default title";
     private static final String DEFAULT_CONTENT = "post default content";
     private static final String DEFAULT_COVER_IMAGE = "post default cover image";
     private static final String DEFAULT_AUTHOR_NAME = DEFAULT_AUTHOR.profile().name();
 
-    private PostHelper() {}
+    private PostFactory() {}
 
     public static Post create() {
         return Post.of(DEFAULT_AUTHOR, new PostInformation(DEFAULT_TITLE, DEFAULT_CONTENT));

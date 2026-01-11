@@ -1,46 +1,26 @@
 package me.jaeyeop.blog.support;
 
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.MariaDBContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
+import com.redis.testcontainers.RedisContainer;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.utility.DockerImageName;
 
-@SuppressWarnings({"rawtypes", "resource"})
-@DirtiesContext
-@Testcontainers
 public abstract class ContainerTest {
+    @ServiceConnection
+    public static final MySQLContainer<?> MYSQL_CONTAINER =
+            new MySQLContainer<>(DockerImageName.parse("mysql").withTag("8.4.7"))
+                    .withDatabaseName("blog")
+                    .withExposedPorts(3306)
+                    .withUsername("test")
+                    .withPassword("test");
 
-    private static final String MARIADB_IMAGE = "mariadb:10.7.3";
-    private static final String REDIS_IMAGE = "redis:7.0.4-alpine";
-    private static final int REDIS_PORT = 6379;
-
-    @Container private static final MariaDBContainer MARIADB_CONTAINER;
-
-    @Container private static final GenericContainer REDIS_CONTAINER;
+    @ServiceConnection
+    public static final RedisContainer REDIS_CONTAINER =
+            new RedisContainer(DockerImageName.parse("redis").withTag("8.4.0-alpine"))
+                    .withExposedPorts(RedisContainer.REDIS_PORT);
 
     static {
-        MARIADB_CONTAINER =
-                new MariaDBContainer<>(MARIADB_IMAGE)
-                        .withDatabaseName("blog")
-                        .withExposedPorts(3306)
-                        .withUsername("test")
-                        .withPassword("test");
-        REDIS_CONTAINER = new GenericContainer<>(REDIS_IMAGE).withExposedPorts(REDIS_PORT);
-
-        MARIADB_CONTAINER.start();
+        MYSQL_CONTAINER.start();
         REDIS_CONTAINER.start();
-    }
-
-    @DynamicPropertySource
-    private static void setProperty(final DynamicPropertyRegistry registry) {
-        registry.add("spring.redis.host", REDIS_CONTAINER::getHost);
-        registry.add("spring.redis.port", () -> REDIS_CONTAINER.getMappedPort(REDIS_PORT));
-        registry.add("spring.datasource.url", MARIADB_CONTAINER::getJdbcUrl);
-        registry.add("spring.datasource.driver-class-name", MARIADB_CONTAINER::getDriverClassName);
-        registry.add("spring.datasource.hikari.username", MARIADB_CONTAINER::getUsername);
-        registry.add("spring.datasource.hikari.password", MARIADB_CONTAINER::getPassword);
     }
 }

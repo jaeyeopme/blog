@@ -16,7 +16,7 @@ import me.jaeyeop.blog.comment.adapter.in.EditCommentRequestDto;
 import me.jaeyeop.blog.comment.adapter.in.WriteCommentRequestDto;
 import me.jaeyeop.blog.comment.adapter.out.CommentInformationProjectionDto;
 import me.jaeyeop.blog.support.IntegrationTest;
-import me.jaeyeop.blog.support.helper.UserHelper.WithPrincipal;
+import me.jaeyeop.blog.support.factory.UserSecurityContextFactory.WithPrincipal;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
@@ -25,7 +25,6 @@ import org.springframework.data.domain.PageRequest;
 
 @SuppressWarnings("OptionalGetWithoutIsPresent")
 class CommentIntegrationTest extends IntegrationTest {
-
     @WithPrincipal
     @Test
     void 댓글_작성() throws Exception {

@@ -23,16 +23,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Slf4j
 @Component
 public class OAuth2AuthenticationFilter extends OncePerRequestFilter {
-
     private final UserQueryPort userQueryPort;
-
     private final ExpiredTokenQueryPort expiredTokenQueryPort;
-
     private final TokenProvider tokenProvider;
 
     public OAuth2AuthenticationFilter(
@@ -50,50 +48,51 @@ public class OAuth2AuthenticationFilter extends OncePerRequestFilter {
             @NonNull final HttpServletResponse response,
             @NonNull final FilterChain chain)
             throws ServletException, IOException {
-        try {
-            final var authResult = attemptAuthentication(request);
-            successfulAuthentication(authResult);
-        } catch (final AuthenticationException e) {
-            unsuccessfulAuthentication(e);
+        final var token = request.getHeader(HttpHeaders.AUTHORIZATION);
+
+        if (StringUtils.hasText(token)) {
+            try {
+                final var authResult = attemptAuthentication(request, token);
+                successfulAuthentication(authResult);
+            } catch (final AuthenticationException e) {
+                unsuccessfulAuthentication(e);
+            }
         }
 
         chain.doFilter(request, response);
     }
 
-    private Authentication attemptAuthentication(final HttpServletRequest request) {
-        final var acessToken = obtainToken(request);
+    private Authentication attemptAuthentication(
+            final HttpServletRequest request, final String token) {
+        final var acessToken = obtainToken(token);
         final var user = retrieveUser(acessToken.email());
 
         return createSuccessAuthentication(request, UserPrincipal.from(user));
     }
 
-    private Token obtainToken(final HttpServletRequest httpServletRequest) {
-        final var accessToken =
-                tokenProvider.verify(httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION));
+    private Token obtainToken(final String token) {
+        final var verifiedToken = tokenProvider.verify(token);
 
-        if (expiredTokenQueryPort.isExpired(accessToken.value())) {
+        if (expiredTokenQueryPort.isExpired(verifiedToken.value())) {
             throw new BadCredentialsException("expired access token");
         }
 
-        return accessToken;
+        return verifiedToken;
     }
 
     private User retrieveUser(final String email) {
         return userQueryPort
                 .findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("user not found"));
     }
 
     private Authentication createSuccessAuthentication(
             final HttpServletRequest request, final UserPrincipal principal) {
-        final var result = getResult(principal);
-        result.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        return result;
-    }
-
-    private UsernamePasswordAuthenticationToken getResult(final UserPrincipal principal) {
-        return new UsernamePasswordAuthenticationToken(
-                principal, Strings.EMPTY, principal.getAuthorities());
+        final var auth =
+                UsernamePasswordAuthenticationToken.authenticated(
+                        principal, Strings.EMPTY, principal.getAuthorities());
+        auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        return auth;
     }
 
     private void successfulAuthentication(final Authentication authResult) {

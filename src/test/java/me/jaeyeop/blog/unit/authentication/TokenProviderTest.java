@@ -4,19 +4,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import me.jaeyeop.blog.commons.token.TokenProvider;
-import me.jaeyeop.blog.support.helper.TokenProviderHelper;
+import me.jaeyeop.blog.support.factory.TokenFactory;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.BadCredentialsException;
 
 class TokenProviderTest {
-
     private TokenProvider tokenProvider;
 
     @BeforeEach
     void setUp() {
-        tokenProvider = TokenProviderHelper.create();
+        tokenProvider = TokenFactory.create();
     }
 
     @Test
@@ -39,7 +38,7 @@ class TokenProviderTest {
 
     @Test
     void 다른_키를_가진_토큰_검증() {
-        final var differentKeyProvider = TokenProviderHelper.createDifferentKey();
+        final var differentKeyProvider = TokenFactory.createDifferentKey();
         final var accessToken = differentKeyProvider.createAccess("email@email.com");
 
         final ThrowingCallable when = () -> tokenProvider.verify(accessToken.value());
@@ -49,7 +48,7 @@ class TokenProviderTest {
 
     @Test
     void 만료된_토큰_검증() {
-        final var expiredProvider = TokenProviderHelper.createExpired();
+        final var expiredProvider = TokenFactory.createExpired();
         final var accessToken = expiredProvider.createAccess("email@email.com");
 
         final ThrowingCallable when = () -> tokenProvider.verify(accessToken.value());

@@ -1,4 +1,4 @@
-package me.jaeyeop.blog.support.helper;
+package me.jaeyeop.blog.support.factory;
 
 import java.util.List;
 import java.util.stream.IntStream;
@@ -11,13 +11,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
-public final class CommentHelper {
-
+public final class CommentFactory {
     private static final String DEFAULT_CONTENT = "content";
-
     private static final String DEFAULT_AUTHOR_NAME = "author";
 
-    private CommentHelper() {}
+    private CommentFactory() {}
 
     public static Comment create(final Post post, final User author) {
         return Comment.of(post, author, new CommentInformation(DEFAULT_CONTENT));
@@ -28,7 +26,7 @@ public final class CommentHelper {
         final List<CommentInformationProjectionDto> content =
                 IntStream.range(pageable.getPageNumber(), pageable.getPageSize())
                         .asLongStream()
-                        .mapToObj(CommentHelper::createInformation)
+                        .mapToObj(CommentFactory::createInformation)
                         .toList();
         return new PageImpl<>(content, pageable, content.size());
     }

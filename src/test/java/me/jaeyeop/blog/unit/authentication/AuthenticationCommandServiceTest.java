@@ -9,13 +9,30 @@ import static org.mockito.Mockito.never;
 
 import me.jaeyeop.blog.authentication.application.port.in.AuthenticationCommandUseCase.LogoutCommand;
 import me.jaeyeop.blog.authentication.application.port.in.AuthenticationCommandUseCase.RefreshCommand;
+import me.jaeyeop.blog.authentication.application.port.out.ExpiredTokenCommandPort;
+import me.jaeyeop.blog.authentication.application.port.out.ExpiredTokenQueryPort;
+import me.jaeyeop.blog.authentication.application.port.out.RefreshTokenCommandPort;
+import me.jaeyeop.blog.authentication.application.port.out.RefreshTokenQueryPort;
+import me.jaeyeop.blog.authentication.application.service.AuthenticationCommandService;
+import me.jaeyeop.blog.commons.token.TokenProvider;
 import me.jaeyeop.blog.support.UnitTest;
-import me.jaeyeop.blog.support.helper.TokenProviderHelper;
+import me.jaeyeop.blog.support.factory.TokenFactory;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
 import org.springframework.security.authentication.BadCredentialsException;
 
 class AuthenticationCommandServiceTest extends UnitTest {
+    @InjectMocks private AuthenticationCommandService authCommandService;
+    @Mock private ExpiredTokenCommandPort expiredTokenCommandPort;
+    @Mock private RefreshTokenCommandPort refreshTokenCommandPort;
+    @Mock(stubOnly = true)
+    private ExpiredTokenQueryPort expiredTokenQueryPort;
+    @Mock(stubOnly = true)
+    private RefreshTokenQueryPort refreshTokenQueryPort;
+    @Spy private TokenProvider tokenProvider = TokenFactory.create();
 
     @Test
     void 토큰_만료() {
@@ -74,7 +91,7 @@ class AuthenticationCommandServiceTest extends UnitTest {
     void 유효하지_않은_엑세스_토큰_만료() {
         // GIVEN
         final var email = "email@email.com";
-        final var expiredProvider = TokenProviderHelper.createExpired();
+        final var expiredProvider = TokenFactory.createExpired();
         final var accessToken = expiredProvider.createAccess(email).value();
         final var refreshToken = tokenProvider.createRefresh(email).value();
         final var command = new LogoutCommand(TYPE + accessToken, TYPE + refreshToken);
@@ -92,7 +109,7 @@ class AuthenticationCommandServiceTest extends UnitTest {
     void 유효하지_않은_리프레시_토큰_만료() {
         // GIVEN
         final var email = "email@email.com";
-        final var expiredProvider = TokenProviderHelper.createExpired();
+        final var expiredProvider = TokenFactory.createExpired();
         final var accessToken = tokenProvider.createAccess(email).value();
         final var refreshToken = expiredProvider.createRefresh(email).value();
         final var command = new LogoutCommand(TYPE + accessToken, TYPE + refreshToken);

@@ -10,12 +10,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import me.jaeyeop.blog.support.IntegrationTest;
-import me.jaeyeop.blog.support.helper.UserHelper.WithPrincipal;
+import me.jaeyeop.blog.support.factory.UserSecurityContextFactory.WithPrincipal;
 import me.jaeyeop.blog.user.adapter.in.UpdateUserRequestDto;
+import me.jaeyeop.blog.user.adapter.out.UserRepository;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@SuppressWarnings("OptionalGetWithoutIsPresent")
 class UserIntegrationTest extends IntegrationTest {
+    @Autowired protected UserRepository userRepository;
 
     @WithPrincipal
     @Test

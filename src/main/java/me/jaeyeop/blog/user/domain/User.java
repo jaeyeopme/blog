@@ -20,7 +20,6 @@ import me.jaeyeop.blog.post.domain.Post;
 @Entity
 @Getter
 public class User extends AbstractBaseEntity {
-
     @Embedded private UserProfile profile;
 
     @NotNull

@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @Service
 public class UserQueryService implements UserQueryUseCase {
-
     private final UserQueryPort userQueryPort;
 
     public UserQueryService(final UserQueryPort userQueryPort) {

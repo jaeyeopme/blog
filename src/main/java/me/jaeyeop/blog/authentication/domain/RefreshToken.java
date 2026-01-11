@@ -10,7 +10,6 @@ import org.springframework.data.redis.core.TimeToLive;
 @EqualsAndHashCode
 @RedisHash("refreshToken")
 public class RefreshToken {
-
     @NotBlank @Id private String value;
 
     @TimeToLive(unit = TimeUnit.MILLISECONDS)

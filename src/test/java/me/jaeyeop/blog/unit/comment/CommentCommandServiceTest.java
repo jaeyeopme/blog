@@ -11,21 +11,40 @@ import java.util.Optional;
 import me.jaeyeop.blog.comment.application.port.in.CommentCommandUseCase.DeleteCommand;
 import me.jaeyeop.blog.comment.application.port.in.CommentCommandUseCase.EditCommand;
 import me.jaeyeop.blog.comment.application.port.in.CommentCommandUseCase.WriteCommand;
+import me.jaeyeop.blog.comment.application.port.out.CommentCommandPort;
+import me.jaeyeop.blog.comment.application.port.out.CommentQueryPort;
+import me.jaeyeop.blog.comment.application.service.CommentCommandService;
 import me.jaeyeop.blog.comment.domain.Comment;
 import me.jaeyeop.blog.commons.error.exception.AccessDeniedException;
 import me.jaeyeop.blog.commons.error.exception.CommentNotFoundException;
 import me.jaeyeop.blog.commons.error.exception.PostNotFoundException;
+import me.jaeyeop.blog.post.application.port.out.PostQueryPort;
 import me.jaeyeop.blog.post.domain.Post;
 import me.jaeyeop.blog.support.UnitTest;
-import me.jaeyeop.blog.support.helper.CommentHelper;
-import me.jaeyeop.blog.support.helper.PostHelper;
-import me.jaeyeop.blog.support.helper.UserHelper;
+import me.jaeyeop.blog.support.factory.CommentFactory;
+import me.jaeyeop.blog.support.factory.PostFactory;
+import me.jaeyeop.blog.support.factory.UserFactory;
+import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
 import me.jaeyeop.blog.user.domain.User;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 
 class CommentCommandServiceTest extends UnitTest {
+    @InjectMocks private CommentCommandService commentCommandService;
+
+    @Mock private CommentCommandPort commentCommandPort;
+
+    @Mock(stubOnly = true)
+    private CommentQueryPort commentQueryPort;
+
+    @Mock(stubOnly = true)
+    private PostQueryPort postQueryPort;
+
+    @Mock(stubOnly = true)
+    private UserQueryPort userQueryPort;
 
     @Test
     void 댓글_작성() {
@@ -161,19 +180,19 @@ class CommentCommandServiceTest extends UnitTest {
     }
 
     private Comment getStubComment(final Long commentId, final Post post, final User author) {
-        final var comment = CommentHelper.create(post, author);
+        final var comment = CommentFactory.create(post, author);
         ReflectionTestUtils.setField(comment, "id", commentId);
         return comment;
     }
 
     private Post getStubPost(final Long postId) {
-        final var post = PostHelper.create();
+        final var post = PostFactory.create();
         ReflectionTestUtils.setField(post, "id", postId);
         return post;
     }
 
     private User getStubAuthor(final Long authorId) {
-        final var author = UserHelper.create();
+        final var author = UserFactory.create();
         ReflectionTestUtils.setField(author, "id", authorId);
         return author;
     }

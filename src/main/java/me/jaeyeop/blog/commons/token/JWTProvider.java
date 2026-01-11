@@ -17,15 +17,11 @@ import org.springframework.util.StringUtils;
 
 @Component
 public class JWTProvider implements TokenProvider {
-
     public static final String TYPE = "Bearer ";
 
     private final Key key;
-
     private final long accessExp;
-
     private final long refreshExp;
-
     private final Clock clock;
 
     public JWTProvider(

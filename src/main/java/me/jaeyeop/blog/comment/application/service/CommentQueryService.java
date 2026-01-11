@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @Service
 public class CommentQueryService implements CommentQueryUseCase {
-
     private final CommentQueryPort commentQueryPort;
 
     private final PostQueryPort postQueryPort;

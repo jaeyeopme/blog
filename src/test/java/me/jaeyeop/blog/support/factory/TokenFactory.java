@@ -1,4 +1,4 @@
-package me.jaeyeop.blog.support.helper;
+package me.jaeyeop.blog.support.factory;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -6,15 +6,11 @@ import java.time.ZoneId;
 import me.jaeyeop.blog.commons.token.JWTProvider;
 import me.jaeyeop.blog.commons.token.TokenProvider;
 
-public class TokenProviderHelper {
-
+public class TokenFactory {
     private static final Clock DEFAULT_JWT_CLOCK =
             Clock.fixed(Instant.now(), ZoneId.systemDefault());
-
     private static final String DEFAULT_JWT_KEY = "key-key-key-key-key-key";
-
     private static final int DEFAULT_JWT_ACCESS_EXP = 200000;
-
     private static final int DEFAULT_JWT_REFRESH_EXP = 600000;
 
     public static TokenProvider createDifferentKey() {

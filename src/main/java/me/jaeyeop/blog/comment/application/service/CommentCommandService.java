@@ -18,13 +18,9 @@ import org.springframework.stereotype.Service;
 @Transactional
 @Service
 public class CommentCommandService implements CommentCommandUseCase {
-
     private final CommentCommandPort commentCommandPort;
-
     private final CommentQueryPort commentQueryPort;
-
     private final PostQueryPort postQueryPort;
-
     private final UserQueryPort userQueryPort;
 
     public CommentCommandService(

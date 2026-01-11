@@ -13,18 +13,30 @@ import me.jaeyeop.blog.commons.error.exception.PostNotFoundException;
 import me.jaeyeop.blog.post.application.port.in.PostCommandUseCase.DeleteCommand;
 import me.jaeyeop.blog.post.application.port.in.PostCommandUseCase.EditCommand;
 import me.jaeyeop.blog.post.application.port.in.PostCommandUseCase.WriteCommand;
+import me.jaeyeop.blog.post.application.port.out.PostCommandPort;
+import me.jaeyeop.blog.post.application.port.out.PostQueryPort;
+import me.jaeyeop.blog.post.application.service.PostCommandService;
 import me.jaeyeop.blog.post.domain.Post;
 import me.jaeyeop.blog.support.UnitTest;
-import me.jaeyeop.blog.support.helper.PostHelper;
-import me.jaeyeop.blog.support.helper.UserHelper;
+import me.jaeyeop.blog.support.factory.PostFactory;
+import me.jaeyeop.blog.support.factory.UserFactory;
+import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
 import me.jaeyeop.blog.user.domain.User;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 
 class PostCommandServiceTest extends UnitTest {
+    @InjectMocks private PostCommandService postCommandService;
+    @Mock private PostCommandPort postCommandPort;
+    @Mock(stubOnly = true)
+    private PostQueryPort postQueryPort;
+    @Mock(stubOnly = true)
+    private UserQueryPort userQueryPort;
 
     @Test
     void 게시글_저장() {
@@ -187,13 +199,13 @@ class PostCommandServiceTest extends UnitTest {
     }
 
     private Post getStubPost(final Long postId) {
-        final var post = PostHelper.create();
+        final var post = PostFactory.create();
         ReflectionTestUtils.setField(post, "id", postId);
         return post;
     }
 
     private User getStubAuthor(final Long authorId) {
-        final var author = UserHelper.create();
+        final var author = UserFactory.create();
         ReflectionTestUtils.setField(author, "id", authorId);
         return author;
     }

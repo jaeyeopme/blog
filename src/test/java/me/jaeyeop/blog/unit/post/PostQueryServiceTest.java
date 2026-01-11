@@ -7,18 +7,25 @@ import static org.mockito.BDDMockito.given;
 import java.util.Optional;
 import me.jaeyeop.blog.commons.error.exception.PostNotFoundException;
 import me.jaeyeop.blog.post.application.port.in.PostQueryUseCase.InformationQuery;
+import me.jaeyeop.blog.post.application.port.out.PostQueryPort;
+import me.jaeyeop.blog.post.application.service.PostQueryService;
 import me.jaeyeop.blog.support.UnitTest;
-import me.jaeyeop.blog.support.helper.PostHelper;
+import me.jaeyeop.blog.support.factory.PostFactory;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 class PostQueryServiceTest extends UnitTest {
+    @InjectMocks private PostQueryService postQueryService;
+    @Mock(stubOnly = true)
+    private PostQueryPort postQueryPort;
 
     @Test
     void 게시글_조회() {
         // GIVEN
         final var postId = 1L;
-        final var information = PostHelper.createInformation(postId);
+        final var information = PostFactory.createInformation(postId);
         given(postQueryPort.findInformationById(postId)).willReturn(Optional.of(information));
         final var query = new InformationQuery(postId);
 

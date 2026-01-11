@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(AUTHENTICATION_API_URI)
 public class AuthenticationWebAdaptor implements AuthenticationOAS {
-
     public static final String AUTHENTICATION_API_URI = "/api/v1/auth";
     public static final String REFRESH_AUTHORIZATION = "Refresh-Authorization";
 

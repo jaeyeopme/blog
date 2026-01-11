@@ -7,21 +7,31 @@ import static org.mockito.BDDMockito.given;
 import java.util.Optional;
 import me.jaeyeop.blog.comment.application.port.in.CommentQueryUseCase.PageQuery;
 import me.jaeyeop.blog.comment.application.port.in.CommentQueryUseCase.Query;
+import me.jaeyeop.blog.comment.application.port.out.CommentQueryPort;
+import me.jaeyeop.blog.comment.application.service.CommentQueryService;
 import me.jaeyeop.blog.commons.error.exception.CommentNotFoundException;
 import me.jaeyeop.blog.commons.error.exception.PostNotFoundException;
+import me.jaeyeop.blog.post.application.port.out.PostQueryPort;
 import me.jaeyeop.blog.support.UnitTest;
-import me.jaeyeop.blog.support.helper.CommentHelper;
+import me.jaeyeop.blog.support.factory.CommentFactory;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 
 class CommentQueryServiceTest extends UnitTest {
+    @InjectMocks private CommentQueryService commentQueryService;
+    @Mock(stubOnly = true)
+    private CommentQueryPort commentQueryPort;
+    @Mock(stubOnly = true)
+    private PostQueryPort postQueryPort;
 
     @Test
     void 댓글_조회() {
         // GIVEN
-        final var stub = CommentHelper.createInformation(55L);
+        final var stub = CommentFactory.createInformation(55L);
         given(commentQueryPort.findInformationById(stub.id())).willReturn(Optional.of(stub));
         final var query = new Query(stub.id());
 
@@ -51,7 +61,7 @@ class CommentQueryServiceTest extends UnitTest {
         // GIVEN
         final var postId = 1L;
         final var pageable = getPageable();
-        final var infoPage = CommentHelper.createInformationPage(pageable);
+        final var infoPage = CommentFactory.createInformationPage(pageable);
         given(postQueryPort.existsById(postId)).willReturn(Boolean.TRUE);
         given(commentQueryPort.findInformationPageByPostId(postId, pageable)).willReturn(infoPage);
         final var query = new PageQuery(postId, pageable);

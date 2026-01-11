@@ -11,10 +11,8 @@ import org.springframework.stereotype.Service;
 @Transactional
 @Service
 public class UserCommandService implements UserCommandUseCase {
-
-    private final UserQueryPort userQueryPort;
-
     private final UserCommandPort userCommandPort;
+    private final UserQueryPort userQueryPort;
 
     public UserCommandService(
             final UserQueryPort userQueryPort, final UserCommandPort userCommandPort) {

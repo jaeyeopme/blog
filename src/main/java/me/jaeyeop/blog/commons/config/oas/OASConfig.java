@@ -18,11 +18,8 @@ import org.springframework.http.HttpHeaders;
 @Profile(value = {"local", "dev"})
 @Configuration
 public class OASConfig {
-
     private final String contactName;
-
     private final String contactEmail;
-
     private final String contactUrl;
 
     public OASConfig(
@@ -58,7 +55,7 @@ public class OASConfig {
                         """
                                 .formatted(
                                         AuthenticationWebAdaptor.AUTHENTICATION_API_URI
-                                                + "/google"))
+                                                + "/login/google"))
                 .contact(new Contact().name(contactName).email(contactEmail).url(contactUrl))
                 .version("v1");
     }

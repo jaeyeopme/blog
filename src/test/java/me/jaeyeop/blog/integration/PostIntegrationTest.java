@@ -14,12 +14,11 @@ import me.jaeyeop.blog.post.adapter.in.EditPostRequestDto;
 import me.jaeyeop.blog.post.adapter.in.WritePostRequestDto;
 import me.jaeyeop.blog.post.adapter.out.PostInformationProjectionDto;
 import me.jaeyeop.blog.support.IntegrationTest;
-import me.jaeyeop.blog.support.helper.UserHelper.WithPrincipal;
+import me.jaeyeop.blog.support.factory.UserFactory;
+import me.jaeyeop.blog.support.factory.UserSecurityContextFactory.WithPrincipal;
 import org.junit.jupiter.api.Test;
 
-@SuppressWarnings("OptionalGetWithoutIsPresent")
 class PostIntegrationTest extends IntegrationTest {
-
     @WithPrincipal
     @Test
     void 게시글_작성() throws Exception {
@@ -35,11 +34,45 @@ class PostIntegrationTest extends IntegrationTest {
         when.andExpectAll(status().isCreated());
     }
 
+    @Test
+    void 게시글_작성_실패_인증없음() throws Exception {
+        // GIVEN
+        final var request = new WritePostRequestDto("title", "content");
+
+        // WHEN
+        final var when =
+                mockMvc.perform(
+                        post(POST_API_URI).contentType(APPLICATION_JSON).content(toJson(request)));
+
+        // THEN
+        when.andExpectAll(status().isUnauthorized());
+    }
+
     @WithPrincipal
     @Test
     void 게시글_조회() throws Exception {
         // GIVEN
         final var post = getPost(getPrincipal());
+        final var information =
+                new PostInformationProjectionDto(
+                        post.id(),
+                        post.information(),
+                        post.author().profile().name(),
+                        post.createdAt(),
+                        post.lastModifiedAt());
+
+        // WHEN
+        final var when = mockMvc.perform(get(POST_API_URI + "/{id}", post.id()));
+
+        // THEN
+        when.andExpectAll(status().isOk(), content().json(toJson(information)));
+    }
+
+    @Test
+    void 게시글_조회_성공_인증없음() throws Exception {
+        // GIVEN
+        final var author = userRepository.save(UserFactory.create());
+        final var post = getPost(author);
         final var information =
                 new PostInformationProjectionDto(
                         post.id(),

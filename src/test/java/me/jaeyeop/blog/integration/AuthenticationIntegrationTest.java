@@ -16,14 +16,13 @@ import me.jaeyeop.blog.authentication.domain.RefreshToken;
 import me.jaeyeop.blog.authentication.domain.Token;
 import me.jaeyeop.blog.commons.token.TokenProvider;
 import me.jaeyeop.blog.support.IntegrationTest;
-import me.jaeyeop.blog.support.helper.UserHelper.WithPrincipal;
+import me.jaeyeop.blog.support.factory.UserSecurityContextFactory.WithPrincipal;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
 class AuthenticationIntegrationTest extends IntegrationTest {
-
     @Autowired protected ExpiredTokenRepository expiredTokenRepository;
 
     @Autowired protected RefreshTokenRepository refreshTokenRepository;
@@ -122,7 +121,7 @@ class AuthenticationIntegrationTest extends IntegrationTest {
     }
 
     private void clearRedis() {
-        log.info("===== Clear Redis =====");
+        log.debug("===== Clear Redis =====");
         expiredTokenRepository.deleteAll();
         refreshTokenRepository.deleteAll();
     }

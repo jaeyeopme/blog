@@ -10,17 +10,26 @@ import static org.mockito.Mockito.never;
 import java.util.Optional;
 import me.jaeyeop.blog.commons.error.exception.UserNotFoundException;
 import me.jaeyeop.blog.support.UnitTest;
-import me.jaeyeop.blog.support.helper.UserHelper;
+import me.jaeyeop.blog.support.factory.UserFactory;
 import me.jaeyeop.blog.user.application.port.in.UserCommandUseCase.DeleteCommand;
 import me.jaeyeop.blog.user.application.port.in.UserCommandUseCase.UpdateCommand;
+import me.jaeyeop.blog.user.application.port.out.UserCommandPort;
+import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
+import me.jaeyeop.blog.user.application.service.UserCommandService;
 import me.jaeyeop.blog.user.domain.User;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 
 class UserCommandServiceTest extends UnitTest {
+    @InjectMocks private UserCommandService userCommandService;
+    @Mock private UserCommandPort userCommandPort;
+    @Mock(stubOnly = true)
+    private UserQueryPort userQueryPort;
 
     @Test
     void 프로필_업데이트() {
@@ -37,8 +46,8 @@ class UserCommandServiceTest extends UnitTest {
         assertThat(user.profile().introduce()).isEqualTo(command.newIntroduce());
     }
 
-    @ParameterizedTest
     @NullAndEmptySource
+    @ParameterizedTest
     void 비어있는_이름으로_프로필_업데이트(final String newName) {
         // GIVEN
         final var user = getUser(81L);
@@ -53,8 +62,8 @@ class UserCommandServiceTest extends UnitTest {
         assertThat(user.profile().introduce()).isEqualTo(command.newIntroduce());
     }
 
-    @ParameterizedTest
     @NullAndEmptySource
+    @ParameterizedTest
     void 비어있는_소개로_프로필_업데이트(final String newIntroduce) {
         // GIVEN
         final var user = getUser(81L);
@@ -111,7 +120,7 @@ class UserCommandServiceTest extends UnitTest {
     }
 
     private User getUser(final Long userId) {
-        final var user = UserHelper.create();
+        final var user = UserFactory.create();
         ReflectionTestUtils.setField(user, "id", userId);
         return user;
     }

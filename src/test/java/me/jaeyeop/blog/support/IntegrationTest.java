@@ -1,6 +1,7 @@
 package me.jaeyeop.blog.support;
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -13,8 +14,8 @@ import me.jaeyeop.blog.comment.domain.Comment;
 import me.jaeyeop.blog.commons.config.security.UserPrincipal;
 import me.jaeyeop.blog.post.adapter.out.PostJpaRepository;
 import me.jaeyeop.blog.post.domain.Post;
-import me.jaeyeop.blog.support.helper.CommentHelper;
-import me.jaeyeop.blog.support.helper.PostHelper;
+import me.jaeyeop.blog.support.factory.CommentFactory;
+import me.jaeyeop.blog.support.factory.PostFactory;
 import me.jaeyeop.blog.user.adapter.out.UserRepository;
 import me.jaeyeop.blog.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,28 +38,24 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 public abstract class IntegrationTest extends ContainerTest {
-
     @Autowired protected WebApplicationContext context;
-
     @Autowired protected MockMvc mockMvc;
-
     @Autowired protected ObjectMapper objectMapper;
-
     @Autowired protected EntityManager entityManager;
-
     @Autowired protected UserRepository userRepository;
-
     @Autowired protected PostJpaRepository postJpaRepository;
-
     @Autowired protected CommentJpaRepository commentJpaRepository;
 
     @BeforeEach
     public void setUp() {
         this.mockMvc =
                 MockMvcBuilders.webAppContextSetup(this.context)
+                        .apply(springSecurity())
                         .alwaysDo(print())
                         .alwaysDo(result -> clearPersistenceContext())
-                        .addFilter(new CharacterEncodingFilter(StandardCharsets.UTF_8.name(), true))
+                        .addFilter(
+                                new CharacterEncodingFilter(
+                                        StandardCharsets.UTF_8.name(), true, true))
                         .build();
     }
 
@@ -78,13 +75,13 @@ public abstract class IntegrationTest extends ContainerTest {
     }
 
     protected Post getPost(final User author) {
-        final var post = postJpaRepository.save(PostHelper.create(author));
+        final var post = postJpaRepository.save(PostFactory.create(author));
         clearPersistenceContext();
         return post;
     }
 
     protected Comment getComment(final Post post, final User author) {
-        final var comment = commentJpaRepository.save(CommentHelper.create(post, author));
+        final var comment = commentJpaRepository.save(CommentFactory.create(post, author));
         clearPersistenceContext();
         return comment;
     }
