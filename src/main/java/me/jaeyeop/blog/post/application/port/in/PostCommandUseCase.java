@@ -1,7 +1,6 @@
 package me.jaeyeop.blog.post.application.port.in;
 
 public interface PostCommandUseCase {
-
     Long write(WriteCommand command);
 
     void edit(EditCommand command);

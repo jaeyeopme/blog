@@ -1,6 +1,7 @@
 package me.jaeyeop.blog.commons.error.exception;
 
 import lombok.Getter;
+
 import me.jaeyeop.blog.commons.error.Error;
 
 @Getter

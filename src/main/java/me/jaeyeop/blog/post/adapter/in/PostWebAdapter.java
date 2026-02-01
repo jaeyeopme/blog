@@ -1,19 +1,7 @@
 package me.jaeyeop.blog.post.adapter.in;
 
-import static me.jaeyeop.blog.post.adapter.in.PostWebAdapter.POST_API_URI;
-import static me.jaeyeop.blog.post.application.port.in.PostCommandUseCase.DeleteCommand;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
-import static org.springframework.http.HttpStatus.OK;
-
 import java.net.URI;
-import me.jaeyeop.blog.commons.config.security.Principal;
-import me.jaeyeop.blog.commons.config.security.UserPrincipal;
-import me.jaeyeop.blog.post.adapter.out.PostInformationProjectionDto;
-import me.jaeyeop.blog.post.application.port.in.PostCommandUseCase;
-import me.jaeyeop.blog.post.application.port.in.PostCommandUseCase.EditCommand;
-import me.jaeyeop.blog.post.application.port.in.PostCommandUseCase.WriteCommand;
-import me.jaeyeop.blog.post.application.port.in.PostQueryUseCase;
-import me.jaeyeop.blog.post.application.port.in.PostQueryUseCase.InformationQuery;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +13,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import me.jaeyeop.blog.commons.config.security.Principal;
+import me.jaeyeop.blog.commons.config.security.UserPrincipal;
+import me.jaeyeop.blog.post.adapter.out.PostInformationProjectionDto;
+import me.jaeyeop.blog.post.application.port.in.PostCommandUseCase;
+import me.jaeyeop.blog.post.application.port.in.PostCommandUseCase.EditCommand;
+import me.jaeyeop.blog.post.application.port.in.PostCommandUseCase.WriteCommand;
+import me.jaeyeop.blog.post.application.port.in.PostQueryUseCase;
+import me.jaeyeop.blog.post.application.port.in.PostQueryUseCase.InformationQuery;
+
+import static me.jaeyeop.blog.post.adapter.in.PostWebAdapter.POST_API_URI;
+import static me.jaeyeop.blog.post.application.port.in.PostCommandUseCase.DeleteCommand;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.OK;
 
 @Validated
 @RequestMapping(POST_API_URI)

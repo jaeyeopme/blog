@@ -1,5 +1,8 @@
 package me.jaeyeop.blog.post.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -8,9 +11,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
+
 import lombok.Getter;
+
 import me.jaeyeop.blog.comment.domain.Comment;
 import me.jaeyeop.blog.commons.error.exception.AccessDeniedException;
 import me.jaeyeop.blog.commons.persistence.AbstractBaseEntity;
@@ -19,8 +22,8 @@ import me.jaeyeop.blog.user.domain.User;
 @Entity
 @Getter
 public class Post extends AbstractBaseEntity {
-
-    @Embedded private PostInformation information;
+    @Embedded
+    private PostInformation information;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

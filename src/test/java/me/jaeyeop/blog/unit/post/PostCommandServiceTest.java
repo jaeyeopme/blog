@@ -1,13 +1,15 @@
 package me.jaeyeop.blog.unit.post;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.never;
-
 import java.util.Optional;
+
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.test.util.ReflectionTestUtils;
+
 import me.jaeyeop.blog.commons.error.exception.AccessDeniedException;
 import me.jaeyeop.blog.commons.error.exception.PostNotFoundException;
 import me.jaeyeop.blog.post.application.port.in.PostCommandUseCase.DeleteCommand;
@@ -22,17 +24,19 @@ import me.jaeyeop.blog.support.factory.PostFactory;
 import me.jaeyeop.blog.support.factory.UserFactory;
 import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
 import me.jaeyeop.blog.user.domain.User;
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.never;
 
 class PostCommandServiceTest extends UnitTest {
-    @InjectMocks private PostCommandService postCommandService;
-    @Mock private PostCommandPort postCommandPort;
+    @InjectMocks
+    private PostCommandService postCommandService;
+    @Mock
+    private PostCommandPort postCommandPort;
 
     @Mock(stubOnly = true)
     private PostQueryPort postQueryPort;

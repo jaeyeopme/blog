@@ -1,30 +1,31 @@
 package me.jaeyeop.blog.comment.adapter.in;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import me.jaeyeop.blog.comment.adapter.out.CommentInformationProjectionDto;
-import me.jaeyeop.blog.commons.config.oas.OASRequest.PageParameters;
-import me.jaeyeop.blog.commons.config.oas.OASResponse.InvalidArgumentResponse;
-import me.jaeyeop.blog.commons.config.oas.OASResponse.NotFoundCommentResponse;
-import me.jaeyeop.blog.commons.config.oas.OASResponse.SecurityResponse;
-import me.jaeyeop.blog.commons.config.security.UserPrincipal;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import me.jaeyeop.blog.comment.adapter.out.CommentInformationProjectionDto;
+import me.jaeyeop.blog.commons.config.oas.OASRequest.PageParameters;
+import me.jaeyeop.blog.commons.config.oas.OASResponse.InvalidArgumentResponse;
+import me.jaeyeop.blog.commons.config.oas.OASResponse.NotFoundCommentResponse;
+import me.jaeyeop.blog.commons.config.oas.OASResponse.SecurityResponse;
+import me.jaeyeop.blog.commons.config.security.UserPrincipal;
+
 @Validated
 @Tag(name = "4.comment", description = "댓글(댓글 작성, 댓글 조회, 댓글 수정, 댓글 삭제)")
 public interface CommentOAS {
-
     @InvalidArgumentResponse
     @SecurityResponse
     @ApiResponse(

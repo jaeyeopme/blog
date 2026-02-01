@@ -1,21 +1,21 @@
 package me.jaeyeop.blog.comment.adapter.out;
 
-import static me.jaeyeop.blog.comment.domain.QComment.comment;
-import static me.jaeyeop.blog.post.domain.QPost.post;
-import static me.jaeyeop.blog.user.domain.QUser.user;
+import java.util.List;
+import java.util.Optional;
 
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.util.List;
-import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
+import static me.jaeyeop.blog.comment.domain.QComment.comment;
+import static me.jaeyeop.blog.post.domain.QPost.post;
+import static me.jaeyeop.blog.user.domain.QUser.user;
+
 @Repository
 public class CommentQueryRepository {
-
     private final JPAQueryFactory jpaQueryFactory;
 
     public CommentQueryRepository(final JPAQueryFactory jpaQueryFactory) {

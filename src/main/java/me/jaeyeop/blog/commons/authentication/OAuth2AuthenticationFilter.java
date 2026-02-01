@@ -1,17 +1,13 @@
 package me.jaeyeop.blog.commons.authentication;
 
-import static me.jaeyeop.blog.commons.token.TokenProvider.BEARER_TYPE;
+import java.io.IOException;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
+
 import lombok.extern.slf4j.Slf4j;
-import me.jaeyeop.blog.authentication.application.port.out.ExpiredTokenQueryPort;
-import me.jaeyeop.blog.authentication.domain.Token;
-import me.jaeyeop.blog.commons.config.security.UserPrincipal;
-import me.jaeyeop.blog.commons.token.TokenProvider;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
@@ -24,6 +20,13 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import me.jaeyeop.blog.authentication.application.port.out.ExpiredTokenQueryPort;
+import me.jaeyeop.blog.authentication.domain.Token;
+import me.jaeyeop.blog.commons.config.security.UserPrincipal;
+import me.jaeyeop.blog.commons.token.TokenProvider;
+
+import static me.jaeyeop.blog.commons.token.TokenProvider.BEARER_TYPE;
 
 @Slf4j
 @Component

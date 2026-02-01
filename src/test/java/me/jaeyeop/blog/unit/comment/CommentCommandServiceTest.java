@@ -1,13 +1,13 @@
 package me.jaeyeop.blog.unit.comment;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.never;
-
 import java.util.Optional;
+
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.test.util.ReflectionTestUtils;
+
 import me.jaeyeop.blog.comment.application.port.in.CommentCommandUseCase.DeleteCommand;
 import me.jaeyeop.blog.comment.application.port.in.CommentCommandUseCase.EditCommand;
 import me.jaeyeop.blog.comment.application.port.in.CommentCommandUseCase.WriteCommand;
@@ -26,16 +26,20 @@ import me.jaeyeop.blog.support.factory.PostFactory;
 import me.jaeyeop.blog.support.factory.UserFactory;
 import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
 import me.jaeyeop.blog.user.domain.User;
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.never;
 
 class CommentCommandServiceTest extends UnitTest {
-    @InjectMocks private CommentCommandService commentCommandService;
+    @InjectMocks
+    private CommentCommandService commentCommandService;
 
-    @Mock private CommentCommandPort commentCommandPort;
+    @Mock
+    private CommentCommandPort commentCommandPort;
 
     @Mock(stubOnly = true)
     private CommentQueryPort commentQueryPort;

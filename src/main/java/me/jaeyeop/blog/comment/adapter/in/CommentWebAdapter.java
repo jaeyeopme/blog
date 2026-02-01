@@ -1,23 +1,10 @@
 package me.jaeyeop.blog.comment.adapter.in;
 
-import static me.jaeyeop.blog.post.adapter.in.PostWebAdapter.POST_API_URI;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
-import static org.springframework.http.HttpStatus.OK;
+import java.net.URI;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import java.net.URI;
-import me.jaeyeop.blog.comment.adapter.out.CommentInformationProjectionDto;
-import me.jaeyeop.blog.comment.application.port.in.CommentCommandUseCase;
-import me.jaeyeop.blog.comment.application.port.in.CommentCommandUseCase.DeleteCommand;
-import me.jaeyeop.blog.comment.application.port.in.CommentCommandUseCase.EditCommand;
-import me.jaeyeop.blog.comment.application.port.in.CommentCommandUseCase.WriteCommand;
-import me.jaeyeop.blog.comment.application.port.in.CommentQueryUseCase;
-import me.jaeyeop.blog.comment.application.port.in.CommentQueryUseCase.PageQuery;
-import me.jaeyeop.blog.comment.application.port.in.CommentQueryUseCase.Query;
-import me.jaeyeop.blog.commons.config.security.Principal;
-import me.jaeyeop.blog.commons.config.security.UserPrincipal;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +18,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import me.jaeyeop.blog.comment.adapter.out.CommentInformationProjectionDto;
+import me.jaeyeop.blog.comment.application.port.in.CommentCommandUseCase;
+import me.jaeyeop.blog.comment.application.port.in.CommentCommandUseCase.DeleteCommand;
+import me.jaeyeop.blog.comment.application.port.in.CommentCommandUseCase.EditCommand;
+import me.jaeyeop.blog.comment.application.port.in.CommentCommandUseCase.WriteCommand;
+import me.jaeyeop.blog.comment.application.port.in.CommentQueryUseCase;
+import me.jaeyeop.blog.comment.application.port.in.CommentQueryUseCase.PageQuery;
+import me.jaeyeop.blog.comment.application.port.in.CommentQueryUseCase.Query;
+import me.jaeyeop.blog.commons.config.security.Principal;
+import me.jaeyeop.blog.commons.config.security.UserPrincipal;
+
+import static me.jaeyeop.blog.post.adapter.in.PostWebAdapter.POST_API_URI;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.OK;
 
 @Validated
 @RestController

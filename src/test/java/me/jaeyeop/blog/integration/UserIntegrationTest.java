@@ -1,5 +1,13 @@
 package me.jaeyeop.blog.integration;
 
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import me.jaeyeop.blog.support.IntegrationTest;
+import me.jaeyeop.blog.support.factory.UserSecurityContextFactory.WithPrincipal;
+import me.jaeyeop.blog.user.adapter.in.UpdateUserRequestDto;
+import me.jaeyeop.blog.user.adapter.out.UserRepository;
+
 import static me.jaeyeop.blog.user.adapter.in.UserWebAdapter.USER_API_URI;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -8,13 +16,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import me.jaeyeop.blog.support.IntegrationTest;
-import me.jaeyeop.blog.support.factory.UserSecurityContextFactory.WithPrincipal;
-import me.jaeyeop.blog.user.adapter.in.UpdateUserRequestDto;
-import me.jaeyeop.blog.user.adapter.out.UserRepository;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 class UserIntegrationTest extends IntegrationTest {
     @Autowired

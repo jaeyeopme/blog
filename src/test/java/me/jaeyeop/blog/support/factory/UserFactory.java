@@ -1,9 +1,10 @@
 package me.jaeyeop.blog.support.factory;
 
+import org.springframework.test.util.ReflectionTestUtils;
+
 import me.jaeyeop.blog.commons.authentication.OAuth2Attributes;
 import me.jaeyeop.blog.commons.authentication.OAuth2Provider;
 import me.jaeyeop.blog.user.domain.User;
-import org.springframework.test.util.ReflectionTestUtils;
 
 public final class UserFactory {
     private static final String DEFAULT_EMAIL = "email@email.com";

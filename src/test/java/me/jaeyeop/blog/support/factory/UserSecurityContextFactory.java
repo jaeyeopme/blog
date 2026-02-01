@@ -1,16 +1,13 @@
 package me.jaeyeop.blog.support.factory;
 
-import static me.jaeyeop.blog.support.factory.UserSecurityContextFactory.WithPrincipal;
-
-import jakarta.persistence.EntityManager;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import jakarta.persistence.EntityManager;
+
 import lombok.extern.slf4j.Slf4j;
-import me.jaeyeop.blog.commons.config.security.UserPrincipal;
-import me.jaeyeop.blog.user.adapter.out.UserRepository;
-import me.jaeyeop.blog.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
@@ -18,6 +15,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithSecurityContext;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
 import org.springframework.stereotype.Component;
+
+import me.jaeyeop.blog.commons.config.security.UserPrincipal;
+import me.jaeyeop.blog.user.adapter.out.UserRepository;
+import me.jaeyeop.blog.user.domain.User;
+
+import static me.jaeyeop.blog.support.factory.UserSecurityContextFactory.WithPrincipal;
 
 @Slf4j
 @Component

@@ -1,24 +1,12 @@
 package me.jaeyeop.blog.support;
 
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import java.nio.charset.StandardCharsets;
+
+import jakarta.persistence.EntityManager;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.persistence.EntityManager;
-import java.nio.charset.StandardCharsets;
 import lombok.extern.slf4j.Slf4j;
-import me.jaeyeop.blog.comment.adapter.out.CommentJpaRepository;
-import me.jaeyeop.blog.comment.domain.Comment;
-import me.jaeyeop.blog.commons.config.security.UserPrincipal;
-import me.jaeyeop.blog.commons.error.exception.UserNotFoundException;
-import me.jaeyeop.blog.post.adapter.out.PostJpaRepository;
-import me.jaeyeop.blog.post.domain.Post;
-import me.jaeyeop.blog.support.factory.CommentFactory;
-import me.jaeyeop.blog.support.factory.PostFactory;
-import me.jaeyeop.blog.user.adapter.out.UserRepository;
-import me.jaeyeop.blog.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
@@ -32,6 +20,21 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
+import me.jaeyeop.blog.comment.adapter.out.CommentJpaRepository;
+import me.jaeyeop.blog.comment.domain.Comment;
+import me.jaeyeop.blog.commons.config.security.UserPrincipal;
+import me.jaeyeop.blog.commons.error.exception.UserNotFoundException;
+import me.jaeyeop.blog.post.adapter.out.PostJpaRepository;
+import me.jaeyeop.blog.post.domain.Post;
+import me.jaeyeop.blog.support.factory.CommentFactory;
+import me.jaeyeop.blog.support.factory.PostFactory;
+import me.jaeyeop.blog.user.adapter.out.UserRepository;
+import me.jaeyeop.blog.user.domain.User;
+
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+
 @Slf4j
 @Disabled
 @Tag("integration")
@@ -39,19 +42,26 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 public abstract class IntegrationTest extends ContainerTest {
-    @Autowired protected WebApplicationContext context;
+    @Autowired
+    protected WebApplicationContext context;
 
-    @Autowired protected MockMvc mockMvc;
+    @Autowired
+    protected MockMvc mockMvc;
 
-    @Autowired protected ObjectMapper objectMapper;
+    @Autowired
+    protected ObjectMapper objectMapper;
 
-    @Autowired protected EntityManager entityManager;
+    @Autowired
+    protected EntityManager entityManager;
 
-    @Autowired protected UserRepository userRepository;
+    @Autowired
+    protected UserRepository userRepository;
 
-    @Autowired protected PostJpaRepository postJpaRepository;
+    @Autowired
+    protected PostJpaRepository postJpaRepository;
 
-    @Autowired protected CommentJpaRepository commentJpaRepository;
+    @Autowired
+    protected CommentJpaRepository commentJpaRepository;
 
     @BeforeEach
     public void setUp() {

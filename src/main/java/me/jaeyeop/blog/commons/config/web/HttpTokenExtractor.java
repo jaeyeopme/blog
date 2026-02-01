@@ -1,12 +1,14 @@
 package me.jaeyeop.blog.commons.config.web;
 
-import static me.jaeyeop.blog.commons.token.TokenProvider.BEARER_TYPE;
-
 import jakarta.servlet.http.HttpServletRequest;
-import me.jaeyeop.blog.commons.token.TokenType;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+
+import me.jaeyeop.blog.commons.token.TokenType;
+
+import static me.jaeyeop.blog.commons.token.TokenProvider.BEARER_TYPE;
 
 @Component
 public class HttpTokenExtractor implements TokenExtractor {

@@ -3,13 +3,13 @@ package me.jaeyeop.blog.user.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotBlank;
+
 import lombok.Getter;
 import org.springframework.util.StringUtils;
 
 @Getter
 @Embeddable
 public class UserProfile {
-
     @NotBlank
     @Column(nullable = false, unique = true)
     private String email;
@@ -18,9 +18,11 @@ public class UserProfile {
     @Column(nullable = false)
     private String name;
 
-    @Column private String picture;
+    @Column
+    private String picture;
 
-    @Column private String introduce;
+    @Column
+    private String introduce;
 
     protected UserProfile() {}
 

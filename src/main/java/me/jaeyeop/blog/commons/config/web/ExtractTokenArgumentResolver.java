@@ -1,8 +1,9 @@
 package me.jaeyeop.blog.commons.config.web;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.Objects;
-import me.jaeyeop.blog.commons.error.exception.MissingTokenException;
+
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.NonNull;
 import org.springframework.util.StringUtils;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
+
+import me.jaeyeop.blog.commons.error.exception.MissingTokenException;
 
 public class ExtractTokenArgumentResolver implements HandlerMethodArgumentResolver {
     private final TokenExtractor tokenExtractor;
@@ -26,9 +29,11 @@ public class ExtractTokenArgumentResolver implements HandlerMethodArgumentResolv
 
     @Override
     public Object resolveArgument(
-            @NonNull final MethodParameter parameter,
+            @NonNull
+            final MethodParameter parameter,
             final ModelAndViewContainer mavContainer,
-            @NonNull final NativeWebRequest webRequest,
+            @NonNull
+            final NativeWebRequest webRequest,
             final WebDataBinderFactory binderFactory) {
         final var annotation =
                 Objects.requireNonNull(parameter.getParameterAnnotation(ExtractToken.class));

@@ -2,14 +2,7 @@ package me.jaeyeop.blog.commons.config.security;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import me.jaeyeop.blog.authentication.adapter.in.AuthenticationWebAdaptor;
-import me.jaeyeop.blog.comment.adapter.in.CommentWebAdapter;
-import me.jaeyeop.blog.commons.authentication.OAuth2AuthenticationFilter;
-import me.jaeyeop.blog.commons.authentication.OAuth2FailureHandler;
-import me.jaeyeop.blog.commons.authentication.OAuth2SuccessHandler;
-import me.jaeyeop.blog.commons.authentication.OAuth2UserServiceDelegator;
-import me.jaeyeop.blog.post.adapter.in.PostWebAdapter;
-import me.jaeyeop.blog.user.adapter.in.UserWebAdapter;
+
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +16,15 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
+
+import me.jaeyeop.blog.authentication.adapter.in.AuthenticationWebAdaptor;
+import me.jaeyeop.blog.comment.adapter.in.CommentWebAdapter;
+import me.jaeyeop.blog.commons.authentication.OAuth2AuthenticationFilter;
+import me.jaeyeop.blog.commons.authentication.OAuth2FailureHandler;
+import me.jaeyeop.blog.commons.authentication.OAuth2SuccessHandler;
+import me.jaeyeop.blog.commons.authentication.OAuth2UserServiceDelegator;
+import me.jaeyeop.blog.post.adapter.in.PostWebAdapter;
+import me.jaeyeop.blog.user.adapter.in.UserWebAdapter;
 
 @Configuration
 public class SecurityConfig {

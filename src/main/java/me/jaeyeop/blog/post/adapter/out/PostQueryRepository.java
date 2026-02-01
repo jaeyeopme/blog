@@ -1,15 +1,15 @@
 package me.jaeyeop.blog.post.adapter.out;
 
+import java.util.Optional;
+
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.springframework.stereotype.Repository;
+
 import static me.jaeyeop.blog.post.domain.QPost.post;
 import static me.jaeyeop.blog.user.domain.QUser.user;
 
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.util.Optional;
-import org.springframework.stereotype.Repository;
-
 @Repository
 public class PostQueryRepository {
-
     private final JPAQueryFactory jpaQueryFactory;
 
     public PostQueryRepository(final JPAQueryFactory jpaQueryFactory) {

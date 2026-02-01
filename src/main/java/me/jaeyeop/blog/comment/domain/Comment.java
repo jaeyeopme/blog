@@ -6,7 +6,9 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
+
 import lombok.Getter;
+
 import me.jaeyeop.blog.commons.error.exception.AccessDeniedException;
 import me.jaeyeop.blog.commons.persistence.AbstractBaseEntity;
 import me.jaeyeop.blog.post.domain.Post;
@@ -15,8 +17,8 @@ import me.jaeyeop.blog.user.domain.User;
 @Entity
 @Getter
 public class Comment extends AbstractBaseEntity {
-
-    @Embedded private CommentInformation information;
+    @Embedded
+    private CommentInformation information;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

@@ -1,12 +1,14 @@
 package me.jaeyeop.blog.user.application.service;
 
 import jakarta.transaction.Transactional;
+
+import org.springframework.stereotype.Service;
+
 import me.jaeyeop.blog.commons.error.exception.UserNotFoundException;
 import me.jaeyeop.blog.user.application.port.in.UserCommandUseCase;
 import me.jaeyeop.blog.user.application.port.out.UserCommandPort;
 import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
 import me.jaeyeop.blog.user.domain.User;
-import org.springframework.stereotype.Service;
 
 @Transactional
 @Service

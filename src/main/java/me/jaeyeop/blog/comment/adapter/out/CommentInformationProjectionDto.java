@@ -1,8 +1,10 @@
 package me.jaeyeop.blog.comment.adapter.out;
 
+import java.time.LocalDateTime;
+
 import com.querydsl.core.annotations.QueryProjection;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.LocalDateTime;
+
 import me.jaeyeop.blog.comment.domain.CommentInformation;
 
 @Schema(name = "Comment Information Response", title = "댓글 정보 응답")
@@ -12,7 +14,6 @@ public record CommentInformationProjectionDto(
         @Schema(description = "내용") String content,
         @Schema(description = "작성일") LocalDateTime createdAt,
         @Schema(description = "수정일") LocalDateTime modifiedAt) {
-
     @QueryProjection
     public CommentInformationProjectionDto(
             final Long id,

@@ -1,6 +1,9 @@
 package me.jaeyeop.blog.comment.application.service;
 
 import jakarta.transaction.Transactional;
+
+import org.springframework.stereotype.Service;
+
 import me.jaeyeop.blog.comment.application.port.in.CommentCommandUseCase;
 import me.jaeyeop.blog.comment.application.port.out.CommentCommandPort;
 import me.jaeyeop.blog.comment.application.port.out.CommentQueryPort;
@@ -13,7 +16,6 @@ import me.jaeyeop.blog.post.application.port.out.PostQueryPort;
 import me.jaeyeop.blog.post.domain.Post;
 import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
 import me.jaeyeop.blog.user.domain.User;
-import org.springframework.stereotype.Service;
 
 @Transactional
 @Service

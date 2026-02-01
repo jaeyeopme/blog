@@ -1,15 +1,10 @@
 package me.jaeyeop.blog.integration;
 
-import static me.jaeyeop.blog.authentication.adapter.in.AuthenticationWebAdaptor.AUTHENTICATION_API_URI;
-import static me.jaeyeop.blog.commons.config.web.HttpTokenExtractor.REFRESH_AUTHORIZATION_HEADER;
-import static me.jaeyeop.blog.commons.token.TokenProvider.BEARER_TYPE;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import me.jaeyeop.blog.authentication.adapter.out.ExpiredTokenRepository;
 import me.jaeyeop.blog.authentication.adapter.out.RefreshTokenRepository;
 import me.jaeyeop.blog.authentication.domain.RefreshToken;
@@ -19,17 +14,26 @@ import me.jaeyeop.blog.commons.token.TokenProvider;
 import me.jaeyeop.blog.support.IntegrationTest;
 import me.jaeyeop.blog.support.factory.UserSecurityContextFactory.WithPrincipal;
 import me.jaeyeop.blog.user.domain.User;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import static me.jaeyeop.blog.authentication.adapter.in.AuthenticationWebAdaptor.AUTHENTICATION_API_URI;
+import static me.jaeyeop.blog.commons.config.web.HttpTokenExtractor.REFRESH_AUTHORIZATION_HEADER;
+import static me.jaeyeop.blog.commons.token.TokenProvider.BEARER_TYPE;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Slf4j
 class AuthenticationIntegrationTest extends IntegrationTest {
-    @Autowired protected ExpiredTokenRepository expiredTokenRepository;
+    @Autowired
+    protected ExpiredTokenRepository expiredTokenRepository;
 
-    @Autowired protected RefreshTokenRepository refreshTokenRepository;
+    @Autowired
+    protected RefreshTokenRepository refreshTokenRepository;
 
-    @Autowired private TokenProvider tokenProvider;
+    @Autowired
+    private TokenProvider tokenProvider;
 
     @AfterEach
     void tearDown() {

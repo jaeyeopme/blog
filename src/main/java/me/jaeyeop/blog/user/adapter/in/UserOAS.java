@@ -1,17 +1,19 @@
 package me.jaeyeop.blog.user.adapter.in;
 
+import jakarta.validation.ConstraintDeclarationException;
+import jakarta.validation.constraints.NotNull;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.ConstraintDeclarationException;
-import jakarta.validation.constraints.NotNull;
+import org.springframework.validation.annotation.Validated;
+
 import me.jaeyeop.blog.commons.config.oas.OASResponse.InvalidArgumentResponse;
 import me.jaeyeop.blog.commons.config.oas.OASResponse.NotFoundUserResponse;
 import me.jaeyeop.blog.commons.config.oas.OASResponse.SecurityResponse;
 import me.jaeyeop.blog.commons.config.security.UserPrincipal;
-import org.springframework.validation.annotation.Validated;
 
 /**
  * {@link Validated} 어노테이션을 사용할 때 LSP 위배를 주의해야 한다.

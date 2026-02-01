@@ -1,5 +1,14 @@
 package me.jaeyeop.blog.integration;
 
+import org.junit.jupiter.api.Test;
+
+import me.jaeyeop.blog.post.adapter.in.EditPostRequestDto;
+import me.jaeyeop.blog.post.adapter.in.WritePostRequestDto;
+import me.jaeyeop.blog.post.adapter.out.PostInformationProjectionDto;
+import me.jaeyeop.blog.support.IntegrationTest;
+import me.jaeyeop.blog.support.factory.UserFactory;
+import me.jaeyeop.blog.support.factory.UserSecurityContextFactory.WithPrincipal;
+
 import static me.jaeyeop.blog.post.adapter.in.PostWebAdapter.POST_API_URI;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -9,14 +18,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import me.jaeyeop.blog.post.adapter.in.EditPostRequestDto;
-import me.jaeyeop.blog.post.adapter.in.WritePostRequestDto;
-import me.jaeyeop.blog.post.adapter.out.PostInformationProjectionDto;
-import me.jaeyeop.blog.support.IntegrationTest;
-import me.jaeyeop.blog.support.factory.UserFactory;
-import me.jaeyeop.blog.support.factory.UserSecurityContextFactory.WithPrincipal;
-import org.junit.jupiter.api.Test;
 
 class PostIntegrationTest extends IntegrationTest {
     @WithPrincipal

@@ -1,7 +1,6 @@
 package me.jaeyeop.blog.comment.application.port.in;
 
 public interface CommentCommandUseCase {
-
     Long write(WriteCommand command);
 
     void edit(EditCommand command);

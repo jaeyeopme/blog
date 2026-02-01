@@ -1,16 +1,18 @@
 package me.jaeyeop.blog.commons.authentication;
 
 import jakarta.transaction.Transactional;
-import me.jaeyeop.blog.commons.config.security.UserPrincipal;
-import me.jaeyeop.blog.commons.error.exception.OAuth2ProviderMismatchException;
-import me.jaeyeop.blog.user.application.port.out.UserCommandPort;
-import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
-import me.jaeyeop.blog.user.domain.User;
+
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+
+import me.jaeyeop.blog.commons.config.security.UserPrincipal;
+import me.jaeyeop.blog.commons.error.exception.OAuth2ProviderMismatchException;
+import me.jaeyeop.blog.user.application.port.out.UserCommandPort;
+import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
+import me.jaeyeop.blog.user.domain.User;
 
 @Transactional
 @Service

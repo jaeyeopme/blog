@@ -1,10 +1,14 @@
 package me.jaeyeop.blog.unit.comment;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.BDDMockito.given;
-
 import java.util.Optional;
+
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
+
 import me.jaeyeop.blog.comment.application.port.in.CommentQueryUseCase.PageQuery;
 import me.jaeyeop.blog.comment.application.port.in.CommentQueryUseCase.Query;
 import me.jaeyeop.blog.comment.application.port.out.CommentQueryPort;
@@ -14,15 +18,14 @@ import me.jaeyeop.blog.commons.error.exception.PostNotFoundException;
 import me.jaeyeop.blog.post.application.port.out.PostQueryPort;
 import me.jaeyeop.blog.support.UnitTest;
 import me.jaeyeop.blog.support.factory.CommentFactory;
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort.Direction;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.BDDMockito.given;
 
 class CommentQueryServiceTest extends UnitTest {
-    @InjectMocks private CommentQueryService commentQueryService;
+    @InjectMocks
+    private CommentQueryService commentQueryService;
 
     @Mock(stubOnly = true)
     private CommentQueryPort commentQueryPort;

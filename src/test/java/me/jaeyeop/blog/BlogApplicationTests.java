@@ -7,7 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 @Disabled
 @SpringBootTest
 class BlogApplicationTests {
-
     @Test
     void contextLoads() {}
 }

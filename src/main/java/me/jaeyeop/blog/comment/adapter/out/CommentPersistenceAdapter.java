@@ -2,16 +2,17 @@ package me.jaeyeop.blog.comment.adapter.out;
 
 import java.util.List;
 import java.util.Optional;
-import me.jaeyeop.blog.comment.application.port.out.CommentCommandPort;
-import me.jaeyeop.blog.comment.application.port.out.CommentQueryPort;
-import me.jaeyeop.blog.comment.domain.Comment;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import me.jaeyeop.blog.comment.application.port.out.CommentCommandPort;
+import me.jaeyeop.blog.comment.application.port.out.CommentQueryPort;
+import me.jaeyeop.blog.comment.domain.Comment;
+
 @Component
 public class CommentPersistenceAdapter implements CommentCommandPort, CommentQueryPort {
-
     private final CommentJpaRepository commentJpaRepository;
 
     private final CommentQueryRepository commentQueryRepository;

@@ -1,13 +1,15 @@
 package me.jaeyeop.blog.unit.user;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.never;
-
 import java.util.Optional;
+
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.test.util.ReflectionTestUtils;
+
 import me.jaeyeop.blog.commons.error.exception.UserNotFoundException;
 import me.jaeyeop.blog.support.UnitTest;
 import me.jaeyeop.blog.support.factory.UserFactory;
@@ -17,17 +19,19 @@ import me.jaeyeop.blog.user.application.port.out.UserCommandPort;
 import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
 import me.jaeyeop.blog.user.application.service.UserCommandService;
 import me.jaeyeop.blog.user.domain.User;
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.never;
 
 class UserCommandServiceTest extends UnitTest {
-    @InjectMocks private UserCommandService userCommandService;
-    @Mock private UserCommandPort userCommandPort;
+    @InjectMocks
+    private UserCommandService userCommandService;
+    @Mock
+    private UserCommandPort userCommandPort;
 
     @Mock(stubOnly = true)
     private UserQueryPort userQueryPort;

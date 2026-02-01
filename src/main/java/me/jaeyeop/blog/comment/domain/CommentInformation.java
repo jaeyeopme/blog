@@ -3,12 +3,12 @@ package me.jaeyeop.blog.comment.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotBlank;
+
 import lombok.Getter;
 
 @Embeddable
 @Getter
 public class CommentInformation {
-
     @NotBlank
     @Column(nullable = false)
     private String content;

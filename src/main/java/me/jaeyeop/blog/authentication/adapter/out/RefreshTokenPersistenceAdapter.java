@@ -1,9 +1,10 @@
 package me.jaeyeop.blog.authentication.adapter.out;
 
+import org.springframework.stereotype.Component;
+
 import me.jaeyeop.blog.authentication.application.port.out.RefreshTokenCommandPort;
 import me.jaeyeop.blog.authentication.application.port.out.RefreshTokenQueryPort;
 import me.jaeyeop.blog.authentication.domain.RefreshToken;
-import org.springframework.stereotype.Component;
 
 @Component
 public class RefreshTokenPersistenceAdapter

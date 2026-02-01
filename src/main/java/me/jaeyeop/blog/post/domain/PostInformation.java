@@ -4,13 +4,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Lob;
 import jakarta.validation.constraints.NotBlank;
+
 import lombok.Getter;
 import org.springframework.util.StringUtils;
 
 @Embeddable
 @Getter
 public class PostInformation {
-
     @NotBlank
     @Column(nullable = false)
     private String title;
@@ -20,7 +20,8 @@ public class PostInformation {
     @Column(nullable = false)
     private String content;
 
-    @Column private String coverImage;
+    @Column
+    private String coverImage;
 
     protected PostInformation() {}
 

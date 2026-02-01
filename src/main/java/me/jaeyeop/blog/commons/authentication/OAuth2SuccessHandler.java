@@ -1,21 +1,24 @@
 package me.jaeyeop.blog.commons.authentication;
 
-import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import java.io.IOException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
+
 import me.jaeyeop.blog.authentication.application.port.out.RefreshTokenCommandPort;
 import me.jaeyeop.blog.authentication.domain.RefreshToken;
 import me.jaeyeop.blog.authentication.domain.Token;
 import me.jaeyeop.blog.authentication.domain.TokenClaims;
 import me.jaeyeop.blog.commons.config.security.UserPrincipal;
 import me.jaeyeop.blog.commons.token.TokenProvider;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.stereotype.Component;
+
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Component
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {

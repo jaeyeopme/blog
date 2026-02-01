@@ -1,12 +1,13 @@
 package me.jaeyeop.blog.user.application.service;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import me.jaeyeop.blog.commons.error.exception.UserNotFoundException;
 import me.jaeyeop.blog.user.application.port.in.UserQueryUseCase;
 import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
 import me.jaeyeop.blog.user.domain.User;
 import me.jaeyeop.blog.user.domain.UserProfile;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
 @Service

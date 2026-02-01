@@ -1,14 +1,15 @@
 package me.jaeyeop.blog.user.adapter.out;
 
 import java.util.Optional;
+
+import org.springframework.stereotype.Component;
+
 import me.jaeyeop.blog.user.application.port.out.UserCommandPort;
 import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
 import me.jaeyeop.blog.user.domain.User;
-import org.springframework.stereotype.Component;
 
 @Component
 public class UserPersistenceAdapter implements UserCommandPort, UserQueryPort {
-
     private final UserRepository userRepository;
 
     public UserPersistenceAdapter(final UserRepository userRepository) {

@@ -1,7 +1,8 @@
 package me.jaeyeop.blog.commons.token;
 
-import me.jaeyeop.blog.authentication.domain.Token;
 import org.springframework.security.authentication.CredentialsExpiredException;
+
+import me.jaeyeop.blog.authentication.domain.Token;
 
 public class ExpiredTokenException extends CredentialsExpiredException {
     private final transient Token token;

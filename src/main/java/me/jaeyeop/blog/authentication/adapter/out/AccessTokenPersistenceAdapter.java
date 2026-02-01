@@ -1,9 +1,10 @@
 package me.jaeyeop.blog.authentication.adapter.out;
 
+import org.springframework.stereotype.Component;
+
 import me.jaeyeop.blog.authentication.application.port.out.ExpiredTokenCommandPort;
 import me.jaeyeop.blog.authentication.application.port.out.ExpiredTokenQueryPort;
 import me.jaeyeop.blog.authentication.domain.ExpiredToken;
-import org.springframework.stereotype.Component;
 
 @Component
 public class AccessTokenPersistenceAdapter

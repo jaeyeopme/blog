@@ -1,5 +1,10 @@
 package me.jaeyeop.blog.user.domain;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -13,11 +18,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+
 import lombok.Getter;
+
 import me.jaeyeop.blog.comment.domain.Comment;
 import me.jaeyeop.blog.commons.authentication.OAuth2Attributes;
 import me.jaeyeop.blog.commons.authentication.OAuth2Provider;
@@ -27,7 +30,8 @@ import me.jaeyeop.blog.post.domain.Post;
 @Entity
 @Getter
 public class User extends AbstractBaseEntity {
-    @Embedded private UserProfile profile;
+    @Embedded
+    private UserProfile profile;
 
     @NotEmpty
     @ElementCollection(fetch = FetchType.EAGER)

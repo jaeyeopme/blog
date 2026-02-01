@@ -6,19 +6,19 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+
 import me.jaeyeop.blog.commons.config.oas.OASResponse.InvalidArgumentResponse;
 import me.jaeyeop.blog.commons.config.oas.OASResponse.NotFoundPostResponse;
 import me.jaeyeop.blog.commons.config.oas.OASResponse.SecurityResponse;
 import me.jaeyeop.blog.commons.config.security.UserPrincipal;
 import me.jaeyeop.blog.post.adapter.out.PostInformationProjectionDto;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 
 @Validated
 @Tag(name = "3.post", description = "게시글(게시글 작성, 게시글 조회, 게시글 수정, 게시글 삭제)")
 public interface PostOAS {
-
     @InvalidArgumentResponse
     @SecurityResponse
     @ApiResponse(

@@ -1,8 +1,10 @@
 package me.jaeyeop.blog.post.adapter.out;
 
+import java.time.LocalDateTime;
+
 import com.querydsl.core.annotations.QueryProjection;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.LocalDateTime;
+
 import me.jaeyeop.blog.post.domain.PostInformation;
 
 @Schema(name = "Post Information Response", title = "게시글 정보 응답")
@@ -14,7 +16,6 @@ public record PostInformationProjectionDto(
         @Schema(description = "작성자 이름") String authorName,
         @Schema(description = "작성일") LocalDateTime createdAt,
         @Schema(description = "수정일") LocalDateTime lastModifiedAt) {
-
     @QueryProjection
     public PostInformationProjectionDto(
             final Long id,

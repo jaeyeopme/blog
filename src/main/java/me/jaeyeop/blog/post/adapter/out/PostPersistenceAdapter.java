@@ -2,14 +2,15 @@ package me.jaeyeop.blog.post.adapter.out;
 
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.stereotype.Component;
+
 import me.jaeyeop.blog.post.application.port.out.PostCommandPort;
 import me.jaeyeop.blog.post.application.port.out.PostQueryPort;
 import me.jaeyeop.blog.post.domain.Post;
-import org.springframework.stereotype.Component;
 
 @Component
 public class PostPersistenceAdapter implements PostCommandPort, PostQueryPort {
-
     private final PostJpaRepository postJpaRepository;
 
     private final PostQueryRepository postQueryRepository;

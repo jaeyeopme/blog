@@ -1,14 +1,15 @@
 package me.jaeyeop.blog.comment.application.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import me.jaeyeop.blog.comment.adapter.out.CommentInformationProjectionDto;
 import me.jaeyeop.blog.comment.application.port.in.CommentQueryUseCase;
 import me.jaeyeop.blog.comment.application.port.out.CommentQueryPort;
 import me.jaeyeop.blog.commons.error.exception.CommentNotFoundException;
 import me.jaeyeop.blog.commons.error.exception.PostNotFoundException;
 import me.jaeyeop.blog.post.application.port.out.PostQueryPort;
-import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
 @Service

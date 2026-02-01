@@ -1,7 +1,13 @@
 package me.jaeyeop.blog.authentication.application.service;
 
-import jakarta.transaction.Transactional;
 import java.util.Optional;
+
+import jakarta.transaction.Transactional;
+
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.CredentialsExpiredException;
+import org.springframework.stereotype.Service;
+
 import me.jaeyeop.blog.authentication.application.port.in.AuthenticationCommandUseCase;
 import me.jaeyeop.blog.authentication.application.port.out.ExpiredTokenCommandPort;
 import me.jaeyeop.blog.authentication.application.port.out.ExpiredTokenQueryPort;
@@ -16,9 +22,6 @@ import me.jaeyeop.blog.commons.error.exception.UserNotFoundException;
 import me.jaeyeop.blog.commons.token.TokenProvider;
 import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
 import me.jaeyeop.blog.user.domain.User;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.CredentialsExpiredException;
-import org.springframework.stereotype.Service;
 
 @Transactional
 @Service
@@ -36,12 +39,12 @@ public class AuthenticationCommandService implements AuthenticationCommandUseCas
     private final UserQueryPort userQueryPort;
 
     public AuthenticationCommandService(
-        final ExpiredTokenQueryPort expiredTokenQueryPort,
-        final ExpiredTokenCommandPort expiredTokenCommandPort,
-        final RefreshTokenCommandPort refreshTokenCommandPort,
-        final RefreshTokenQueryPort refreshTokenQueryPort,
-        final TokenProvider tokenProvider,
-        final UserQueryPort userQueryPort) {
+            final ExpiredTokenQueryPort expiredTokenQueryPort,
+            final ExpiredTokenCommandPort expiredTokenCommandPort,
+            final RefreshTokenCommandPort refreshTokenCommandPort,
+            final RefreshTokenQueryPort refreshTokenQueryPort,
+            final TokenProvider tokenProvider,
+            final UserQueryPort userQueryPort) {
         this.expiredTokenQueryPort = expiredTokenQueryPort;
         this.expiredTokenCommandPort = expiredTokenCommandPort;
         this.refreshTokenCommandPort = refreshTokenCommandPort;
@@ -53,9 +56,9 @@ public class AuthenticationCommandService implements AuthenticationCommandUseCas
     @Override
     public void logout(final LogoutCommand command) {
         resolveTokenIgnoringExpiration(command.accessToken())
-            .ifPresent(this::invalidateAccessToken);
+                .ifPresent(this::invalidateAccessToken);
         resolveTokenIgnoringExpiration(command.refreshToken())
-            .ifPresent(this::invalidateRefreshToken);
+                .ifPresent(this::invalidateRefreshToken);
     }
 
     @Override

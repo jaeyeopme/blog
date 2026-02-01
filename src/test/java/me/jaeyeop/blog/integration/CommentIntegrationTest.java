@@ -1,5 +1,19 @@
 package me.jaeyeop.blog.integration;
 
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+
+import me.jaeyeop.blog.comment.adapter.in.EditCommentRequestDto;
+import me.jaeyeop.blog.comment.adapter.in.WriteCommentRequestDto;
+import me.jaeyeop.blog.comment.adapter.out.CommentInformationProjectionDto;
+import me.jaeyeop.blog.support.IntegrationTest;
+import me.jaeyeop.blog.support.factory.UserSecurityContextFactory.WithPrincipal;
+
 import static me.jaeyeop.blog.comment.adapter.in.CommentWebAdapter.COMMENT_API_URI;
 import static me.jaeyeop.blog.post.adapter.in.PostWebAdapter.POST_API_URI;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -10,18 +24,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.List;
-import me.jaeyeop.blog.comment.adapter.in.EditCommentRequestDto;
-import me.jaeyeop.blog.comment.adapter.in.WriteCommentRequestDto;
-import me.jaeyeop.blog.comment.adapter.out.CommentInformationProjectionDto;
-import me.jaeyeop.blog.support.IntegrationTest;
-import me.jaeyeop.blog.support.factory.UserSecurityContextFactory.WithPrincipal;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 
 @SuppressWarnings("OptionalGetWithoutIsPresent")
 class CommentIntegrationTest extends IntegrationTest {

@@ -1,19 +1,20 @@
 package me.jaeyeop.blog.commons.config.oas;
 
-import static io.swagger.v3.oas.models.security.SecurityScheme.In.HEADER;
-import static io.swagger.v3.oas.models.security.SecurityScheme.Type.HTTP;
-
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityScheme;
-import me.jaeyeop.blog.authentication.adapter.in.AuthenticationWebAdaptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpHeaders;
+
+import me.jaeyeop.blog.authentication.adapter.in.AuthenticationWebAdaptor;
+
+import static io.swagger.v3.oas.models.security.SecurityScheme.In.HEADER;
+import static io.swagger.v3.oas.models.security.SecurityScheme.Type.HTTP;
 
 @Profile(value = {"local", "dev"})
 @Configuration
@@ -23,9 +24,12 @@ public class OASConfig {
     private final String contactUrl;
 
     public OASConfig(
-            @Value("${oas.contact.name}") final String contactName,
-            @Value("${oas.contact.email}") final String contactEmail,
-            @Value("${oas.contact.url}") final String contactUrl) {
+            @Value("${oas.contact.name}")
+            final String contactName,
+            @Value("${oas.contact.email}")
+            final String contactEmail,
+            @Value("${oas.contact.url}")
+            final String contactUrl) {
         this.contactName = contactName;
         this.contactEmail = contactEmail;
         this.contactUrl = contactUrl;

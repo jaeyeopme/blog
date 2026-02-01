@@ -5,9 +5,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.MediaType;
+
 import me.jaeyeop.blog.commons.authentication.OAuth2Response;
 import me.jaeyeop.blog.commons.config.oas.OASResponse.SecurityResponse;
-import org.springframework.http.MediaType;
 
 @Tag(name = "1.authentication", description = "인증(로그아웃, 엑세스 토큰 재발급)")
 public interface AuthenticationOAS {

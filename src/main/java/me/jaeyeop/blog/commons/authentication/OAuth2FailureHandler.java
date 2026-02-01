@@ -1,13 +1,16 @@
 package me.jaeyeop.blog.commons.authentication;
 
+import java.io.IOException;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import me.jaeyeop.blog.commons.error.exception.AbstractBaseException;
+
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerExceptionResolver;
+
+import me.jaeyeop.blog.commons.error.exception.AbstractBaseException;
 
 @Component
 public class OAuth2FailureHandler implements AuthenticationFailureHandler {
