@@ -29,7 +29,7 @@ class CommentIntegrationTest extends IntegrationTest {
     @Test
     void 댓글_작성() throws Exception {
         // GIVEN
-        final var post = getPost(getPrincipal());
+        final var post = getPost(getPrincipalUser());
         final var request = new WriteCommentRequestDto("content");
 
         // WHEN
@@ -48,7 +48,7 @@ class CommentIntegrationTest extends IntegrationTest {
     @ParameterizedTest
     void 비어있는_댓글_작성(final String content) throws Exception {
         // GIVEN
-        final var post = getPost(getPrincipal());
+        final var post = getPost(getPrincipalUser());
         final var request = new WriteCommentRequestDto(content);
 
         // WHEN
@@ -66,7 +66,7 @@ class CommentIntegrationTest extends IntegrationTest {
     @Test
     void 댓글_조회() throws Exception {
         // GIVEN
-        final var comment = getComment(getPost(getPrincipal()), getPrincipal());
+        final var comment = getComment(getPost(getPrincipalUser()), getPrincipalUser());
         final var information =
                 new CommentInformationProjectionDto(
                         comment.id(),
@@ -89,7 +89,7 @@ class CommentIntegrationTest extends IntegrationTest {
     @Test
     void 댓글_페이지_조회() throws Exception {
         // GIVEN
-        final var comment = getComment(getPost(getPrincipal()), getPrincipal());
+        final var comment = getComment(getPost(getPrincipalUser()), getPrincipalUser());
         final var info =
                 new CommentInformationProjectionDto(
                         comment.id(),
@@ -118,7 +118,7 @@ class CommentIntegrationTest extends IntegrationTest {
     @Test
     void 댓글_업데이트() throws Exception {
         // GIVEN
-        final var comment = getComment(getPost(getPrincipal()), getPrincipal());
+        final var comment = getComment(getPost(getPrincipalUser()), getPrincipalUser());
         final var request = new EditCommentRequestDto("newContent");
 
         // WHEN
@@ -138,7 +138,7 @@ class CommentIntegrationTest extends IntegrationTest {
     @Test
     void 댓글_삭제() throws Exception {
         // GIVEN
-        final var comment = getComment(getPost(getPrincipal()), getPrincipal());
+        final var comment = getComment(getPost(getPrincipalUser()), getPrincipalUser());
 
         // WHEN
         final var when =

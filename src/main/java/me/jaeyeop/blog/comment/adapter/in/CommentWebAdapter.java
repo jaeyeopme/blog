@@ -35,7 +35,6 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RestController
 public class CommentWebAdapter implements CommentOAS {
-
     public static final String COMMENT_API_URI = "/api/v1/comments";
 
     private final CommentCommandUseCase commentCommandUseCase;
@@ -56,7 +55,7 @@ public class CommentWebAdapter implements CommentOAS {
             @Principal UserPrincipal principal,
             @PathVariable Long postId,
             @RequestBody @Validated WriteCommentRequestDto request) {
-        final var command = new WriteCommand(principal.user().id(), postId, request.content());
+        final var command = new WriteCommand(principal.id(), postId, request.content());
         final var id = commentCommandUseCase.write(command);
         final var uri = URI.create(String.format("%s/%d", COMMENT_API_URI, id));
         return ResponseEntity.created(uri).build();
@@ -88,7 +87,7 @@ public class CommentWebAdapter implements CommentOAS {
             @Principal UserPrincipal principal,
             @PathVariable Long commentId,
             @RequestBody @Validated EditCommentRequestDto request) {
-        final var command = new EditCommand(principal.user().id(), commentId, request.content());
+        final var command = new EditCommand(principal.id(), commentId, request.content());
         commentCommandUseCase.edit(command);
     }
 
@@ -96,7 +95,7 @@ public class CommentWebAdapter implements CommentOAS {
     @DeleteMapping(COMMENT_API_URI + "/{commentId}")
     @Override
     public void delete(@Principal UserPrincipal principal, @PathVariable Long commentId) {
-        final var command = new DeleteCommand(principal.user().id(), commentId);
+        final var command = new DeleteCommand(principal.id(), commentId);
         commentCommandUseCase.delete(command);
     }
 }

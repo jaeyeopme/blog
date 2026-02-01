@@ -10,6 +10,7 @@ import java.io.IOException;
 import me.jaeyeop.blog.authentication.application.port.out.RefreshTokenCommandPort;
 import me.jaeyeop.blog.authentication.domain.RefreshToken;
 import me.jaeyeop.blog.authentication.domain.Token;
+import me.jaeyeop.blog.authentication.domain.TokenClaims;
 import me.jaeyeop.blog.commons.config.security.UserPrincipal;
 import me.jaeyeop.blog.commons.token.TokenProvider;
 import org.springframework.security.core.Authentication;
@@ -18,7 +19,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
-
     private final RefreshTokenCommandPort refreshTokenCommandPort;
 
     private final TokenProvider tokenProvider;
@@ -43,18 +43,18 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         response.setStatus(OK.value());
         response.setContentType(APPLICATION_JSON_VALUE);
 
-        final var principalEmail =
-                ((UserPrincipal) authentication.getPrincipal()).user().profile().email();
-        final var accessToken = tokenProvider.createAccess(principalEmail);
-        final var refreshToken = createRefresh(principalEmail);
+        final var principal = (UserPrincipal) authentication.getPrincipal();
+        final var claims = new TokenClaims(principal.id(), principal.authorities());
+        final var accessToken = tokenProvider.createAccess(claims);
+        final var refreshToken = createRefresh(claims);
 
         objectMapper.writeValue(
                 response.getWriter(),
                 new OAuth2Response(accessToken.value(), refreshToken.value()));
     }
 
-    private Token createRefresh(final String email) {
-        final var token = tokenProvider.createRefresh(email);
+    private Token createRefresh(final TokenClaims claims) {
+        final var token = tokenProvider.createRefresh(claims);
         refreshTokenCommandPort.activate(RefreshToken.from(token));
         return token;
     }

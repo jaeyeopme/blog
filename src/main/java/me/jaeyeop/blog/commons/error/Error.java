@@ -5,17 +5,26 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public enum Error {
-    INVALID_ARGUMENT("잘못된 입력값입니다", HttpStatus.BAD_REQUEST),
+    INVALID_ARGUMENT("Invalid argument", HttpStatus.BAD_REQUEST),
 
-    UNAUTHORIZED("유효하지 않은 토큰입니다.", HttpStatus.UNAUTHORIZED),
+    MISSING_TOKEN("Token is missing", HttpStatus.BAD_REQUEST),
 
-    FORBIDDEN("접근 권한이 없습니다.", HttpStatus.FORBIDDEN),
+    UNAUTHORIZED("Invalid token", HttpStatus.UNAUTHORIZED),
 
-    USER_NOT_FOUND("존재하지 않는 사용자입니다.", HttpStatus.NOT_FOUND),
+    FORBIDDEN("Access denied", HttpStatus.FORBIDDEN),
 
-    POST_NOT_FOUND("존재하지 않는 게시글입니다.", HttpStatus.NOT_FOUND),
+    USER_NOT_FOUND("User not found", HttpStatus.NOT_FOUND),
 
-    COMMENT_NOT_FOUND("존재하지 않는 댓글입니다.", HttpStatus.NOT_FOUND);
+    POST_NOT_FOUND("Post not found", HttpStatus.NOT_FOUND),
+
+    COMMENT_NOT_FOUND("Comment not found", HttpStatus.NOT_FOUND),
+
+    OAUTH_PROVIDER_MISMATCH(
+            "Email already registered. Please login with your social account.",
+            HttpStatus.BAD_REQUEST),
+
+    INTERNAL_SERVER_ERROR(
+            "Server error. Please try again later.", HttpStatus.INTERNAL_SERVER_ERROR);
 
     private final String message;
 

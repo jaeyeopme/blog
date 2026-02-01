@@ -13,13 +13,13 @@ public class RefreshToken {
     @NotBlank @Id private String value;
 
     @TimeToLive(unit = TimeUnit.MILLISECONDS)
-    private long expiration;
+    private long expirationMillis;
 
     protected RefreshToken() {}
 
-    private RefreshToken(final String value, final long expiration) {
+    private RefreshToken(final String value, final long expirationMillis) {
         this.value = value;
-        this.expiration = expiration;
+        this.expirationMillis = expirationMillis;
     }
 
     public static RefreshToken from(Token token) {

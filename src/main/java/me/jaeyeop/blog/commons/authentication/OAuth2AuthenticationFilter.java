@@ -1,5 +1,7 @@
 package me.jaeyeop.blog.commons.authentication;
 
+import static me.jaeyeop.blog.commons.token.TokenProvider.BEARER_TYPE;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,17 +12,14 @@ import me.jaeyeop.blog.authentication.application.port.out.ExpiredTokenQueryPort
 import me.jaeyeop.blog.authentication.domain.Token;
 import me.jaeyeop.blog.commons.config.security.UserPrincipal;
 import me.jaeyeop.blog.commons.token.TokenProvider;
-import me.jaeyeop.blog.user.application.port.out.UserQueryPort;
-import me.jaeyeop.blog.user.domain.User;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
-import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -29,33 +28,34 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Slf4j
 @Component
 public class OAuth2AuthenticationFilter extends OncePerRequestFilter {
-    private final UserQueryPort userQueryPort;
     private final ExpiredTokenQueryPort expiredTokenQueryPort;
+
     private final TokenProvider tokenProvider;
 
     public OAuth2AuthenticationFilter(
-            final UserQueryPort userQueryPort,
-            final ExpiredTokenQueryPort expiredTokenQueryPort,
-            final TokenProvider tokenProvider) {
-        this.userQueryPort = userQueryPort;
+            final ExpiredTokenQueryPort expiredTokenQueryPort, final TokenProvider tokenProvider) {
         this.expiredTokenQueryPort = expiredTokenQueryPort;
         this.tokenProvider = tokenProvider;
     }
 
     @Override
     protected void doFilterInternal(
-            @NonNull final HttpServletRequest request,
-            @NonNull final HttpServletResponse response,
-            @NonNull final FilterChain chain)
+            @NonNull
+            final HttpServletRequest request,
+            @NonNull
+            final HttpServletResponse response,
+            @NonNull
+            final FilterChain chain)
             throws ServletException, IOException {
-        final var token = request.getHeader(HttpHeaders.AUTHORIZATION);
+        final var header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if (StringUtils.hasText(token)) {
+        if (StringUtils.hasText(header) && header.startsWith(BEARER_TYPE)) {
             try {
+                final var token = header.substring(BEARER_TYPE.length());
                 final var authResult = attemptAuthentication(request, token);
                 successfulAuthentication(authResult);
             } catch (final AuthenticationException e) {
-                unsuccessfulAuthentication(e);
+                unsuccessfulAuthentication(request, e);
             }
         }
 
@@ -64,26 +64,21 @@ public class OAuth2AuthenticationFilter extends OncePerRequestFilter {
 
     private Authentication attemptAuthentication(
             final HttpServletRequest request, final String token) {
-        final var acessToken = obtainToken(token);
-        final var user = retrieveUser(acessToken.email());
+        final var accessToken = obtainToken(token);
+        final var claims = accessToken.tokenClaims();
+        final var principal = new UserPrincipal(claims.id(), claims.authorities());
 
-        return createSuccessAuthentication(request, UserPrincipal.from(user));
+        return createSuccessAuthentication(request, principal);
     }
 
     private Token obtainToken(final String token) {
         final var verifiedToken = tokenProvider.verify(token);
 
-        if (expiredTokenQueryPort.isExpired(verifiedToken.value())) {
-            throw new BadCredentialsException("expired access token");
+        if (expiredTokenQueryPort.isInvalidated(verifiedToken.value())) {
+            throw new CredentialsExpiredException("Expired or invalidated token");
         }
 
         return verifiedToken;
-    }
-
-    private User retrieveUser(final String email) {
-        return userQueryPort
-                .findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("user not found"));
     }
 
     private Authentication createSuccessAuthentication(
@@ -102,10 +97,12 @@ public class OAuth2AuthenticationFilter extends OncePerRequestFilter {
         log.debug("Set SecurityContextHolder to {}", authResult);
     }
 
-    private void unsuccessfulAuthentication(final AuthenticationException failed) {
+    private void unsuccessfulAuthentication(
+            final HttpServletRequest request, final AuthenticationException failed) {
         SecurityContextHolder.clearContext();
         log.trace("Failed to process authentication request", failed);
         log.trace("Cleared SecurityContextHolder");
         log.trace("Handling authentication failure");
+        request.setAttribute("exception", failed);
     }
 }

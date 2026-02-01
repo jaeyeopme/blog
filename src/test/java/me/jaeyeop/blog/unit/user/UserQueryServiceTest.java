@@ -17,20 +17,22 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 class UserQueryServiceTest extends UnitTest {
-    @InjectMocks private UserQueryService userQueryService;
+    @InjectMocks
+    private UserQueryService userQueryService;
+
     @Mock(stubOnly = true)
     private UserQueryPort userQueryPort;
 
     @Test
     void 프로필_조회() {
         // GIVEN
-        final var email = "email@email.com";
+        final var id = 44L;
         final var user = UserFactory.create();
-        given(userQueryPort.findByEmail(email)).willReturn(Optional.of(user));
+        given(userQueryPort.findById(id)).willReturn(Optional.of(user));
         final var profile = user.profile();
 
         // WHEN
-        final var actual = userQueryService.findProfileByEmail(new ProfileQuery(email));
+        final var actual = userQueryService.findProfileById(new ProfileQuery(id));
 
         // THEN
         assertThat(actual).isEqualTo(profile);
@@ -39,12 +41,11 @@ class UserQueryServiceTest extends UnitTest {
     @Test
     void 존재하지_않는_프로필_조회() {
         // GIVEN
-        final var email = "anonymous@email.com";
-        given(userQueryPort.findByEmail(email)).willReturn(Optional.empty());
+        final var id = 55L;
+        given(userQueryPort.findById(id)).willReturn(Optional.empty());
 
         // WHEN
-        final ThrowingCallable when =
-                () -> userQueryService.findProfileByEmail(new ProfileQuery(email));
+        final ThrowingCallable when = () -> userQueryService.findProfileById(new ProfileQuery(id));
 
         // THEN
         assertThatThrownBy(when).isInstanceOf(UserNotFoundException.class);

@@ -52,7 +52,7 @@ class PostIntegrationTest extends IntegrationTest {
     @Test
     void 게시글_조회() throws Exception {
         // GIVEN
-        final var post = getPost(getPrincipal());
+        final var post = getPost(getPrincipalUser());
         final var information =
                 new PostInformationProjectionDto(
                         post.id(),
@@ -92,7 +92,7 @@ class PostIntegrationTest extends IntegrationTest {
     @Test
     void 게시글_업데이트() throws Exception {
         // GIVEN
-        final var savedPost = getPost(getPrincipal());
+        final var savedPost = getPost(getPrincipalUser());
         final var request = new EditPostRequestDto("newTitle", "newContent");
 
         // WHEN
@@ -114,7 +114,7 @@ class PostIntegrationTest extends IntegrationTest {
     @Test
     void 게시글_삭제() throws Exception {
         // GIVEN
-        final var author = getPrincipal();
+        final var author = getPrincipalUser();
         final var post = getPost(author);
         final var comment = getComment(post, author);
 

@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import me.jaeyeop.blog.authentication.adapter.in.AuthenticationWebAdaptor;
 import me.jaeyeop.blog.comment.adapter.in.CommentWebAdapter;
 import me.jaeyeop.blog.commons.authentication.OAuth2AuthenticationFilter;
+import me.jaeyeop.blog.commons.authentication.OAuth2FailureHandler;
 import me.jaeyeop.blog.commons.authentication.OAuth2SuccessHandler;
 import me.jaeyeop.blog.commons.authentication.OAuth2UserServiceDelegator;
 import me.jaeyeop.blog.post.adapter.in.PostWebAdapter;
@@ -26,17 +27,24 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 @Configuration
 public class SecurityConfig {
     private final OAuth2AuthenticationFilter oAuth2AuthenticationFilter;
+
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
+
+    private final OAuth2FailureHandler oAuth2FailureHandler;
+
     private final OAuth2UserServiceDelegator oAuth2UserServiceDelegator;
+
     private final HandlerExceptionResolver handlerExceptionResolver;
 
     public SecurityConfig(
             final OAuth2AuthenticationFilter oAuth2AuthenticationFilter,
             final OAuth2SuccessHandler oAuth2SuccessHandler,
+            final OAuth2FailureHandler oAuth2FailureHandler,
             final OAuth2UserServiceDelegator oAuth2UserServiceDelegator,
             final HandlerExceptionResolver handlerExceptionResolver) {
         this.oAuth2AuthenticationFilter = oAuth2AuthenticationFilter;
         this.oAuth2SuccessHandler = oAuth2SuccessHandler;
+        this.oAuth2FailureHandler = oAuth2FailureHandler;
         this.oAuth2UserServiceDelegator = oAuth2UserServiceDelegator;
         this.handlerExceptionResolver = handlerExceptionResolver;
     }
@@ -45,11 +53,20 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(final HttpSecurity httpSecurity)
             throws Exception {
         final var oas = new String[] {"/swagger-ui/**", "/api-docs/**"};
-        final var endpoint =
+
+        // Endpoints that do not require authentication (login, token refresh)
+        final var authenticationEndpoints =
                 new String[] {
-                    UserWebAdapter.USER_API_URI + "/*",
+                    AuthenticationWebAdaptor.AUTHENTICATION_API_URI + "/login/**",
+                    AuthenticationWebAdaptor.AUTHENTICATION_API_URI + "/refresh"
+                };
+
+        // Endpoints that allow only GET requests (posts, comments, user profiles)
+        final var publicReadEndpoints =
+                new String[] {
                     PostWebAdapter.POST_API_URI + "/**",
-                    CommentWebAdapter.COMMENT_API_URI + "/**"
+                    CommentWebAdapter.COMMENT_API_URI + "/**",
+                    UserWebAdapter.USER_API_URI + "/*"
                 };
 
         httpSecurity
@@ -66,18 +83,20 @@ public class SecurityConfig {
                 .oauth2Login(
                         oauth2 ->
                                 oauth2.successHandler(oAuth2SuccessHandler)
+                                        .failureHandler(oAuth2FailureHandler)
                                         .userInfoEndpoint(
-                                                userInfo ->
-                                                        userInfo.userService(
+                                                userInfoEndpointConfig ->
+                                                        userInfoEndpointConfig.userService(
                                                                 oAuth2UserServiceDelegator))
                                         .authorizationEndpoint(
-                                                authorization ->
-                                                        authorization.baseUri(
+                                                authorizationEndpoint ->
+                                                        authorizationEndpoint.baseUri(
                                                                 AuthenticationWebAdaptor
-                                                                        .AUTHENTICATION_API_URI + "/login")))
+                                                                                .AUTHENTICATION_API_URI
+                                                                        + "/login")))
                 .exceptionHandling(
-                        exceptions ->
-                                exceptions
+                        exceptionHandling ->
+                                exceptionHandling
                                         .accessDeniedHandler(getAccessDeniedHandler())
                                         .authenticationEntryPoint(getAuthenticationEntryPoint()))
                 .authorizeHttpRequests(
@@ -87,8 +106,19 @@ public class SecurityConfig {
                                         .permitAll()
                                         .requestMatchers(HttpMethod.GET, oas)
                                         .permitAll()
-                                        .requestMatchers(HttpMethod.GET, endpoint)
+                                        // 1. Allow all methods for authentication-related endpoints
+                                        .requestMatchers(authenticationEndpoints)
                                         .permitAll()
+                                        // 2. Authentication required for retrieving own profile
+                                        // (must have higher priority than publicReadEndpoints
+                                        // wildcard)
+                                        .requestMatchers(
+                                                HttpMethod.GET, UserWebAdapter.USER_API_URI + "/me")
+                                        .authenticated()
+                                        // 3. Allow only GET requests for public read endpoints
+                                        .requestMatchers(HttpMethod.GET, publicReadEndpoints)
+                                        .permitAll()
+                                        // 4. Authentication required for all other requests
                                         .anyRequest()
                                         .authenticated());
 

@@ -23,8 +23,10 @@ import org.springframework.data.domain.Sort.Direction;
 
 class CommentQueryServiceTest extends UnitTest {
     @InjectMocks private CommentQueryService commentQueryService;
+
     @Mock(stubOnly = true)
     private CommentQueryPort commentQueryPort;
+
     @Mock(stubOnly = true)
     private PostQueryPort postQueryPort;
 

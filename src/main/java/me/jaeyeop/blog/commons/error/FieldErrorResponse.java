@@ -8,7 +8,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
 public record FieldErrorResponse(String message, List<FieldErrorProperty> errors) {
-
     public static FieldErrorResponse from(final Set<ConstraintViolation<?>> errors) {
         return new FieldErrorResponse(
                 Error.INVALID_ARGUMENT.message(), FieldErrorProperty.of(errors));
@@ -20,7 +19,6 @@ public record FieldErrorResponse(String message, List<FieldErrorProperty> errors
     }
 
     private record FieldErrorProperty(String field, String value, String message) {
-
         private static List<FieldErrorProperty> of(final BindingResult errors) {
             final List<FieldError> fieldErrors = errors.getFieldErrors();
             return fieldErrors.stream().map(FieldErrorProperty::map).toList();

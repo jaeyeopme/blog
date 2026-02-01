@@ -1,15 +1,22 @@
 package me.jaeyeop.blog.user.domain;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import lombok.Getter;
 import me.jaeyeop.blog.comment.domain.Comment;
 import me.jaeyeop.blog.commons.authentication.OAuth2Attributes;
@@ -22,10 +29,12 @@ import me.jaeyeop.blog.post.domain.Post;
 public class User extends AbstractBaseEntity {
     @Embedded private UserProfile profile;
 
-    @NotNull
+    @NotEmpty
+    @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role;
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role", nullable = false)
+    private final Set<Role> roles = new HashSet<>();
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -42,7 +51,7 @@ public class User extends AbstractBaseEntity {
 
     private User(final UserProfile profile, final Role role, final OAuth2Provider provider) {
         this.profile = profile;
-        this.role = role;
+        this.roles.add(role);
         this.provider = provider;
     }
 

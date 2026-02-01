@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(POST_API_URI)
 @RestController
 public class PostWebAdapter implements PostOAS {
-
     public static final String POST_API_URI = "/api/v1/posts";
 
     private final PostCommandUseCase postCommandUseCase;
@@ -46,7 +45,7 @@ public class PostWebAdapter implements PostOAS {
     @ResponseStatus(NO_CONTENT)
     @DeleteMapping("/{postId}")
     public void delete(@Principal UserPrincipal principal, @PathVariable Long postId) {
-        final var command = new DeleteCommand(principal.user().id(), postId);
+        final var command = new DeleteCommand(principal.id(), postId);
         postCommandUseCase.delete(command);
     }
 
@@ -64,7 +63,7 @@ public class PostWebAdapter implements PostOAS {
             @PathVariable Long postId,
             @RequestBody EditPostRequestDto request) {
         final var command =
-                new EditCommand(principal.user().id(), postId, request.title(), request.content());
+                new EditCommand(principal.id(), postId, request.title(), request.content());
         postCommandUseCase.edit(command);
     }
 
@@ -72,8 +71,7 @@ public class PostWebAdapter implements PostOAS {
     public ResponseEntity<Void> write(
             @Principal UserPrincipal principal,
             @RequestBody @Validated WritePostRequestDto request) {
-        final var command =
-                new WriteCommand(principal.user().id(), request.title(), request.content());
+        final var command = new WriteCommand(principal.id(), request.title(), request.content());
         final var id = postCommandUseCase.write(command);
         final var uri = URI.create(String.format("%s/%d", POST_API_URI, id));
         return ResponseEntity.created(uri).build();

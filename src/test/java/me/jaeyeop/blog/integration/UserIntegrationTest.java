@@ -17,13 +17,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 class UserIntegrationTest extends IntegrationTest {
-    @Autowired protected UserRepository userRepository;
+    @Autowired
+    protected UserRepository userRepository;
 
     @WithPrincipal
     @Test
     void 자신의_프로필_조회() throws Exception {
         // GIVE
-        final var profile = getPrincipal().profile();
+        final var profile = getPrincipalUser().profile();
 
         // WHEN
         final var when = mockMvc.perform(get(USER_API_URI + "/me"));
@@ -36,11 +37,10 @@ class UserIntegrationTest extends IntegrationTest {
     @Test
     void 이메일로_프로필_조회() throws Exception {
         // GIVE
-        final var profile = getPrincipal().profile();
+        final var profile = getPrincipalUser().profile();
 
         // WHEN
-        final var when =
-                mockMvc.perform(get(USER_API_URI + "/{email}", getPrincipal().profile().email()));
+        final var when = mockMvc.perform(get(USER_API_URI + "/{id}", getPrincipalUser().id()));
 
         // THEN
         when.andExpectAll(status().isOk(), content().json(toJson(profile)));
@@ -50,7 +50,7 @@ class UserIntegrationTest extends IntegrationTest {
     @Test
     void 프로필_업데이트() throws Exception {
         // GIVEN
-        final var user = getPrincipal();
+        final var user = getPrincipalUser();
         final var request = new UpdateUserRequestDto("newName", "newIntroduce");
 
         // THEN
@@ -62,7 +62,10 @@ class UserIntegrationTest extends IntegrationTest {
 
         // WHEN
         when.andExpectAll(status().isNoContent());
-        final var updatedUser = userRepository.findById(user.id()).get();
+        final var optionalUpdatedUser = userRepository.findById(user.id());
+        assertThat(optionalUpdatedUser).isPresent();
+
+        final var updatedUser = optionalUpdatedUser.get();
         assertThat(updatedUser.profile().name()).isEqualTo(request.name());
         assertThat(updatedUser.profile().introduce()).isEqualTo(request.introduce());
     }
@@ -71,7 +74,7 @@ class UserIntegrationTest extends IntegrationTest {
     @Test
     void 프로필_삭제() throws Exception {
         // GIVEN
-        final var user = getPrincipal();
+        final var user = getPrincipalUser();
         final var post = getPost(user);
         final var comment = getComment(post, user);
 

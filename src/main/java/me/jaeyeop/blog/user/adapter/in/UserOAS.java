@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.ConstraintDeclarationException;
-import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import me.jaeyeop.blog.commons.config.oas.OASResponse.InvalidArgumentResponse;
 import me.jaeyeop.blog.commons.config.oas.OASResponse.NotFoundUserResponse;
 import me.jaeyeop.blog.commons.config.oas.OASResponse.SecurityResponse;
@@ -21,7 +21,6 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @Tag(name = "2.user", description = "사용자(프로필 조회, 프로필 수정, 프로필 삭제)")
 public interface UserOAS {
-
     @SecurityResponse
     @ApiResponse(
             responseCode = "200",
@@ -36,8 +35,8 @@ public interface UserOAS {
             responseCode = "200",
             description = "사용자 프로필 조회 성공",
             content = @Content(schema = @Schema(implementation = UserProfileResponseDto.class)))
-    @Operation(summary = "Find user profile by user email", description = "사용자의 프로필을 조회합니다.")
-    UserProfileResponseDto findByEmail(@Schema(description = "사용자 이메일") @Email String email);
+    @Operation(summary = "Find user profile by user id", description = "사용자의 프로필을 조회합니다.")
+    UserProfileResponseDto findById(@Schema(description = "사용자 식별자") @NotNull Long id);
 
     @InvalidArgumentResponse
     @SecurityResponse

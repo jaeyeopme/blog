@@ -22,8 +22,11 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public final class UserSecurityContextFactory implements WithSecurityContextFactory<WithPrincipal> {
-    @Autowired private EntityManager entityManager;
-    @Autowired private UserRepository userRepository;
+    @Autowired
+    private EntityManager entityManager;
+
+    @Autowired
+    private UserRepository userRepository;
 
     private void clearPersistenceContext() {
         log.debug("===== Clear Persistence Context =====");
@@ -41,7 +44,7 @@ public final class UserSecurityContextFactory implements WithSecurityContextFact
 
     private SecurityContext createSecurityContext(final User user) {
         final var context = SecurityContextHolder.createEmptyContext();
-        final var userPrincipal = UserPrincipal.from(user);
+        final var userPrincipal = new UserPrincipal(user.id(), user.roles());
 
         context.setAuthentication(
                 UsernamePasswordAuthenticationToken.authenticated(

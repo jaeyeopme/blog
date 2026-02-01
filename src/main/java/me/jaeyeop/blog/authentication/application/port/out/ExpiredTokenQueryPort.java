@@ -1,6 +1,6 @@
 package me.jaeyeop.blog.authentication.application.port.out;
 
+/** Query port for checking Access Token invalidation status. */
 public interface ExpiredTokenQueryPort {
-
-    boolean isExpired(String token);
+    boolean isInvalidated(String token);
 }

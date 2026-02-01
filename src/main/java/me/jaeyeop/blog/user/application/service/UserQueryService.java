@@ -18,11 +18,11 @@ public class UserQueryService implements UserQueryUseCase {
     }
 
     @Override
-    public UserProfile findProfileByEmail(final ProfileQuery profileQuery) {
-        return findByEmail(profileQuery.email()).profile();
+    public UserProfile findProfileById(final ProfileQuery profileQuery) {
+        return findById(profileQuery.id()).profile();
     }
 
-    private User findByEmail(final String email) {
-        return userQueryPort.findByEmail(email).orElseThrow(UserNotFoundException::new);
+    private User findById(final Long id) {
+        return userQueryPort.findById(id).orElseThrow(UserNotFoundException::new);
     }
 }

@@ -1,33 +1,31 @@
 package me.jaeyeop.blog.commons.config.security;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
-import me.jaeyeop.blog.user.domain.User;
+import java.util.Set;
+import me.jaeyeop.blog.user.domain.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-public record UserPrincipal(User user, Collection<? extends GrantedAuthority> authorities)
+public record UserPrincipal(Long id, Collection<? extends GrantedAuthority> authorities)
         implements OAuth2User {
-
-    public static UserPrincipal from(final User user) {
-        return new UserPrincipal(
-                user, Collections.singleton(new SimpleGrantedAuthority(user.role().name())));
+    public UserPrincipal(final Long id, final Set<Role> roles) {
+        this(id, roles.stream().map(role -> new SimpleGrantedAuthority(role.name())).toList());
     }
 
     @Override
     public Map<String, Object> getAttributes() {
-        return Collections.emptyMap();
+        return Map.of();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities();
+        return authorities;
     }
 
     @Override
     public String getName() {
-        return user.profile().email();
+        return String.valueOf(id);
     }
 }

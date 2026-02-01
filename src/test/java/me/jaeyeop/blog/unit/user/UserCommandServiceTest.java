@@ -28,6 +28,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 class UserCommandServiceTest extends UnitTest {
     @InjectMocks private UserCommandService userCommandService;
     @Mock private UserCommandPort userCommandPort;
+
     @Mock(stubOnly = true)
     private UserQueryPort userQueryPort;
 

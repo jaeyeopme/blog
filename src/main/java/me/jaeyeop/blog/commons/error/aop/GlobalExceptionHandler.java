@@ -20,95 +20,107 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 public final class GlobalExceptionHandler {
-
     private static final String LOG_FORMAT = "Class Name: {}, Message: {}";
 
     /**
-     * 개발자 정의 예외 처리
+     * Handle custom exceptions defined by developers
      *
-     * @param e 개발자 정의 예외
+     * @param e Custom exception
      * @return {@link Error}
      */
     @ExceptionHandler(AbstractBaseException.class)
     public ResponseEntity<ErrorResponse> blogExceptionHandler(final AbstractBaseException e) {
-        logDebug(e);
-        return ResponseEntity.status(e.code().status()).body(new ErrorResponse(e.code().message()));
+        logWarn(e);
+        return ResponseEntity.status(e.code().status()).body(new ErrorResponse(e.getMessage()));
     }
 
     /**
-     * 유효하지 않은 인증 정보 예외 처리
+     * Handle invalid authentication information exceptions
      *
-     * @param e 유효하지 않은 인증 정보의 요청에 대한 예외
+     * @param e Exception for request with invalid authentication info
      * @return {@link Error} UNAUTHORIZED
      */
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ErrorResponse> authenticationExceptionHandler(
             final AuthenticationException e) {
-        logError(e);
+        logWarn(e);
         return ResponseEntity.status(Error.UNAUTHORIZED.status())
                 .body(new ErrorResponse(Error.UNAUTHORIZED.message()));
     }
 
     /**
-     * 접근 권한 예외 처리
+     * Handle access denied exceptions
      *
-     * @param e 권한이 없는 요청에 대한 예외
+     * @param e Exception for unauthorized request
      * @return {@link Error} FORBIDDEN
      */
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorResponse> accessDeniedExceptionHandler(
             final AccessDeniedException e) {
-        logError(e);
+        logWarn(e);
         return ResponseEntity.status(Error.FORBIDDEN.status())
                 .body(new ErrorResponse(Error.FORBIDDEN.message()));
     }
 
     /**
-     * 헤더 바인딩 에러 예외 처리
+     * Handle header binding error exceptions
      *
-     * @param e {@link RequestHeader} 바인딩 예외
+     * @param e {@link RequestHeader} binding exception
      * @return {@link Error} INVALID_ARGUMENT
      */
     @ExceptionHandler(MissingRequestHeaderException.class)
     public ResponseEntity<ErrorResponse> missingRequestHeaderExceptionHandler(
             final MissingRequestHeaderException e) {
-        logError(e);
+        logWarn(e);
         return ResponseEntity.badRequest()
                 .body(new ErrorResponse(Error.INVALID_ARGUMENT.message()));
     }
 
     /**
-     * 데이터 바인딩 에러 예외 처리
+     * Handle data binding error exceptions
      *
-     * @param e 인수 바인딩 예외
-     * @return 바인딩 에러 필드를 포함한 HTTP 400 BAD_REQUEST
+     * @param e Argument binding exception
+     * @return HTTP 400 BAD_REQUEST including binding error fields
      */
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<FieldErrorResponse> constraintViolationExceptionHandler(
             final ConstraintViolationException e) {
-        logError(e);
+        logWarn(e);
         return ResponseEntity.badRequest()
                 .body(FieldErrorResponse.from(e.getConstraintViolations()));
     }
 
     /**
-     * 데이터 바인딩 에러 예외 처리
+     * Handle data binding error exceptions
      *
-     * @param e {@link Validated} 및 {@link Valid} 인수 바인딩 예외
-     * @return 바인딩 에러 필드를 포함한 HTTP 400 BAD_REQUEST
+     * @param e {@link Validated} and {@link Valid} argument binding exception
+     * @return HTTP 400 BAD_REQUEST including binding error fields
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<FieldErrorResponse> handleMethodArgumentNotValid(
             final MethodArgumentNotValidException e) {
-        logError(e);
+        logWarn(e);
         return ResponseEntity.badRequest().body(FieldErrorResponse.from(e.getBindingResult()));
     }
 
-    private void logDebug(final Exception e) {
-        log.debug(LOG_FORMAT, e.getClass().getSimpleName(), e.getMessage());
+    /**
+     * Handle all other exceptions
+     *
+     * @param e Unexpected exception
+     * @return {@link Error} INTERNAL_SERVER_ERROR
+     */
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleException(final Exception e) {
+        logError(e);
+        return ResponseEntity.internalServerError()
+                .body(new ErrorResponse(Error.INTERNAL_SERVER_ERROR.message()));
+    }
+
+    private void logWarn(final Exception e) {
+        log.warn(LOG_FORMAT, e.getClass().getSimpleName(), e.getMessage());
     }
 
     private void logError(final Exception e) {
-        log.error(LOG_FORMAT, e.getClass().getSimpleName(), e.getMessage());
+        log.error(LOG_FORMAT, e.getClass().getSimpleName(), e.getMessage(), e);
     }
 }

@@ -18,6 +18,7 @@ import org.mockito.Mock;
 
 class PostQueryServiceTest extends UnitTest {
     @InjectMocks private PostQueryService postQueryService;
+
     @Mock(stubOnly = true)
     private PostQueryPort postQueryPort;
 

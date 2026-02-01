@@ -33,8 +33,10 @@ import org.springframework.test.util.ReflectionTestUtils;
 class PostCommandServiceTest extends UnitTest {
     @InjectMocks private PostCommandService postCommandService;
     @Mock private PostCommandPort postCommandPort;
+
     @Mock(stubOnly = true)
     private PostQueryPort postQueryPort;
+
     @Mock(stubOnly = true)
     private UserQueryPort userQueryPort;
 

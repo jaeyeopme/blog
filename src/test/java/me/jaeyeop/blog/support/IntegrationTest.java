@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.jaeyeop.blog.comment.adapter.out.CommentJpaRepository;
 import me.jaeyeop.blog.comment.domain.Comment;
 import me.jaeyeop.blog.commons.config.security.UserPrincipal;
+import me.jaeyeop.blog.commons.error.exception.UserNotFoundException;
 import me.jaeyeop.blog.post.adapter.out.PostJpaRepository;
 import me.jaeyeop.blog.post.domain.Post;
 import me.jaeyeop.blog.support.factory.CommentFactory;
@@ -39,11 +40,17 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 public abstract class IntegrationTest extends ContainerTest {
     @Autowired protected WebApplicationContext context;
+
     @Autowired protected MockMvc mockMvc;
+
     @Autowired protected ObjectMapper objectMapper;
+
     @Autowired protected EntityManager entityManager;
+
     @Autowired protected UserRepository userRepository;
+
     @Autowired protected PostJpaRepository postJpaRepository;
+
     @Autowired protected CommentJpaRepository commentJpaRepository;
 
     @BeforeEach
@@ -68,10 +75,11 @@ public abstract class IntegrationTest extends ContainerTest {
         return objectMapper.writeValueAsString(value);
     }
 
-    protected User getPrincipal() {
-        return ((UserPrincipal)
-                        SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-                .user();
+    protected User getPrincipalUser() {
+        final var principal =
+                (UserPrincipal)
+                        SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userRepository.findById(principal.id()).orElseThrow(UserNotFoundException::new);
     }
 
     protected Post getPost(final User author) {

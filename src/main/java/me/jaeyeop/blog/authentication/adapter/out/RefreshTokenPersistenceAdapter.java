@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class RefreshTokenPersistenceAdapter
         implements RefreshTokenCommandPort, RefreshTokenQueryPort {
-
     private final RefreshTokenRepository refreshTokenRepository;
 
     public RefreshTokenPersistenceAdapter(final RefreshTokenRepository refreshTokenRepository) {
@@ -21,12 +20,12 @@ public class RefreshTokenPersistenceAdapter
     }
 
     @Override
-    public void expire(final RefreshToken token) {
+    public void invalidate(final RefreshToken token) {
         refreshTokenRepository.delete(token);
     }
 
     @Override
-    public boolean isExpired(final String token) {
+    public boolean isInvalidated(final String token) {
         return !refreshTokenRepository.existsById(token);
     }
 }
