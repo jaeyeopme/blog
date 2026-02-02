@@ -3,6 +3,7 @@ package me.jaeyeop.blog.unit.post;
 import java.util.Optional;
 
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -26,31 +27,27 @@ class PostQueryServiceTest extends UnitTest {
     private PostQueryPort postQueryPort;
 
     @Test
-    void 게시글_조회() {
-        // GIVEN
+    @DisplayName("Find information by id")
+    void find_information_by_id() {
         final var postId = 1L;
         final var information = PostFactory.createInformation(postId);
         given(postQueryPort.findInformationById(postId)).willReturn(Optional.of(information));
         final var query = new InformationQuery(postId);
 
-        // WHEN
         final var foundInformation = postQueryService.findInformationById(query);
 
-        // THEN
         assertThat(foundInformation).isEqualTo(information);
     }
 
     @Test
-    void 존재하지_않는_게시글_조회() {
-        // GIVEN
+    @DisplayName("Find information by id not found")
+    void find_information_by_id_not_found() {
         final var postId = 1L;
         given(postQueryPort.findInformationById(postId)).willReturn(Optional.empty());
         final var query = new InformationQuery(postId);
 
-        // WHEN
         final ThrowingCallable when = () -> postQueryService.findInformationById(query);
 
-        // THEN
         assertThatThrownBy(when).isInstanceOf(PostNotFoundException.class);
     }
 }

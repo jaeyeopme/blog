@@ -3,6 +3,7 @@ package me.jaeyeop.blog.unit.user;
 import java.util.Optional;
 
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -26,30 +27,26 @@ class UserQueryServiceTest extends UnitTest {
     private UserQueryPort userQueryPort;
 
     @Test
-    void 프로필_조회() {
-        // GIVEN
+    @DisplayName("Find profile by id")
+    void find_profile_by_id() {
         final var id = 44L;
         final var user = UserFactory.create();
         given(userQueryPort.findById(id)).willReturn(Optional.of(user));
         final var profile = user.profile();
 
-        // WHEN
         final var actual = userQueryService.findProfileById(new ProfileQuery(id));
 
-        // THEN
         assertThat(actual).isEqualTo(profile);
     }
 
     @Test
-    void 존재하지_않는_프로필_조회() {
-        // GIVEN
+    @DisplayName("Find profile by id not found")
+    void find_profile_by_id_not_found() {
         final var id = 55L;
         given(userQueryPort.findById(id)).willReturn(Optional.empty());
 
-        // WHEN
         final ThrowingCallable when = () -> userQueryService.findProfileById(new ProfileQuery(id));
 
-        // THEN
         assertThatThrownBy(when).isInstanceOf(UserNotFoundException.class);
     }
 }

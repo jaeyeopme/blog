@@ -4,6 +4,7 @@ import java.util.Set;
 
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.CredentialsExpiredException;
@@ -25,7 +26,8 @@ class TokenProviderTest {
     }
 
     @Test
-    void 엑세스_토큰_발급() {
+    @DisplayName("Create access token")
+    void create_access_token() {
         final var id = 55L;
         final var claims = new TokenClaims(id, Set.of(Role.USER));
         final var accessToken = tokenProvider.createAccess(claims);
@@ -34,7 +36,8 @@ class TokenProviderTest {
     }
 
     @Test
-    void 리프레시_토큰_발급() {
+    @DisplayName("Create refresh token")
+    void create_refresh_token() {
         final var id = 55L;
         final var claims = new TokenClaims(id, Set.of(Role.USER));
 
@@ -44,7 +47,8 @@ class TokenProviderTest {
     }
 
     @Test
-    void 다른_키를_가진_토큰_검증() {
+    @DisplayName("Verify token with different key")
+    void verify_token_with_different_key() {
         final var differentKeyProvider = TokenFactory.createDifferentKey();
         final var claims = new TokenClaims(1L, Set.of(Role.USER));
         final var accessToken = differentKeyProvider.createAccess(claims);
@@ -55,7 +59,8 @@ class TokenProviderTest {
     }
 
     @Test
-    void 만료된_토큰_검증() {
+    @DisplayName("Verify expired token")
+    void verify_expired_token() {
         final var expiredProvider = TokenFactory.createExpired();
         final var claims = new TokenClaims(1L, Set.of(Role.USER));
         final var accessToken = expiredProvider.createAccess(claims);

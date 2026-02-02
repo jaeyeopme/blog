@@ -1,5 +1,6 @@
 package me.jaeyeop.blog.integration;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import me.jaeyeop.blog.post.adapter.in.EditPostRequestDto;
@@ -20,39 +21,35 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class PostIntegrationTest extends IntegrationTest {
-    @WithPrincipal
     @Test
-    void 게시글_작성() throws Exception {
-        // GIVEN
+    @WithPrincipal
+    @DisplayName("Write post")
+    void write_post() throws Exception {
         final var request = new WritePostRequestDto("title", "content");
 
-        // WHEN
         final var when =
                 mockMvc.perform(
                         post(POST_API_URI).contentType(APPLICATION_JSON).content(toJson(request)));
 
-        // THEN
         when.andExpectAll(status().isCreated());
     }
 
     @Test
-    void 게시글_작성_실패_인증없음() throws Exception {
-        // GIVEN
+    @DisplayName("Write post fail unauthorized")
+    void write_post_fail_unauthorized() throws Exception {
         final var request = new WritePostRequestDto("title", "content");
 
-        // WHEN
         final var when =
                 mockMvc.perform(
                         post(POST_API_URI).contentType(APPLICATION_JSON).content(toJson(request)));
 
-        // THEN
         when.andExpectAll(status().isUnauthorized());
     }
 
-    @WithPrincipal
     @Test
-    void 게시글_조회() throws Exception {
-        // GIVEN
+    @WithPrincipal
+    @DisplayName("Get post")
+    void get_post() throws Exception {
         final var post = getPost(getPrincipalUser());
         final var information =
                 new PostInformationProjectionDto(
@@ -62,16 +59,14 @@ class PostIntegrationTest extends IntegrationTest {
                         post.createdAt(),
                         post.lastModifiedAt());
 
-        // WHEN
         final var when = mockMvc.perform(get(POST_API_URI + "/{id}", post.id()));
 
-        // THEN
         when.andExpectAll(status().isOk(), content().json(toJson(information)));
     }
 
     @Test
-    void 게시글_조회_성공_인증없음() throws Exception {
-        // GIVEN
+    @DisplayName("Get post success unauthorized")
+    void get_post_success_unauthorized() throws Exception {
         final var author = userRepository.save(UserFactory.create());
         final var post = getPost(author);
         final var information =
@@ -82,28 +77,24 @@ class PostIntegrationTest extends IntegrationTest {
                         post.createdAt(),
                         post.lastModifiedAt());
 
-        // WHEN
         final var when = mockMvc.perform(get(POST_API_URI + "/{id}", post.id()));
 
-        // THEN
         when.andExpectAll(status().isOk(), content().json(toJson(information)));
     }
 
-    @WithPrincipal
     @Test
-    void 게시글_업데이트() throws Exception {
-        // GIVEN
+    @WithPrincipal
+    @DisplayName("Update post")
+    void update_post() throws Exception {
         final var savedPost = getPost(getPrincipalUser());
         final var request = new EditPostRequestDto("newTitle", "newContent");
 
-        // WHEN
         final var when =
                 mockMvc.perform(
                         patch(POST_API_URI + "/{id}", savedPost.id())
                                 .contentType(APPLICATION_JSON)
                                 .content(toJson(request)));
 
-        // THEN
         when.andExpectAll(status().isNoContent());
         final var post = postJpaRepository.findById(savedPost.id()).get();
         assertThat(post.id()).isEqualTo(savedPost.id());
@@ -111,18 +102,16 @@ class PostIntegrationTest extends IntegrationTest {
         assertThat(post.information().content()).isEqualTo(request.content());
     }
 
-    @WithPrincipal
     @Test
-    void 게시글_삭제() throws Exception {
-        // GIVEN
+    @WithPrincipal
+    @DisplayName("Delete post")
+    void delete_post() throws Exception {
         final var author = getPrincipalUser();
         final var post = getPost(author);
         final var comment = getComment(post, author);
 
-        // WHEN
         final var when = mockMvc.perform(delete(POST_API_URI + "/{id}", post.id()));
 
-        // THEN
         when.andExpectAll(status().isNoContent());
         assertThat(postJpaRepository.findById(post.id())).isNotPresent();
         assertThat(commentJpaRepository.findById(comment.id())).isNotPresent();

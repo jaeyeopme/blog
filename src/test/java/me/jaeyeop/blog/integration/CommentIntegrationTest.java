@@ -2,6 +2,7 @@ package me.jaeyeop.blog.integration;
 
 import java.util.List;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
@@ -27,47 +28,43 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SuppressWarnings("OptionalGetWithoutIsPresent")
 class CommentIntegrationTest extends IntegrationTest {
-    @WithPrincipal
     @Test
-    void 댓글_작성() throws Exception {
-        // GIVEN
+    @WithPrincipal
+    @DisplayName("Write comment")
+    void write_comment() throws Exception {
         final var post = getPost(getPrincipalUser());
         final var request = new WriteCommentRequestDto("content");
 
-        // WHEN
         final var when =
                 mockMvc.perform(
                         post(POST_API_URI + "/{postId}/comments", post.id())
                                 .contentType(APPLICATION_JSON)
                                 .content(toJson(request)));
 
-        // THEN
         when.andExpectAll(status().isCreated());
     }
 
     @WithPrincipal
     @NullAndEmptySource
     @ParameterizedTest
-    void 비어있는_댓글_작성(final String content) throws Exception {
-        // GIVEN
+    @DisplayName("Write empty comment")
+    void write_empty_comment(final String content) throws Exception {
         final var post = getPost(getPrincipalUser());
         final var request = new WriteCommentRequestDto(content);
 
-        // WHEN
         final var when =
                 mockMvc.perform(
                         post(POST_API_URI + "/{postId}/comments", post.id())
                                 .contentType(APPLICATION_JSON)
                                 .content(toJson(request)));
 
-        // THEN
         when.andExpectAll(status().isBadRequest());
     }
 
-    @WithPrincipal
     @Test
-    void 댓글_조회() throws Exception {
-        // GIVEN
+    @WithPrincipal
+    @DisplayName("Get comment")
+    void get_comment() throws Exception {
         final var comment = getComment(getPost(getPrincipalUser()), getPrincipalUser());
         final var information =
                 new CommentInformationProjectionDto(
@@ -77,20 +74,18 @@ class CommentIntegrationTest extends IntegrationTest {
                         comment.createdAt(),
                         comment.lastModifiedAt());
 
-        // WHEN
         final var when =
                 mockMvc.perform(
                         get(COMMENT_API_URI + "/{commentId}", comment.id())
                                 .contentType(APPLICATION_JSON));
 
-        // THEN
         when.andExpectAll(status().isOk(), content().json(toJson(information)));
     }
 
-    @WithPrincipal
     @Test
-    void 댓글_페이지_조회() throws Exception {
-        // GIVEN
+    @WithPrincipal
+    @DisplayName("Get comment page")
+    void get_comment_page() throws Exception {
         final var comment = getComment(getPost(getPrincipalUser()), getPrincipalUser());
         final var info =
                 new CommentInformationProjectionDto(
@@ -102,7 +97,6 @@ class CommentIntegrationTest extends IntegrationTest {
         final var pageable = PageRequest.of(0, 2);
         final var informationPage = new PageImpl<>(List.of(info), pageable, 1);
 
-        // WHEN
         final var when =
                 mockMvc.perform(
                         get(
@@ -112,43 +106,38 @@ class CommentIntegrationTest extends IntegrationTest {
                                         pageable.getPageSize())
                                 .contentType(APPLICATION_JSON));
 
-        // THEN
         when.andExpectAll(status().isOk(), content().json(toJson(informationPage)));
     }
 
-    @WithPrincipal
     @Test
-    void 댓글_업데이트() throws Exception {
-        // GIVEN
+    @WithPrincipal
+    @DisplayName("Update comment")
+    void update_comment() throws Exception {
         final var comment = getComment(getPost(getPrincipalUser()), getPrincipalUser());
         final var request = new EditCommentRequestDto("newContent");
 
-        // WHEN
         final var when =
                 mockMvc.perform(
                         patch(COMMENT_API_URI + "/{commentId}", comment.id())
                                 .contentType(APPLICATION_JSON)
                                 .content(toJson(request)));
 
-        // THEN
         when.andExpectAll(status().isNoContent());
         assertThat(commentJpaRepository.findById(comment.id()).get().information().content())
                 .isEqualTo(request.content());
     }
 
-    @WithPrincipal
     @Test
-    void 댓글_삭제() throws Exception {
-        // GIVEN
+    @WithPrincipal
+    @DisplayName("Delete comment")
+    void delete_comment() throws Exception {
         final var comment = getComment(getPost(getPrincipalUser()), getPrincipalUser());
 
-        // WHEN
         final var when =
                 mockMvc.perform(
                         delete(COMMENT_API_URI + "/{commentId}", comment.id())
                                 .contentType(APPLICATION_JSON));
 
-        // THEN
         when.andExpectAll(status().isNoContent());
         assertThat(commentJpaRepository.findById(comment.id())).isNotPresent();
     }

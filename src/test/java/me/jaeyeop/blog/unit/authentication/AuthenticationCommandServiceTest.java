@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -56,8 +57,8 @@ class AuthenticationCommandServiceTest extends UnitTest {
     private TokenProvider tokenProvider = TokenFactory.create();
 
     @Test
-    void 로그아웃_성공() {
-        // GIVEN
+    @DisplayName("Logout success")
+    void logout_success() {
         final var tokenClaims =
                 new TokenClaims(55L, List.of(new SimpleGrantedAuthority(Role.USER.name())));
         final var accessToken = tokenProvider.createAccess(tokenClaims).value();
@@ -66,17 +67,15 @@ class AuthenticationCommandServiceTest extends UnitTest {
         given(refreshTokenQueryPort.isInvalidated(refreshToken)).willReturn(Boolean.FALSE);
         final var command = new LogoutCommand(accessToken, refreshToken);
 
-        // WHEN
         authCommandService.logout(command);
 
-        // THEN
         then(expiredTokenCommandPort).should().invalidate(any());
         then(refreshTokenCommandPort).should().invalidate(any());
     }
 
     @Test
-    void 이미_무효화된_엑세스_토큰_로그아웃() {
-        // GIVEN
+    @DisplayName("Logout with invalidated access token")
+    void logout_with_invalidated_access_token() {
         final var tokenClaims =
                 new TokenClaims(55L, List.of(new SimpleGrantedAuthority(Role.USER.name())));
         final var accessToken = tokenProvider.createAccess(tokenClaims).value();
@@ -85,17 +84,15 @@ class AuthenticationCommandServiceTest extends UnitTest {
         given(refreshTokenQueryPort.isInvalidated(refreshToken)).willReturn(Boolean.FALSE);
         final var command = new LogoutCommand(accessToken, refreshToken);
 
-        // WHEN
         authCommandService.logout(command);
 
-        // THEN
         then(expiredTokenCommandPort).should(never()).invalidate(any());
         then(refreshTokenCommandPort).should().invalidate(any());
     }
 
     @Test
-    void 이미_무효화된_리프레시_토큰_로그아웃() {
-        // GIVEN
+    @DisplayName("Logout with invalidated refresh token")
+    void logout_with_invalidated_refresh_token() {
         final var tokenClaims =
                 new TokenClaims(55L, List.of(new SimpleGrantedAuthority(Role.USER.name())));
         final var accessToken = tokenProvider.createAccess(tokenClaims).value();
@@ -104,17 +101,15 @@ class AuthenticationCommandServiceTest extends UnitTest {
         given(refreshTokenQueryPort.isInvalidated(refreshToken)).willReturn(Boolean.TRUE);
         final var command = new LogoutCommand(accessToken, refreshToken);
 
-        // WHEN
         authCommandService.logout(command);
 
-        // THEN
         then(expiredTokenCommandPort).should().invalidate(any());
         then(refreshTokenCommandPort).should(never()).invalidate(any());
     }
 
     @Test
-    void 유효하지_않은_엑세스_토큰_로그아웃() {
-        // GIVEN
+    @DisplayName("Logout with invalid access token")
+    void logout_with_invalid_access_token() {
         final var tokenClaims =
                 new TokenClaims(55L, List.of(new SimpleGrantedAuthority(Role.USER.name())));
         final var expiredProvider = TokenFactory.createExpired();
@@ -123,17 +118,15 @@ class AuthenticationCommandServiceTest extends UnitTest {
         given(refreshTokenQueryPort.isInvalidated(refreshToken)).willReturn(Boolean.FALSE);
         final var command = new LogoutCommand(accessToken, refreshToken);
 
-        // WHEN
         authCommandService.logout(command);
 
-        // THEN: Logout should succeed even if the token is invalid
         then(expiredTokenCommandPort).should(never()).invalidate(any());
         then(refreshTokenCommandPort).should().invalidate(any());
     }
 
     @Test
-    void 유효하지_않은_리프레시_토큰_로그아웃() {
-        // GIVEN
+    @DisplayName("Logout with invalid refresh token")
+    void logout_with_invalid_refresh_token() {
         final var tokenClaims =
                 new TokenClaims(55L, List.of(new SimpleGrantedAuthority(Role.USER.name())));
         final var expiredProvider = TokenFactory.createExpired();
@@ -142,17 +135,15 @@ class AuthenticationCommandServiceTest extends UnitTest {
         given(expiredTokenQueryPort.isInvalidated(accessToken)).willReturn(Boolean.FALSE);
         final var command = new LogoutCommand(accessToken, refreshToken);
 
-        // WHEN
         authCommandService.logout(command);
 
-        // THEN: Logout should succeed even if the token is invalid
         then(expiredTokenCommandPort).should().invalidate(any());
         then(refreshTokenCommandPort).should(never()).invalidate(any());
     }
 
     @Test
-    void 리프레시_토큰으로_엑세스_토큰_재발급() {
-        // GIVEN
+    @DisplayName("Refresh access token")
+    void refresh_access_token() {
         final var user = UserFactory.create(55L);
         final var tokenClaims = new TokenClaims(user.id(), user.roles());
         final var refreshToken = tokenProvider.createRefresh(tokenClaims);
@@ -160,27 +151,23 @@ class AuthenticationCommandServiceTest extends UnitTest {
         given(userQueryPort.findById(user.id())).willReturn(Optional.of(user));
         assertThat(refreshToken.value()).isNotBlank();
 
-        // WHEN
         final var command = new RefreshCommand(refreshToken.value());
         authCommandService.refresh(command);
 
-        // THEN
         then(refreshTokenCommandPort).should().activate(any());
     }
 
     @Test
-    void 무효화된_리프레시_토큰으로_엑세스_토큰_재발급_실패() {
-        // GIVEN
+    @DisplayName("Refresh access token fail invalidated refresh token")
+    void refresh_access_token_fail_invalidated_refresh_token() {
         final var tokenClaims =
                 new TokenClaims(55L, List.of(new SimpleGrantedAuthority(Role.USER.name())));
         final var refreshToken = tokenProvider.createRefresh(tokenClaims);
         given(refreshTokenQueryPort.isInvalidated(refreshToken.value())).willReturn(Boolean.TRUE);
 
-        // WHEN
         final var command = new RefreshCommand(refreshToken.value());
         final ThrowingCallable when = () -> authCommandService.refresh(command);
 
-        // THEN
         assertThatThrownBy(when).isInstanceOf(BadCredentialsException.class);
     }
 }

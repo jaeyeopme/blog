@@ -2,6 +2,7 @@ package me.jaeyeop.blog.integration;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -40,15 +41,14 @@ class AuthenticationIntegrationTest extends IntegrationTest {
         clearRedis();
     }
 
-    @WithPrincipal
     @Test
-    void 로그아웃() throws Exception {
-        // GIVEN
+    @WithPrincipal
+    @DisplayName("Logout")
+    void logout() throws Exception {
         final var user = getPrincipalUser();
         final var accessTokenValue = getAccessToken(user).value();
         final var refreshTokenValue = getSavedRefreshToken(user).value();
 
-        // WHEN
         final var when =
                 mockMvc.perform(
                         delete(AUTHENTICATION_API_URI + "/logout")
@@ -57,20 +57,18 @@ class AuthenticationIntegrationTest extends IntegrationTest {
                                         REFRESH_AUTHORIZATION_HEADER,
                                         getHeaderValue(refreshTokenValue)));
 
-        // THEN
         when.andExpectAll(status().isNoContent());
         assertThat(expiredTokenRepository.findById(accessTokenValue)).isPresent();
         assertThat(refreshTokenRepository.findById(refreshTokenValue)).isNotPresent();
     }
 
-    @WithPrincipal
     @Test
-    void 엑세스_토큰_재발급() throws Exception {
-        // GIVEN
+    @WithPrincipal
+    @DisplayName("Reissue access token")
+    void reissue_access_token() throws Exception {
         final var user = getPrincipalUser();
         final var refreshTokenValue = getSavedRefreshToken(user).value();
 
-        // WHEN
         final var when =
                 mockMvc.perform(
                         post(AUTHENTICATION_API_URI + "/refresh")
@@ -78,19 +76,17 @@ class AuthenticationIntegrationTest extends IntegrationTest {
                                         REFRESH_AUTHORIZATION_HEADER,
                                         getHeaderValue(refreshTokenValue)));
 
-        // THEN
         when.andExpectAll(status().isCreated());
         assertThat(refreshTokenRepository.findById(refreshTokenValue)).isPresent();
     }
 
-    @WithPrincipal
     @Test
-    void 리프레시_토큰_저장소에_없는_리프레시_토큰으로_엑세스_토큰_재발급() throws Exception {
-        // GIVEN
+    @WithPrincipal
+    @DisplayName("Reissue access token with invalid refresh token")
+    void reissue_access_token_with_invalid_refresh_token() throws Exception {
         final var user = getPrincipalUser();
         final var refreshTokenValue = getRefreshToken(user).value();
 
-        // WHEN
         final var when =
                 mockMvc.perform(
                         post(AUTHENTICATION_API_URI + "/refresh")
@@ -98,7 +94,6 @@ class AuthenticationIntegrationTest extends IntegrationTest {
                                         REFRESH_AUTHORIZATION_HEADER,
                                         getHeaderValue(refreshTokenValue)));
 
-        // THEN
         when.andExpectAll(status().isUnauthorized());
         assertThat(refreshTokenRepository.findById(refreshTokenValue)).isNotPresent();
     }
