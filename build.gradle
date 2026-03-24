@@ -75,7 +75,7 @@ dependencies {
 
 jib {
     from {
-        image = "amazoncorretto:17.0.5-alpine"
+        image = "amazoncorretto:21-alpine"
     }
     to {
         tags = ["$project.version".toString(), "latest"]
